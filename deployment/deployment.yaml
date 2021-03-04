@@ -5,7 +5,7 @@ metadata:
   name: kic-frontend-service
 spec:
   ports:
-    - port: 19006
+    - port: 80
       name: http
   selector:
     app: kic-frontend
@@ -32,4 +32,4 @@ spec:
         - image: gcr.io/PROJECT_ID/IMAGE:TAG
           name: kic-frontend
           ports:
-            - containerPort: 19006
+            - containerPort: 80

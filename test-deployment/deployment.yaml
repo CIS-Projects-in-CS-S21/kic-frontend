@@ -5,7 +5,7 @@ metadata:
   name: test-kic-frontend-service
 spec:
   ports:
-    - port: 19006
+    - port: 80
       name: http
   selector:
     app: test-kic-frontend
@@ -33,4 +33,4 @@ spec:
           imagePullPolicy: Always
           name: test-kic-frontend
           ports:
-            - containerPort: 19006
+            - containerPort: 80
