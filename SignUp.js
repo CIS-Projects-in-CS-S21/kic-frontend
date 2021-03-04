@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
-class LogIn extends React.Component {
+class SignUp extends React.Component {
   render() {
       return (
         <View style={styles.container}>
@@ -11,14 +11,14 @@ class LogIn extends React.Component {
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('./assets/kic.png')}
           />
-          <Text>Keeping It Casual Log In Page!</Text>
-          <Button
-            title = "Sign Up!"
-            onPress = {() =>
-                this.props.navigation.navigate('SignUp')
-            }
-          />
+          <Text>Keeping It Casual Sign Up Page!</Text>
           <StatusBar style="auto" />
+            <Button
+                title = "Back to Log In!"
+                onPress = {() =>
+                    this.props.navigation.navigate('LogIn')
+                }
+            />
         </View>
       );
   }
@@ -33,4 +33,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogIn;
+export default SignUp;

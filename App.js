@@ -4,18 +4,26 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import LogIn from "./LogIn";
+import SignUp from "./SignUp";
+
+const Stack = createStackNavigator();
 
 class App extends React.Component {
   render() {
       return (
-        <View style={styles.container}>
-          <Image
-            style={{width: 180, height: 180, resizeMode: 'contain'}}
-            source = {require('./assets/kic.png')}
-          />
-          <Text>Keeping It Casual!</Text>
-          <StatusBar style="auto" />
-        </View>
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name= "LogIn"
+                    component={LogIn}
+                />
+                <Stack.Screen
+                    name= "SignUp"
+                    component={SignUp}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
       );
   }
 }
