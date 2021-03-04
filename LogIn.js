@@ -18,6 +18,13 @@ class LogIn extends React.Component {
                 this.props.navigation.navigate('SignUp')
             }
           />
+
+          <Button
+            title = "Log In! Now, Let's view your Personal Page!"
+            onPress = {() =>
+                this.props.navigation.navigate('PersonalPage')
+            }
+          />
           <StatusBar style="auto" />
         </View>
       );
@@ -30,6 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 20,
   },
 });
 

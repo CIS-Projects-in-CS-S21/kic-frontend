@@ -1,11 +1,13 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
+import PersonalPage from "./PersonalPage";
+import MentalHealthLog from "./MentalHealthLog";
+import FindHelp from "./FindHelp";
 
 const Stack = createStackNavigator();
 
@@ -21,6 +23,18 @@ class App extends React.Component {
                 <Stack.Screen
                     name= "SignUp"
                     component={SignUp}
+                />
+                <Stack.Screen
+                    name= "PersonalPage"
+                    component={PersonalPage}
+                />
+                <Stack.Screen
+                    name= "MentalHealthLog"
+                    component={MentalHealthLog}
+                />
+                <Stack.Screen
+                    name= "FindHelp"
+                    component={FindHelp}
                 />
             </Stack.Navigator>
         </NavigationContainer>
