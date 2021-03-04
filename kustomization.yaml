@@ -1,2 +1,2 @@
 resources:
-  - kubernetes/deployment.yml
+  - deployment/deployment.yml
