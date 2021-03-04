@@ -1,9 +1,20 @@
+/**
+ * @fileoverview Find Help page - allows users to find nearby mental health professionals
+ */
+
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
+/**
+ * @class Contains function for rendering FindHelp screen.
+ */
 class FindHelp extends React.Component {
+  /**
+   * Renders FindHelp screen components.
+   * @returns {Component}
+   */
   render() {
       return (
         <View style={styles.container}>
@@ -24,6 +35,9 @@ class FindHelp extends React.Component {
   }
 }
 
+/**
+ * @constant styles creates stylesheet for FindHelp screen components
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,

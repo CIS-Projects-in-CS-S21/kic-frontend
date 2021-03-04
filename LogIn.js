@@ -1,9 +1,20 @@
+/**
+ * @fileoverview Login page - allows users to login to their account.
+ */
+
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
+/**
+ * @class Contains function for rendering Login screen.
+ */
 class LogIn extends React.Component {
+  /**
+   * Renders LogIn screen components.
+   * @returns {Component}
+   */
   render() {
       return (
         <View style={styles.container}>
@@ -31,6 +42,9 @@ class LogIn extends React.Component {
   }
 }
 
+/**
+ * @constant styles creates stylesheet for Login screen components
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
