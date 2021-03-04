@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2049fe55-f953-4100-8853-55041d175b71" name="Default Changelist" comment="Created LogIn.js and SignUp.js files for login and sign up respectively.">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/conf.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/LogIn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/App.js.html" beforeDir="false" afterPath="$PROJECT_DIR$/out/App.js.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-Bold-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-Bold-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-BoldItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-BoldItalic-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-Italic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-Italic-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-Light-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-Light-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-LightItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-LightItalic-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-Regular-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-Regular-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/out/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/scripts/linenumber.js" beforeDir="false" afterPath="$PROJECT_DIR$/out/scripts/linenumber.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/scripts/prettify/Apache-License-2.0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/scripts/prettify/Apache-License-2.0.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/scripts/prettify/lang-css.js" beforeDir="false" afterPath="$PROJECT_DIR$/out/scripts/prettify/lang-css.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/scripts/prettify/prettify.js" beforeDir="false" afterPath="$PROJECT_DIR$/out/scripts/prettify/prettify.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/styles/jsdoc-default.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/styles/jsdoc-default.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/styles/prettify-jsdoc.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/styles/prettify-jsdoc.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/styles/prettify-tomorrow.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/styles/prettify-tomorrow.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +78,11 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="yarn" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\aszli\IdeaProjects\kic-frontend" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -71,6 +107,9 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.js" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -86,5 +125,19 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created LogIn.js and SignUp.js files for login and sign up respectively." />
     <option name="LAST_COMMIT_MESSAGE" value="Created LogIn.js and SignUp.js files for login and sign up respectively." />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="129" y="55" key="MergeDialog" timestamp="1614895711717">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="129" y="55" key="MergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1614895711717" />
+    <state x="321" y="125" key="MultipleFileMergeDialog" timestamp="1614895747344">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="321" y="125" key="MultipleFileMergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1614895747344" />
+    <state x="462" y="77" key="git4idea.branch.GitSmartOperationDialog" timestamp="1614895704927">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="462" y="77" key="git4idea.branch.GitSmartOperationDialog/0.0.1366.728@0.0.1366.728" timestamp="1614895704927" />
   </component>
 </project>
