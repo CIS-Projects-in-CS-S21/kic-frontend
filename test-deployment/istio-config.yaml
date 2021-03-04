@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   namespace: kic
-  name: kic-frontend-virtual-service
+  name: test-kic-frontend-virtual-service
 spec:
   hosts:
     - "test.keeping-it-casual.com"
@@ -11,7 +11,7 @@ spec:
   http:
       - route:
         - destination:
-            host: kic-frontend-service
+            host: test-kic-frontend-service
             port:
               number: 19006
 
