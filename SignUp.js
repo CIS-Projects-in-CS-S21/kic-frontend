@@ -1,9 +1,21 @@
+/**
+ * @fileoverview The screen for the signup page, containing a link
+ * back to the log in page.
+ */
+
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
+/**
+ * @class Contains function for rendering the signup page.
+ */
 class SignUp extends React.Component {
+  /**
+   * Renders signup page components.
+   * @returns {Component}
+   */
   render() {
       return (
         <View style={styles.container}>
@@ -24,6 +36,9 @@ class SignUp extends React.Component {
   }
 }
 
+/**
+ * @constant styles creates stylesheet for the signup page
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
