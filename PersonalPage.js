@@ -1,9 +1,21 @@
+/**
+ * @fileoverview The screen for the user's personal page, containing links
+ * to the Mental Health Log page and User Feed.
+ */
+
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
+/**
+ * @class Contains function for rendering the personal page.
+ */
 class PersonalPage extends React.Component {
+  /**
+   * Renders personal page components.
+   * @returns {Component}
+   */
   render() {
       return (
         <View style={styles.container}>
@@ -30,6 +42,9 @@ class PersonalPage extends React.Component {
   }
 }
 
+/**
+ * @constant styles creates stylesheet for personal page components
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
