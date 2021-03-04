@@ -8,6 +8,8 @@ import SignUp from "./SignUp";
 import PersonalPage from "./PersonalPage";
 import MentalHealthLog from "./MentalHealthLog";
 import FindHelp from "./FindHelp";
+import UserFeed from './UserFeed';
+import Explore from './Explore';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +25,14 @@ class App extends React.Component {
                 <Stack.Screen
                     name= "SignUp"
                     component={SignUp}
+                />
+                <Stack.Screen
+                    name= "UserFeed"
+                    component={UserFeed}
+                />
+                <Stack.Screen
+                    name= "Explore"
+                    component={Explore}
                 />
                 <Stack.Screen
                     name= "PersonalPage"
