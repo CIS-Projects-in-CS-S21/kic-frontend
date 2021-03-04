@@ -9,7 +9,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
 /**
- * @class Contains function for rendering the signup page.
+ * @class Contains function for rendering the signup page
  */
 class SignUp extends React.Component {
   /**
