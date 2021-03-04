@@ -63,7 +63,9 @@ class App extends React.Component {
   }
 }
 
-
+/**
+ * @constant styles creates stylesheet for main screen components
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,

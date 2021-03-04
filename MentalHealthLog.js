@@ -1,9 +1,20 @@
+/**
+ * @fileoverview MentalHealthLog page - allows users track their mental health through logging and journaling.
+ */
+
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
+/**
+ * @class Contains function for rendering MentalHealthLog screen.
+ */
 class MentalHealthLog extends React.Component {
+  /**
+   * Renders MentalHealth screen components.
+   * @returns {Component}
+   */
   render() {
       return (
         <View style={styles.container}>
@@ -30,6 +41,9 @@ class MentalHealthLog extends React.Component {
   }
 }
 
+/**
+ * @constant styles creates stylesheet for MentalHealthLog screen components
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
