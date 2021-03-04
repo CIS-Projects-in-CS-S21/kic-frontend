@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Main screen containing links to other screens on the app.
+ */
+
 import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
@@ -13,7 +17,14 @@ import Explore from './Explore';
 
 const Stack = createStackNavigator();
 
+/**
+ * @class Contains function for rendering main screen.
+ */
 class App extends React.Component {
+  /**
+   * Renders main screen components.
+   * @returns {Component}
+   */
   render() {
       return (
         <NavigationContainer>
@@ -51,6 +62,7 @@ class App extends React.Component {
       );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {
