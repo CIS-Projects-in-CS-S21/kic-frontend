@@ -1,6 +1,5 @@
 /**
- * @fileoverview The screen for the signup page, containing a link
- * back to the log in page.
+ * @fileoverview Explore page - allows users to discover friends and search for users.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -8,27 +7,28 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
+
 /**
- * @class Contains function for rendering the signup page
+ * @class Contains function for rendering Explore screen.
  */
-class SignUp extends React.Component {
+class Explore extends React.Component {
+  render() {
   /**
-   * Renders signup page components.
+   * Renders Explore screen components.
    * @returns {Component}
    */
-  render() {
       return (
         <View style={styles.container}>
           <Image
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('./assets/kic.png')}
           />
-          <Text>Keeping It Casual Sign Up Page!</Text>
+          <Text>Keeping It Casual User Feed!</Text>
           <StatusBar style="auto" />
             <Button
-                title = "Back to Log In!"
+                title = "Back to User Feed!"
                 onPress = {() =>
-                    this.props.navigation.navigate('LogIn')
+                    this.props.navigation.navigate('UserFeed')
                 }
             />
         </View>
@@ -37,7 +37,7 @@ class SignUp extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for the signup page
+ * @constant styles creates stylesheet for Explore screen components
  */
 const styles = StyleSheet.create({
   container: {
@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default Explore;

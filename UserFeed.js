@@ -1,5 +1,6 @@
 /**
- * @fileoverview Login page - allows users to login to their account.
+ * @fileoverview The screen for the user's feed, containing links to the
+ * Explore Page and Personal Page.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -8,11 +9,11 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
 /**
- * @class Contains function for rendering Login screen.
+ * @class Contains function for rendering the user feed.
  */
-class LogIn extends React.Component {
+class UserFeed extends React.Component {
   /**
-   * Renders LogIn screen components.
+   * Renders user feed components.
    * @returns {Component}
    */
   render() {
@@ -22,28 +23,27 @@ class LogIn extends React.Component {
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('./assets/kic.png')}
           />
-          <Text>Keeping It Casual Log In Page!</Text>
-          <Button
-            title = "Sign Up!"
-            onPress = {() =>
-                this.props.navigation.navigate('SignUp')
-            }
-          />
-
-          <Button
-            title = "Log In! Now, Let's view your Personal Page!"
-            onPress = {() =>
-                this.props.navigation.navigate('PersonalPage')
-            }
-          />
+          <Text>Keeping It Casual User Feed!</Text>
           <StatusBar style="auto" />
+          <Button
+            title = "Explore!"
+            onPress = {() =>
+                this.props.navigation.navigate('Explore')
+            }
+          />
+            <Button
+                title = "Back to Personal Page!"
+                onPress = {() =>
+                    this.props.navigation.navigate('PersonalPage')
+                }
+            />
         </View>
       );
   }
 }
 
 /**
- * @constant styles creates stylesheet for Login screen components
+ * @constant styles creates stylesheet for the user feed
  */
 const styles = StyleSheet.create({
   container: {
@@ -51,8 +51,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 20,
   },
 });
 
-export default LogIn;
+export default UserFeed;

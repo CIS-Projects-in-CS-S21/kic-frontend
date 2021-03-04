@@ -1,5 +1,5 @@
 /**
- * @fileoverview Login page - allows users to login to their account.
+ * @fileoverview MentalHealthLog page - allows users track their mental health through logging and journaling.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -8,11 +8,11 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
 /**
- * @class Contains function for rendering Login screen.
+ * @class Contains function for rendering MentalHealthLog screen.
  */
-class LogIn extends React.Component {
+class MentalHealthLog extends React.Component {
   /**
-   * Renders LogIn screen components.
+   * Renders MentalHealth screen components.
    * @returns {Component}
    */
   render() {
@@ -22,20 +22,19 @@ class LogIn extends React.Component {
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('./assets/kic.png')}
           />
-          <Text>Keeping It Casual Log In Page!</Text>
+          <Text>Keeping It Casual Mental Health Page!</Text>
           <Button
-            title = "Sign Up!"
+            title = "Find Help!"
             onPress = {() =>
-                this.props.navigation.navigate('SignUp')
+                this.props.navigation.navigate('FindHelp')
             }
           />
-
-          <Button
-            title = "Log In! Now, Let's view your Personal Page!"
-            onPress = {() =>
-                this.props.navigation.navigate('PersonalPage')
-            }
-          />
+            <Button
+                title = "Return to Personal Page!"
+                onPress = {() =>
+                    this.props.navigation.navigate('PersonalPage')
+                }
+            />
           <StatusBar style="auto" />
         </View>
       );
@@ -43,7 +42,7 @@ class LogIn extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for Login screen components
+ * @constant styles creates stylesheet for MentalHealthLog screen components
  */
 const styles = StyleSheet.create({
   container: {
@@ -51,8 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 20,
   },
 });
 
-export default LogIn;
+export default MentalHealthLog;

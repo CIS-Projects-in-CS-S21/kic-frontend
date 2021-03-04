@@ -1,5 +1,6 @@
 /**
- * @fileoverview Login page - allows users to login to their account.
+ * @fileoverview The screen for the user's personal page, containing links
+ * to the Mental Health Log page and User Feed.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -8,11 +9,11 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import {Button} from "react-native-web";
 
 /**
- * @class Contains function for rendering Login screen.
+ * @class Contains function for rendering the personal page.
  */
-class LogIn extends React.Component {
+class PersonalPage extends React.Component {
   /**
-   * Renders LogIn screen components.
+   * Renders personal page components.
    * @returns {Component}
    */
   render() {
@@ -22,18 +23,17 @@ class LogIn extends React.Component {
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('./assets/kic.png')}
           />
-          <Text>Keeping It Casual Log In Page!</Text>
+          <Text>Keeping It Casual Personal Page!</Text>
           <Button
-            title = "Sign Up!"
+            title = "Mental Health Tracker!"
             onPress = {() =>
-                this.props.navigation.navigate('SignUp')
+                this.props.navigation.navigate('MentalHealthLog')
             }
           />
-
           <Button
-            title = "Log In! Now, Let's view your Personal Page!"
+            title = "User Feed!"
             onPress = {() =>
-                this.props.navigation.navigate('PersonalPage')
+                this.props.navigation.navigate('UserFeed')
             }
           />
           <StatusBar style="auto" />
@@ -43,7 +43,7 @@ class LogIn extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for Login screen components
+ * @constant styles creates stylesheet for personal page components
  */
 const styles = StyleSheet.create({
   container: {
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogIn;
+export default PersonalPage;
