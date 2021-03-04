@@ -5,7 +5,7 @@ metadata:
   name: kic-frontend-virtual-service
 spec:
   hosts:
-    - "keeping-it-casual.com"
+    - "test.keeping-it-casual.com"
   gateways:
     - kic-gateway
   http:

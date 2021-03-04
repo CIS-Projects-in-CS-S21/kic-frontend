@@ -29,7 +29,7 @@ spec:
         app: kic-frontend
     spec:
       containers:
-        - image: gcr.io/PROJECT_ID/IMAGE:TAG
+        - image: gcr.io/keeping-it-casual/kic-frontend:dev
           name: kic-frontend
           ports:
             - containerPort: 19006
