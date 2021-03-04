@@ -1,35 +1,68 @@
-import { StatusBar } from 'expo-status-bar';
+/**
+ * @fileoverview Main screen containing links to other screens on the app.
+ */
+
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LogIn from "./LogIn";
+import SignUp from "./SignUp";
+import PersonalPage from "./PersonalPage";
+import MentalHealthLog from "./MentalHealthLog";
+import FindHelp from "./FindHelp";
+import UserFeed from './UserFeed';
+import Explore from './Explore';
 
-/** @namespace */
-var exampleVar = {
-    /**
-     * Repeat <tt>str</tt> several times.
-     * @param {string} str The string to repeat.
-     * @param {number} [times=1] How many times to repeat the string.
-     * @returns {string}
-     */
-    repeat: function(str, times) {
-        if (times === undefined || times < 1) {
-            times = 1;
-        }
-        return new Array(times+1).join(str);
-    }
-};
+const Stack = createStackNavigator();
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Image
-        style={{width: 180, height: 180, resizeMode: 'contain'}}
-        source = {require('./assets/kic.png')}
-      />
-      <Text>Keeping It Casual!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+/**
+ * @class Contains function for rendering main screen.
+ */
+class App extends React.Component {
+  /**
+   * Renders main screen components.
+   * @returns {Component}
+   */
+  render() {
+      return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name= "LogIn"
+                    component={LogIn}
+                />
+                <Stack.Screen
+                    name= "SignUp"
+                    component={SignUp}
+                />
+                <Stack.Screen
+                    name= "UserFeed"
+                    component={UserFeed}
+                />
+                <Stack.Screen
+                    name= "Explore"
+                    component={Explore}
+                />
+                <Stack.Screen
+                    name= "PersonalPage"
+                    component={PersonalPage}
+                />
+                <Stack.Screen
+                    name= "MentalHealthLog"
+                    component={MentalHealthLog}
+                />
+                <Stack.Screen
+                    name= "FindHelp"
+                    component={FindHelp}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
+      );
+  }
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -39,3 +72,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default App;
