@@ -5,7 +5,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity } from 'react-native';
 import {Button} from "react-native-web";
 import Modal from 'modal-enhanced-react-native-web';
 
@@ -19,7 +19,10 @@ class PersonalPage extends React.Component {
     // Define the initial state:
     this.state = {
       personalDisplayName: "Display Name",
-      modalVisible: true,
+      personalUserName: "@username",
+      personalBio: "This is a one-line bio.",
+      postDescription: "This is a one-line post description.",
+      modalVisible: false,
     };
   }
 
@@ -38,6 +41,40 @@ class PersonalPage extends React.Component {
   closeDetailedView = () => {
       this.setState({
           modalVisible: false
+      })
+  }
+
+  /**
+   * Gets user's posts.
+   */
+  fetchPosts = () => {
+      {/** Request posts for user */}
+  }
+
+  /**
+   * Gets image of post.
+   */
+  fetchPostImage = () => {
+      this.setState({
+          /** Get image of clicked post */
+      })
+  }
+
+  /**
+   * Gets post's description.
+   */
+  fetchPostDescription = () => {
+      this.setState({
+          /** Get description of clicked post */
+      })
+  }
+
+  /**
+   * Gets post's description.
+   */
+  fetchPostMetadata = () => {
+      this.setState({
+          /** Get metadata of clicked post */
       })
   }
 
@@ -71,7 +108,7 @@ class PersonalPage extends React.Component {
               </View>
 
               {/* User's bio */}
-              <Text style ={styles.textBio}>Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. </Text>
+              <Text style ={styles.textBio}>{this.state.personalBio}</Text>
 
           </View>
 
@@ -80,10 +117,15 @@ class PersonalPage extends React.Component {
         {/* postsContainer */}
         <View style ={styles.postGrid}>
             <View style ={styles.postRow}>
+                <TouchableOpacity
+                    onPress={this.openDetailedView}
+                >
                 <Image
                   style ={styles.postImage}
                   source = {require('./assets/default/default_icon_2.png')}
                 />
+                </TouchableOpacity>
+
                 <Image
                   style ={styles.postImage}
                   source = {require('./assets/default/default_icon_2.png')}
@@ -114,9 +156,8 @@ class PersonalPage extends React.Component {
         {/* DETAILED VIEW */}
         <Modal
             animationType="slide"
-            transparent={false}
+            transparent={true}
             visible={this.state.modalVisible}
-            presentationStyle="pageSheet"
         >
             <View style={styles.detailedViewPopUp}>
 
@@ -129,6 +170,8 @@ class PersonalPage extends React.Component {
               <View style={styles.postDetails}>
 
                 <Text style={styles.detailedViewDisplayName}>{this.state.personalDisplayName}</Text>
+                <Text style={styles.detailedViewDisplayName}>{this.state.personalUserName}</Text>
+                <Text style={styles.detailedViewDisplayName}>{this.state.postDescription}</Text>
 
                 <Button style={styles.closeDetailedViewButton}
                   title = "Close"
@@ -165,7 +208,7 @@ class PersonalPage extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     alignItems: 'center',
     paddingVertical: 20,
     paddingTop: 10,
@@ -243,15 +286,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '50%',
+    backgroundColor: "white",
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeftLeft: 20,
+    paddingRight: 20,
   },
   detailedViewImage: {
     width: 500,
     height: 500,
+    marginLeft: 20,
+    marginRight: 20,
   },
   postDetails: {
     flexDirection: 'column',
-    marginLeft: 50,
   },
   detailedViewIcon: {
     width: 20,
