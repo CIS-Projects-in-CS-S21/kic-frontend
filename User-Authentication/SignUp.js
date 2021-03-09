@@ -20,7 +20,7 @@ class SignUp extends React.Component {
         <View style={styles.container}>
           <Image
             style={{width: 180, height: 180, resizeMode: 'contain'}}
-            source = {require('./assets/kic.png')}
+            source = {require('../assets/kic.png')}
           />
           <Text>Keeping It Casual Sign Up Page!</Text>
           <StatusBar style="auto" />
