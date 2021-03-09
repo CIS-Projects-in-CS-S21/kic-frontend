@@ -5,13 +5,42 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import {Button} from "react-native-web";
+import Modal from 'modal-enhanced-react-native-web';
 
 /**
  * @class Contains function for rendering the personal page.
  */
 class PersonalPage extends React.Component {
+  constructor() {
+    super();
+
+    // Define the initial state:
+    this.state = {
+      personalDisplayName: "Display Name",
+      modalVisible: true,
+    };
+  }
+
+  /**
+   * Handles opening the modal.
+   */
+  openDetailedView = () => {
+      this.setState({
+          modalVisible: true
+      })
+  }
+
+  /**
+   * Handles closing the modal.
+   */
+  closeDetailedView = () => {
+      this.setState({
+          modalVisible: false
+      })
+  }
+
   /**
    * Renders personal page components.
    * @returns {Component}
@@ -35,7 +64,7 @@ class PersonalPage extends React.Component {
               {/* User's display name and username */}
               <View style ={styles.userID}>
                   {/* Display name */}
-                  <Text style ={styles.textDisplayName}>Display Name </Text>
+                  <Text style ={styles.textDisplayName}>{this.state.personalDisplayName}</Text>
 
                   {/* Username */}
                   <Text style ={styles.textUsername}>@username</Text>
@@ -49,11 +78,67 @@ class PersonalPage extends React.Component {
         </View>
 
         {/* postsContainer */}
-        <View style ={styles.postsContainer}>
+        <View style ={styles.postGrid}>
+            <View style ={styles.postRow}>
+                <Image
+                  style ={styles.postImage}
+                  source = {require('./assets/default/default_icon_2.png')}
+                />
+                <Image
+                  style ={styles.postImage}
+                  source = {require('./assets/default/default_icon_2.png')}
+                />
+                <Image
+                  style ={styles.postImage}
+                  source = {require('./assets/default/default_icon_2.png')}
+                />
+                <Image
+                  style ={styles.postImage}
+                  source = {require('./assets/default/default_icon_2.png')}
+                />
+            </View>
 
-            <Text style ={styles.text}>Posts will go here.</Text>
+            <View style ={styles.postRow}>
+                <Image
+                  style ={styles.postImage}
+                  source = {require('./assets/default/default_icon_2.png')}
+                />
+                <Image
+                  style ={styles.postImage}
+                  source = {require('./assets/default/default_icon_2.png')}
+                />
+            </View>
 
         </View>
+
+        {/* DETAILED VIEW */}
+        <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.modalVisible}
+            presentationStyle="pageSheet"
+        >
+            <View style={styles.detailedViewPopUp}>
+
+              {/* The image */}
+              <Image
+                style ={styles.detailedViewImage}
+                source = {require('./assets/default/default_icon.png')}
+              />
+
+              <View style={styles.postDetails}>
+
+                <Text style={styles.detailedViewDisplayName}>{this.state.personalDisplayName}</Text>
+
+                <Button style={styles.closeDetailedViewButton}
+                  title = "Close"
+                  onPress = {this.closeDetailedView}
+                />
+
+              </View>
+
+            </View>
+        </Modal>
 
         {/* NAVIGATION */}
           <Button
@@ -117,33 +202,81 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingVertical: 10,
   },
+  textDisplayName: {
+    fontSize: 18,
+    marginRight: 5,
+  },
   textUsername: {
     fontSize: 18,
     fontWeight: "bold",
-  },
-  textDisplayName: {
-    fontSize: 18,
   },
   textBio: {
     width: 745,
     fontSize: 15,
   },
-  postsContainer: {
+  postGrid: {
     backgroundColor: '#b3d2db',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
+    alignItems: 'left',
+    justifyContent:'center',
     width: '75%',
     marginTop: 15,
     marginBottom: 15,
+  },
+  postRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
     marginLeft: 15,
     marginRight: 15,
     paddingTop: 10,
     paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
-  text: {
-    paddingVertical: 10,
-    fontSize: 16,
+  postImage: {
+    alignSelf: 'flex-start',
+    width: 230,
+    height: 230,
+    marginLeft: 5,
+    marginRight: 5,
   },
+  detailedViewPopUp: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '50%',
+  },
+  detailedViewImage: {
+    width: 500,
+    height: 500,
+  },
+  postDetails: {
+    flexDirection: 'column',
+    marginLeft: 50,
+  },
+  detailedViewIcon: {
+    width: 20,
+    height: 20,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    marginRight: 5,
+    marginLeft: 5,
+  },
+  detailedViewDisplayName: {
+    fontSize: 15,
+  },
+  detailedViewUsername: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  detailedViewText: {
+    fontSize: 14,
+  },
+  closeDetailedViewButton: {
+    height: 5,
+    width: 5,
+  }
 });
 
 export default PersonalPage;
