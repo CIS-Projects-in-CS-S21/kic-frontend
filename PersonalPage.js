@@ -5,8 +5,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity } from 'react-native';
-import {Button} from "react-native-web";
+import { StyleSheet, Text, View, Image, Button, Pressable, TouchableOpacity } from 'react-native';
 import Modal from 'modal-enhanced-react-native-web';
 
 /**
@@ -259,8 +258,7 @@ const styles = StyleSheet.create({
   },
   postGrid: {
     backgroundColor: '#b3d2db',
-    alignItems: 'left',
-    justifyContent:'center',
+    justifyContent: 'center',
     width: '75%',
     marginTop: 15,
     marginBottom: 15,
@@ -289,7 +287,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingTop: 20,
     paddingBottom: 20,
-    paddingLeftLeft: 20,
+    paddingLeft: 20,
     paddingRight: 20,
   },
   detailedViewImage: {
