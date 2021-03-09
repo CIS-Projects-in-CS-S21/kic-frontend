@@ -19,10 +19,19 @@ class PersonalPage extends React.Component {
   render() {
       return (
         <View style={styles.container}>
+
+        {/* HEADER */}
+        <View style ={styles.profileHeader}>
+
+          {/* User's icon */}
           <Image
-            style={{width: 180, height: 180, resizeMode: 'contain'}}
-            source = {require('./assets/kic.png')}
+            style={styles.icon}
+            source = {require('./assets/default/default_icon.png')}
           />
+
+        </View>
+
+        {/* NAVIGATION */}
           <Text>Keeping It Casual Personal Page!</Text>
           <Button
             title = "Mental Health Tracker!"
@@ -52,6 +61,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 20,
+  },
+  profileHeader: {
+    flexDirection: 'row',
+    alignItems: 'left',
+    justifyContent: 'center',
+  },
+  icon: {
+    width: 50,
+    height: 50,
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
+    borderBottomRightRadius: 25,
+    borderBottomLeftRadius: 25,
   },
 });
 
