@@ -19,24 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2049fe55-f953-4100-8853-55041d175b71" name="Default Changelist" comment="Created LogIn.js and SignUp.js files for login and sign up respectively.">
-      <change afterPath="$PROJECT_DIR$/conf.json" afterDir="false" />
+    <list default="true" id="2049fe55-f953-4100-8853-55041d175b71" name="Default Changelist" comment="Improved organization of project by putting each page into separate folders and adding a folder for general components.">
+      <change afterPath="$PROJECT_DIR$/Components/Style.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/App.js.html" beforeDir="false" afterPath="$PROJECT_DIR$/out/App.js.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-Bold-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-Bold-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-BoldItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-BoldItalic-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-Italic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-Italic-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-Light-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-Light-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-LightItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-LightItalic-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/fonts/OpenSans-Regular-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/fonts/OpenSans-Regular-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/out/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/scripts/linenumber.js" beforeDir="false" afterPath="$PROJECT_DIR$/out/scripts/linenumber.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/scripts/prettify/Apache-License-2.0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/scripts/prettify/Apache-License-2.0.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/scripts/prettify/lang-css.js" beforeDir="false" afterPath="$PROJECT_DIR$/out/scripts/prettify/lang-css.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/scripts/prettify/prettify.js" beforeDir="false" afterPath="$PROJECT_DIR$/out/scripts/prettify/prettify.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/styles/jsdoc-default.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/styles/jsdoc-default.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/styles/prettify-jsdoc.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/styles/prettify-jsdoc.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/styles/prettify-tomorrow.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/styles/prettify-tomorrow.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +39,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="hello-world" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -80,8 +66,25 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\aszli\IdeaProjects\kic-frontend" />
+      <recent name="$PROJECT_DIR$/User Feed" />
+      <recent name="$PROJECT_DIR$/User Authentication" />
+      <recent name="$PROJECT_DIR$/Personal Page" />
+      <recent name="$PROJECT_DIR$/Mental Health " />
+      <recent name="$PROJECT_DIR$/User Validation" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -93,6 +96,7 @@
       <updated>1614793728792</updated>
       <workItem from="1614832404691" duration="1000000" />
       <workItem from="1614890535733" duration="2812000" />
+      <workItem from="1615324382442" duration="1241000" />
     </task>
     <task id="LOCAL-00001" summary="Created LogIn.js and SignUp.js files for login and sign up respectively.">
       <created>1614891505952</created>
@@ -101,7 +105,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614891505952</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Improved organization of project by putting each page into separate folders and adding a folder for general components.">
+      <created>1615325143619</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1615325143619</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -124,20 +135,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created LogIn.js and SignUp.js files for login and sign up respectively." />
-    <option name="LAST_COMMIT_MESSAGE" value="Created LogIn.js and SignUp.js files for login and sign up respectively." />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="129" y="55" key="MergeDialog" timestamp="1614895711717">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="129" y="55" key="MergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1614895711717" />
-    <state x="321" y="125" key="MultipleFileMergeDialog" timestamp="1614895747344">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="321" y="125" key="MultipleFileMergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1614895747344" />
-    <state x="462" y="77" key="git4idea.branch.GitSmartOperationDialog" timestamp="1614895704927">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="462" y="77" key="git4idea.branch.GitSmartOperationDialog/0.0.1366.728@0.0.1366.728" timestamp="1614895704927" />
+    <MESSAGE value="Improved organization of project by putting each page into separate folders and adding a folder for general components." />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved organization of project by putting each page into separate folders and adding a folder for general components." />
   </component>
 </project>
