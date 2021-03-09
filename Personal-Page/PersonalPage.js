@@ -6,6 +6,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import KIC_Style from "../Components/Style";
 
 /**
  * @class Contains function for rendering the personal page.
@@ -82,7 +83,7 @@ class PersonalPage extends React.Component {
    */
   render() {
       return (
-        <View style={styles.container}>
+        <View style={styles.KIC_Style}>
 
         {/* HEADER */}
         <View style ={styles.profileHeader}>
@@ -90,7 +91,7 @@ class PersonalPage extends React.Component {
           {/* User's icon */}
           <Image
             style={styles.icon}
-            source = {require('./assets/default/default_icon_2.png')}
+            source = {require('../assets/default/default_icon_2.png')}
           />
 
           {/* User's info */}
@@ -120,32 +121,32 @@ class PersonalPage extends React.Component {
                 >
                 <Image
                   style ={styles.postImage}
-                  source = {require('./assets/default/default_icon_2.png')}
+                  source = {require('../assets/default/default_icon_2.png')}
                 />
                 </TouchableOpacity>
 
                 <Image
                   style ={styles.postImage}
-                  source = {require('./assets/default/default_icon_2.png')}
+                  source = {require('../assets/default/default_icon_2.png')}
                 />
                 <Image
                   style ={styles.postImage}
-                  source = {require('./assets/default/default_icon_2.png')}
+                  source = {require('../assets/default/default_icon_2.png')}
                 />
                 <Image
                   style ={styles.postImage}
-                  source = {require('./assets/default/default_icon_2.png')}
+                  source = {require('../assets/default/default_icon_2.png')}
                 />
             </View>
 
             <View style ={styles.postRow}>
                 <Image
                   style ={styles.postImage}
-                  source = {require('./assets/default/default_icon_2.png')}
+                  source = {require('../assets/default/default_icon_2.png')}
                 />
                 <Image
                   style ={styles.postImage}
-                  source = {require('./assets/default/default_icon_2.png')}
+                  source = {require('../assets/default/default_icon_2.png')}
                 />
             </View>
 
@@ -162,7 +163,7 @@ class PersonalPage extends React.Component {
               {/* The image */}
               <Image
                 style ={styles.detailedViewImage}
-                source = {require('./assets/default/default_icon.png')}
+                source = {require('../assets/default/default_icon.png')}
               />
 
               <View style={styles.postDetails}>
