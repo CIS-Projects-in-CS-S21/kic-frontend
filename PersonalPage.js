@@ -5,8 +5,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button, Pressable, TouchableOpacity } from 'react-native';
-import Modal from 'modal-enhanced-react-native-web';
+import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 
 /**
  * @class Contains function for rendering the personal page.
