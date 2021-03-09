@@ -15,6 +15,9 @@ import MentalHealthLog from "./Mental-Health/MentalHealthLog";
 import FindHelp from "./Mental-Health/FindHelp";
 import UserFeed from './User-Feed/UserFeed';
 import Explore from './Explore-Page/Explore';
+import Style from './Components/Style';
+import LotsOfStyles from "./Components/Style";
+import KIC_Style from "./Components/Style";
 
 
 const Stack = createStackNavigator();
@@ -68,13 +71,6 @@ class App extends React.Component {
 /**
  * @constant styles creates stylesheet for main screen components
  */
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = KIC_Style;
 
 export default App;

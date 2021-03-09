@@ -19,18 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2049fe55-f953-4100-8853-55041d175b71" name="Default Changelist" comment="Created LogIn.js and SignUp.js files for login and sign up respectively.">
+    <list default="true" id="2049fe55-f953-4100-8853-55041d175b71" name="Default Changelist" comment="Improved organization of project by putting each page into separate folders and adding a folder for general components.">
+      <change afterPath="$PROJECT_DIR$/Components/Style.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Explore.js" beforeDir="false" afterPath="$PROJECT_DIR$/Explore-Page/Explore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FindHelp.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mental-Health/FindHelp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/User-Authentication/LogIn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MentalHealthLog.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mental-Health/MentalHealthLog.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PersonalPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/Personal-Page/PersonalPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SignUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/User-Authentication/SignUp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserFeed.js" beforeDir="false" afterPath="$PROJECT_DIR$/User-Feed/UserFeed.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +96,7 @@
       <updated>1614793728792</updated>
       <workItem from="1614832404691" duration="1000000" />
       <workItem from="1614890535733" duration="2812000" />
-      <workItem from="1615324382442" duration="459000" />
+      <workItem from="1615324382442" duration="1241000" />
     </task>
     <task id="LOCAL-00001" summary="Created LogIn.js and SignUp.js files for login and sign up respectively.">
       <created>1614891505952</created>
@@ -113,7 +105,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614891505952</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Improved organization of project by putting each page into separate folders and adding a folder for general components.">
+      <created>1615325143619</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1615325143619</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,6 +135,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created LogIn.js and SignUp.js files for login and sign up respectively." />
-    <option name="LAST_COMMIT_MESSAGE" value="Created LogIn.js and SignUp.js files for login and sign up respectively." />
+    <MESSAGE value="Improved organization of project by putting each page into separate folders and adding a folder for general components." />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved organization of project by putting each page into separate folders and adding a folder for general components." />
   </component>
 </project>
