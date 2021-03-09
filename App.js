@@ -3,17 +3,19 @@
  */
 
 import 'react-native-gesture-handler';
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LogIn from "./LogIn";
-import SignUp from "./SignUp";
-import PersonalPage from "./PersonalPage";
-import MentalHealthLog from "./MentalHealthLog";
-import FindHelp from "./FindHelp";
-import UserFeed from './UserFeed';
-import Explore from './Explore';
+import LogIn from "./User-Authentication/LogIn";
+import SignUp from "./User-Authentication/SignUp";
+import PersonalPage from "./Personal-Page/PersonalPage";
+import MentalHealthLog from "./Mental-Health/MentalHealthLog";
+import FindHelp from "./Mental-Health/FindHelp";
+import UserFeed from './User-Feed/UserFeed';
+import Explore from './Explore-Page/Explore';
+
 
 const Stack = createStackNavigator();
 
