@@ -208,7 +208,7 @@ class PersonalPage extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     alignItems: 'center',
     paddingVertical: 20,
     paddingTop: 10,
