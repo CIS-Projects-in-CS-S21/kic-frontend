@@ -26,13 +26,36 @@ class PersonalPage extends React.Component {
           {/* User's icon */}
           <Image
             style={styles.icon}
-            source = {require('./assets/default/default_icon.png')}
+            source = {require('./assets/default/default_icon_2.png')}
           />
+
+          {/* User's info */}
+          <View style ={styles.userInfo}>
+
+              {/* User's display name and username */}
+              <View style ={styles.userID}>
+                  {/* Display name */}
+                  <Text style ={styles.textDisplayName}>Display Name </Text>
+
+                  {/* Username */}
+                  <Text style ={styles.textUsername}>@username</Text>
+              </View>
+
+              {/* User's bio */}
+              <Text style ={styles.textBio}>Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. Sample user bio. </Text>
+
+          </View>
+
+        </View>
+
+        {/* postsContainer */}
+        <View style ={styles.postsContainer}>
+
+            <Text style ={styles.text}>Posts will go here.</Text>
 
         </View>
 
         {/* NAVIGATION */}
-          <Text>Keeping It Casual Personal Page!</Text>
           <Button
             title = "Mental Health Tracker!"
             onPress = {() =>
@@ -59,21 +82,67 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
     paddingVertical: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    justifyContent: 'flex-start',
   },
   profileHeader: {
+    paddingTop: 30,
+    paddingBottom: 30,
     flexDirection: 'row',
-    alignItems: 'left',
-    justifyContent: 'center',
+    width: '75%',
+    alignItems: 'center',
+    justifyContent:'center',
+    backgroundColor: '#b3d2db',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    borderBottomRightRadius: 40,
   },
   icon: {
-    width: 50,
-    height: 50,
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
-    borderBottomRightRadius: 25,
-    borderBottomLeftRadius: 25,
+    width: 150,
+    height: 150,
+    borderTopRightRadius: 75,
+    borderTopLeftRadius: 75,
+    borderBottomRightRadius: 75,
+    borderBottomLeftRadius: 75,
+    marginRight: 20,
+    marginLeft: 20,
+  },
+  userInfo: {
+    flexDirection: 'column',
+  },
+  userID: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingVertical: 10,
+  },
+  textUsername: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  textDisplayName: {
+    fontSize: 18,
+  },
+  textBio: {
+    width: 745,
+    fontSize: 15,
+  },
+  postsContainer: {
+    backgroundColor: '#b3d2db',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: '75%',
+    marginTop: 15,
+    marginBottom: 15,
+    marginLeft: 15,
+    marginRight: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  text: {
+    paddingVertical: 10,
+    fontSize: 16,
   },
 });
 
