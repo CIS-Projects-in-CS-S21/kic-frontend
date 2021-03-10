@@ -1,0 +1,13 @@
+.form{
+    width: 400px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+.formInput {
+    padding-top: 10px;
+}
+
+.formDefault {
+    font-family: 'Franklin Gothic', 'Arial Narrow', Arial, sans-serif;
+}

@@ -1,57 +1,35 @@
 /**
  * @fileoverview Login page - allows users to login to their account.
  */
-
-import { StatusBar } from 'expo-status-bar';
+import './SignUpStyle.css';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { useState } from 'react'; 
+export default function logIn() {
 
-/**
- * @class Contains function for rendering Login screen.
- */
-class LogIn extends React.Component {
-  /**
-   * Renders LogIn screen components.
-   * @returns {Component}
-   */
-  render() {
-      return (
-        <View style={styles.container}>
-          <Image
-            style={{width: 180, height: 180, resizeMode: 'contain'}}
-            source = {require('../assets/kic.png')}
-          />
-          <Text>Keeping It Casual Log In Page!</Text>
-          <Button
-            title = "Sign Up!"
-            onPress = {() =>
-                this.props.navigation.navigate('SignUp')
-            }
-          />
+  const [email, setEmail] = useState(""); 
+  const [password, setPassword] = useState("");
+  
+  const handleSubmit = evt => {
+    evt.preventDefault(); 
+    //Handle request,  if successful link to User Feed 
+}; 
 
-          <Button
-            title = "Log In! Now, Let's view your Personal Page!"
-            onPress = {() =>
-                this.props.navigation.navigate('PersonalPage')
-            }
-          />
-          <StatusBar style="auto" />
-        </View>
+  return (
+        <div className="login">
+          <h1>Keeping It Casual: Log In Page</h1>
+          <div className="form"> 
+                <form onSubmit={handleSubmit}>
+                  <div className="formInput">
+                      <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
+                  </div>
+                  <div className="formInput">
+                      <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder = "Password" required="required"/>
+                  </div>
+                  <div className="formInput">
+                      <button type="submit" value="submit">Log In</button> 
+                  </div>
+                </form>
+          </div>
+        </div>
       );
   }
-}
-
-/**
- * @constant styles creates stylesheet for Login screen components
- */
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 20,
-  },
-});
-
-export default LogIn;
