@@ -18,7 +18,7 @@ class PersonalPage extends React.Component {
   /*
    * Class constructor
    */
-  constructor() {
+  constructor(props) {
     super();
 
     // Define the initial state:
@@ -31,32 +31,14 @@ class PersonalPage extends React.Component {
   }
 
   /**
-   * Handles opening the modal.
-   */
-  openDetailedView = () => {
-      this.setState({
-          modalVisible: true
-      })
-  }
-
-  /**
-   * Handles closing the modal.
-   */
-  closeDetailedView = () => {
-      this.setState({
-          modalVisible: false
-      })
-  }
-
-  /**
-   * Gets user's posts.
+   * Gets user's posts. Returns an array of the user's posts.
    */
   fetchPosts = () => {
       {/** Request posts for user */}
   }
 
   /**
-   * Gets image of post.
+   * Gets a post's corresponding image to display in the grid.
    */
   fetchPostImage = () => {
       this.setState({
@@ -89,13 +71,13 @@ class PersonalPage extends React.Component {
   render() {
       return (
         <View style={styles.container}>
-
             {/* Pass parent's (PersonalPage) state data to the child (ProfileHeader) */}
             <ProfileHeader
                 userFirstName = {this.state.userFirstName}
                 userLastName = {this.state.userLastName}
                 userBio = {this.state.userBio}
                 userHandle = {this.state.userHandle}
+                userPosts = {this.state.userPosts}
                 />
 
             <PostsGrid />
