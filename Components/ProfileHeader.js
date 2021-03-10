@@ -1,6 +1,6 @@
 /**
-* @fileoverview The screen for the user's personal page, containing links
-* to the Mental Health Log page and User Feed.
+* @fileoverview The profile header is a reusable component used to display the user's icon,
+* display name, handle, and bio.
 */
 
 import { StatusBar } from 'expo-status-bar';
@@ -11,10 +11,9 @@ import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpaci
 * @class Contains function for rendering the personal page.
 */
 class ProfileHeader extends React.Component {
-
     /**
     * Renders personal page components.
-    * @returns {Component}
+    * @returns {ProfileHeader}
     */
     render() {
       return (
@@ -29,20 +28,20 @@ class ProfileHeader extends React.Component {
                 source = {require('../assets/default/default_icon_2.png')}
               />
 
-              {/* User's info */}
+              {/* Container for user's info */}
               <View style ={styles.userInfo}>
 
-                  {/* User's display name and username */}
+                  {/* User's display name and handle */}
                   <View style ={styles.userID}>
                       {/* Display name */}
-                      <Text style ={styles.textDisplayName}>{this.state.personalDisplayName}</Text>
+                      <Text style ={styles.textDisplayName}>{this.props.userFirstName} {this.props.userLastName}</Text>
 
-                      {/* Username */}
-                      <Text style ={styles.textUsername}>@username</Text>
+                      {/* Handle */}
+                      <Text style ={styles.textHandle}>@{this.props.userHandle}</Text>
                   </View>
 
                   {/* User's bio */}
-                  <Text style ={styles.textBio}>{this.state.personalBio}</Text>
+                  <Text style ={styles.textBio}>{this.props.userBio}</Text>
               </View>
             </View>
         </View>
@@ -51,60 +50,60 @@ class ProfileHeader extends React.Component {
 }
 
 /**
-* @constant styles creates stylesheet for personal page components
+* @constant styles creates stylesheet for the profile header
 */
 const styles = StyleSheet.create({
-profileHeaderContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingVertical: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-    justifyContent: 'flex-start',
-},
-profileHeader: {
-    paddingTop: 30,
-    paddingBottom: 30,
-    flexDirection: 'row',
-    width: '75%',
-    alignItems: 'center',
-    justifyContent:'center',
-    backgroundColor: '#b3d2db',
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    borderBottomRightRadius: 40,
-},
-icon: {
-    width: 150,
-    height: 150,
-    borderTopRightRadius: 75,
-    borderTopLeftRadius: 75,
-    borderBottomRightRadius: 75,
-    borderBottomLeftRadius: 75,
-    marginRight: 20,
-    marginLeft: 20,
-},
-userInfo: {
-    flexDirection: 'column',
-},
-userID: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    paddingVertical: 10,
-},
-textDisplayName: {
-    fontSize: 18,
-    marginRight: 5,
-},
-textUsername: {
-    fontSize: 18,
-    fontWeight: "bold",
-},
-textBio: {
-    width: 745,
-    fontSize: 15,
-},
+    profileHeaderContainer: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        paddingVertical: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        justifyContent: 'flex-start',
+    },
+    profileHeader: {
+        paddingTop: 30,
+        paddingBottom: 30,
+        paddingRight: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent:'center',
+        backgroundColor: '#b3d2db',
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        borderBottomRightRadius: 40,
+    },
+    icon: {
+        width: 150,
+        height: 150,
+        borderTopRightRadius: 75,
+        borderTopLeftRadius: 75,
+        borderBottomRightRadius: 75,
+        borderBottomLeftRadius: 75,
+        marginRight: 20,
+        marginLeft: 20,
+    },
+    userInfo: {
+        flexDirection: 'column',
+    },
+    userID: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        paddingVertical: 10,
+    },
+    textDisplayName: {
+        fontSize: 18,
+        marginRight: 5,
+    },
+    textHandle: {
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    textBio: {
+        width: 745,
+        fontSize: 15,
+    },
 });
 
 export default ProfileHeader;

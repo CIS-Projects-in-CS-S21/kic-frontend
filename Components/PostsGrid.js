@@ -1,6 +1,6 @@
 /**
-* @fileoverview The screen for the user's personal page, containing links
-* to the Mental Health Log page and User Feed.
+* @fileoverview The PostsGrid component is a reusable component used to display a given user's
+* posts in a grid format (4 images wide).
 */
 
 import { StatusBar } from 'expo-status-bar';
@@ -8,16 +8,15 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 
 /**
-* @class Contains function for rendering the personal page.
+* @class Contains function for rendering the posts grid
 */
 class PostsGrid extends React.Component {
     /**
-    * Renders personal page components.
-    * @returns {Component}
+    * Renders a grid of the user's posts
+    * @returns {PostsGrid}
     */
     render() {
       return (
-        {/* postsContainer */}
         <View style ={styles.postGrid}>
             <View style ={styles.postRow}>
                 <TouchableOpacity
@@ -59,13 +58,12 @@ class PostsGrid extends React.Component {
 }
 
 /**
-* @constant styles creates stylesheet for personal page components
+* @constant styles creates stylesheet for the PostsGrid component
 */
 const styles = StyleSheet.create({
   postGrid: {
     backgroundColor: '#b3d2db',
     justifyContent: 'center',
-    width: '75%',
     marginTop: 15,
     marginBottom: 15,
   },
@@ -85,7 +83,7 @@ const styles = StyleSheet.create({
     height: 230,
     marginLeft: 5,
     marginRight: 5,
-  }
+  },
 });
 
 export default PostsGrid;
