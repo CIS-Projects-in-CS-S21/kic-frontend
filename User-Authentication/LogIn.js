@@ -39,7 +39,7 @@ class LogIn extends React.Component {
           <Button
             title = "Go to post"
             onPress = {() =>
-                this.props.navigation.navigate('Post')
+                this.props.navigation.navigate('DetailedPostView')
             }
           />
           <StatusBar style="auto" />

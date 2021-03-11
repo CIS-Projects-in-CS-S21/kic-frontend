@@ -1,5 +1,5 @@
 /**
- * @fileoverview The screen for the Detailed View of a post.
+ * @fileoverview The screen for the Detailed View of a post, which is accessed when clicking on a post.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -9,9 +9,9 @@ import KIC_Style from "../Components/Style";
 import PostDetails from "./PostDetails";
 
 /**
- * @class Contains function for rendering the personal page.
+ * @class Contains function for rendering the detailed post view.
  */
-class Post extends React.Component {
+class DetailedPostView extends React.Component {
 
   /*
    * Class constructor
@@ -33,8 +33,8 @@ class Post extends React.Component {
   }
 
   /**
-   * Renders the Post components.
-   * @returns a {Post}
+   * Renders the DetailedPostView components.
+   * @returns a {DetailedPostView}
    */
   render() {
       return (
@@ -45,7 +45,7 @@ class Post extends React.Component {
                     source = {require('../assets/default/default_icon_2.png')}
                     />
 
-                {/* Pass parent's (Post) state data to the child (PostDetails) */}
+                {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
                 <PostDetails
                     userFirstName = {this.state.userFirstName}
                     userLastName = {this.state.userLastName}
@@ -65,7 +65,7 @@ class Post extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for an individual Post's components.
+ * @constant styles creates stylesheet for an individual DetailedPostView's components.
  */
 const styles = StyleSheet.create({
   container: {
@@ -92,4 +92,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Post;
+export default DetailedPostView;
