@@ -14,7 +14,6 @@ import PostsGrid from "../Components/PostsGrid";
  * @class Contains function for rendering the personal page.
  */
 class PersonalPage extends React.Component {
-
   /*
    * Class constructor
    */
@@ -34,34 +33,14 @@ class PersonalPage extends React.Component {
    * Gets user's posts. Returns an array of the user's posts.
    */
   fetchPosts = () => {
-      {/** Request posts for user */}
+      // Request posts for user
   }
 
   /**
    * Gets a post's corresponding image to display in the grid.
    */
   fetchPostImage = () => {
-      this.setState({
-          /** Get image of clicked post */
-      })
-  }
-
-  /**
-   * Gets post's description.
-   */
-  fetchPostDescription = () => {
-      this.setState({
-          /** Get description of clicked post */
-      })
-  }
-
-  /**
-   * Gets post's metadata.
-   */
-  fetchPostMetadata = () => {
-      this.setState({
-          /** Get metadata of clicked post */
-      })
+      // Request the image from backend
   }
 
   /**

@@ -5,56 +5,49 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, FlatList, ScrollView, SafeAreaView, Button, Pressable, TouchableOpacity } from 'react-native';
-
-const COMMENTS = [
-  {
-    id: '1',
-    commentText: 'First comment. First comment. First comment. First comment. ',
-  },
-  {
-    id: '2',
-    commentText: 'Second comment',
-  },
-  {
-    id: '3',
-    commentText: 'Third comment',
-  },
-  {
-    id: '4',
-    commentText: 'Fourth comment',
-  },
-  {
-    id: '5',
-    commentText: 'Fifth comment',
-  },
-  {
-    id: '6',
-    commentText: 'Sixth comment',
-  },
-];
-
-const Comment = ({ commenterHandle, commenterPosterFirstName, commenterFirstName, commentText }) => (
-  <View style={styles.comment}>
-    <Text style={styles.commentText}>{commentText}</Text>
-  </View>
-);
+import { StyleSheet, Text, View, Image, FlatList, ScrollView, SafeAreaView, Button } from 'react-native';
+import CommentSection from "./CommentSection";
 
 /**
 * @class Contains function for rendering the personal page.
 */
 class PostDetails extends React.Component {
+    /*
+    * Class constructor
+    */
+    constructor(props) {
+        super();
+
+        this.state = {
+            day: 16,
+            month: 'March',
+            year: 1998,
+            min: 23,
+            hour: 2,
+            ampm: 'AM',
+            numComments: 7,
+        };
+    }
+
     /**
-    * Renders personal page components.
-    * @returns {PostHeader}
+    * Gets post's description.
+    */
+    fetchPostDescription = () => {
+       // Request the description from backend
+    }
+
+    /**
+    * Gets post's metadata.
+    */
+    fetchPostMetadata = () => {
+       // Request post metadata from backend
+    }
+
+    /**
+    * Renders the details of the post.
+    * @returns {PostDetails}
     */
     render() {
-
-      {/* Function for rendering comments */}
-      const renderItem = ({ item }) => (
-        <Comment commentText={item.commentText} />
-      );
-
       return (
         <SafeAreaView style={styles.postDetailsContainer}>
 
@@ -67,33 +60,28 @@ class PostDetails extends React.Component {
                 />
 
                 {/* User's display name and handle */}
-                <View style ={styles.userID}>
-                  {/* Display name */}
-                  <Text style ={styles.textUserNames}>{this.props.userFirstName} {this.props.userLastName} @{this.props.userHandle}</Text>
-                </View>
+                <Text style ={styles.userNamesText}>{this.props.userFirstName} {this.props.userLastName} @{this.props.userHandle}</Text>
             </View>
 
-            <ScrollView style ={{height: 150, width: '100%', marginBottom: 20}}>
-
-                <Text>This is a caption. It's ideally seven lines long but a scrollbar will appear if the user will be allowed to write a description longer than seven lines' worth of words.</Text>
-
+            <View style={styles.captionContainer}>
+            <ScrollView style ={styles.captionBox}>
+                <Text style ={styles.captionText}>This is a caption. It's ideally around eight lines long but a scrollbar will appear if the user will be allowed to write a description longer than eight lines' worth of words.</Text>
             </ScrollView>
-
-            {/* Comments section */}
-            <View style={{height: 200, width: '100%', flex: 1}}>
-                <FlatList
-                    data={COMMENTS}
-                    renderItem={renderItem}
-                    keyExtractor={comment => comment.id}
-                />
             </View>
+
+            <Text style={styles.postTimestamp}>Posted on {this.state.day} {this.state.month} {this.state.year} at {this.state.hour}:{this.state.min} {this.state.ampm}</Text>
+
+            <CommentSection
+                numComments = {this.state.numComments}
+            />
         </SafeAreaView>
       );
     }
 }
 
 /**
-* @constant styles creates stylesheet for the profile header
+* @constant styles creates stylesheet for the post details, which includes the original poster's
+* information, the post description, timestamps, the comments section, and comments.
 */
 const styles = StyleSheet.create({
     postDetailsContainer: {
@@ -110,9 +98,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingBottom: 10,
     },
-    postCaption: {
+    captionContainer: {
+        maxHeight: 150,
+    },
+    captionBox: {
+        width: '100%',
+        marginBottom: 5,
+        flexGrow: 0,
+    },
+    captionText: {
         fontSize: 13,
-        paddingBottom: 25,
+    },
+    postTimestamp: {
+        fontSize: 10,
+        fontStyle: 'italic',
+        color: '#707070',
+        textAlign: 'right',
     },
     icon: {
         width: 45,
@@ -122,23 +123,11 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 75,
         borderBottomLeftRadius: 75,
     },
-    textUserNames: {
+    userNamesText: {
         alignItems: 'left',
         fontSize: 15,
         marginLeft: 5,
         marginBottom: 5,
-    },
-    commentSection: {
-        height: '50',
-    },
-    comment: {
-        backgroundColor: '#fff',
-        width: '95%',
-        padding: 15,
-        marginTop: 10,
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
-        borderBottomLeftRadius: 25,
     },
 });
 
