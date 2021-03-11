@@ -15,6 +15,7 @@ import MentalHealthLog from "./Mental-Health/MentalHealthLog";
 import FindHelp from "./Mental-Health/FindHelp";
 import UserFeed from './User-Feed/UserFeed';
 import Explore from './Explore-Page/Explore';
+import Post from './Components/Post';
 import Style from './Components/Style';
 import LotsOfStyles from "./Components/Style";
 import KIC_Style from "./Components/Style";
@@ -61,6 +62,10 @@ class App extends React.Component {
                 <Stack.Screen
                     name= "FindHelp"
                     component={FindHelp}
+                />
+                <Stack.Screen
+                    name= "Post"
+                    component={Post}
                 />
             </Stack.Navigator>
         </NavigationContainer>
