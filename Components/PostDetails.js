@@ -10,7 +10,7 @@ import { StyleSheet, Text, View, Image, FlatList, ScrollView, SafeAreaView, Butt
 const COMMENTS = [
   {
     id: '1',
-    commentText: 'First comment. First comment. First comment. First comment. First comment. First comment. First comment. First comment. First comment. ',
+    commentText: 'First comment. First comment. First comment. First comment. ',
   },
   {
     id: '2',
@@ -44,10 +44,6 @@ const Comment = ({ commenterHandle, commenterPosterFirstName, commenterFirstName
 * @class Contains function for rendering the personal page.
 */
 class PostDetails extends React.Component {
-
-
-
-
     /**
     * Renders personal page components.
     * @returns {PostHeader}
@@ -77,21 +73,20 @@ class PostDetails extends React.Component {
                 </View>
             </View>
 
-            <View style ={styles.postCaption}>
+            <ScrollView style ={{height: 150, width: '100%', marginBottom: 20}}>
 
-                <Text>This is a caption. This is a caption. This is a caption. This is a caption. This is a caption. This is a caption. This is a caption. This is a caption. This is a caption. </Text>
+                <Text>This is a caption. It's ideally seven lines long but a scrollbar will appear if the user will be allowed to write a description longer than seven lines' worth of words.</Text>
 
-            </View>
+            </ScrollView>
 
             {/* Comments section */}
-            <ScrollView style={styles.commentSection}>
-            <FlatList
-                data={COMMENTS}
-                renderItem={renderItem}
-                keyExtractor={comment => comment.id}
-                marginBottom={50}
-            />
-            </ScrollView>
+            <View style={{height: 200, width: '100%', flex: 1}}>
+                <FlatList
+                    data={COMMENTS}
+                    renderItem={renderItem}
+                    keyExtractor={comment => comment.id}
+                />
+            </View>
         </SafeAreaView>
       );
     }
@@ -104,8 +99,8 @@ const styles = StyleSheet.create({
     postDetailsContainer: {
         paddingTop: 30,
         paddingBottom: 30,
-        paddingRight: 10,
         paddingLeft: 30,
+        paddingRight: -10,
         flexDirection: 'column',
         flex: 1,
     },
@@ -115,22 +110,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingBottom: 10,
     },
-    commentSection: {
-        flexGrow: 1,
-    },
-    comment: {
-        backgroundColor: '#fff',
-        width: '100%',
-        padding: 15,
-        marginTop: 10,
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
-        borderBottomLeftRadius: 25,
-    },
     postCaption: {
         fontSize: 13,
-        paddingBottom: 5,
-        flex: 1,
+        paddingBottom: 25,
     },
     icon: {
         width: 45,
@@ -145,6 +127,18 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginLeft: 5,
         marginBottom: 5,
+    },
+    commentSection: {
+        height: '50',
+    },
+    comment: {
+        backgroundColor: '#fff',
+        width: '95%',
+        padding: 15,
+        marginTop: 10,
+        borderTopRightRadius: 25,
+        borderTopLeftRadius: 25,
+        borderBottomLeftRadius: 25,
     },
 });
 
