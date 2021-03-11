@@ -1,5 +1,5 @@
 /**
-* @fileoverview A comment section of fixed height and scrollbar.
+* @fileoverview A Comment Section of fixed height and scrollbar populated by Comments.
 */
 
 import { StatusBar } from 'expo-status-bar';
@@ -46,9 +46,16 @@ const Comment = ({ commenterHandle, commenterPosterFirstName, commenterFirstName
 );
 
 /**
-* @class Contains function for rendering the personal page.
+* @class Contains function for rendering the comment section.
 */
 class CommentSection extends React.Component {
+    /**
+    * Gets a post's comments to render on the page.
+    */
+    fetchPostComments = () => {
+      // Request post's comments from backend.
+    }
+
     /**
     * Renders comments section.
     * @returns {ProfileHeader}
@@ -77,7 +84,7 @@ class CommentSection extends React.Component {
 }
 
 /**
-* @constant styles creates stylesheet for the profile header
+* @constant styles creates stylesheet for the Comment Section
 */
 const styles = StyleSheet.create({
     commentSection: {

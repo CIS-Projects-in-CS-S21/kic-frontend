@@ -1,6 +1,6 @@
 /**
-* @fileoverview The profile header is a reusable component used to display the user's icon,
-* display name, handle, and bio.
+* @fileoverview The PostDetails component is a reusable component for the Detailed View of a post,
+* consisting of the user's handle, display name, timestamps, and a CommentSection.
 */
 
 import { StatusBar } from 'expo-status-bar';
@@ -9,7 +9,7 @@ import { StyleSheet, Text, View, Image, FlatList, ScrollView, SafeAreaView, Butt
 import CommentSection from "./CommentSection";
 
 /**
-* @class Contains function for rendering the personal page.
+* @class Contains function for rendering a PostDetails component.
 */
 class PostDetails extends React.Component {
     /*
@@ -81,7 +81,7 @@ class PostDetails extends React.Component {
 
 /**
 * @constant styles creates stylesheet for the post details, which includes the original poster's
-* information, the post description, timestamps, the comments section, and comments.
+* information, the post description, and timestamps.
 */
 const styles = StyleSheet.create({
     postDetailsContainer: {

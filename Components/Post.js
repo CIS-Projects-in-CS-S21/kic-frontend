@@ -1,6 +1,5 @@
 /**
- * @fileoverview The screen for the user's personal page, containing links
- * to the Mental Health Log page and User Feed.
+ * @fileoverview The screen for the Detailed View of a post.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -34,8 +33,8 @@ class Post extends React.Component {
   }
 
   /**
-   * Renders personal page components.
-   * @returns {PersonalPage}
+   * Renders the Post components.
+   * @returns a {Post}
    */
   render() {
       return (
@@ -66,7 +65,7 @@ class Post extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for personal page components
+ * @constant styles creates stylesheet for an individual Post's components.
  */
 const styles = StyleSheet.create({
   container: {
