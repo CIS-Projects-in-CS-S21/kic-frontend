@@ -58,7 +58,7 @@ class CommentSection extends React.Component {
 
     /**
     * Renders comments section.
-    * @returns {ProfileHeader}
+    * @returns {CommentSection}
     */
     render() {
       {/* Function for rendering comments */}
