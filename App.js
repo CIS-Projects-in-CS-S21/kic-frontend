@@ -14,13 +14,23 @@ import PersonalPage from "./Personal-Page/PersonalPage";
 import MentalHealthLog from "./Mental-Health/MentalHealthLog";
 import FindHelp from "./Mental-Health/FindHelp";
 import UserFeed from './User-Feed/UserFeed';
-import Explore from './Explore-Page/Explore';
-import Style from './Components/Style';
-import LotsOfStyles from "./Components/Style";
 import KIC_Style from "./Components/Style";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import Explore from "./Explore-Page/Explore";
+import Post from "./Post/Post";
 
+const Tab = createBottomTabNavigator();
 
-const Stack = createStackNavigator();
+function MyTabs() {
+    return (
+        <Tab.Navigator>
+            <Tab.Screen name="Feed" component={UserFeed} />
+            <Tab.Screen name="Profile" component={PersonalPage} />
+            <Tab.Screen name="Post" component={Post} />
+            <Tab.Screen name="Explore" component={Explore} />
+        </Tab.Navigator>
+    );
+}
 
 /**
  * @class Contains function for rendering main screen.
@@ -32,38 +42,9 @@ class App extends React.Component {
    */
   render() {
       return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen
-                    name= "LogIn"
-                    component={LogIn}
-                />
-                <Stack.Screen
-                    name= "SignUp"
-                    component={SignUp}
-                />
-                <Stack.Screen
-                    name= "UserFeed"
-                    component={UserFeed}
-                />
-                <Stack.Screen
-                    name= "Explore"
-                    component={Explore}
-                />
-                <Stack.Screen
-                    name= "PersonalPage"
-                    component={PersonalPage}
-                />
-                <Stack.Screen
-                    name= "MentalHealthLog"
-                    component={MentalHealthLog}
-                />
-                <Stack.Screen
-                    name= "FindHelp"
-                    component={FindHelp}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
+          <NavigationContainer>
+              <MyTabs />
+          </NavigationContainer>
       );
   }
 }

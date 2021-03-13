@@ -6,6 +6,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import MentalHealthLog from "../Mental-Health/MentalHealthLog";
+
+
+
 
 /**
  * @class Contains function for rendering the personal page.
@@ -27,12 +31,6 @@ class PersonalPage extends React.Component {
             title = "Mental Health Tracker!"
             onPress = {() =>
                 this.props.navigation.navigate('MentalHealthLog')
-            }
-          />
-          <Button
-            title = "User Feed!"
-            onPress = {() =>
-                this.props.navigation.navigate('UserFeed')
             }
           />
           <StatusBar style="auto" />
