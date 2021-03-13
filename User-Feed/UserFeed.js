@@ -24,18 +24,6 @@ class UserFeed extends React.Component {
           />
           <Text>Keeping It Casual User Feed!</Text>
           <StatusBar style="auto" />
-          <Button
-            title = "Explore!"
-            onPress = {() =>
-                this.props.navigation.navigate('Explore')
-            }
-          />
-            <Button
-                title = "Back to Personal Page!"
-                onPress = {() =>
-                    this.props.navigation.navigate('PersonalPage')
-                }
-            />
         </View>
       );
   }

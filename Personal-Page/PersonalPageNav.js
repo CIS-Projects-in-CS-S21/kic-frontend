@@ -6,13 +6,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import {createStackNavigator} from "@react-navigation/stack";
-import LogIn from "../User-Authentication/LogIn";
-import SignUp from "../User-Authentication/SignUp";
-import UserFeed from "../User-Feed/UserFeed";
-import Explore from "../Explore-Page/Explore";
 import MentalHealthLog from "../Mental-Health/MentalHealthLog";
 import FindHelp from "../Mental-Health/FindHelp";
-import {NavigationContainer} from "@react-navigation/native";
 import PersonalPage from "./PersonalPage";
 
 const Stack = createStackNavigator();
