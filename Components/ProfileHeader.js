@@ -18,10 +18,6 @@ class ProfileHeader extends React.Component {
     render() {
       return (
         <View style={styles.profileHeaderContainer}>
-
-            {/* HEADER */}
-            <View style ={styles.profileHeader}>
-
               {/* User's icon */}
               <Image
                 style={styles.icon}
@@ -43,7 +39,6 @@ class ProfileHeader extends React.Component {
                   {/* User's bio */}
                   <Text style ={styles.textBio}>{this.props.userBio}</Text>
               </View>
-            </View>
         </View>
       );
     }
@@ -54,38 +49,36 @@ class ProfileHeader extends React.Component {
 */
 const styles = StyleSheet.create({
     profileHeaderContainer: {
-        flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor: '#b3d2db',
         paddingVertical: 20,
-        paddingTop: 10,
-        paddingBottom: 10,
         justifyContent: 'flex-start',
-    },
-    profileHeader: {
         paddingTop: 30,
         paddingBottom: 30,
         paddingRight: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent:'center',
-        backgroundColor: '#b3d2db',
+        paddingLeft: 10,
+        marginLeft: 10,
+        marginRight: 10,
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
         borderBottomRightRadius: 40,
     },
     icon: {
-        width: 150,
-        height: 150,
-        borderTopRightRadius: 75,
-        borderTopLeftRadius: 75,
-        borderBottomRightRadius: 75,
-        borderBottomLeftRadius: 75,
+        width: 100,
+        height: 100,
+        borderTopRightRadius: 50,
+        borderTopLeftRadius: 50,
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
         marginRight: 20,
         marginLeft: 20,
     },
     userInfo: {
         flexDirection: 'column',
+        width: '80%',
+        paddingRight: 10,
+        flex: 1,
     },
     userID: {
         flexDirection: 'row',
@@ -101,7 +94,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     textBio: {
-        width: 745,
         fontSize: 15,
     },
 });

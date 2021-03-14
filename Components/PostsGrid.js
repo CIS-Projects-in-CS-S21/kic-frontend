@@ -18,40 +18,36 @@ class PostsGrid extends React.Component {
     render() {
       return (
         <View style ={styles.postGrid}>
-            <View style ={styles.postRow}>
-                <TouchableOpacity
-                    onPress={this.openDetailedView}
-                >
-                <Image
-                  style ={styles.postImage}
-                  source = {require('../assets/default/default_icon_2.png')}
-                />
-                </TouchableOpacity>
+            <TouchableOpacity
+                onPress={this.openDetailedView}
+            >
+            <Image
+              style ={styles.postImage}
+              source = {require('../assets/default/default_icon_2.png')}
+            />
+            </TouchableOpacity>
 
-                <Image
-                  style ={styles.postImage}
-                  source = {require('../assets/default/default_icon_2.png')}
-                />
-                <Image
-                  style ={styles.postImage}
-                  source = {require('../assets/default/default_icon_2.png')}
-                />
-                <Image
-                  style ={styles.postImage}
-                  source = {require('../assets/default/default_icon_2.png')}
-                />
-            </View>
+            <Image
+              style ={styles.postImage}
+              source = {require('../assets/default/default_icon_2.png')}
+            />
+            <Image
+              style ={styles.postImage}
+              source = {require('../assets/default/default_icon_2.png')}
+            />
+            <Image
+              style ={styles.postImage}
+              source = {require('../assets/default/default_icon_2.png')}
+            />
 
-            <View style ={styles.postRow}>
-                <Image
-                  style ={styles.postImage}
-                  source = {require('../assets/default/default_icon_2.png')}
-                />
-                <Image
-                  style ={styles.postImage}
-                  source = {require('../assets/default/default_icon_2.png')}
-                />
-            </View>
+            <Image
+              style ={styles.postImage}
+              source = {require('../assets/default/default_icon_2.png')}
+            />
+            <Image
+              style ={styles.postImage}
+              source = {require('../assets/default/default_icon_2.png')}
+            />
         </View>
       );
     }
@@ -63,13 +59,13 @@ class PostsGrid extends React.Component {
 const styles = StyleSheet.create({
   postGrid: {
     backgroundColor: '#b3d2db',
+    flex: 1,
     justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
     marginTop: 15,
     marginBottom: 15,
-  },
-  postRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
     marginLeft: 15,
     marginRight: 15,
     paddingTop: 10,
@@ -78,11 +74,13 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   postImage: {
-    alignSelf: 'flex-start',
-    width: 230,
-    height: 230,
+    width: 300,
+    height: 300,
     marginLeft: 5,
     marginRight: 5,
+    marginTop: 5,
+    marginBottom: 5,
+    resizeMode: 'contain',
   },
 });
 

@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 75,
     },
     userNamesText: {
-        alignItems: 'left',
+        textAlign: 'left',
         fontSize: 15,
         marginLeft: 5,
         marginBottom: 5,

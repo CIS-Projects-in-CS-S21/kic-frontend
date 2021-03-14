@@ -5,7 +5,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
@@ -49,7 +49,8 @@ class PersonalPage extends React.Component {
    */
   render() {
       return (
-        <View style={styles.container}>
+        <View style={styles.container}><ScrollView>
+
             {/* Pass parent's (PersonalPage) state data to the child (ProfileHeader) */}
             <ProfileHeader
                 userFirstName = {this.state.userFirstName}
@@ -75,7 +76,7 @@ class PersonalPage extends React.Component {
                 }
               />
               <StatusBar style="auto" />
-        </View>
+        </ScrollView></View>
       );
   }
 }
@@ -85,57 +86,11 @@ class PersonalPage extends React.Component {
  */
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    paddingVertical: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
     justifyContent: 'flex-start',
-  },
-  detailedViewPopUp: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: "white",
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  detailedViewImage: {
-    width: 500,
-    height: 500,
-    marginLeft: 20,
-    marginRight: 20,
-  },
-  postDetails: {
     flexDirection: 'column',
   },
-  detailedViewIcon: {
-    width: 20,
-    height: 20,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    marginRight: 5,
-    marginLeft: 5,
-  },
-  detailedViewDisplayName: {
-    fontSize: 15,
-  },
-  detailedViewUsername: {
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-  detailedViewText: {
-    fontSize: 14,
-  },
-  closeDetailedViewButton: {
-    height: 5,
-    width: 5,
-  }
 });
 
 export default PersonalPage;
