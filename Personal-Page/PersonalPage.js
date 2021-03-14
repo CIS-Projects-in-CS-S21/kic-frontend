@@ -25,7 +25,9 @@ class PersonalPage extends React.Component {
       userFirstName: "First",
       userLastName: "Last",
       userHandle: "username",
-      userBio: "This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. ",
+      userBio: "This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. ",
+      numPosts: 6,
+      numFriends: 0,
     };
   }
 
@@ -34,6 +36,13 @@ class PersonalPage extends React.Component {
    */
   fetchPosts = () => {
       // Request posts for user
+  }
+
+  /**
+   * Gets user information (name, handle, bio, post & friend count)
+   */
+  fetchInformation = () => {
+      // Request user information and save to state
   }
 
   /**
@@ -51,15 +60,19 @@ class PersonalPage extends React.Component {
       return (
         <View style={styles.container}><ScrollView>
 
-            {/* Pass parent's (PersonalPage) state data to the child (ProfileHeader) */}
+            {/* Display profile header with state information */}
             <ProfileHeader
                 userFirstName = {this.state.userFirstName}
                 userLastName = {this.state.userLastName}
                 userBio = {this.state.userBio}
                 userHandle = {this.state.userHandle}
                 userPosts = {this.state.userPosts}
+                numPosts = {this.state.numPosts}
+                numFriends = {this.state.numFriends}
                 />
 
+
+            {/* Show posts */}
             <PostsGrid />
 
             {/* NAVIGATION */}

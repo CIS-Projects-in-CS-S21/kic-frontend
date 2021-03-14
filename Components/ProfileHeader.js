@@ -34,7 +34,11 @@ class ProfileHeader extends React.Component {
 
                       {/* Handle */}
                       <Text style ={styles.textHandle}>@{this.props.userHandle}</Text>
+
                   </View>
+
+                  {/* # of posts and friends */}
+                  <Text style ={styles.textStats}>{this.props.numPosts} posts, {this.props.numFriends} friends</Text>
 
                   {/* User's bio */}
                   <Text style ={styles.textBio}>{this.props.userBio}</Text>
@@ -83,7 +87,6 @@ const styles = StyleSheet.create({
     userID: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        paddingVertical: 10,
     },
     textDisplayName: {
         fontSize: 18,
@@ -94,8 +97,13 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     textBio: {
+        paddingTop: 10,
         fontSize: 15,
     },
+    textStats: {
+        fontSize: 13,
+        fontStyle: 'italic',
+    }
 });
 
 export default ProfileHeader;
