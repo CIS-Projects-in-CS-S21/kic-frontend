@@ -5,7 +5,8 @@
 import "./SignUpStyle.css";
 import React from 'react';
 import { useState } from 'react'; 
-import { useNavigation } from '@react-navigation/native';
+import request from 'users_grpc_web_pb.js'; 
+import { AddUserRequest } from "../gen/proto/users_pb";
 
 
 /**
@@ -15,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 export default function signUp() {
   const [firstName, setFirstName] = useState(""); 
   const [lastName, setLastName] = useState(""); 
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState(""); 
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState(""); 
@@ -24,9 +26,17 @@ export default function signUp() {
     if(password1 !== password2) {
       alert('Error: Passwords must be equal.');
     } else {
+      makeRequest(); 
       //Handle request
     }
 }; 
+
+const makeRequest = () => {
+  const client = new UsersClient("http://test.api.keeping-it-casual.com");
+  let req = new AddUserRequest();
+  client.addUser(req).then(res => {console.log(res.getSuccess())})
+}
+
 
   return (
         <div className="signUp">
@@ -38,6 +48,9 @@ export default function signUp() {
                   </div>
                   <div className="formInput">
                       <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="formDefault" placeholder = "Last name" required="required"/>
+                  </div>
+                  <div className="formInput">
+                      <input type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
                   </div>
                   <div className="formInput">
                       <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
