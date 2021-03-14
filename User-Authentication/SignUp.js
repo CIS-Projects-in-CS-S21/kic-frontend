@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
 import {Date} from "../gen/proto/common_pb";
+import personalPage from "../Personal-Page/PersonalPage"
 
 
 /**
@@ -29,6 +30,7 @@ export default function signUp() {
     } else {
       makeRequest(); 
       //Handle request
+      
     }
 }; 
 
@@ -48,7 +50,9 @@ const makeRequest = () => {
     req.setDesiredpassword(password1)
     client.addUser(req, {}).then(res => {
         console.log(res)
+        history.push('/personalPage')
     })
+    
 }
 
 

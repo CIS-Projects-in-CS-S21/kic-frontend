@@ -35,12 +35,12 @@ class App extends React.Component {
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen
-                    name= "SignUp"
-                    component={SignUp}
-                />
-                <Stack.Screen
                     name= "LogIn"
                     component={LogIn}
+                />
+                <Stack.Screen
+                    name= "SignUp"
+                    component={SignUp}
                 />
                 <Stack.Screen
                     name= "UserFeed"

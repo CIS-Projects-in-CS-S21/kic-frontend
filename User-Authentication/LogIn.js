@@ -4,15 +4,29 @@
 import './SignUpStyle.css';
 import React from 'react';
 import { useState } from 'react'; 
-export default function logIn() {
+import { createStackNavigator } from '@react-navigation/stack';
+import {UsersClient} from "../gen/proto/UsersServiceClientPb";
+import { GetJWTTokenRequest } from '../gen/proto/users_pb';
 
+
+export default function logIn() {
+  
   const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   
   const handleSubmit = evt => {
     evt.preventDefault(); 
     //Handle request,  if successful link to User Feed 
-}; 
+    const client = new UsersClient(
+      "http://test.api.keeping-it-casual.com"
+  );
+  let req = new GetJWTTokenRequest();
+  req.getUsername(email);
+  req.getPassword(password); 
+  client.getJWTToken(req, {}).then(res => {
+    console.log(res) 
+  })
+};
 
   return (
         <div className="login">
