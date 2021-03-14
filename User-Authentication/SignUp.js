@@ -4,9 +4,10 @@
  */
 import "./SignUpStyle.css";
 import React from 'react';
-import { useState } from 'react'; 
-import request from 'users_grpc_web_pb.js'; 
+import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
+import {UsersClient} from "../gen/proto/UsersServiceClientPb";
+import {Date} from "../gen/proto/common_pb";
 
 
 /**
@@ -32,9 +33,22 @@ export default function signUp() {
 }; 
 
 const makeRequest = () => {
-  const client = new UsersClient("http://test.api.keeping-it-casual.com");
-  let req = new AddUserRequest();
-  client.addUser(req).then(res => {console.log(res.getSuccess())})
+    const client = new UsersClient(
+        "http://test.api.keeping-it-casual.com"
+    );
+    let req = new AddUserRequest()
+    let date = new Date()
+    date.setYear(1998)
+    date.setMonth(8)
+    date.setDay(21)
+    req.setEmail(firstName)
+    req.setBirthday(date)
+    req.setCity("test")
+    req.setDesiredusername(firstName)
+    req.setDesiredpassword(password1)
+    client.addUser(req, {}).then(res => {
+        console.log(res)
+    })
 }
 
 
