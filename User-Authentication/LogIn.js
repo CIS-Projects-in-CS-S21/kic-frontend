@@ -30,9 +30,9 @@ class LogIn extends React.Component {
           />
 
           <Button
-            title = "Log In! Now, Let's view your Personal Page!"
+            title = "Log In! Now, Let's view your user feed!"
             onPress = {() =>
-                this.props.navigation.navigate('PersonalPage')
+                this.props.navigation.navigate('TabNavigation')
             }
           />
 
