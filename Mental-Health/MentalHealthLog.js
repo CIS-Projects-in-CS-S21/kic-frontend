@@ -28,12 +28,13 @@ class MentalHealthLog extends React.Component {
                 this.props.navigation.navigate('FindHelp')
             }
           />
-            <Button
-                title = "Return to Personal Page!"
-                onPress = {() =>
-                    this.props.navigation.navigate('PersonalPage')
-                }
-            />
+
+          <Button
+            title = "Return to Personal Page!"
+            onPress = {() =>
+                this.props.navigation.navigate('Profile')
+            }
+          />
           <StatusBar style="auto" />
         </View>
       );

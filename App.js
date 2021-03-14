@@ -14,6 +14,7 @@ import LogIn from "./User-Authentication/LogIn";
 import SignUp from "./User-Authentication/SignUp";
 import UserFeed from './User-Feed/UserFeed';
 import MentalHealthLog from './Mental-Health/MentalHealthLog';
+import FindHelp from './Mental-Health/FindHelp';
 
 const Stack = createStackNavigator();
 
@@ -39,8 +40,12 @@ class App extends React.Component {
                       component={SignUp}
                   />
                   <Stack.Screen
-                      name="MentalHealhLog"
+                      name="MentalHealthLog"
                       component={MentalHealthLog}
+                  />
+                  <Stack.Screen
+                      name="FindHelp"
+                      component={FindHelp}
                   />
                   <Stack.Screen
                       name="TabNavigation"

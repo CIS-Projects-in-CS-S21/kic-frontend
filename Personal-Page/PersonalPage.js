@@ -79,7 +79,7 @@ class PersonalPage extends React.Component {
               <Button
                 title = "Mental Health Tracker!"
                 onPress = {() =>
-                    this.props.navigation.navigate('MentalHealhLog')
+                    this.props.navigation.navigate('MentalHealthLog')
                 }
               />
               <Button
