@@ -8,7 +8,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 
 /**
-* @class Contains function for rendering the personal page.
+* @class Contains function for rendering the profile header.
 */
 class ProfileHeader extends React.Component {
     /**

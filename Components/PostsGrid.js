@@ -1,6 +1,6 @@
 /**
 * @fileoverview The PostsGrid component is a reusable component used to display a given user's
-* posts in a grid format (4 images wide).
+* posts in a grid format. Automatically wraps content to next line depending on screen size.
 */
 
 import { StatusBar } from 'expo-status-bar';
