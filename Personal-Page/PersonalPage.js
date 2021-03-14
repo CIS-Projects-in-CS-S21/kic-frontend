@@ -79,13 +79,13 @@ class PersonalPage extends React.Component {
               <Button
                 title = "Mental Health Tracker!"
                 onPress = {() =>
-                    this.props.navigation.navigate('MentalHealthLog')
+                    this.props.navigation.navigate('MentalHealhLog')
                 }
               />
               <Button
                 title = "User Feed!"
                 onPress = {() =>
-                    this.props.navigation.navigate('UserFeed')
+                    this.props.navigation.navigate('Feed')
                 }
               />
               <StatusBar style="auto" />
@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     flexDirection: 'column',
+    flex: 1,
   },
 });
 
