@@ -5,6 +5,8 @@
 import "./SignUpStyle.css";
 import React from 'react';
 import { useState } from 'react'; 
+import { useNavigation } from '@react-navigation/native';
+
 
 /**
  * @class Contains function for rendering the signup page
