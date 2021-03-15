@@ -23,12 +23,12 @@ export default function logIn() {
       "http://test.api.keeping-it-casual.com"
     );
     let req = new GetJWTTokenRequest();
-    req.getUsername(username);
-    req.getPassword(password);
+    req.setUsername(username);
+    req.setPassword(password);
     client.getJWTToken(req, {}).then(res => {
       // On successful login, take user to user feed
       console.log(res)
-      navigation.navigate('UserFeed')
+      navigation.navigate('PersonalPage')
     }).catch(e => {
           console.log(e);
     });
