@@ -14,7 +14,7 @@ export default function logIn() {
 
   const navigation = useNavigation(); 
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = evt => {
