@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
 import {Date} from "../gen/proto/common_pb";
+import {Button} from "react-native";
 import personalPage from "../Personal-Page/PersonalPage"
 
 
@@ -50,7 +51,6 @@ const makeRequest = () => {
     req.setDesiredpassword(password1)
     client.addUser(req, {}).then(res => {
         console.log(res)
-        history.push('/personalPage')
     })
     
 }
@@ -68,7 +68,7 @@ const makeRequest = () => {
                       <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="formDefault" placeholder = "Last name" required="required"/>
                   </div>
                   <div className="formInput">
-                      <input type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
+                      <input type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "Username" required="required"/>
                   </div>
                   <div className="formInput">
                       <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
