@@ -4,6 +4,7 @@
  */
 import "./SignUpStyle.css";
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
@@ -17,6 +18,8 @@ import personalPage from "../Personal-Page/PersonalPage"
  */
 
 export default function signUp() {
+  const navigation = useNavigation();
+
   const [firstName, setFirstName] = useState(""); 
   const [lastName, setLastName] = useState(""); 
   const [username, setUserName] = useState("");
@@ -82,6 +85,12 @@ const makeRequest = () => {
                       <button type="submit" value="submit">Register</button>
                   </div>
                 </form>
+                <Button
+                    title="Log in"
+                    onPress = {() =>
+                        navigation.navigate('LogIn')
+                    }
+                />
           </div>
         </div>
       );
