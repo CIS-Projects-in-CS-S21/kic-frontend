@@ -1,0 +1,354 @@
+import * as jspb from 'google-protobuf'
+
+import * as proto_common_pb from '../proto/common_pb';
+
+
+export class AddUserRequest extends jspb.Message {
+  getEmail(): string;
+  setEmail(value: string): AddUserRequest;
+
+  getDesiredusername(): string;
+  setDesiredusername(value: string): AddUserRequest;
+
+  getDesiredpassword(): string;
+  setDesiredpassword(value: string): AddUserRequest;
+
+  getBirthday(): proto_common_pb.Date | undefined;
+  setBirthday(value?: proto_common_pb.Date): AddUserRequest;
+  hasBirthday(): boolean;
+  clearBirthday(): AddUserRequest;
+
+  getCity(): string;
+  setCity(value: string): AddUserRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AddUserRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: AddUserRequest): AddUserRequest.AsObject;
+  static serializeBinaryToWriter(message: AddUserRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddUserRequest;
+  static deserializeBinaryFromReader(message: AddUserRequest, reader: jspb.BinaryReader): AddUserRequest;
+}
+
+export namespace AddUserRequest {
+  export type AsObject = {
+    email: string,
+    desiredusername: string,
+    desiredpassword: string,
+    birthday?: proto_common_pb.Date.AsObject,
+    city: string,
+  }
+}
+
+export class AddUserResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): AddUserResponse;
+
+  getCreateduser(): proto_common_pb.User | undefined;
+  setCreateduser(value?: proto_common_pb.User): AddUserResponse;
+  hasCreateduser(): boolean;
+  clearCreateduser(): AddUserResponse;
+
+  getErrorsList(): Array<AddUserError>;
+  setErrorsList(value: Array<AddUserError>): AddUserResponse;
+  clearErrorsList(): AddUserResponse;
+  addErrors(value: AddUserError, index?: number): AddUserResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AddUserResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: AddUserResponse): AddUserResponse.AsObject;
+  static serializeBinaryToWriter(message: AddUserResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddUserResponse;
+  static deserializeBinaryFromReader(message: AddUserResponse, reader: jspb.BinaryReader): AddUserResponse;
+}
+
+export namespace AddUserResponse {
+  export type AsObject = {
+    success: boolean,
+    createduser?: proto_common_pb.User.AsObject,
+    errorsList: Array<AddUserError>,
+  }
+}
+
+export class GetUserByUsernameRequest extends jspb.Message {
+  getUsername(): string;
+  setUsername(value: string): GetUserByUsernameRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetUserByUsernameRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetUserByUsernameRequest): GetUserByUsernameRequest.AsObject;
+  static serializeBinaryToWriter(message: GetUserByUsernameRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetUserByUsernameRequest;
+  static deserializeBinaryFromReader(message: GetUserByUsernameRequest, reader: jspb.BinaryReader): GetUserByUsernameRequest;
+}
+
+export namespace GetUserByUsernameRequest {
+  export type AsObject = {
+    username: string,
+  }
+}
+
+export class GetUserByUsernameResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): GetUserByUsernameResponse;
+
+  getUser(): proto_common_pb.User | undefined;
+  setUser(value?: proto_common_pb.User): GetUserByUsernameResponse;
+  hasUser(): boolean;
+  clearUser(): GetUserByUsernameResponse;
+
+  getErrorsList(): Array<GetUserError>;
+  setErrorsList(value: Array<GetUserError>): GetUserByUsernameResponse;
+  clearErrorsList(): GetUserByUsernameResponse;
+  addErrors(value: GetUserError, index?: number): GetUserByUsernameResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetUserByUsernameResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetUserByUsernameResponse): GetUserByUsernameResponse.AsObject;
+  static serializeBinaryToWriter(message: GetUserByUsernameResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetUserByUsernameResponse;
+  static deserializeBinaryFromReader(message: GetUserByUsernameResponse, reader: jspb.BinaryReader): GetUserByUsernameResponse;
+}
+
+export namespace GetUserByUsernameResponse {
+  export type AsObject = {
+    success: boolean,
+    user?: proto_common_pb.User.AsObject,
+    errorsList: Array<GetUserError>,
+  }
+}
+
+export class GetUserByIDRequest extends jspb.Message {
+  getUserid(): number;
+  setUserid(value: number): GetUserByIDRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetUserByIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetUserByIDRequest): GetUserByIDRequest.AsObject;
+  static serializeBinaryToWriter(message: GetUserByIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetUserByIDRequest;
+  static deserializeBinaryFromReader(message: GetUserByIDRequest, reader: jspb.BinaryReader): GetUserByIDRequest;
+}
+
+export namespace GetUserByIDRequest {
+  export type AsObject = {
+    userid: number,
+  }
+}
+
+export class GetUserByIDResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): GetUserByIDResponse;
+
+  getUser(): proto_common_pb.User | undefined;
+  setUser(value?: proto_common_pb.User): GetUserByIDResponse;
+  hasUser(): boolean;
+  clearUser(): GetUserByIDResponse;
+
+  getErrorsList(): Array<GetUserError>;
+  setErrorsList(value: Array<GetUserError>): GetUserByIDResponse;
+  clearErrorsList(): GetUserByIDResponse;
+  addErrors(value: GetUserError, index?: number): GetUserByIDResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetUserByIDResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetUserByIDResponse): GetUserByIDResponse.AsObject;
+  static serializeBinaryToWriter(message: GetUserByIDResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetUserByIDResponse;
+  static deserializeBinaryFromReader(message: GetUserByIDResponse, reader: jspb.BinaryReader): GetUserByIDResponse;
+}
+
+export namespace GetUserByIDResponse {
+  export type AsObject = {
+    success: boolean,
+    user?: proto_common_pb.User.AsObject,
+    errorsList: Array<GetUserError>,
+  }
+}
+
+export class GetUserNameByIDRequest extends jspb.Message {
+  getUserid(): number;
+  setUserid(value: number): GetUserNameByIDRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetUserNameByIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetUserNameByIDRequest): GetUserNameByIDRequest.AsObject;
+  static serializeBinaryToWriter(message: GetUserNameByIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetUserNameByIDRequest;
+  static deserializeBinaryFromReader(message: GetUserNameByIDRequest, reader: jspb.BinaryReader): GetUserNameByIDRequest;
+}
+
+export namespace GetUserNameByIDRequest {
+  export type AsObject = {
+    userid: number,
+  }
+}
+
+export class GetUserNameByIDResponse extends jspb.Message {
+  getUsername(): string;
+  setUsername(value: string): GetUserNameByIDResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetUserNameByIDResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetUserNameByIDResponse): GetUserNameByIDResponse.AsObject;
+  static serializeBinaryToWriter(message: GetUserNameByIDResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetUserNameByIDResponse;
+  static deserializeBinaryFromReader(message: GetUserNameByIDResponse, reader: jspb.BinaryReader): GetUserNameByIDResponse;
+}
+
+export namespace GetUserNameByIDResponse {
+  export type AsObject = {
+    username: string,
+  }
+}
+
+export class DeleteUserByIDRequest extends jspb.Message {
+  getUserid(): number;
+  setUserid(value: number): DeleteUserByIDRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DeleteUserByIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: DeleteUserByIDRequest): DeleteUserByIDRequest.AsObject;
+  static serializeBinaryToWriter(message: DeleteUserByIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeleteUserByIDRequest;
+  static deserializeBinaryFromReader(message: DeleteUserByIDRequest, reader: jspb.BinaryReader): DeleteUserByIDRequest;
+}
+
+export namespace DeleteUserByIDRequest {
+  export type AsObject = {
+    userid: number,
+  }
+}
+
+export class DeleteUserByIDResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): DeleteUserByIDResponse;
+
+  getDeleteduser(): proto_common_pb.User | undefined;
+  setDeleteduser(value?: proto_common_pb.User): DeleteUserByIDResponse;
+  hasDeleteduser(): boolean;
+  clearDeleteduser(): DeleteUserByIDResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DeleteUserByIDResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: DeleteUserByIDResponse): DeleteUserByIDResponse.AsObject;
+  static serializeBinaryToWriter(message: DeleteUserByIDResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeleteUserByIDResponse;
+  static deserializeBinaryFromReader(message: DeleteUserByIDResponse, reader: jspb.BinaryReader): DeleteUserByIDResponse;
+}
+
+export namespace DeleteUserByIDResponse {
+  export type AsObject = {
+    success: boolean,
+    deleteduser?: proto_common_pb.User.AsObject,
+  }
+}
+
+export class UpdateUserInfoRequest extends jspb.Message {
+  getDesiredinfo(): proto_common_pb.User | undefined;
+  setDesiredinfo(value?: proto_common_pb.User): UpdateUserInfoRequest;
+  hasDesiredinfo(): boolean;
+  clearDesiredinfo(): UpdateUserInfoRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateUserInfoRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateUserInfoRequest): UpdateUserInfoRequest.AsObject;
+  static serializeBinaryToWriter(message: UpdateUserInfoRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateUserInfoRequest;
+  static deserializeBinaryFromReader(message: UpdateUserInfoRequest, reader: jspb.BinaryReader): UpdateUserInfoRequest;
+}
+
+export namespace UpdateUserInfoRequest {
+  export type AsObject = {
+    desiredinfo?: proto_common_pb.User.AsObject,
+  }
+}
+
+export class UpdateUserInfoResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): UpdateUserInfoResponse;
+
+  getUpdateduser(): proto_common_pb.User | undefined;
+  setUpdateduser(value?: proto_common_pb.User): UpdateUserInfoResponse;
+  hasUpdateduser(): boolean;
+  clearUpdateduser(): UpdateUserInfoResponse;
+
+  getErrorsList(): Array<AddUserError>;
+  setErrorsList(value: Array<AddUserError>): UpdateUserInfoResponse;
+  clearErrorsList(): UpdateUserInfoResponse;
+  addErrors(value: AddUserError, index?: number): UpdateUserInfoResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateUserInfoResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateUserInfoResponse): UpdateUserInfoResponse.AsObject;
+  static serializeBinaryToWriter(message: UpdateUserInfoResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateUserInfoResponse;
+  static deserializeBinaryFromReader(message: UpdateUserInfoResponse, reader: jspb.BinaryReader): UpdateUserInfoResponse;
+}
+
+export namespace UpdateUserInfoResponse {
+  export type AsObject = {
+    success: boolean,
+    updateduser?: proto_common_pb.User.AsObject,
+    errorsList: Array<AddUserError>,
+  }
+}
+
+export class GetJWTTokenRequest extends jspb.Message {
+  getUsername(): string;
+  setUsername(value: string): GetJWTTokenRequest;
+
+  getPassword(): string;
+  setPassword(value: string): GetJWTTokenRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetJWTTokenRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetJWTTokenRequest): GetJWTTokenRequest.AsObject;
+  static serializeBinaryToWriter(message: GetJWTTokenRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetJWTTokenRequest;
+  static deserializeBinaryFromReader(message: GetJWTTokenRequest, reader: jspb.BinaryReader): GetJWTTokenRequest;
+}
+
+export namespace GetJWTTokenRequest {
+  export type AsObject = {
+    username: string,
+    password: string,
+  }
+}
+
+export class GetJWTTokenResponse extends jspb.Message {
+  getToken(): string;
+  setToken(value: string): GetJWTTokenResponse;
+
+  getError(): GetJWTTokenResponse.JWTError;
+  setError(value: GetJWTTokenResponse.JWTError): GetJWTTokenResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetJWTTokenResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetJWTTokenResponse): GetJWTTokenResponse.AsObject;
+  static serializeBinaryToWriter(message: GetJWTTokenResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetJWTTokenResponse;
+  static deserializeBinaryFromReader(message: GetJWTTokenResponse, reader: jspb.BinaryReader): GetJWTTokenResponse;
+}
+
+export namespace GetJWTTokenResponse {
+  export type AsObject = {
+    token: string,
+    error: GetJWTTokenResponse.JWTError,
+  }
+
+  export enum JWTError { 
+    INVALID_PASSWORD = 0,
+    INVALID_USERNAME = 1,
+  }
+}
+
+export enum AddUserError { 
+  DUPLICATE_EMAIL = 0,
+  DUPLICATE_USERNAME = 1,
+  INVALID_PASSWORD = 2,
+  BIRTHDAY_MALFORMED = 3,
+}
+export enum GetUserError { 
+  INVALID_USERNAME = 0,
+  INVALID_ID = 1,
+}

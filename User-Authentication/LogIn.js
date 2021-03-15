@@ -1,57 +1,54 @@
 /**
  * @fileoverview Login page - allows users to login to their account.
  */
-
-import { StatusBar } from 'expo-status-bar';
+import './SignUpStyle.css';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; 
+import { useState } from 'react';
+import { UsersClient } from "../gen/proto/UsersServiceClientPb";
+import { GetJWTTokenRequest } from '../gen/proto/users_pb';
 
-/**
- * @class Contains function for rendering Login screen.
- */
-class LogIn extends React.Component {
-  /**
-   * Renders LogIn screen components.
-   * @returns {Component}
-   */
-  render() {
-      return (
-        <View style={styles.container}>
-          <Image
-            style={{width: 180, height: 180, resizeMode: 'contain'}}
-            source = {require('../assets/kic.png')}
-          />
-          <Text>Keeping It Casual Log In Page!</Text>
-          <Button
-            title = "Sign Up!"
-            onPress = {() =>
-                this.props.navigation.navigate('SignUp')
-            }
-          />
 
-          <Button
-            title = "Log In! Now, Let's view your user feed!"
-            onPress = {() =>
-                this.props.navigation.navigate('TabNavigation')
-            }
-          />
-          <StatusBar style="auto" />
-        </View>
-      );
-  }
+export default function logIn() {
+
+  const navigation = useNavigation(); 
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = evt => {
+    evt.preventDefault();
+    const client = new UsersClient(
+      "http://test.api.keeping-it-casual.com"
+    );
+    let req = new GetJWTTokenRequest();
+    req.getUsername(email);
+    req.getPassword(password);
+    client.getJWTToken(req, {}).then(res => {
+      console.log(res)
+      //If successful, log in as user and link to User Feed
+    })
+  };
+
+  return (
+    <div className="login">
+      <h1>Keeping It Casual: Log In Page</h1>
+      <div className="form">
+        <form onSubmit={handleSubmit}>
+          <div className="formInput">
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder="Email" required="required" />
+          </div>
+          <div className="formInput">
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder="Password" required="required" />
+          </div>
+          <div className="formInput">
+            <button type="submit" value="submit">Log In</button>
+          </div>
+        </form>
+        <div>
+            <button onClick={navigation.navigate('SignUp')}>Sign Up!</button>
+          </div>
+      </div>
+      </div>
+  );
 }
-
-/**
- * @constant styles creates stylesheet for Login screen components
- */
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 20,
-  },
-});
-
-export default LogIn;
