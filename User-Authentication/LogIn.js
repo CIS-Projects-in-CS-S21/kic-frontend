@@ -28,7 +28,7 @@ export default function logIn() {
     client.getJWTToken(req, {}).then(res => {
       // On successful login, take user to user feed
       console.log(res)
-      navigation.navigate('UserFeed')
+      navigation.navigate('TabNavigation')
     }).catch(e => {
           console.log(e);
     });

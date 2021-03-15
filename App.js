@@ -40,18 +40,6 @@ class App extends React.Component {
                       component={SignUp}
                   />
                   <Stack.Screen
-                      name="UserFeed"
-                      component={UserFeed}
-                  />
-                  <Stack.Screen
-                      name="MentalHealthLog"
-                      component={MentalHealthLog}
-                  />
-                  <Stack.Screen
-                      name="FindHelp"
-                      component={FindHelp}
-                  />
-                  <Stack.Screen
                       name="TabNavigation"
                       component={TabNavigation}
                   />
