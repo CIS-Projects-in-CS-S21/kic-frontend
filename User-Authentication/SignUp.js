@@ -58,7 +58,7 @@ const makeRequest = () => {
   return (
         <div className="signUp">
           <h1>Keeping It Casual: Sign Up Page</h1>
-          <div className="form"> 
+          <div className="form">
                 <form onSubmit={handleSubmit}>
                   <div className="formInput">
                       <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
@@ -79,7 +79,7 @@ const makeRequest = () => {
                       <input type="password" value={password2} onChange={e => setPassword2(e.target.value)} className="formDefault" placeholder = "Retype password" required="required"/>
                   </div>
                   <div className="formInput">
-                      <button type="submit" value="submit">Register</button> 
+                      <button type="submit" value="submit">Register</button>
                   </div>
                 </form>
           </div>
