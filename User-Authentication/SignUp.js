@@ -29,9 +29,7 @@ export default function signUp() {
     if(password1 !== password2) {
       alert('Error: Passwords must be equal.');
     } else {
-      makeRequest(); 
-      //Handle request
-      
+      makeRequest();       
     }
 }; 
 
@@ -51,6 +49,7 @@ const makeRequest = () => {
     req.setDesiredpassword(password1)
     client.addUser(req, {}).then(res => {
         console.log(res)
+        //If successful, log in as user and link to User Feed
     })
     
 }

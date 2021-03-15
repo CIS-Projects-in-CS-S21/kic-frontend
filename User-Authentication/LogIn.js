@@ -19,7 +19,6 @@ export default function logIn() {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    //Handle request,  if successful link to User Feed 
     const client = new UsersClient(
       "http://test.api.keeping-it-casual.com"
     );
@@ -28,6 +27,7 @@ export default function logIn() {
     req.getPassword(password);
     client.getJWTToken(req, {}).then(res => {
       console.log(res)
+      //If successful, log in as user and link to User Feed
     })
   };
 
