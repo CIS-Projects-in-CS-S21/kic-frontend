@@ -45,14 +45,15 @@ const makeRequest = () => {
     date.setYear(1998)
     date.setMonth(8)
     date.setDay(21)
-    req.setEmail(firstName)
+    req.setEmail(email)
     req.setBirthday(date)
     req.setCity("test")
-    req.setDesiredusername(firstName)
+    req.setDesiredusername(username)
     req.setDesiredpassword(password1)
     client.addUser(req, {}).then(res => {
+        // On successful signup, return user to login screen for login
         console.log(res)
-        //If successful, log in as user and link to User Feed
+        navigation.navigate('LogIn')
     })
     
 }
@@ -85,6 +86,7 @@ const makeRequest = () => {
                       <button type="submit" value="submit">Register</button>
                   </div>
                 </form>
+
                 <Button
                     title="Log in"
                     onPress = {() =>

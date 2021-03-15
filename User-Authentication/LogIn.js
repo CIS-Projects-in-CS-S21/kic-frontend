@@ -26,8 +26,9 @@ export default function logIn() {
     req.getUsername(email);
     req.getPassword(password);
     client.getJWTToken(req, {}).then(res => {
+      // On successful login, take user to user feed
       console.log(res)
-      //If successful, log in as user and link to User Feed
+      navigation.navigate('UserFeed')
     })
   };
 
@@ -37,13 +38,13 @@ export default function logIn() {
       <div className="form">
               <form onSubmit={handleSubmit}>
                 <div className="formInput">
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder="Email" required="required" />
+                  <input type="text" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder="Email" required="required" />
                 </div>
                 <div className="formInput">
                   <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder="Password" required="required" />
                 </div>
                 <div className="formInput">
-                  <button type="submit" value="submit">Log In</button>
+                    <button type="submit" value="submit">Log in</button>
                 </div>
               </form>
               <Button
