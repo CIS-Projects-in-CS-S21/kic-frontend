@@ -27,7 +27,7 @@ class Explore extends React.Component {
             <Button
                 title = "Back to User Feed!"
                 onPress = {() =>
-                    this.props.navigation.navigate('UserFeed')
+                    this.props.navigation.navigate('Feed')
                 }
             />
         </View>

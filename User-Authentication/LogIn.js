@@ -9,7 +9,6 @@ import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
 
 
-
 export default function logIn() {
 
   const navigation = useNavigation(); 

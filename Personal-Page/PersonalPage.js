@@ -5,38 +5,91 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
+import KIC_Style from "../Components/Style";
+import ProfileHeader from "../Components/ProfileHeader";
+import PostsGrid from "../Components/PostsGrid";
 
 /**
  * @class Contains function for rendering the personal page.
  */
 class PersonalPage extends React.Component {
+  /*
+   * Class constructor
+   */
+  constructor(props) {
+    super();
+
+    // Define the initial state:
+    this.state = {
+      userFirstName: "First",
+      userLastName: "Last",
+      userHandle: "username",
+      userBio: "This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. ",
+      numPosts: 6,
+      numFriends: 0,
+    };
+  }
+
+  /**
+   * Gets user's posts. Returns an array of the user's posts.
+   */
+  fetchPosts = () => {
+      // Request posts for user
+  }
+
+  /**
+   * Gets user information (name, handle, bio, post & friend count)
+   */
+  fetchInformation = () => {
+      // Request user information and save to state
+  }
+
+  /**
+   * Gets a post's corresponding image to display in the grid.
+   */
+  fetchPostImage = () => {
+      // Request the image from backend
+  }
+
   /**
    * Renders personal page components.
-   * @returns {Component}
+   * @returns {PersonalPage}
    */
   render() {
       return (
-        <View style={styles.container}>
-          <Image
-            style={{width: 180, height: 180, resizeMode: 'contain'}}
-            source = {require('../assets/kic.png')}
-          />
-          <Text>Keeping It Casual Personal Page!</Text>
-          <Button
-            title = "Mental Health Tracker!"
-            onPress = {() =>
-                this.props.navigation.navigate('MentalHealthLog')
-            }
-          />
-          <Button
-            title = "User Feed!"
-            onPress = {() =>
-                this.props.navigation.navigate('UserFeed')
-            }
-          />
-          <StatusBar style="auto" />
-        </View>
+        <View style={styles.container}><ScrollView>
+
+            {/* Display profile header with state information */}
+            <ProfileHeader
+                userFirstName = {this.state.userFirstName}
+                userLastName = {this.state.userLastName}
+                userBio = {this.state.userBio}
+                userHandle = {this.state.userHandle}
+                userPosts = {this.state.userPosts}
+                numPosts = {this.state.numPosts}
+                numFriends = {this.state.numFriends}
+                />
+
+
+            {/* Show posts */}
+            <PostsGrid />
+
+            {/* NAVIGATION */}
+              <Button
+                title = "Mental Health Tracker!"
+                onPress = {() =>
+                    this.props.navigation.navigate('MentalHealthLog')
+                }
+              />
+              <Button
+                title = "User Feed!"
+                onPress = {() =>
+                    this.props.navigation.navigate('Feed')
+                }
+              />
+              <StatusBar style="auto" />
+        </ScrollView></View>
       );
   }
 }
@@ -46,11 +99,11 @@ class PersonalPage extends React.Component {
  */
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 20,
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    flex: 1,
   },
 });
 
