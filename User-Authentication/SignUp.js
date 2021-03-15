@@ -54,7 +54,9 @@ const makeRequest = () => {
         // On successful signup, return user to login screen for login
         console.log(res)
         navigation.navigate('LogIn')
-    })
+    }).catch(e => {
+          console.log(e);
+    });
     
 }
 

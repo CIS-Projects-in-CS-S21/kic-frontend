@@ -29,7 +29,9 @@ export default function logIn() {
       // On successful login, take user to user feed
       console.log(res)
       navigation.navigate('UserFeed')
-    })
+    }).catch(e => {
+          console.log(e);
+    });
   };
 
   return (
