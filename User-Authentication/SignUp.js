@@ -4,6 +4,7 @@
  */
 import "./SignUpStyle.css";
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
@@ -17,6 +18,8 @@ import personalPage from "../Personal-Page/PersonalPage"
  */
 
 export default function signUp() {
+  const navigation = useNavigation();
+
   const [firstName, setFirstName] = useState(""); 
   const [lastName, setLastName] = useState(""); 
   const [username, setUserName] = useState("");
@@ -42,15 +45,18 @@ const makeRequest = () => {
     date.setYear(1998)
     date.setMonth(8)
     date.setDay(21)
-    req.setEmail(firstName)
+    req.setEmail(email)
     req.setBirthday(date)
     req.setCity("test")
-    req.setDesiredusername(firstName)
+    req.setDesiredusername(username)
     req.setDesiredpassword(password1)
     client.addUser(req, {}).then(res => {
+        // On successful signup, return user to login screen for login
         console.log(res)
-        //If successful, log in as user and link to User Feed
-    })
+        navigation.navigate('LogIn')
+    }).catch(e => {
+          console.log(e);
+    });
     
 }
 
@@ -58,7 +64,7 @@ const makeRequest = () => {
   return (
         <div className="signUp">
           <h1>Keeping It Casual: Sign Up Page</h1>
-          <div className="form"> 
+          <div className="form">
                 <form onSubmit={handleSubmit}>
                   <div className="formInput">
                       <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
@@ -79,9 +85,16 @@ const makeRequest = () => {
                       <input type="password" value={password2} onChange={e => setPassword2(e.target.value)} className="formDefault" placeholder = "Retype password" required="required"/>
                   </div>
                   <div className="formInput">
-                      <button type="submit" value="submit">Register</button> 
+                      <button type="submit" value="submit">Register</button>
                   </div>
                 </form>
+
+                <Button
+                    title="Log in"
+                    onPress = {() =>
+                        navigation.navigate('LogIn')
+                    }
+                />
           </div>
         </div>
       );

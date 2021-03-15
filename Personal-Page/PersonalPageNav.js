@@ -24,7 +24,7 @@ class PersonalPageNav extends React.Component {
         return (
                 <Stack.Navigator>
                     <Stack.Screen
-                        name="PersonalPage"
+                        name="Profile"
                         component={PersonalPage}
                     />
                     <Stack.Screen

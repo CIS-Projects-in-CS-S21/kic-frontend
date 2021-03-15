@@ -4,7 +4,8 @@
 import './SignUpStyle.css';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native'; 
-import { useState } from 'react';
+import { useState} from 'react';
+import { Button } from 'react-native';
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
 
@@ -13,7 +14,7 @@ export default function logIn() {
 
   const navigation = useNavigation(); 
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = evt => {
@@ -22,33 +23,39 @@ export default function logIn() {
       "http://test.api.keeping-it-casual.com"
     );
     let req = new GetJWTTokenRequest();
-    req.getUsername(email);
-    req.getPassword(password);
+    req.setUsername(username);
+    req.setPassword(password);
     client.getJWTToken(req, {}).then(res => {
+      // On successful login, take user to user feed
       console.log(res)
-      //If successful, log in as user and link to User Feed
-    })
+      navigation.navigate('TabNavigation')
+    }).catch(e => {
+          console.log(e);
+    });
   };
 
   return (
     <div className="login">
       <h1>Keeping It Casual: Log In Page</h1>
       <div className="form">
-        <form onSubmit={handleSubmit}>
-          <div className="formInput">
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder="Email" required="required" />
-          </div>
-          <div className="formInput">
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder="Password" required="required" />
-          </div>
-          <div className="formInput">
-            <button type="submit" value="submit">Log In</button>
-          </div>
-        </form>
-        <div>
-            <button onClick={navigation.navigate('SignUp')}>Sign Up!</button>
-          </div>
+              <form onSubmit={handleSubmit}>
+                <div className="formInput">
+                  <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="formDefault" placeholder="Username" required="required" />
+                </div>
+                <div className="formInput">
+                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder="Password" required="required" />
+                </div>
+                <div className="formInput">
+                    <button type="submit" value="submit">Log in</button>
+                </div>
+              </form>
+              <Button
+                  title="Sign up"
+                  onPress = {() =>
+                      navigation.navigate('SignUp')
+                  }
+              />
       </div>
-      </div>
+    </div>
   );
 }
