@@ -13,15 +13,15 @@ We propose a social media application focused on mental health awareness that ke
 - Created a login and signup page and connected them with the backend
 
 ### Backend Releases 
-https://github.com/CIS-Projects-in-CS-S21/kic-media/releases/tag/1.0.0
-https://github.com/CIS-Projects-in-CS-S21/kic-users/releases/tag/v1.0.0
+- For kic-media: https://github.com/CIS-Projects-in-CS-S21/kic-media/releases/tag/1.0.0
+- For kic-users: https://github.com/CIS-Projects-in-CS-S21/kic-users/releases/tag/v1.0.0
 
 ### Frontend Release
-https://github.com/CIS-Projects-in-CS-S21/kic-frontend/releases/tag/v1.0.0
+- For frontend: https://github.com/CIS-Projects-in-CS-S21/kic-frontend/releases/tag/v1.0.0
 
 ### Deployment Page
 http://keeping-it-casual.com
 
 ### Demo Instructions and Guide
 Please find the demo instructions and feedback form below:
-https://forms.gle/yCp3aCqtCzsRT2A79 
+- https://forms.gle/yCp3aCqtCzsRT2A79 
