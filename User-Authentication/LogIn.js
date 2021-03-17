@@ -20,7 +20,7 @@ export default function logIn() {
   const handleSubmit = evt => {
     evt.preventDefault();
     const client = new UsersClient(
-      "http://test.api.keeping-it-casual.com"
+      "https://test.api.keeping-it-casual.com"
     );
     let req = new GetJWTTokenRequest();
     req.setUsername(username);

@@ -38,7 +38,7 @@ export default function signUp() {
 
 const makeRequest = () => {
     const client = new UsersClient(
-        "http://test.api.keeping-it-casual.com"
+        "https://test.api.keeping-it-casual.com"
     );
     let req = new AddUserRequest()
     let date = new Date()
