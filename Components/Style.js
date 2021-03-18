@@ -3,11 +3,12 @@ import { StyleSheet} from 'react-native';
 
 const KIC_Style = StyleSheet.create({
     container: {
-        marginTop: 50,
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#b3d2db',
         alignItems: 'center',
         justifyContent: 'center',
+        color: 'white',
+        fontFamily: 'Georgia-Bold'
     }
 });
 

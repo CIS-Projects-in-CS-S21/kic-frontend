@@ -9,8 +9,9 @@ import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
 import {Date} from "../gen/proto/common_pb";
-import {Button} from "react-native";
+import {Button, View} from "react-native";
 import personalPage from "../Personal-Page/PersonalPage"
+import KIC_Style from "../Components/Style";
 
 
 /**
@@ -30,7 +31,13 @@ export default function signUp() {
   const handleSubmit = evt => {
     evt.preventDefault(); 
     if(password1 !== password2) {
-      alert('Error: Passwords must be equal.');
+        alert('Error: Passwords must be equal.');
+    } else if (username.equals(null)) {
+        alert('Error: Must input username');
+    } else if (password1.equals(null)) {
+        alert('Error: Must input password');
+    } else if (password2.equals(null)) {
+        alert('Error: Must input password');
     } else {
       makeRequest();       
     }
@@ -56,47 +63,48 @@ const makeRequest = () => {
         navigation.navigate('LogIn')
     }).catch(e => {
           console.log(e);
+          alert("Invalid signup. Please use different credentials and try again.")
     });
-    
 }
 
 
   return (
-        <div className="signUp">
-          <h1>Keeping It Casual: Sign Up Page</h1>
-          <div className="form">
-                <form onSubmit={handleSubmit}>
-                  <div className="formInput">
-                      <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="formDefault" placeholder = "Last name" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "Username" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="password" value={password1} onChange={e => setPassword1(e.target.value)} className="formDefault" placeholder = "Password" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="password" value={password2} onChange={e => setPassword2(e.target.value)} className="formDefault" placeholder = "Retype password" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <button type="submit" value="submit">Register</button>
-                  </div>
-                </form>
-
-                <Button
-                    title="Log in"
-                    onPress = {() =>
-                        navigation.navigate('LogIn')
-                    }
-                />
-          </div>
-        </div>
+      <View style = {KIC_Style.container}>
+          <div className="signUp">
+              <h1>Keeping It Casual: Sign Up Page</h1>
+              <div className="form">
+                    <form onSubmit={handleSubmit}>
+                      <div className="formInput">
+                          <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="formDefault" placeholder = "Last name" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "Username" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="password" value={password1} onChange={e => setPassword1(e.target.value)} className="formDefault" placeholder = "Password" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="password" value={password2} onChange={e => setPassword2(e.target.value)} className="formDefault" placeholder = "Retype password" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <button type="submit" value="submit">Register</button>
+                      </div>
+                    </form>
+                    <Button
+                        title="Log in"
+                        onPress = {() =>
+                            navigation.navigate('LogIn')
+                        }
+                    />
+              </div>
+            </div>
+        </View>
       );
   }
 

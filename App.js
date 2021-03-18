@@ -29,22 +29,22 @@ class App extends React.Component {
    */
   render() {
       return (
-          <NavigationContainer>
-              <Stack.Navigator>
-                  <Stack.Screen
-                      name="LogIn"
-                      component={LogIn}
-                  />
-                  <Stack.Screen
-                      name="SignUp"
-                      component={SignUp}
-                  />
-                  <Stack.Screen
-                      name="TabNavigation"
-                      component={TabNavigation}
-                  />
-              </Stack.Navigator>
-          </NavigationContainer>
+              <NavigationContainer>
+                  <Stack.Navigator>
+                      <Stack.Screen
+                          name="LogIn"
+                          component={LogIn}
+                      />
+                      <Stack.Screen
+                          name="SignUp"
+                          component={SignUp}
+                      />
+                      <Stack.Screen
+                          name="TabNavigation"
+                          component={TabNavigation}
+                      />
+                  </Stack.Navigator>
+              </NavigationContainer>
       );
   }
 }
@@ -52,6 +52,13 @@ class App extends React.Component {
 /**
  * @constant styles creates stylesheet for main screen components
  */
-const styles = KIC_Style;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
+})
 
 export default App;

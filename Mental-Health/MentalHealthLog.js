@@ -16,7 +16,7 @@ class MentalHealthLog extends React.Component {
    */
   render() {
       return (
-        <View style={styles.container}>
+        <View style={KIC_Style.container}>
           <Image
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('../assets/kic.png')}
@@ -42,15 +42,15 @@ class MentalHealthLog extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for MentalHealthLog screen components
+ * @constant styles creates stylesheet for Mental Health screen components
  */
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });
 
 export default MentalHealthLog;
