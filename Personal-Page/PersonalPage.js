@@ -9,11 +9,12 @@ import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, Touchable
 import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
+import MyUser from "../Components/MyUser";
 
 /**
  * @class Contains function for rendering the personal page.
  */
-class PersonalPage extends React.Component {
+export default class PersonalPage extends React.Component {
   /*
    * Class constructor
    */
@@ -53,6 +54,16 @@ class PersonalPage extends React.Component {
   }
 
   /**
+   * Example function usage: creates an instance of MyUser with the given names and returns the
+   * first name using MyUser.getUserFirstName. getName() is then called by the ProfileHeader
+   * component in render() below, in order to pass the userFirstName into the ProfileHeader component.
+   */
+  getName = () => {
+      let user = new MyUser("AlternateFirstName", this.userLastName);
+      return user.getUserFirstName();
+  }
+
+  /**
    * Renders personal page components.
    * @returns {PersonalPage}
    */
@@ -62,7 +73,7 @@ class PersonalPage extends React.Component {
 
             {/* Display profile header with state information */}
             <ProfileHeader
-                userFirstName = {this.state.userFirstName}
+                userFirstName = {this.getName()}
                 userLastName = {this.state.userLastName}
                 userBio = {this.state.userBio}
                 userHandle = {this.state.userHandle}
@@ -106,5 +117,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-export default PersonalPage;
