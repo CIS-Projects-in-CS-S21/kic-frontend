@@ -20,8 +20,10 @@ export default function logIn() {
     evt.preventDefault();
     let url = "";
     if (__DEV__) {
+        console.log("Running in development mode");
         url = "http://test.api.keeping-it-casual.com";
     } else {
+        console.log("Running in production mode");
         url = "https://api.keeping-it-casual.com";
     }
 
@@ -32,32 +34,33 @@ export default function logIn() {
     req.setPassword(password);
 
     client.getJWTToken(req, {}).then(res => {
+        // Log response
+        console.log(res)
+
         // Store token in cookies
         const storeToken = async () => {
-        await CookieManager.clearAll() //clearing cookies stored
-        //natively before each
-        //request
-        try {
-            await AsyncStorage.setItem(
-                '@MyToken:key',
-                res.getJWTToken()
-            );
-        } catch (error) {
-            // Error saving data
+            await CookieManager.clearAll() //clearing cookies stored
+            //natively before each
+            //request
+            try {
+                await AsyncStorage.setItem(
+                    '@MyToken',
+                    res.getJWTToken()
+                );
+            } catch (error) {
+                console.log("Error storing token in cookies");
+                console.log(e);
+            }
         }
-    }
 
-      // Log response
-      console.log(res)
-
-      // On successful login, take user to user feed
-
-      if (res.length > 0){
+        // On successful login, take user to user feed
+        if (res.array.length > 0){
             navigation.navigate('TabNavigation')
-      }
-      else{
-            console.log("No token received")
-      }
+        }
+        else{
+            console.log("No token received!")
+            // ALERT USER: WRONG PASSWORD
+        }
     }).catch(e => {
           console.log(e);
     });
