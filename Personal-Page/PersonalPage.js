@@ -9,6 +9,7 @@ import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, Touchable
 import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
+import TokenManager from '../User-Authentication/TokenManager';
 
 /**
  * @class Contains function for rendering the personal page.
@@ -52,6 +53,13 @@ class PersonalPage extends React.Component {
       // Request the image from backend
   }
 
+  getToken = () => {
+    // Try to retrieve token and log in console
+    let tokenManager = new TokenManager();
+    let token = tokenManager.getToken();
+    console.log("Retrieved token on personal page: " + token);
+  }
+
   /**
    * Renders personal page components.
    * @returns {PersonalPage}
@@ -74,6 +82,9 @@ class PersonalPage extends React.Component {
 
             {/* Show posts */}
             <PostsGrid />
+
+            {/* Test getting token from personal page */}
+            {this.getToken()}
 
             {/* NAVIGATION */}
               <Button
