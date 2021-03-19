@@ -5,9 +5,10 @@ import './SignUpStyle.css';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native'; 
 import { useState} from 'react';
-import { AsyncStorage, Button } from 'react-native';
+import { Button } from 'react-native';
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function logIn() {
 
@@ -15,6 +16,34 @@ export default function logIn() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+    // Store token using AsyncStorage
+    const storeToken = async (token) => {
+        try {
+            await AsyncStorage.setItem(
+                'MyToken',
+                token
+            );
+            console.log("Stored token: " + token);
+        } catch (error) {
+            console.log("Error storing token!");
+            console.log(error);
+        }
+    }
+
+    // Get token from AsyncStorage
+    const getToken = async () => {
+        try {
+            AsyncStorage.getItem('MyToken', (err, result) => {
+                console.log("Retrieved token successfully.");
+                return result;
+            });
+        } catch (error) {
+            console.log("Error fetching token!");
+            console.log(error);
+        }
+    }
+
 
   const handleSubmit = evt => {
     evt.preventDefault();
@@ -34,27 +63,18 @@ export default function logIn() {
     req.setPassword(password);
 
     client.getJWTToken(req, {}).then(res => {
-        // Log response
-        console.log(res)
-
-        // Store token in cookies
-        const storeToken = async () => {
-            await CookieManager.clearAll() //clearing cookies stored
-            //natively before each
-            //request
-            try {
-                await AsyncStorage.setItem(
-                    '@MyToken',
-                    res.getJWTToken()
-                );
-            } catch (error) {
-                console.log("Error storing token in cookies");
-                console.log(e);
-            }
-        }
-
-        // On successful login, take user to user feed
+        // On successful login, store token and go to user feed
         if (res.array.length > 0){
+            // Log token to store
+            console.log("Should store: " + res)
+
+            // Store token
+            storeToken(res);
+
+            // Try to retrieve token and log in console
+            let token = getToken();
+            console.log("Retrieved " + token);
+
             navigation.navigate('TabNavigation')
         }
         else{
