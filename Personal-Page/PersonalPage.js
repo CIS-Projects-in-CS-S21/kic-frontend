@@ -54,19 +54,6 @@ class PersonalPage extends React.Component {
   }
 
   /**
-   * Log a greeting only if session is authenticated.
-   */
-  sayHi = () => {
-    let tokenManager = new TokenManager();
-    if (tokenManager.isAuthenticated()){
-        console.log("Hi!");
-    }
-    else{
-        console.log("I can't say hi without a token!");
-    }
-  }
-
-  /**
    * Renders personal page components.
    * @returns {PersonalPage}
    */
@@ -88,9 +75,6 @@ class PersonalPage extends React.Component {
 
             {/* Show posts */}
             <PostsGrid />
-
-            {/* Test checking authentication from personal page */}
-            {this.sayHi()}
 
             {/* NAVIGATION */}
               <Button
