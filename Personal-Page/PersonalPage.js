@@ -53,11 +53,17 @@ class PersonalPage extends React.Component {
       // Request the image from backend
   }
 
-  getToken = () => {
-    // Try to retrieve token and log in console
+  /**
+   * Log a greeting only if session is authenticated.
+   */
+  sayHi = () => {
     let tokenManager = new TokenManager();
-    let token = tokenManager.getToken();
-    console.log("Retrieved token on personal page: " + token);
+    if (tokenManager.isAuthenticated()){
+        console.log("Hi!");
+    }
+    else{
+        console.log("I can't say hi without a token!");
+    }
   }
 
   /**
@@ -83,8 +89,8 @@ class PersonalPage extends React.Component {
             {/* Show posts */}
             <PostsGrid />
 
-            {/* Test getting token from personal page */}
-            {this.getToken()}
+            {/* Test checking authentication from personal page */}
+            {this.sayHi()}
 
             {/* NAVIGATION */}
               <Button
