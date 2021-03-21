@@ -9,9 +9,10 @@ import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
 import {Date} from "../gen/proto/common_pb";
-import {Button, View} from "react-native";
+import {Button, Image, View} from "react-native";
 import personalPage from "../Personal-Page/PersonalPage"
 import KIC_Style from "../Components/Style";
+import {Text, TouchableOpacity} from "react-native-web";
 
 
 /**
@@ -77,7 +78,11 @@ const makeRequest = () => {
   return (
       <View style = {KIC_Style.container}>
           <div className="signUp">
-              <h1>Keeping It Casual: Sign Up Page</h1>
+              <h1>Sign Up Page</h1>
+              <Image
+                  style={{width: 180, height: 180, alignItems: "center", resizeMode: 'contain'}}
+                  source = {require('../assets/kic.png')}
+              />
               <div className="form">
                     <form onSubmit={handleSubmit}>
                       <div className="formInput">
@@ -102,12 +107,11 @@ const makeRequest = () => {
                           <button type="submit" value="submit">Register</button>
                       </div>
                     </form>
-                    <Button
-                        title="Log in"
-                        onPress = {() =>
-                            navigation.navigate('LogIn')
-                        }
-                    />
+                    <TouchableOpacity style={KIC_Style.button} onPress={() =>
+                          navigation.navigate('LogIn')
+                      }>
+                          <Text style = {KIC_Style.button_font}>Log In</Text>
+                    </TouchableOpacity>
               </div>
             </div>
         </View>
