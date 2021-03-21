@@ -159,13 +159,13 @@ proto.kic.health.HealthTrackingPromiseClient.prototype.getHealthDataForUser =
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.kic.health.AddHealthDataForUserRequest,
- *   !proto.kic.health.HealthDataErrorResponse>}
+ *   !proto.kic.health.AddHealthDataForUserResponse>}
  */
 const methodDescriptor_HealthTracking_AddHealthDataForUser = new grpc.web.MethodDescriptor(
   '/kic.health.HealthTracking/AddHealthDataForUser',
   grpc.web.MethodType.UNARY,
   proto.kic.health.AddHealthDataForUserRequest,
-  proto.kic.health.HealthDataErrorResponse,
+  proto.kic.health.AddHealthDataForUserResponse,
   /**
    * @param {!proto.kic.health.AddHealthDataForUserRequest} request
    * @return {!Uint8Array}
@@ -173,7 +173,7 @@ const methodDescriptor_HealthTracking_AddHealthDataForUser = new grpc.web.Method
   function(request) {
     return request.serializeBinary();
   },
-  proto.kic.health.HealthDataErrorResponse.deserializeBinary
+  proto.kic.health.AddHealthDataForUserResponse.deserializeBinary
 );
 
 
@@ -181,10 +181,10 @@ const methodDescriptor_HealthTracking_AddHealthDataForUser = new grpc.web.Method
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.kic.health.AddHealthDataForUserRequest,
- *   !proto.kic.health.HealthDataErrorResponse>}
+ *   !proto.kic.health.AddHealthDataForUserResponse>}
  */
 const methodInfo_HealthTracking_AddHealthDataForUser = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.kic.health.HealthDataErrorResponse,
+  proto.kic.health.AddHealthDataForUserResponse,
   /**
    * @param {!proto.kic.health.AddHealthDataForUserRequest} request
    * @return {!Uint8Array}
@@ -192,7 +192,7 @@ const methodInfo_HealthTracking_AddHealthDataForUser = new grpc.web.AbstractClie
   function(request) {
     return request.serializeBinary();
   },
-  proto.kic.health.HealthDataErrorResponse.deserializeBinary
+  proto.kic.health.AddHealthDataForUserResponse.deserializeBinary
 );
 
 
@@ -201,9 +201,9 @@ const methodInfo_HealthTracking_AddHealthDataForUser = new grpc.web.AbstractClie
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.kic.health.HealthDataErrorResponse)}
+ * @param {function(?grpc.web.Error, ?proto.kic.health.AddHealthDataForUserResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.kic.health.HealthDataErrorResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.kic.health.AddHealthDataForUserResponse>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.kic.health.HealthTrackingClient.prototype.addHealthDataForUser =
@@ -222,7 +222,7 @@ proto.kic.health.HealthTrackingClient.prototype.addHealthDataForUser =
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.kic.health.HealthDataErrorResponse>}
+ * @return {!Promise<!proto.kic.health.AddHealthDataForUserResponse>}
  *     Promise that resolves to the response
  */
 proto.kic.health.HealthTrackingPromiseClient.prototype.addHealthDataForUser =
@@ -319,13 +319,13 @@ proto.kic.health.HealthTrackingPromiseClient.prototype.deleteHealthDataForUser =
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.kic.health.UpdateHealthDataForDateRequest,
- *   !proto.kic.health.HealthDataErrorResponse>}
+ *   !proto.kic.health.UpdateHealthDataForDateResponse>}
  */
 const methodDescriptor_HealthTracking_UpdateHealthDataForDate = new grpc.web.MethodDescriptor(
   '/kic.health.HealthTracking/UpdateHealthDataForDate',
   grpc.web.MethodType.UNARY,
   proto.kic.health.UpdateHealthDataForDateRequest,
-  proto.kic.health.HealthDataErrorResponse,
+  proto.kic.health.UpdateHealthDataForDateResponse,
   /**
    * @param {!proto.kic.health.UpdateHealthDataForDateRequest} request
    * @return {!Uint8Array}
@@ -333,7 +333,7 @@ const methodDescriptor_HealthTracking_UpdateHealthDataForDate = new grpc.web.Met
   function(request) {
     return request.serializeBinary();
   },
-  proto.kic.health.HealthDataErrorResponse.deserializeBinary
+  proto.kic.health.UpdateHealthDataForDateResponse.deserializeBinary
 );
 
 
@@ -341,10 +341,10 @@ const methodDescriptor_HealthTracking_UpdateHealthDataForDate = new grpc.web.Met
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.kic.health.UpdateHealthDataForDateRequest,
- *   !proto.kic.health.HealthDataErrorResponse>}
+ *   !proto.kic.health.UpdateHealthDataForDateResponse>}
  */
 const methodInfo_HealthTracking_UpdateHealthDataForDate = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.kic.health.HealthDataErrorResponse,
+  proto.kic.health.UpdateHealthDataForDateResponse,
   /**
    * @param {!proto.kic.health.UpdateHealthDataForDateRequest} request
    * @return {!Uint8Array}
@@ -352,7 +352,7 @@ const methodInfo_HealthTracking_UpdateHealthDataForDate = new grpc.web.AbstractC
   function(request) {
     return request.serializeBinary();
   },
-  proto.kic.health.HealthDataErrorResponse.deserializeBinary
+  proto.kic.health.UpdateHealthDataForDateResponse.deserializeBinary
 );
 
 
@@ -361,9 +361,9 @@ const methodInfo_HealthTracking_UpdateHealthDataForDate = new grpc.web.AbstractC
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.kic.health.HealthDataErrorResponse)}
+ * @param {function(?grpc.web.Error, ?proto.kic.health.UpdateHealthDataForDateResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.kic.health.HealthDataErrorResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.kic.health.UpdateHealthDataForDateResponse>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.kic.health.HealthTrackingClient.prototype.updateHealthDataForDate =
@@ -382,7 +382,7 @@ proto.kic.health.HealthTrackingClient.prototype.updateHealthDataForDate =
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.kic.health.HealthDataErrorResponse>}
+ * @return {!Promise<!proto.kic.health.UpdateHealthDataForDateResponse>}
  *     Promise that resolves to the response
  */
 proto.kic.health.HealthTrackingPromiseClient.prototype.updateHealthDataForDate =

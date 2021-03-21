@@ -14,19 +14,16 @@ var global = Function('return this')();
 
 var proto_common_pb = require('../proto/common_pb.js');
 goog.object.extend(proto, proto_common_pb);
-goog.exportSymbol('proto.kic.users.AddUserError', null, global);
 goog.exportSymbol('proto.kic.users.AddUserRequest', null, global);
 goog.exportSymbol('proto.kic.users.AddUserResponse', null, global);
 goog.exportSymbol('proto.kic.users.DeleteUserByIDRequest', null, global);
 goog.exportSymbol('proto.kic.users.DeleteUserByIDResponse', null, global);
 goog.exportSymbol('proto.kic.users.GetJWTTokenRequest', null, global);
 goog.exportSymbol('proto.kic.users.GetJWTTokenResponse', null, global);
-goog.exportSymbol('proto.kic.users.GetJWTTokenResponse.JWTError', null, global);
 goog.exportSymbol('proto.kic.users.GetUserByIDRequest', null, global);
 goog.exportSymbol('proto.kic.users.GetUserByIDResponse', null, global);
 goog.exportSymbol('proto.kic.users.GetUserByUsernameRequest', null, global);
 goog.exportSymbol('proto.kic.users.GetUserByUsernameResponse', null, global);
-goog.exportSymbol('proto.kic.users.GetUserError', null, global);
 goog.exportSymbol('proto.kic.users.GetUserNameByIDRequest', null, global);
 goog.exportSymbol('proto.kic.users.GetUserNameByIDResponse', null, global);
 goog.exportSymbol('proto.kic.users.UpdateUserInfoRequest', null, global);
@@ -63,7 +60,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.kic.users.AddUserResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.kic.users.AddUserResponse.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.kic.users.AddUserResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -105,7 +102,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.kic.users.GetUserByUsernameResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.kic.users.GetUserByUsernameResponse.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.kic.users.GetUserByUsernameResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -147,7 +144,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.kic.users.GetUserByIDResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.kic.users.GetUserByIDResponse.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.kic.users.GetUserByIDResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -273,7 +270,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.kic.users.UpdateUserInfoResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.kic.users.UpdateUserInfoResponse.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.kic.users.UpdateUserInfoResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -597,13 +594,6 @@ proto.kic.users.AddUserRequest.prototype.setCity = function(value) {
 
 
 
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.kic.users.AddUserResponse.repeatedFields_ = [3];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -636,8 +626,7 @@ proto.kic.users.AddUserResponse.prototype.toObject = function(opt_includeInstanc
 proto.kic.users.AddUserResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    createduser: (f = msg.getCreateduser()) && proto_common_pb.User.toObject(includeInstance, f),
-    errorsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+    createduser: (f = msg.getCreateduser()) && proto_common_pb.User.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -683,10 +672,6 @@ proto.kic.users.AddUserResponse.deserializeBinaryFromReader = function(msg, read
       reader.readMessage(value,proto_common_pb.User.deserializeBinaryFromReader);
       msg.setCreateduser(value);
       break;
-    case 3:
-      var value = /** @type {!Array<!proto.kic.users.AddUserError>} */ (reader.readPackedEnum());
-      msg.setErrorsList(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -729,13 +714,6 @@ proto.kic.users.AddUserResponse.serializeBinaryToWriter = function(message, writ
       2,
       f,
       proto_common_pb.User.serializeBinaryToWriter
-    );
-  }
-  f = message.getErrorsList();
-  if (f.length > 0) {
-    writer.writePackedEnum(
-      3,
-      f
     );
   }
 };
@@ -793,43 +771,6 @@ proto.kic.users.AddUserResponse.prototype.clearCreateduser = function() {
  */
 proto.kic.users.AddUserResponse.prototype.hasCreateduser = function() {
   return jspb.Message.getField(this, 2) != null;
-};
-
-
-/**
- * repeated AddUserError errors = 3;
- * @return {!Array<!proto.kic.users.AddUserError>}
- */
-proto.kic.users.AddUserResponse.prototype.getErrorsList = function() {
-  return /** @type {!Array<!proto.kic.users.AddUserError>} */ (jspb.Message.getRepeatedField(this, 3));
-};
-
-
-/**
- * @param {!Array<!proto.kic.users.AddUserError>} value
- * @return {!proto.kic.users.AddUserResponse} returns this
- */
-proto.kic.users.AddUserResponse.prototype.setErrorsList = function(value) {
-  return jspb.Message.setField(this, 3, value || []);
-};
-
-
-/**
- * @param {!proto.kic.users.AddUserError} value
- * @param {number=} opt_index
- * @return {!proto.kic.users.AddUserResponse} returns this
- */
-proto.kic.users.AddUserResponse.prototype.addErrors = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.kic.users.AddUserResponse} returns this
- */
-proto.kic.users.AddUserResponse.prototype.clearErrorsList = function() {
-  return this.setErrorsList([]);
 };
 
 
@@ -964,13 +905,6 @@ proto.kic.users.GetUserByUsernameRequest.prototype.setUsername = function(value)
 
 
 
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.kic.users.GetUserByUsernameResponse.repeatedFields_ = [3];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -1003,8 +937,7 @@ proto.kic.users.GetUserByUsernameResponse.prototype.toObject = function(opt_incl
 proto.kic.users.GetUserByUsernameResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    user: (f = msg.getUser()) && proto_common_pb.User.toObject(includeInstance, f),
-    errorsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+    user: (f = msg.getUser()) && proto_common_pb.User.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1050,10 +983,6 @@ proto.kic.users.GetUserByUsernameResponse.deserializeBinaryFromReader = function
       reader.readMessage(value,proto_common_pb.User.deserializeBinaryFromReader);
       msg.setUser(value);
       break;
-    case 3:
-      var value = /** @type {!Array<!proto.kic.users.GetUserError>} */ (reader.readPackedEnum());
-      msg.setErrorsList(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -1096,13 +1025,6 @@ proto.kic.users.GetUserByUsernameResponse.serializeBinaryToWriter = function(mes
       2,
       f,
       proto_common_pb.User.serializeBinaryToWriter
-    );
-  }
-  f = message.getErrorsList();
-  if (f.length > 0) {
-    writer.writePackedEnum(
-      3,
-      f
     );
   }
 };
@@ -1160,43 +1082,6 @@ proto.kic.users.GetUserByUsernameResponse.prototype.clearUser = function() {
  */
 proto.kic.users.GetUserByUsernameResponse.prototype.hasUser = function() {
   return jspb.Message.getField(this, 2) != null;
-};
-
-
-/**
- * repeated GetUserError errors = 3;
- * @return {!Array<!proto.kic.users.GetUserError>}
- */
-proto.kic.users.GetUserByUsernameResponse.prototype.getErrorsList = function() {
-  return /** @type {!Array<!proto.kic.users.GetUserError>} */ (jspb.Message.getRepeatedField(this, 3));
-};
-
-
-/**
- * @param {!Array<!proto.kic.users.GetUserError>} value
- * @return {!proto.kic.users.GetUserByUsernameResponse} returns this
- */
-proto.kic.users.GetUserByUsernameResponse.prototype.setErrorsList = function(value) {
-  return jspb.Message.setField(this, 3, value || []);
-};
-
-
-/**
- * @param {!proto.kic.users.GetUserError} value
- * @param {number=} opt_index
- * @return {!proto.kic.users.GetUserByUsernameResponse} returns this
- */
-proto.kic.users.GetUserByUsernameResponse.prototype.addErrors = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.kic.users.GetUserByUsernameResponse} returns this
- */
-proto.kic.users.GetUserByUsernameResponse.prototype.clearErrorsList = function() {
-  return this.setErrorsList([]);
 };
 
 
@@ -1331,13 +1216,6 @@ proto.kic.users.GetUserByIDRequest.prototype.setUserid = function(value) {
 
 
 
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.kic.users.GetUserByIDResponse.repeatedFields_ = [3];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -1370,8 +1248,7 @@ proto.kic.users.GetUserByIDResponse.prototype.toObject = function(opt_includeIns
 proto.kic.users.GetUserByIDResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    user: (f = msg.getUser()) && proto_common_pb.User.toObject(includeInstance, f),
-    errorsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+    user: (f = msg.getUser()) && proto_common_pb.User.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1417,10 +1294,6 @@ proto.kic.users.GetUserByIDResponse.deserializeBinaryFromReader = function(msg, 
       reader.readMessage(value,proto_common_pb.User.deserializeBinaryFromReader);
       msg.setUser(value);
       break;
-    case 3:
-      var value = /** @type {!Array<!proto.kic.users.GetUserError>} */ (reader.readPackedEnum());
-      msg.setErrorsList(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -1463,13 +1336,6 @@ proto.kic.users.GetUserByIDResponse.serializeBinaryToWriter = function(message, 
       2,
       f,
       proto_common_pb.User.serializeBinaryToWriter
-    );
-  }
-  f = message.getErrorsList();
-  if (f.length > 0) {
-    writer.writePackedEnum(
-      3,
-      f
     );
   }
 };
@@ -1527,43 +1393,6 @@ proto.kic.users.GetUserByIDResponse.prototype.clearUser = function() {
  */
 proto.kic.users.GetUserByIDResponse.prototype.hasUser = function() {
   return jspb.Message.getField(this, 2) != null;
-};
-
-
-/**
- * repeated GetUserError errors = 3;
- * @return {!Array<!proto.kic.users.GetUserError>}
- */
-proto.kic.users.GetUserByIDResponse.prototype.getErrorsList = function() {
-  return /** @type {!Array<!proto.kic.users.GetUserError>} */ (jspb.Message.getRepeatedField(this, 3));
-};
-
-
-/**
- * @param {!Array<!proto.kic.users.GetUserError>} value
- * @return {!proto.kic.users.GetUserByIDResponse} returns this
- */
-proto.kic.users.GetUserByIDResponse.prototype.setErrorsList = function(value) {
-  return jspb.Message.setField(this, 3, value || []);
-};
-
-
-/**
- * @param {!proto.kic.users.GetUserError} value
- * @param {number=} opt_index
- * @return {!proto.kic.users.GetUserByIDResponse} returns this
- */
-proto.kic.users.GetUserByIDResponse.prototype.addErrors = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.kic.users.GetUserByIDResponse} returns this
- */
-proto.kic.users.GetUserByIDResponse.prototype.clearErrorsList = function() {
-  return this.setErrorsList([]);
 };
 
 
@@ -1989,8 +1818,7 @@ proto.kic.users.DeleteUserByIDResponse.prototype.toObject = function(opt_include
  */
 proto.kic.users.DeleteUserByIDResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    deleteduser: (f = msg.getDeleteduser()) && proto_common_pb.User.toObject(includeInstance, f)
+    success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
   };
 
   if (includeInstance) {
@@ -2031,11 +1859,6 @@ proto.kic.users.DeleteUserByIDResponse.deserializeBinaryFromReader = function(ms
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setSuccess(value);
       break;
-    case 2:
-      var value = new proto_common_pb.User;
-      reader.readMessage(value,proto_common_pb.User.deserializeBinaryFromReader);
-      msg.setDeleteduser(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -2072,14 +1895,6 @@ proto.kic.users.DeleteUserByIDResponse.serializeBinaryToWriter = function(messag
       f
     );
   }
-  f = message.getDeleteduser();
-  if (f != null) {
-    writer.writeMessage(
-      2,
-      f,
-      proto_common_pb.User.serializeBinaryToWriter
-    );
-  }
 };
 
 
@@ -2098,43 +1913,6 @@ proto.kic.users.DeleteUserByIDResponse.prototype.getSuccess = function() {
  */
 proto.kic.users.DeleteUserByIDResponse.prototype.setSuccess = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
-};
-
-
-/**
- * optional kic.common.User deletedUser = 2;
- * @return {?proto.kic.common.User}
- */
-proto.kic.users.DeleteUserByIDResponse.prototype.getDeleteduser = function() {
-  return /** @type{?proto.kic.common.User} */ (
-    jspb.Message.getWrapperField(this, proto_common_pb.User, 2));
-};
-
-
-/**
- * @param {?proto.kic.common.User|undefined} value
- * @return {!proto.kic.users.DeleteUserByIDResponse} returns this
-*/
-proto.kic.users.DeleteUserByIDResponse.prototype.setDeleteduser = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.kic.users.DeleteUserByIDResponse} returns this
- */
-proto.kic.users.DeleteUserByIDResponse.prototype.clearDeleteduser = function() {
-  return this.setDeleteduser(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.kic.users.DeleteUserByIDResponse.prototype.hasDeleteduser = function() {
-  return jspb.Message.getField(this, 2) != null;
 };
 
 
@@ -2170,7 +1948,12 @@ proto.kic.users.UpdateUserInfoRequest.prototype.toObject = function(opt_includeI
  */
 proto.kic.users.UpdateUserInfoRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    desiredinfo: (f = msg.getDesiredinfo()) && proto_common_pb.User.toObject(includeInstance, f)
+    userid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    email: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    desiredusername: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    desiredpassword: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    birthday: (f = msg.getBirthday()) && proto_common_pb.Date.toObject(includeInstance, f),
+    city: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -2208,9 +1991,29 @@ proto.kic.users.UpdateUserInfoRequest.deserializeBinaryFromReader = function(msg
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto_common_pb.User;
-      reader.readMessage(value,proto_common_pb.User.deserializeBinaryFromReader);
-      msg.setDesiredinfo(value);
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setUserid(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setEmail(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDesiredusername(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDesiredpassword(value);
+      break;
+    case 5:
+      var value = new proto_common_pb.Date;
+      reader.readMessage(value,proto_common_pb.Date.deserializeBinaryFromReader);
+      msg.setBirthday(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCity(value);
       break;
     default:
       reader.skipField();
@@ -2241,33 +2044,140 @@ proto.kic.users.UpdateUserInfoRequest.prototype.serializeBinary = function() {
  */
 proto.kic.users.UpdateUserInfoRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getDesiredinfo();
+  f = message.getUserid();
+  if (f !== 0) {
+    writer.writeInt64(
+      1,
+      f
+    );
+  }
+  f = message.getEmail();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getDesiredusername();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getDesiredpassword();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getBirthday();
   if (f != null) {
     writer.writeMessage(
-      1,
+      5,
       f,
-      proto_common_pb.User.serializeBinaryToWriter
+      proto_common_pb.Date.serializeBinaryToWriter
+    );
+  }
+  f = message.getCity();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
+      f
     );
   }
 };
 
 
 /**
- * optional kic.common.User desiredInfo = 1;
- * @return {?proto.kic.common.User}
+ * optional int64 userID = 1;
+ * @return {number}
  */
-proto.kic.users.UpdateUserInfoRequest.prototype.getDesiredinfo = function() {
-  return /** @type{?proto.kic.common.User} */ (
-    jspb.Message.getWrapperField(this, proto_common_pb.User, 1));
+proto.kic.users.UpdateUserInfoRequest.prototype.getUserid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
- * @param {?proto.kic.common.User|undefined} value
+ * @param {number} value
+ * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.setUserid = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional string email = 2;
+ * @return {string}
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.getEmail = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.setEmail = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string desiredUsername = 3;
+ * @return {string}
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.getDesiredusername = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.setDesiredusername = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string desiredPassword = 4;
+ * @return {string}
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.getDesiredpassword = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.setDesiredpassword = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional kic.common.Date birthday = 5;
+ * @return {?proto.kic.common.Date}
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.getBirthday = function() {
+  return /** @type{?proto.kic.common.Date} */ (
+    jspb.Message.getWrapperField(this, proto_common_pb.Date, 5));
+};
+
+
+/**
+ * @param {?proto.kic.common.Date|undefined} value
  * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
 */
-proto.kic.users.UpdateUserInfoRequest.prototype.setDesiredinfo = function(value) {
-  return jspb.Message.setWrapperField(this, 1, value);
+proto.kic.users.UpdateUserInfoRequest.prototype.setBirthday = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
 };
 
 
@@ -2275,8 +2185,8 @@ proto.kic.users.UpdateUserInfoRequest.prototype.setDesiredinfo = function(value)
  * Clears the message field making it undefined.
  * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
  */
-proto.kic.users.UpdateUserInfoRequest.prototype.clearDesiredinfo = function() {
-  return this.setDesiredinfo(undefined);
+proto.kic.users.UpdateUserInfoRequest.prototype.clearBirthday = function() {
+  return this.setBirthday(undefined);
 };
 
 
@@ -2284,18 +2194,29 @@ proto.kic.users.UpdateUserInfoRequest.prototype.clearDesiredinfo = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.kic.users.UpdateUserInfoRequest.prototype.hasDesiredinfo = function() {
-  return jspb.Message.getField(this, 1) != null;
+proto.kic.users.UpdateUserInfoRequest.prototype.hasBirthday = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
+/**
+ * optional string city = 6;
+ * @return {string}
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.getCity = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
 
 /**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
+ * @param {string} value
+ * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
  */
-proto.kic.users.UpdateUserInfoResponse.repeatedFields_ = [3];
+proto.kic.users.UpdateUserInfoRequest.prototype.setCity = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
 
 
 
@@ -2329,8 +2250,7 @@ proto.kic.users.UpdateUserInfoResponse.prototype.toObject = function(opt_include
 proto.kic.users.UpdateUserInfoResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    updateduser: (f = msg.getUpdateduser()) && proto_common_pb.User.toObject(includeInstance, f),
-    errorsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+    updateduser: (f = msg.getUpdateduser()) && proto_common_pb.User.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2376,10 +2296,6 @@ proto.kic.users.UpdateUserInfoResponse.deserializeBinaryFromReader = function(ms
       reader.readMessage(value,proto_common_pb.User.deserializeBinaryFromReader);
       msg.setUpdateduser(value);
       break;
-    case 3:
-      var value = /** @type {!Array<!proto.kic.users.AddUserError>} */ (reader.readPackedEnum());
-      msg.setErrorsList(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -2422,13 +2338,6 @@ proto.kic.users.UpdateUserInfoResponse.serializeBinaryToWriter = function(messag
       2,
       f,
       proto_common_pb.User.serializeBinaryToWriter
-    );
-  }
-  f = message.getErrorsList();
-  if (f.length > 0) {
-    writer.writePackedEnum(
-      3,
-      f
     );
   }
 };
@@ -2486,43 +2395,6 @@ proto.kic.users.UpdateUserInfoResponse.prototype.clearUpdateduser = function() {
  */
 proto.kic.users.UpdateUserInfoResponse.prototype.hasUpdateduser = function() {
   return jspb.Message.getField(this, 2) != null;
-};
-
-
-/**
- * repeated AddUserError errors = 3;
- * @return {!Array<!proto.kic.users.AddUserError>}
- */
-proto.kic.users.UpdateUserInfoResponse.prototype.getErrorsList = function() {
-  return /** @type {!Array<!proto.kic.users.AddUserError>} */ (jspb.Message.getRepeatedField(this, 3));
-};
-
-
-/**
- * @param {!Array<!proto.kic.users.AddUserError>} value
- * @return {!proto.kic.users.UpdateUserInfoResponse} returns this
- */
-proto.kic.users.UpdateUserInfoResponse.prototype.setErrorsList = function(value) {
-  return jspb.Message.setField(this, 3, value || []);
-};
-
-
-/**
- * @param {!proto.kic.users.AddUserError} value
- * @param {number=} opt_index
- * @return {!proto.kic.users.UpdateUserInfoResponse} returns this
- */
-proto.kic.users.UpdateUserInfoResponse.prototype.addErrors = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.kic.users.UpdateUserInfoResponse} returns this
- */
-proto.kic.users.UpdateUserInfoResponse.prototype.clearErrorsList = function() {
-  return this.setErrorsList([]);
 };
 
 
@@ -2718,8 +2590,7 @@ proto.kic.users.GetJWTTokenResponse.prototype.toObject = function(opt_includeIns
  */
 proto.kic.users.GetJWTTokenResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    token: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    error: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    token: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -2760,10 +2631,6 @@ proto.kic.users.GetJWTTokenResponse.deserializeBinaryFromReader = function(msg, 
       var value = /** @type {string} */ (reader.readString());
       msg.setToken(value);
       break;
-    case 2:
-      var value = /** @type {!proto.kic.users.GetJWTTokenResponse.JWTError} */ (reader.readEnum());
-      msg.setError(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -2800,23 +2667,8 @@ proto.kic.users.GetJWTTokenResponse.serializeBinaryToWriter = function(message, 
       f
     );
   }
-  f = message.getError();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      2,
-      f
-    );
-  }
 };
 
-
-/**
- * @enum {number}
- */
-proto.kic.users.GetJWTTokenResponse.JWTError = {
-  INVALID_PASSWORD: 0,
-  INVALID_USERNAME: 1
-};
 
 /**
  * optional string token = 1;
@@ -2835,41 +2687,5 @@ proto.kic.users.GetJWTTokenResponse.prototype.setToken = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
-
-/**
- * optional JWTError error = 2;
- * @return {!proto.kic.users.GetJWTTokenResponse.JWTError}
- */
-proto.kic.users.GetJWTTokenResponse.prototype.getError = function() {
-  return /** @type {!proto.kic.users.GetJWTTokenResponse.JWTError} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
-};
-
-
-/**
- * @param {!proto.kic.users.GetJWTTokenResponse.JWTError} value
- * @return {!proto.kic.users.GetJWTTokenResponse} returns this
- */
-proto.kic.users.GetJWTTokenResponse.prototype.setError = function(value) {
-  return jspb.Message.setProto3EnumField(this, 2, value);
-};
-
-
-/**
- * @enum {number}
- */
-proto.kic.users.AddUserError = {
-  DUPLICATE_EMAIL: 0,
-  DUPLICATE_USERNAME: 1,
-  INVALID_PASSWORD: 2,
-  BIRTHDAY_MALFORMED: 3
-};
-
-/**
- * @enum {number}
- */
-proto.kic.users.GetUserError = {
-  INVALID_USERNAME: 0,
-  INVALID_ID: 1
-};
 
 goog.object.extend(exports, proto.kic.users);
