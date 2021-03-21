@@ -32,12 +32,14 @@ export default function signUp() {
     evt.preventDefault(); 
     if(password1 !== password2) {
         alert('Error: Passwords must be equal.');
-    } else if (username.equals(null)) {
+    } else if (username == null || username == "") {
         alert('Error: Must input username');
-    } else if (password1.equals(null)) {
+    } else if (password1 == null || password1 == "") {
         alert('Error: Must input password');
-    } else if (password2.equals(null)) {
+    } else if (password2 == null || password2 == "") {
         alert('Error: Must input password');
+    } else if (password1.length < 8) {
+        alert('Error: Passwords must be at least 8 characters.');
     } else {
       makeRequest();       
     }
