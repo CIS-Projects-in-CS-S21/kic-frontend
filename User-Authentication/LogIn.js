@@ -64,6 +64,13 @@ export default function logIn() {
         else{
             console.log("No token received!");
             // ALERT USER: WRONG PASSWORD
+            if (res.getError() == 0) {
+                alert("Incorrect password. Please try again");
+            } else if (res.getError() == 1) {
+                alert("Incorrect username. Please try again");
+            } else {
+                alert("Incorrect username or password.");
+            }
         }
     }).catch(e => {
           console.log(e);

@@ -41,6 +41,10 @@ export default function signUp() {
         alert('Error: Must input password');
     } else if (password1.length < 8) {
         alert('Error: Passwords must be at least 8 characters.');
+    } else if (email.includes("@") == false) {
+        alert('Error: Must include a valid email.');
+    }else if (firstName == "" || lastName == "") {
+        alert('Missing first or last name entries.');
     } else {
       makeRequest();       
     }
@@ -70,7 +74,7 @@ const makeRequest = () => {
         navigation.navigate('LogIn')
     }).catch(e => {
           console.log(e);
-          alert("Invalid signup. Please use different credentials and try again.")
+          alert("Invalid signup. Please use different credentials and try again. If problem persists, contact administrators.")
     });
 }
 
