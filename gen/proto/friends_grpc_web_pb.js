@@ -157,6 +157,86 @@ proto.kic.friends.FriendsPromiseClient.prototype.getFriendsUsernamesForUser =
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.kic.friends.GetFriendsForUserRequest,
+ *   !proto.kic.friends.GetFriendsUsernamesForUserResponse>}
+ */
+const methodDescriptor_Friends_GetAwaitingFriendsUsernamesForUser = new grpc.web.MethodDescriptor(
+  '/kic.friends.Friends/GetAwaitingFriendsUsernamesForUser',
+  grpc.web.MethodType.UNARY,
+  proto.kic.friends.GetFriendsForUserRequest,
+  proto.kic.friends.GetFriendsUsernamesForUserResponse,
+  /**
+   * @param {!proto.kic.friends.GetFriendsForUserRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.kic.friends.GetFriendsUsernamesForUserResponse.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.kic.friends.GetFriendsForUserRequest,
+ *   !proto.kic.friends.GetFriendsUsernamesForUserResponse>}
+ */
+const methodInfo_Friends_GetAwaitingFriendsUsernamesForUser = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.kic.friends.GetFriendsUsernamesForUserResponse,
+  /**
+   * @param {!proto.kic.friends.GetFriendsForUserRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.kic.friends.GetFriendsUsernamesForUserResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.kic.friends.GetFriendsForUserRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.kic.friends.GetFriendsUsernamesForUserResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.kic.friends.GetFriendsUsernamesForUserResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.kic.friends.FriendsClient.prototype.getAwaitingFriendsUsernamesForUser =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/kic.friends.Friends/GetAwaitingFriendsUsernamesForUser',
+      request,
+      metadata || {},
+      methodDescriptor_Friends_GetAwaitingFriendsUsernamesForUser,
+      callback);
+};
+
+
+/**
+ * @param {!proto.kic.friends.GetFriendsForUserRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.kic.friends.GetFriendsUsernamesForUserResponse>}
+ *     Promise that resolves to the response
+ */
+proto.kic.friends.FriendsPromiseClient.prototype.getAwaitingFriendsUsernamesForUser =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/kic.friends.Friends/GetAwaitingFriendsUsernamesForUser',
+      request,
+      metadata || {},
+      methodDescriptor_Friends_GetAwaitingFriendsUsernamesForUser);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.kic.friends.GetFriendsForUserRequest,
  *   !proto.kic.friends.GetFriendsForUserResponse>}
  */
 const methodDescriptor_Friends_GetFriendsForUser = new grpc.web.MethodDescriptor(
