@@ -44,9 +44,13 @@ export default function signUp() {
 }; 
 
 const makeRequest = () => {
-    const client = new UsersClient(
-        "https://test.api.keeping-it-casual.com"
-    );
+    let url = "";
+    if (__DEV__) {
+        url = "http://test.api.keeping-it-casual.com";
+    } else {
+        url = "https://api.keeping-it-casual.com";
+    }
+    const client = new UsersClient(url);
     let req = new AddUserRequest()
     let date = new Date()
     date.setYear(1998)

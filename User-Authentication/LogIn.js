@@ -5,11 +5,11 @@ import './SignUpStyle.css';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native'; 
 import { useState} from 'react';
-import {Button, SafeAreaView, View} from 'react-native';
+import { Button } from 'react-native';
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
-import KIC_Style from "../Components/Style";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import TokenManager from './TokenManager';
 
 export default function logIn() {
 
@@ -20,47 +20,76 @@ export default function logIn() {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    const client = new UsersClient(
-      "https://test.api.keeping-it-casual.com"
-    );
+    let url = "";
+
+    // Check if running in production or development
+    if (__DEV__) {
+        console.log("Running in development mode");
+        url = "http://test.api.keeping-it-casual.com";
+    } else {
+        console.log("Running in production mode");
+        url = "https://api.keeping-it-casual.com";
+    }
+    const client = new UsersClient(url);
+
+    // Set request for GetJWTTokenRequest
     let req = new GetJWTTokenRequest();
     req.setUsername(username);
     req.setPassword(password);
-    client.getJWTToken(req, {}).then(res => {
-      // On successful login, take user to user feed
-      console.log(res)
-      navigation.navigate('TabNavigation')
-    }).catch(e => {
-        //else if it does not work, show error messaging with why it did not work
-        console.log(e);
-        alert("Record not found. Please check username and password.");
 
+    // Try to log in with request
+    client.getJWTToken(req, {}).then(res => {
+        // On successful login, store token and go to user feed
+        if (res.array.length > 0){
+            // Log token to store
+            console.log("Should store: " + res);
+
+            // Create TokenManager
+            let tokenManager = new TokenManager();
+
+            // Clear token
+            tokenManager.forgetToken();
+
+            // Store token
+            tokenManager.storeToken(res);
+
+            // Try to retrieve token and log in console
+            let token = tokenManager.getToken();
+            console.log("Retrieved " + token);
+
+            navigation.navigate('TabNavigation');
+        }
+        else{
+            console.log("No token received!");
+            // ALERT USER: WRONG PASSWORD
+        }
+    }).catch(e => {
+          console.log(e);
     });
   };
+
   return (
-      <View style = {KIC_Style.container}>
-        <div className="login">
-          <h1>Keeping It Casual: Log In Page</h1>
-          <div className="form">
-                  <form onSubmit={handleSubmit}>
-                    <div className="formInput">
-                      <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="formDefault" placeholder="Username" required="required" />
-                    </div>
-                    <div className="formInput">
-                      <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder="Password" required="required" />
-                    </div>
-                    <div className="formInput">
-                        <button type="submit" value="submit">Log in</button>
-                    </div>
-                  </form>
-                  <Button
-                      title="Sign up"
-                      onPress = {() =>
-                          navigation.navigate('SignUp')
-                      }
-                  />
-          </div>
-        </div>
-      </View>
+    <div className="login">
+      <h1>Keeping It Casual: Log In Page</h1>
+      <div className="form">
+              <form onSubmit={handleSubmit}>
+                <div className="formInput">
+                  <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="formDefault" placeholder="Username" required="required" />
+                </div>
+                <div className="formInput">
+                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder="Password" required="required" />
+                </div>
+                <div className="formInput">
+                    <button type="submit" value="submit">Log in</button>
+                </div>
+              </form>
+              <Button
+                  title="Sign up"
+                  onPress = {() =>
+                      navigation.navigate('SignUp')
+                  }
+              />
+      </div>
+    </div>
   );
 }
