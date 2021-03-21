@@ -9,6 +9,7 @@ import MentalHealthLog from "../Mental-Health/MentalHealthLog";
 import FindHelp from "../Mental-Health/FindHelp";
 import PersonalPage from "./PersonalPage";
 import Post from "./Post";
+import PostInfo from "./PostInfo";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,10 @@ class PostNav extends React.Component {
                 <Stack.Screen
                     name="Post"
                     component={Post}
+                />
+                <Stack.Screen
+                    name="PostInfo"
+                    component={PostInfo}
                 />
             </Stack.Navigator>
         );

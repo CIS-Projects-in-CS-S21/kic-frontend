@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import {StyleSheet, Text, View, Image, Button, ScrollView} from 'react-native';
 import KIC_Style from "../Components/Style";
 
 
@@ -27,6 +27,13 @@ class Post extends React.Component {
                 />
                 <Text>Keeping It Casual Post Page!</Text>
                 <StatusBar style="auto" />
+                {/* NAVIGATION */}
+                <Button
+                    title = "Next"
+                    onPress = {() =>
+                        this.props.navigation.navigate('PostInfo')
+                    }
+                />
             </View>
         );
     }
