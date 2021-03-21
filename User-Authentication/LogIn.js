@@ -8,7 +8,8 @@ import { useState} from 'react';
 import { Button } from 'react-native';
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import TokenManager from './TokenManager';
 
 export default function logIn() {
 
@@ -19,16 +20,49 @@ export default function logIn() {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    const client = new UsersClient(
-      "https://test.api.keeping-it-casual.com"
-    );
+    let url = "";
+
+    // Check if running in production or development
+    if (__DEV__) {
+        console.log("Running in development mode");
+        url = "http://test.api.keeping-it-casual.com";
+    } else {
+        console.log("Running in production mode");
+        url = "https://api.keeping-it-casual.com";
+    }
+    const client = new UsersClient(url);
+
+    // Set request for GetJWTTokenRequest
     let req = new GetJWTTokenRequest();
     req.setUsername(username);
     req.setPassword(password);
+
+    // Try to log in with request
     client.getJWTToken(req, {}).then(res => {
-      // On successful login, take user to user feed
-      console.log(res)
-      navigation.navigate('TabNavigation')
+        // On successful login, store token and go to user feed
+        if (res.array.length > 0){
+            // Log token to store
+            console.log("Should store: " + res);
+
+            // Create TokenManager
+            let tokenManager = new TokenManager();
+
+            // Clear token
+            tokenManager.forgetToken();
+
+            // Store token
+            tokenManager.storeToken(res);
+
+            // Try to retrieve token and log in console
+            let token = tokenManager.getToken();
+            console.log("Retrieved " + token);
+
+            navigation.navigate('TabNavigation');
+        }
+        else{
+            console.log("No token received!");
+            // ALERT USER: WRONG PASSWORD
+        }
     }).catch(e => {
           console.log(e);
     });

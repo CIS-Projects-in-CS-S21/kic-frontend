@@ -9,6 +9,7 @@ import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, Touchable
 import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
+import TokenManager from '../User-Authentication/TokenManager';
 
 /**
  * @class Contains function for rendering the personal page.
