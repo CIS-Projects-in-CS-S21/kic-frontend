@@ -12,7 +12,10 @@ const KIC_Style = StyleSheet.create({
     },
     title: {
         color: '#b3d2db',
-        fontFamily: 'sans-serif'
+        fontFamily: 'sans-serif',
+        fontSize: 30,
+        fontWeight: "bold"
+        
     },
     button: {
         width: "80%",
@@ -20,11 +23,11 @@ const KIC_Style = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         backgroundColor: "#7ab7dd",
-        marginTop: 100,
+        marginTop: 10,
         padding: 10,
     },
     button_font: {
-        font: 'sans-serif',
+        fontFamily: 'sans-serif',
         color: '#ffff'
     }
 });
