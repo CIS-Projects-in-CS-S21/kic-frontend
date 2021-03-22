@@ -7,11 +7,13 @@ import KIC_Style from "../Components/Style";
 import React from 'react';
 import { useNavigation } from '@react-navigation/native'; 
 import { useState} from 'react';
-import { Button } from 'react-native';
+import {Button, Image} from 'react-native';
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TokenManager from './TokenManager';
+import {TouchableOpacity, View, Text} from "react-native-web";
+import KIC_Style from "../Components/Style";
 
 export default function logIn() {
 
@@ -64,34 +66,41 @@ export default function logIn() {
         else{
             console.log("No token received!");
             // ALERT USER: WRONG PASSWORD
+            alert("Incorrect password. Please try again");
         }
     }).catch(e => {
           console.log(e);
+          alert("Account does not exist. Please sign up or enter valid account credentials.")
     });
   };
 
   return (
-    <div className="login">
-      <h1>Keeping It Casual: Log In Page</h1>
-      <div className="form">
-              <form onSubmit={handleSubmit}>
-                <div className="formInput">
-                  <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="formDefault" placeholder="Username" required="required" />
-                </div>
-                <div className="formInput">
-                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder="Password" required="required" />
-                </div>
-                <div className="formInput">
-                    <button type="submit" value="submit">Log in</button>
-                </div>
-              </form>
-              <Button
-                  title="Sign up"
-                  onPress = {() =>
+    <View style = {KIC_Style.container}>
+        <div className="login">
+          <h1>Keeping It Casual: Log In Page</h1>
+          <Image
+                style={{width: 180, height: 180, alignItems: "center", resizeMode: 'contain'}}
+                source = {require('../assets/kic.png')}
+          />
+          <div className="form">
+                  <form onSubmit={handleSubmit}>
+                    <div className="formInput">
+                      <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="formDefault" placeholder="Username" required="required" />
+                    </div>
+                    <div className="formInput">
+                      <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="formDefault" placeholder="Password" required="required" />
+                    </div>
+                    <div className="formInput">
+                        <button type="submit" value="submit">Log in</button>
+                    </div>
+                  </form>
+                  <TouchableOpacity style={KIC_Style.button} onPress={() =>
                       navigation.navigate('SignUp')
-                  }
-              />
-      </div>
-    </div>
+                  }>
+                  <Text style = {KIC_Style.button_font}>Sign Up</Text>
+                  </TouchableOpacity>
+          </div>
+        </div>
+    </View>
   );
 }

@@ -302,7 +302,8 @@ proto.kic.common.File.toObject = function(includeInstance, msg) {
   var f, obj = {
     filename: jspb.Message.getFieldWithDefault(msg, 1, ""),
     filelocation: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : []
+    metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : [],
+    datestored: (f = msg.getDatestored()) && proto.kic.common.Date.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -353,6 +354,11 @@ proto.kic.common.File.deserializeBinaryFromReader = function(msg, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
          });
       break;
+    case 4:
+      var value = new proto.kic.common.Date;
+      reader.readMessage(value,proto.kic.common.Date.deserializeBinaryFromReader);
+      msg.setDatestored(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -399,6 +405,14 @@ proto.kic.common.File.serializeBinaryToWriter = function(message, writer) {
   f = message.getMetadataMap(true);
   if (f && f.getLength() > 0) {
     f.serializeBinary(3, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+  }
+  f = message.getDatestored();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      proto.kic.common.Date.serializeBinaryToWriter
+    );
   }
 };
 
@@ -459,6 +473,43 @@ proto.kic.common.File.prototype.getMetadataMap = function(opt_noLazyCreate) {
 proto.kic.common.File.prototype.clearMetadataMap = function() {
   this.getMetadataMap().clear();
   return this;};
+
+
+/**
+ * optional Date dateStored = 4;
+ * @return {?proto.kic.common.Date}
+ */
+proto.kic.common.File.prototype.getDatestored = function() {
+  return /** @type{?proto.kic.common.Date} */ (
+    jspb.Message.getWrapperField(this, proto.kic.common.Date, 4));
+};
+
+
+/**
+ * @param {?proto.kic.common.Date|undefined} value
+ * @return {!proto.kic.common.File} returns this
+*/
+proto.kic.common.File.prototype.setDatestored = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.kic.common.File} returns this
+ */
+proto.kic.common.File.prototype.clearDatestored = function() {
+  return this.setDatestored(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.kic.common.File.prototype.hasDatestored = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
 
 
 

@@ -8,6 +8,9 @@ import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
 import {Date} from "../gen/proto/common_pb";
+import personalPage from "../Personal-Page/PersonalPage"
+import KIC_Style from "../Components/Style";
+import {Text, TouchableOpacity} from "react-native-web";
 import {Form, View, Button, TextInput} from "react-native";
 import {Formik} from 'formik';
 
@@ -28,7 +31,19 @@ export default function signUp() {
   const handleSubmit = evt => {
     evt.preventDefault(); 
     if(password1 !== password2) {
-      alert('Error: Passwords must be equal.');
+        alert('Error: Passwords must be equal.');
+    } else if (username == null || username == "") {
+        alert('Error: Must input username');
+    } else if (password1 == null || password1 == "") {
+        alert('Error: Must input password');
+    } else if (password2 == null || password2 == "") {
+        alert('Error: Must input password');
+    } else if (password1.length < 8) {
+        alert('Error: Passwords must be at least 8 characters.');
+    } else if (email.includes("@") == false) {
+        alert('Error: Must include a valid email.');
+    }else if (firstName == "" || lastName == "") {
+        alert('Missing first or last name entries.');
     } else {
       makeRequest();       
     }
@@ -58,37 +73,51 @@ const makeRequest = () => {
         navigation.navigate('LogIn')
     }).catch(e => {
           console.log(e);
+          alert("Invalid signup. Please use different credentials and try again. If problem persists, contact administrators.")
     });
-    
 }
 
   return (
-        <Formik
-            initialValues = {{firstName : '', lastName : '', username : '', email : '',
-                            password1 : '', password2 : ''}}
-            onSubmit={values => console.log(values)}
-        >
-            <View>
-            
-        
+      <View style = {KIC_Style.container}>
+          <div className="signUp">
+              <h1>Sign Up Page</h1>
+              <Image
+                  style={{width: 180, height: 180, alignItems: "center", resizeMode: 'contain'}}
+                  source = {require('../assets/kic.png')}
+              />
+              <div className="form">
+                    <form onSubmit={handleSubmit}>
+                      <div className="formInput">
+                          <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="formDefault" placeholder = "Last name" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "Username" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="password" value={password1} onChange={e => setPassword1(e.target.value)} className="formDefault" placeholder = "Password" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <input type="password" value={password2} onChange={e => setPassword2(e.target.value)} className="formDefault" placeholder = "Retype password" required="required"/>
+                      </div>
+                      <div className="formInput">
+                          <button type="submit" value="submit">Register</button>
+                      </div>
+                    </form>
+                    <TouchableOpacity style={KIC_Style.button} onPress={() =>
+                          navigation.navigate('LogIn')
+                      }>
+                          <Text style = {KIC_Style.button_font}>Log In</Text>
+                    </TouchableOpacity>
+              </div>
+            </div>
+        </View>
 
-                      <TextInput type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
-                      <TextInput type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="formDefault" placeholder = "Last name" required="required"/>
-                      <TextInput type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "Username" required="required"/>
-                      <TextInput type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
-                      <TextInput type="password" value={password1} onChange={e => setPassword1(e.target.value)} className="formDefault" placeholder = "Password" required="required"/>
-                      <TextInput type="password" value={password2} onChange={e => setPassword2(e.target.value)} className="formDefault" placeholder = "Retype password" required="required"/>
-                      <Button title="Register" onPress={handleSubmit}/>
-                  
-                
-                <Button
-                    title="Log in"
-                    onPress = {() =>
-                        navigation.navigate('LogIn')
-                    }
-                />
-                </View>
-        </Formik>
       );
       
   }
