@@ -5,9 +5,11 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "nodev": "expo start --no-dev --minify"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.8",
     "@react-navigation/native": "^5.9.3",
@@ -31,9 +33,6 @@
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
     "jest": "^26.6.3"
-  },
-  "scripts": {
-    "test": "jest"
   },
   "private": true
 }
