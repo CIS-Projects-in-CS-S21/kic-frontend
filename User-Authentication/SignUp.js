@@ -2,18 +2,17 @@
  * @fileoverview The screen for the signup page, containing a link
  * back to the log in page.
  */
-import "./SignUpStyle.css";
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
 import {Date} from "../gen/proto/common_pb";
-import {Button, Image, View} from "react-native";
 import personalPage from "../Personal-Page/PersonalPage"
 import KIC_Style from "../Components/Style";
 import {Text, TouchableOpacity} from "react-native-web";
-
+import {Form, View, Button, TextInput} from "react-native";
+import {Formik} from 'formik';
 
 /**
  * @class Contains function for rendering the signup page
@@ -78,7 +77,6 @@ const makeRequest = () => {
     });
 }
 
-
   return (
       <View style = {KIC_Style.container}>
           <div className="signUp">
@@ -119,6 +117,8 @@ const makeRequest = () => {
               </div>
             </div>
         </View>
+
       );
+      
   }
 
