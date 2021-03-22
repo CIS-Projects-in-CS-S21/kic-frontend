@@ -2,16 +2,14 @@
  * @fileoverview The screen for the signup page, containing a link
  * back to the log in page.
  */
-import "./SignUpStyle.css";
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { AddUserRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
 import {Date} from "../gen/proto/common_pb";
-import {Button} from "react-native";
-import personalPage from "../Personal-Page/PersonalPage"
-
+import {Form, View, Button, TextInput} from "react-native";
+import {Formik} from 'formik';
 
 /**
  * @class Contains function for rendering the signup page
@@ -64,43 +62,34 @@ const makeRequest = () => {
     
 }
 
-
   return (
-        <div className="signUp">
-          <h1>Keeping It Casual: Sign Up Page</h1>
-          <div className="form">
-                <form onSubmit={handleSubmit}>
-                  <div className="formInput">
-                      <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="formDefault" placeholder = "Last name" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "Username" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="password" value={password1} onChange={e => setPassword1(e.target.value)} className="formDefault" placeholder = "Password" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <input type="password" value={password2} onChange={e => setPassword2(e.target.value)} className="formDefault" placeholder = "Retype password" required="required"/>
-                  </div>
-                  <div className="formInput">
-                      <button type="submit" value="submit">Register</button>
-                  </div>
-                </form>
+        <Formik
+            initialValues = {{firstName : '', lastName : '', username : '', email : '',
+                            password1 : '', password2 : ''}}
+            onSubmit={values => console.log(values)}
+        >
+            <View>
+            
+        
 
+                      <TextInput type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="formDefault" placeholder = "First name" required="required"/>
+                      <TextInput type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="formDefault" placeholder = "Last name" required="required"/>
+                      <TextInput type="text" value={username} onChange={e => setUserName(e.target.value)} className="formDefault" placeholder = "Username" required="required"/>
+                      <TextInput type="email" value={email} onChange={e => setEmail(e.target.value)} className="formDefault" placeholder = "Email" required="required"/>
+                      <TextInput type="password" value={password1} onChange={e => setPassword1(e.target.value)} className="formDefault" placeholder = "Password" required="required"/>
+                      <TextInput type="password" value={password2} onChange={e => setPassword2(e.target.value)} className="formDefault" placeholder = "Retype password" required="required"/>
+                      <Button title="Register" onPress={handleSubmit}/>
+                  
+                
                 <Button
                     title="Log in"
                     onPress = {() =>
                         navigation.navigate('LogIn')
                     }
                 />
-          </div>
-        </div>
+                </View>
+        </Formik>
       );
+      
   }
 

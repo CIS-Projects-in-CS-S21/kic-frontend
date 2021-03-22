@@ -1,7 +1,9 @@
 /**
  * @fileoverview Login page - allows users to login to their account.
  */
-import './SignUpStyle.css';
+
+
+import KIC_Style from "../Components/Style";
 import React from 'react';
 import { useNavigation } from '@react-navigation/native'; 
 import { useState} from 'react';
