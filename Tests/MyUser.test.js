@@ -1,3 +1,7 @@
+/**
+ * @fileoverview A testing suite for MyUser functions, which handle fetching user information.
+ */
+
 import MyUser from "../Components/MyUser";
 
 test('Test Mock User', () => {
