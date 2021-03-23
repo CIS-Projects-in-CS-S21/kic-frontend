@@ -60,8 +60,15 @@ export default function logIn() {
         {/* Try to retrieve token and log in console*/ }
         let token = tokenManager.getToken();
         console.log("Retrieved " + token);
-
-        navigation.navigate('TabNavigation');
+        
+        if(tokenManager.isAuthenticated()) {
+          console.log("I am authenticated!")
+          navigation.navigate('TabNavigation');
+        }
+        else {
+          alert("Invalid account.");
+        }
+        
       }
       else {
         console.log("No token received!");
