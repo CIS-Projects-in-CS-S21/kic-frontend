@@ -3,13 +3,12 @@
  */
 
 
-import KIC_Style from "../Components/Style";
 import React from 'react';
 import { useNavigation } from '@react-navigation/native'; 
 import { useState} from 'react';
-import {Button, Image} from 'react-native';
+import {Image} from 'react-native';
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
-import { GetJWTTokenRequest } from '../gen/proto/users_pb';
+import {GetJWTTokenRequest, GetJWTTokenResponse} from '../gen/proto/users_pb';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TokenManager from './TokenManager';
 import {TouchableOpacity, View, Text} from "react-native-web";
