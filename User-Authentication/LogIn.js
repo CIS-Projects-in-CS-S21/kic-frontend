@@ -91,14 +91,14 @@ export default function logIn() {
       <TextInput
         style={KIC_Style.input}
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={(e) => setUsername(e.nativeEvent.text)}
         placeholder=" Username"
         required="required"
       />
       <TextInput
         style={KIC_Style.input}
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.nativeEvent.text)}
         placeholder=" Password"
         required="required"
         secureTextEntry={true}

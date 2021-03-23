@@ -48,7 +48,7 @@ export default function signUp() {
 
     const makeRequest = () => {
         let url = "";
-        if (__DEV__) {
+        if (!__DEV__) {
             url = "http://test.api.keeping-it-casual.com";
         } else {
             url = "https://api.keeping-it-casual.com";
@@ -83,38 +83,38 @@ export default function signUp() {
             <TextInput
                 style={KIC_Style.input}
                 value={firstName}
-                onChange={e => setFirstName(e.target.value)}
+                onChange={e => setFirstName(e.nativeEvent.text)}
                 placeholder=" First name"
                 required="required" />
             <TextInput
                 style={KIC_Style.input}
                 value={lastName}
-                onChange={e => setLastName(e.target.value)}
+                onChange={e => setLastName(e.nativeEvent.text)}
                 placeholder=" Last name"
                 required="required" />
             <TextInput
                 style={KIC_Style.input}
                 value={username}
-                onChange={e => setUserName(e.target.value)}
+                onChange={e => setUserName(e.nativeEvent.text)}
                 placeholder=" Username"
                 required="required" />
             <TextInput
                 style={KIC_Style.input}
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => setEmail(e.nativeEvent.text)}
                 placeholder=" Email"
                 required="required" />
             <TextInput
                 style={KIC_Style.input}
                 value={password1}
-                onChange={e => setPassword1(e.target.value)}
+                onChange={e => setPassword1(e.nativeEvent.text)}
                 placeholder=" Password"
                 required="required"
                 secureTextEntry={true} />
             <TextInput
                 style={KIC_Style.input}
                 value={password2}
-                onChange={e => setPassword2(e.target.value)}
+                onChange={e => setPassword2(e.nativeEvent.text)}
                 placeholder=" Retype password"
                 required="required"
                 secureTextEntry={true} />
