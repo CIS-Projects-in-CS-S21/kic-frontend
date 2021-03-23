@@ -11,9 +11,8 @@ import { TextInput, Image } from 'react-native';
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Formik }  from 'formik';
 import TokenManager from './TokenManager';
-import { TouchableOpacity, View, Text } from "react-native-web";
+import { TouchableOpacity, View, Text } from "react-native";
 
 export default function logIn() {
 
@@ -22,11 +21,12 @@ export default function logIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+
   const handleSubmit = evt => {
     evt.preventDefault();
     let url = "";
 
-    // Check if running in production or development
+    {/* Check if running in production or development*/ }
     if (__DEV__) {
       console.log("Running in development mode");
       url = "http://test.api.keeping-it-casual.com";
@@ -36,28 +36,28 @@ export default function logIn() {
     }
     const client = new UsersClient(url);
 
-    // Set request for GetJWTTokenRequest
+    {/* Set request for GetJWTTokenRequest*/ }
     let req = new GetJWTTokenRequest();
     req.setUsername(username);
     req.setPassword(password);
 
-    // Try to log in with request
+    {/* Try to log in with request*/ }
     client.getJWTToken(req, {}).then(res => {
-      // On successful login, store token and go to user feed
+      {/* On successful login, store token and go to user feed*/ }
       if (res.array.length > 0) {
-        // Log token to store
+        {/* Log token to store*/ }
         console.log("Should store: " + res);
 
-        // Create TokenManager
+        {/* Create TokenManager*/ }
         let tokenManager = new TokenManager();
 
-        // Clear token
+        {/* Clear token*/ }
         tokenManager.forgetToken();
 
-        // Store token
+        {/* Store token*/ }
         tokenManager.storeToken(res);
 
-        // Try to retrieve token and log in console
+        {/* Try to retrieve token and log in console*/ }
         let token = tokenManager.getToken();
         console.log("Retrieved " + token);
 
@@ -65,7 +65,7 @@ export default function logIn() {
       }
       else {
         console.log("No token received!");
-        // ALERT USER: WRONG PASSWORD
+        {/*ALERT USER: WRONG PASSWORD*/ }
         alert("Incorrect password. Please try again");
       }
     }).catch(e => {
@@ -75,40 +75,37 @@ export default function logIn() {
   };
 
   return (
-    <Formik
-      initialValues={{ username: '', password: '' }}
-      onSubmit={handleSubmit}
-    >
-      <View style={KIC_Style.container}>
+    <View style={KIC_Style.container}>
       <Text style={KIC_Style.title}>Keeping It Casual: Log In Page</Text>
-        <Image
-          style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
-          source={require('../assets/kic.png')}
-        />
-        <TextInput
-          type="text"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          placeholder="Username"
-          required="required"
-        />
-        <TextInput 
-          type="password" 
-          value={password} 
-          onChange={e => setPassword(e.target.value)} 
-          placeholder="Password" 
-          required="required" 
-          secureTextEntry="true"
-        />
-        <TouchableOpacity style={KIC_Style.button} onPress={handleSubmit}>
-          <Text style={KIC_Style.button_font}>Log In</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={KIC_Style.button} onPress={() =>
-          navigation.navigate('SignUp')
-        }>
-          <Text style={KIC_Style.button_font}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-    </Formik>
+      <Image
+        style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+        source={require('../assets/kic.png')}
+      />
+      <TextInput
+        style={KIC_Style.input}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder=" Username"
+        required="required"
+      />
+      <TextInput
+        style={KIC_Style.input}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder=" Password"
+        required="required"
+        secureTextEntry={true}
+      />
+      <TouchableOpacity
+        style={KIC_Style.button}
+        onPress={handleSubmit}>
+        <Text style={KIC_Style.button_font}>Log In</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={KIC_Style.button}
+        onPress={() => navigation.navigate('SignUp')}>
+        <Text style={KIC_Style.button_font}>Sign Up</Text>
+      </TouchableOpacity>
+    </View>
   );
 }

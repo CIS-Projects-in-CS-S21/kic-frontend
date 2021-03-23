@@ -9,9 +9,7 @@ import { AddUserRequest } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
-import { Text, TouchableOpacity } from "react-native-web";
-import { Image, View, Button, TextInput } from "react-native";
-import { Formik } from 'formik';
+import { Text, TouchableOpacity, Image, View, TextInput } from "react-native";
 
 /**
  * @class Contains function for rendering the signup page
@@ -67,7 +65,7 @@ export default function signUp() {
         req.setDesiredusername(username)
         req.setDesiredpassword(password1)
         client.addUser(req, {}).then(res => {
-            // On successful signup, return user to login screen for login
+            {/* On successful signup, return user to login screen for login */ }
             console.log(res)
             navigation.navigate('LogIn')
         }).catch(e => {
@@ -77,67 +75,60 @@ export default function signUp() {
     }
 
     return (
-        <Formik
-            initialValues={{ email: '', firstName: '', lastName: '', password1: '', password2: '' }}
-            onSubmit={values => console.log(values)}
-        >
-            <View style={KIC_Style.container}>
-                <Text style={KIC_Style.title}>Keeping It Casual: Sign Up Page</Text>
-                <Image
-                style={{width: 180, height: 180, alignItems: "center", resizeMode: 'contain'}}
-                source = {require('../assets/kic.png')}/>
-                
-                <TextInput 
-                    type="text" 
-                    value={firstName} 
-                    onChange={e => setFirstName(e.target.value)} 
-                    placeholder="First name" 
-                    required="required" />
-                <TextInput 
-                    type="text" 
-                    value={lastName} 
-                    onChange={e => setLastName(e.target.value)} 
-                    placeholder="Last name" 
-                    required="required" />
-                <TextInput 
-                    type="text" 
-                    value={username} 
-                    onChange={e => setUserName(e.target.value)} 
-                    placeholder="Username" 
-                    required="required" />
-                <TextInput 
-                    type="email" 
-                    value={email} 
-                    onChange={e => setEmail(e.target.value)} 
-                    placeholder="Email" 
-                    required="required" />
-                <TextInput 
-                    type="password" 
-                    value={password1} 
-                    onChange={e => setPassword1(e.target.value)} 
-                    placeholder="Password" 
-                    required="required" 
-                    secureTextEntry="true" />
-                <TextInput 
-                    type="password" 
-                    value={password2} 
-                    onChange={e => setPassword2(e.target.value)} 
-                    placeholder="Retype password" 
-                    required="required" 
-                    secureTextEntry="true" />
-                <TouchableOpacity style={KIC_Style.button} onPress={handleSubmit}>
-                    <Text style={KIC_Style.button_font}>Register</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={KIC_Style.button} onPress={() =>
-                    navigation.navigate('LogIn')
-                }>
-                    <Text style={KIC_Style.button_font}>Log In</Text>
-                </TouchableOpacity>
-
-            </View>
-        </Formik>
-
+        <View style={KIC_Style.container}>
+            <Text style={KIC_Style.title}>Keeping It Casual: Sign Up Page</Text>
+            <Image
+                style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+                source={require('../assets/kic.png')} />
+            <TextInput
+                style={KIC_Style.input}
+                value={firstName}
+                onChange={e => setFirstName(e.target.value)}
+                placeholder=" First name"
+                required="required" />
+            <TextInput
+                style={KIC_Style.input}
+                value={lastName}
+                onChange={e => setLastName(e.target.value)}
+                placeholder=" Last name"
+                required="required" />
+            <TextInput
+                style={KIC_Style.input}
+                value={username}
+                onChange={e => setUserName(e.target.value)}
+                placeholder=" Username"
+                required="required" />
+            <TextInput
+                style={KIC_Style.input}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder=" Email"
+                required="required" />
+            <TextInput
+                style={KIC_Style.input}
+                value={password1}
+                onChange={e => setPassword1(e.target.value)}
+                placeholder=" Password"
+                required="required"
+                secureTextEntry={true} />
+            <TextInput
+                style={KIC_Style.input}
+                value={password2}
+                onChange={e => setPassword2(e.target.value)}
+                placeholder=" Retype password"
+                required="required"
+                secureTextEntry={true} />
+            <TouchableOpacity
+                style={KIC_Style.button}
+                onPress={handleSubmit}>
+                <Text style={KIC_Style.button_font}>Register</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={KIC_Style.button}
+                onPress={() => navigation.navigate('LogIn')}>
+                <Text style={KIC_Style.button_font}>Log In</Text>
+            </TouchableOpacity>
+        </View>
     );
-
 }
 
