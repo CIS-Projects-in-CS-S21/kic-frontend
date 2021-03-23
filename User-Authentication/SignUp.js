@@ -48,7 +48,7 @@ export default function signUp() {
 
     const makeRequest = () => {
         let url = "";
-        if (!__DEV__) {
+        if (__DEV__) {
             url = "http://test.api.keeping-it-casual.com";
         } else {
             url = "https://api.keeping-it-casual.com";
