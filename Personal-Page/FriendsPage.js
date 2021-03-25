@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
@@ -41,7 +41,7 @@ class FriendsPage extends React.Component {
         <Item title={item.title} />
       );
       return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.myHeader}>
             {/* Display profile header with state information */}
             <ProfileHeader
@@ -58,7 +58,7 @@ class FriendsPage extends React.Component {
             <FriendsList />
 
             <StatusBar style="auto" />
-        </View>
+        </SafeAreaView>
       );
   }
 }
