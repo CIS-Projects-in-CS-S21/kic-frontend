@@ -16,7 +16,7 @@ export default class TokenManager {
         try {
             await AsyncStorage.setItem(
                 'MyToken',
-                token
+                 token
             );
             console.log("Stored token: " + token);
         } catch (error) {

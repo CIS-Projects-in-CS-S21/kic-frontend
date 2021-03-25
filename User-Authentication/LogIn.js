@@ -46,7 +46,7 @@ export default function logIn() {
       {/* On successful login, store token and go to user feed*/ }
       if (res.array.length > 0) {
         {/* Log token to store*/ }
-        console.log("Should store: " + res);
+        console.log("Should store: " + res.getToken());
 
         {/* Create TokenManager*/ }
         let tokenManager = new TokenManager();
@@ -55,7 +55,7 @@ export default function logIn() {
         tokenManager.forgetToken();
 
         {/* Store token*/ }
-        tokenManager.storeToken(res);
+        tokenManager.storeToken(res.getToken());
 
         {/* Try to retrieve token and log in console*/ }
         let token = tokenManager.getToken();
