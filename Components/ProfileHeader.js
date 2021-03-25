@@ -37,9 +37,6 @@ class ProfileHeader extends React.Component {
 
                   </View>
 
-                  {/* # of posts and friends */}
-                  <Text style ={styles.textStats}>{this.props.numPosts} posts, {this.props.numFriends} friends</Text>
-
                   {/* User's bio */}
                   <Text style ={styles.textBio}>{this.props.userBio}</Text>
               </View>
@@ -100,10 +97,6 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         fontSize: 15,
     },
-    textStats: {
-        fontSize: 13,
-        fontStyle: 'italic',
-    }
 });
 
 export default ProfileHeader;

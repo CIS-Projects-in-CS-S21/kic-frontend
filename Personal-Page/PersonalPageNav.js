@@ -9,6 +9,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import MentalHealthLog from "../Mental-Health/MentalHealthLog";
 import FindHelp from "../Mental-Health/FindHelp";
 import PersonalPage from "./PersonalPage";
+import FriendsPage from "./FriendsPage";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,10 @@ class PersonalPageNav extends React.Component {
                     <Stack.Screen
                         name="FindHelp"
                         component={FindHelp}
+                    />
+                    <Stack.Screen
+                        name="FriendsPage"
+                        component={FriendsPage}
                     />
                 </Stack.Navigator>
         );
