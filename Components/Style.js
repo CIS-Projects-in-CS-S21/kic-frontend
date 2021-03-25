@@ -8,11 +8,14 @@ const KIC_Style = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         color: '#7ab7dd',
-        fontFamily: 'sans-serif'
     },
     title: {
         color: '#b3d2db',
-        fontFamily: 'sans-serif'
+        fontFamily: 'sans-serif',
+        fontSize: 30,
+        fontWeight: "bold",
+        paddingBottom: 5
+        
     },
     button: {
         width: "80%",
@@ -20,13 +23,19 @@ const KIC_Style = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         backgroundColor: "#7ab7dd",
-        marginTop: 100,
+        marginTop: 7,
         padding: 10,
     },
     button_font: {
-        font: 'sans-serif',
         color: '#ffff'
+    },
+
+    input: {
+        borderWidth: .2,
+        borderColor: '#CDCDCD',
+        padding: 1
     }
+
 });
 
 export default KIC_Style;
