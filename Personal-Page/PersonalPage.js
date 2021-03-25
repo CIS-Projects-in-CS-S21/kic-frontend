@@ -83,6 +83,12 @@ class PersonalPage extends React.Component {
                 }
               />
               <Button
+                title = "View a post"
+                onPress = {() =>
+                    this.props.navigation.navigate('DetailedPostView')
+                }
+              />
+              <Button
                 title = "Mental Health Tracker!"
                 onPress = {() =>
                     this.props.navigation.navigate('MentalHealthLog')
