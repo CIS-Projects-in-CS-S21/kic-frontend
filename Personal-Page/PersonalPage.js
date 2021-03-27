@@ -10,6 +10,7 @@ import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
 import TokenManager from '../User-Authentication/TokenManager';
+import MyUser from "../Components/MyUser";
 
 /**
  * @class Contains function for rendering the personal page.
@@ -20,6 +21,9 @@ class PersonalPage extends React.Component {
    */
   constructor(props) {
     super();
+
+    let user = new MyUser();
+    user.getUserName();
 
     // Define the initial state:
     this.state = {
