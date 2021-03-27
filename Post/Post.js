@@ -3,8 +3,8 @@
 */
 
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import {StyleSheet, Text, View, Image, Button, ScrollView} from 'react-native';
+import React, {useEffect, useReducer, useCallback, useState} from 'react';
+import {StyleSheet, Text, View, Image, Button, BackHandler,ScrollView} from 'react-native';
 import KIC_Style from "../Components/Style";
 
 
