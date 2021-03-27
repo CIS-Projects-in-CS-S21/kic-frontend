@@ -23,13 +23,12 @@ class PersonalPage extends React.Component {
     super();
 
     let user = new MyUser();
-    user.getUserName();
 
     // Define the initial state:
     this.state = {
-      userFirstName: "First",
-      userLastName: "Last",
-      userHandle: "username",
+      userFirstName: user.getFirstName(),
+      userLastName: user.getLastName(),
+      userHandle: user.getUsername(),
       userBio: "This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. ",
       numPosts: 6,
       numFriends: 0,
@@ -72,8 +71,6 @@ class PersonalPage extends React.Component {
                 userBio = {this.state.userBio}
                 userHandle = {this.state.userHandle}
                 userPosts = {this.state.userPosts}
-                numPosts = {this.state.numPosts}
-                numFriends = {this.state.numFriends}
                 />
 
             {/* Show posts */}
