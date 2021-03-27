@@ -112,7 +112,10 @@ proto.kic.common.User.toObject = function(includeInstance, msg) {
   var f, obj = {
     userid: jspb.Message.getFieldWithDefault(msg, 1, 0),
     username: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    email: jspb.Message.getFieldWithDefault(msg, 3, "")
+    email: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    birthday: (f = msg.getBirthday()) && proto.kic.common.Date.toObject(includeInstance, f),
+    city: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    bio: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -161,6 +164,19 @@ proto.kic.common.User.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setEmail(value);
       break;
+    case 4:
+      var value = new proto.kic.common.Date;
+      reader.readMessage(value,proto.kic.common.Date.deserializeBinaryFromReader);
+      msg.setBirthday(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCity(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setBio(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -208,6 +224,28 @@ proto.kic.common.User.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writeString(
       3,
+      f
+    );
+  }
+  f = message.getBirthday();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      proto.kic.common.Date.serializeBinaryToWriter
+    );
+  }
+  f = message.getCity();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+  f = message.getBio();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
       f
     );
   }
@@ -265,6 +303,79 @@ proto.kic.common.User.prototype.getEmail = function() {
  */
 proto.kic.common.User.prototype.setEmail = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional Date birthday = 4;
+ * @return {?proto.kic.common.Date}
+ */
+proto.kic.common.User.prototype.getBirthday = function() {
+  return /** @type{?proto.kic.common.Date} */ (
+    jspb.Message.getWrapperField(this, proto.kic.common.Date, 4));
+};
+
+
+/**
+ * @param {?proto.kic.common.Date|undefined} value
+ * @return {!proto.kic.common.User} returns this
+*/
+proto.kic.common.User.prototype.setBirthday = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.kic.common.User} returns this
+ */
+proto.kic.common.User.prototype.clearBirthday = function() {
+  return this.setBirthday(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.kic.common.User.prototype.hasBirthday = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional string city = 5;
+ * @return {string}
+ */
+proto.kic.common.User.prototype.getCity = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.common.User} returns this
+ */
+proto.kic.common.User.prototype.setCity = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional string bio = 6;
+ * @return {string}
+ */
+proto.kic.common.User.prototype.getBio = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.common.User} returns this
+ */
+proto.kic.common.User.prototype.setBio = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
 };
 
 
