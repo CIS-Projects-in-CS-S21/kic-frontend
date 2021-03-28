@@ -5,7 +5,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { AddUserRequest } from "../gen/proto/users_pb";
+import { GetJWTTokenRequest, AddUserRequest } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
@@ -24,6 +24,7 @@ export default function signUp() {
     const [email, setEmail] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [bio, setBio] = useState("");
 
     const handleSubmit = evt => {
         evt.preventDefault();
@@ -41,19 +42,18 @@ export default function signUp() {
             alert('Error: Must include a valid email.');
         } else if (firstName == "" || lastName == "") {
             alert('Missing first or last name entries.');
+        } else if (bio.length >= 250) {
+            alert('Sorry, your bio must be less than 250 characters long!');
         } else {
             makeRequest();
         }
     };
 
     const makeRequest = () => {
-        let url = "";
-        if (__DEV__) {
-            url = "http://test.api.keeping-it-casual.com";
-        } else {
-            url = "https://api.keeping-it-casual.com";
-        }
-        const client = new UsersClient(url);
+        {/* Create UsersClientManager & create a UsersClient */}
+        let ucm = new UsersClientManager();
+        let client = ucm.createClient();
+
         let req = new AddUserRequest()
         let date = new Date()
         date.setYear(1998)
@@ -118,6 +118,11 @@ export default function signUp() {
                 placeholder=" Retype password"
                 required="required"
                 secureTextEntry={true} />
+            <TextInput
+                style={KIC_Style.input}
+                value={bio}
+                onChange={e => setBio(e.nativeEvent.text)}
+                placeholder=" Bio (max. 250 characters)" />
             <TouchableOpacity
                 style={KIC_Style.button}
                 onPress={handleSubmit}>
