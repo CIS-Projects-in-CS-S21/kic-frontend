@@ -74,7 +74,6 @@ export default function signUp() {
             console.log("Signup result: " + res)
             console.log("Created user: " + res.getCreateduser())
 
-            let client2 = ucm.createClient()
             /** GET JWT USING NEWLY CREATED ACCOUNT **/
             {/* Set request for GetJWTTokenRequest*/ }
             let reqjwt = new GetJWTTokenRequest();
@@ -86,7 +85,7 @@ export default function signUp() {
             let tokenManager = new TokenManager();
 
             {/* Try to log in with request*/ }
-            client2.getJWTToken(reqjwt, {}).then(res2 => {
+            client.getJWTToken(reqjwt, {}).then(res2 => {
               {/* On successful login, store token and go to user feed*/ }
               if (res2.array.length > 0) {
                 {/* Log token to store*/ }
@@ -124,30 +123,23 @@ export default function signUp() {
                         let reqgetuser = new GetUserByIDRequest();
                         reqgetuser.setUserid(tokenObj.uid);
 
-                        let client3 = ucm.createClient();
-
                         /** LOOK UP THE USER THAT WAS JUST CREATED **/
                         {/* Use token to make request */}
-                        client3.getUserByID(reqgetuser, {'Authorization': authString}).then(res3 => {
+                        client.getUserByID(reqgetuser, {'Authorization': authString}).then(res3 => {
                             console.log("User found: " + res3);
 
-                            let client4 = ucm.createClient()
                             // init request to update user info with bio - setBio works
                             let reqbio = new UpdateUserInfoRequest()
                             console.log("User of id " + tokenObj.uid + ": " + res3)
 
                             console.log("The updateuserinforequest: " + reqbio)
+                            reqbio.setUserid(tokenObj.uid)
                             reqbio.setBio(bio)
                             console.log("New bio to set: " + reqbio.getBio())
                             console.log("The updateuserinforequest after setBio(): " + reqbio)
 
-                            // setDesiredinfo() takes in a User - pass the user found from getUserByID in?
-                            // if uncommented, gives a "i.setDesiredinfo() is not a function" error
-                            // reqbio.setDesiredinfo(res3.getUser())
-                            // console.log("Update user request after setDesiredinfo(): " + reqbio)
-
                             /** USE THE USER WE FOUND TO UPDATE THEIR BIO **/
-                            client4.updateUserInfo(reqbio, {'Authorization': authString}).then(res4 => {
+                            client.updateUserInfo(reqbio, {'Authorization': authString}).then(res4 => {
                                 {/* After signup & bio storage, return user to login screen for login */ }
 
                                 //updateUserInfoResponse currently returns true
@@ -158,21 +150,17 @@ export default function signUp() {
 
                                 //error - can't getBio() of undefined since getUpdateduser() returns undefined
                                 console.log("Updated user bio: " + res4.getUpdateduser().getBio())
-
                             }).catch(e4 => {
                                 // updateuserinforequest failed
                                 console.log(e4);
                             });
-
                         }).catch(e3 => {
                             console.log(e3);
                             alert("Could not get username.")
                         });
-
                     }, reason => {
                         console.log(reason)
                     });
-
                 }
                 else {
                   alert("Invalid account.");
@@ -187,8 +175,7 @@ export default function signUp() {
               console.log(e2);
               alert("Account does not exist. Please sign up or enter valid account credentials.")
             });
-
-            navigation.navigate('UserFeed')
+            navigation.navigate('LogIn')
         }).catch(e => {
             console.log(e);
             alert("Invalid signup. Please use different credentials and try again. If problem persists, contact administrators.")
