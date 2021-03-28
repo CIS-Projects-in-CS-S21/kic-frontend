@@ -188,7 +188,7 @@ export default function signUp() {
               alert("Account does not exist. Please sign up or enter valid account credentials.")
             });
 
-            navigation.navigate('LogIn')
+            navigation.navigate('UserFeed')
         }).catch(e => {
             console.log(e);
             alert("Invalid signup. Please use different credentials and try again. If problem persists, contact administrators.")
