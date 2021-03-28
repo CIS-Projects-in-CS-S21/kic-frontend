@@ -78,11 +78,15 @@ class PersonalPage extends React.Component {
             let mybirthyear = bday.split(",")[0];
             let mybirthmonth = bday.split(",")[1];
             let mybirthday = bday.split(",")[2]
+            let mycity = res.getUser().getCity();
             let mybio = res.getUser().getBio();
+            console.log("This user's bio is: " + res.getUser().getBio());
+            console.log("The bio this page is displaying is: " + mybio);
 
             this.setState({
                 username: myusername,
                 bio: mybio,
+                city: mycity,
                 birthDay: mybirthday,
                 birthMonth: mybirthmonth,
                 birthYear: mybirthyear,

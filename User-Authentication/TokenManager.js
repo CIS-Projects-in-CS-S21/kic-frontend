@@ -50,7 +50,14 @@ export default class TokenManager {
     * @function forgetToken
     */
     forgetToken = async() => {
-        AsyncStorage.clear();
+        try {
+            let token = await AsyncStorage.removeItem('MyToken');
+            console.log("Removed token successfully: " + token);
+            return token
+        } catch (error) {
+            console.log("Error removing token!");
+            console.log(error);
+        }
     }
 
     /**

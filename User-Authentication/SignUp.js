@@ -5,8 +5,9 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { GetJWTTokenRequest, AddUserRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
+import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
+import TokenManager from './TokenManager';
 import UsersClientManager from './UsersClientManager.js';
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
@@ -26,6 +27,7 @@ export default function signUp() {
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
     const [bio, setBio] = useState("");
+    const [myUser, setMyUser] = useState("");
 
     const handleSubmit = evt => {
         evt.preventDefault();
@@ -62,36 +64,128 @@ export default function signUp() {
         date.setDay(21)
         req.setEmail(email)
         req.setBirthday(date)
-        req.setCity("test")
+        req.setCity("city")
         req.setDesiredusername(username)
         req.setDesiredpassword(password1)
 
-        // req.setBio(bio)
-
-        // send adduser request
+        // CREATE USER
         client.addUser(req, {}).then(res => {
             {/* On successful signup, return user to login screen for login */ }
             console.log("Signup result: " + res)
             console.log("Created user: " + res.getCreateduser())
 
-            // init request to update user info with bio
-            let reqbio = new UpdateUserInfoRequest()
-            reqbio.setBio(bio)
-            console.log("Bio: " + reqbio.getBio())
+            let client2 = ucm.createClient()
+            /** GET JWT USING NEWLY CREATED ACCOUNT **/
+            {/* Set request for GetJWTTokenRequest*/ }
+            let reqjwt = new GetJWTTokenRequest();
+            console.log("Submitted credentials: username " + username + " and pw " + password1)
+            reqjwt.setUsername(username);
+            reqjwt.setPassword(password1);
 
-            // pass the created user from addUser in? - gives a "s.setdesiredinfo() is not a function" error
-            //reqbio.setDesiredinfo(res.getCreateduser())
+            {/* Create TokenManager*/ }
+            let tokenManager = new TokenManager();
 
-            // send request to update user info? - gives an "unknown content type received" error
-            client.updateUserInfo(reqbio, {}).then(res2 => {
-                {/* On successful signup, return user to login screen for login */ }
-                console.log("UpdateUserInfo result: " + res2)
-                console.log("Updated user: " + res2.getUpdateduser())
+            {/* Try to log in with request*/ }
+            client2.getJWTToken(reqjwt, {}).then(res2 => {
+              {/* On successful login, store token and go to user feed*/ }
+              if (res2.array.length > 0) {
+                {/* Log token to store*/ }
+                console.log("Should store: " + res2.getToken());
 
-                navigation.navigate('LogIn')
-            }).catch(e => {
-                // updateuserinforequest failed
-                console.log(e);
+                {/* Clear token*/ }
+                tokenManager.forgetToken();
+
+                {/* Store token*/ }
+                tokenManager.storeToken(res2.getToken());
+
+                {/* Try to retrieve token and log in console*/ }
+                let token = tokenManager.getToken();
+                console.log("Retrieved " + token);
+
+                if(tokenManager.isAuthenticated()) {
+                    console.log("I am authenticated! Now trying to retrieve JWT")
+
+                    /** GET AUTHENTICATION FROM JWT **/
+                    {/* Get JWT from storage and use for authorization */}
+                    let authString = "Bearer "
+                    tokenManager.getToken().then(value => {
+                        authString += value
+
+                        let extra = value.split(".")[0]
+                        let token = value.split(".")[1]
+
+                        //console.log(atob(extra))
+                        console.log("Token: " + atob(token))
+
+                        var tokenObj = JSON.parse(atob(token));
+                        console.log('User ID from token: ' + tokenObj.uid);
+
+                        {/* Init request for GetUserByIDRequest*/ }
+                        let reqgetuser = new GetUserByIDRequest();
+                        reqgetuser.setUserid(tokenObj.uid);
+
+                        let client3 = ucm.createClient();
+
+                        /** LOOK UP THE USER THAT WAS JUST CREATED **/
+                        {/* Use token to make request */}
+                        client3.getUserByID(reqgetuser, {'Authorization': authString}).then(res3 => {
+                            console.log("User found: " + res3);
+
+                            let client4 = ucm.createClient()
+                            // init request to update user info with bio - setBio works
+                            let reqbio = new UpdateUserInfoRequest()
+                            console.log("User of id " + tokenObj.uid + ": " + res3)
+
+                            console.log("The updateuserinforequest: " + reqbio)
+                            reqbio.setBio(bio)
+                            console.log("New bio to set: " + reqbio.getBio())
+                            console.log("The updateuserinforequest after setBio(): " + reqbio)
+
+                            // setDesiredinfo() takes in a User - pass the user found from getUserByID in?
+                            // if uncommented, gives a "i.setDesiredinfo() is not a function" error
+                            // reqbio.setDesiredinfo(res3.getUser())
+                            // console.log("Update user request after setDesiredinfo(): " + reqbio)
+
+                            /** USE THE USER WE FOUND TO UPDATE THEIR BIO **/
+                            client4.updateUserInfo(reqbio, {'Authorization': authString}).then(res4 => {
+                                {/* After signup & bio storage, return user to login screen for login */ }
+
+                                //updateUserInfoResponse currently returns true
+                                console.log("UpdateUserInfo result: " + res4)
+
+                                //getUpdateduser() currently returns undefined
+                                console.log("Updated user: " + res4.getUpdateduser())
+
+                                //error - can't getBio() of undefined since getUpdateduser() returns undefined
+                                console.log("Updated user bio: " + res4.getUpdateduser().getBio())
+
+                            }).catch(e4 => {
+                                // updateuserinforequest failed
+                                console.log(e4);
+                            });
+
+                        }).catch(e3 => {
+                            console.log(e3);
+                            alert("Could not get username.")
+                        });
+
+                    }, reason => {
+                        console.log(reason)
+                    });
+
+                }
+                else {
+                  alert("Invalid account.");
+                }
+              }
+              else {
+                console.log("No token received!");
+                {/*ALERT USER: WRONG PASSWORD*/ }
+                alert("Incorrect password. Please try again");
+              }
+            }).catch(e2 => {
+              console.log(e2);
+              alert("Account does not exist. Please sign up or enter valid account credentials.")
             });
 
             navigation.navigate('LogIn')
@@ -99,7 +193,13 @@ export default function signUp() {
             console.log(e);
             alert("Invalid signup. Please use different credentials and try again. If problem persists, contact administrators.")
         });
+
+
+
+
+
     }
+
 
     return (
         <View style={KIC_Style.container}>
