@@ -76,28 +76,28 @@ export class HealthTrackingClient {
   }
 
   methodInfoAddHealthDataForUser = new grpcWeb.AbstractClientBase.MethodInfo(
-    proto_health_pb.HealthDataErrorResponse,
+    proto_health_pb.AddHealthDataForUserResponse,
     (request: proto_health_pb.AddHealthDataForUserRequest) => {
       return request.serializeBinary();
     },
-    proto_health_pb.HealthDataErrorResponse.deserializeBinary
+    proto_health_pb.AddHealthDataForUserResponse.deserializeBinary
   );
 
   addHealthDataForUser(
     request: proto_health_pb.AddHealthDataForUserRequest,
-    metadata: grpcWeb.Metadata | null): Promise<proto_health_pb.HealthDataErrorResponse>;
+    metadata: grpcWeb.Metadata | null): Promise<proto_health_pb.AddHealthDataForUserResponse>;
 
   addHealthDataForUser(
     request: proto_health_pb.AddHealthDataForUserRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.Error,
-               response: proto_health_pb.HealthDataErrorResponse) => void): grpcWeb.ClientReadableStream<proto_health_pb.HealthDataErrorResponse>;
+               response: proto_health_pb.AddHealthDataForUserResponse) => void): grpcWeb.ClientReadableStream<proto_health_pb.AddHealthDataForUserResponse>;
 
   addHealthDataForUser(
     request: proto_health_pb.AddHealthDataForUserRequest,
     metadata: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.Error,
-               response: proto_health_pb.HealthDataErrorResponse) => void) {
+               response: proto_health_pb.AddHealthDataForUserResponse) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
@@ -156,28 +156,28 @@ export class HealthTrackingClient {
   }
 
   methodInfoUpdateHealthDataForDate = new grpcWeb.AbstractClientBase.MethodInfo(
-    proto_health_pb.HealthDataErrorResponse,
+    proto_health_pb.UpdateHealthDataForDateResponse,
     (request: proto_health_pb.UpdateHealthDataForDateRequest) => {
       return request.serializeBinary();
     },
-    proto_health_pb.HealthDataErrorResponse.deserializeBinary
+    proto_health_pb.UpdateHealthDataForDateResponse.deserializeBinary
   );
 
   updateHealthDataForDate(
     request: proto_health_pb.UpdateHealthDataForDateRequest,
-    metadata: grpcWeb.Metadata | null): Promise<proto_health_pb.HealthDataErrorResponse>;
+    metadata: grpcWeb.Metadata | null): Promise<proto_health_pb.UpdateHealthDataForDateResponse>;
 
   updateHealthDataForDate(
     request: proto_health_pb.UpdateHealthDataForDateRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.Error,
-               response: proto_health_pb.HealthDataErrorResponse) => void): grpcWeb.ClientReadableStream<proto_health_pb.HealthDataErrorResponse>;
+               response: proto_health_pb.UpdateHealthDataForDateResponse) => void): grpcWeb.ClientReadableStream<proto_health_pb.UpdateHealthDataForDateResponse>;
 
   updateHealthDataForDate(
     request: proto_health_pb.UpdateHealthDataForDateRequest,
     metadata: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.Error,
-               response: proto_health_pb.HealthDataErrorResponse) => void) {
+               response: proto_health_pb.UpdateHealthDataForDateResponse) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +

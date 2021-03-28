@@ -1,6 +1,6 @@
 import * as jspb from 'google-protobuf'
 
-import * as proto_common_pb from '../proto/common_pb';
+import * as proto_common_pb from '../../../pro-keeping-it-casual/gen/grpc-web/proto/common_pb';
 
 
 export class AddUserRequest extends jspb.Message {
@@ -48,11 +48,6 @@ export class AddUserResponse extends jspb.Message {
   hasCreateduser(): boolean;
   clearCreateduser(): AddUserResponse;
 
-  getErrorsList(): Array<AddUserError>;
-  setErrorsList(value: Array<AddUserError>): AddUserResponse;
-  clearErrorsList(): AddUserResponse;
-  addErrors(value: AddUserError, index?: number): AddUserResponse;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AddUserResponse.AsObject;
   static toObject(includeInstance: boolean, msg: AddUserResponse): AddUserResponse.AsObject;
@@ -65,7 +60,6 @@ export namespace AddUserResponse {
   export type AsObject = {
     success: boolean,
     createduser?: proto_common_pb.User.AsObject,
-    errorsList: Array<AddUserError>,
   }
 }
 
@@ -96,11 +90,6 @@ export class GetUserByUsernameResponse extends jspb.Message {
   hasUser(): boolean;
   clearUser(): GetUserByUsernameResponse;
 
-  getErrorsList(): Array<GetUserError>;
-  setErrorsList(value: Array<GetUserError>): GetUserByUsernameResponse;
-  clearErrorsList(): GetUserByUsernameResponse;
-  addErrors(value: GetUserError, index?: number): GetUserByUsernameResponse;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetUserByUsernameResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetUserByUsernameResponse): GetUserByUsernameResponse.AsObject;
@@ -113,7 +102,6 @@ export namespace GetUserByUsernameResponse {
   export type AsObject = {
     success: boolean,
     user?: proto_common_pb.User.AsObject,
-    errorsList: Array<GetUserError>,
   }
 }
 
@@ -144,11 +132,6 @@ export class GetUserByIDResponse extends jspb.Message {
   hasUser(): boolean;
   clearUser(): GetUserByIDResponse;
 
-  getErrorsList(): Array<GetUserError>;
-  setErrorsList(value: Array<GetUserError>): GetUserByIDResponse;
-  clearErrorsList(): GetUserByIDResponse;
-  addErrors(value: GetUserError, index?: number): GetUserByIDResponse;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetUserByIDResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetUserByIDResponse): GetUserByIDResponse.AsObject;
@@ -161,7 +144,6 @@ export namespace GetUserByIDResponse {
   export type AsObject = {
     success: boolean,
     user?: proto_common_pb.User.AsObject,
-    errorsList: Array<GetUserError>,
   }
 }
 
@@ -223,11 +205,6 @@ export class DeleteUserByIDResponse extends jspb.Message {
   getSuccess(): boolean;
   setSuccess(value: boolean): DeleteUserByIDResponse;
 
-  getDeleteduser(): proto_common_pb.User | undefined;
-  setDeleteduser(value?: proto_common_pb.User): DeleteUserByIDResponse;
-  hasDeleteduser(): boolean;
-  clearDeleteduser(): DeleteUserByIDResponse;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteUserByIDResponse.AsObject;
   static toObject(includeInstance: boolean, msg: DeleteUserByIDResponse): DeleteUserByIDResponse.AsObject;
@@ -239,15 +216,32 @@ export class DeleteUserByIDResponse extends jspb.Message {
 export namespace DeleteUserByIDResponse {
   export type AsObject = {
     success: boolean,
-    deleteduser?: proto_common_pb.User.AsObject,
   }
 }
 
 export class UpdateUserInfoRequest extends jspb.Message {
-  getDesiredinfo(): proto_common_pb.User | undefined;
-  setDesiredinfo(value?: proto_common_pb.User): UpdateUserInfoRequest;
-  hasDesiredinfo(): boolean;
-  clearDesiredinfo(): UpdateUserInfoRequest;
+  getUserid(): number;
+  setUserid(value: number): UpdateUserInfoRequest;
+
+  getEmail(): string;
+  setEmail(value: string): UpdateUserInfoRequest;
+
+  getDesiredusername(): string;
+  setDesiredusername(value: string): UpdateUserInfoRequest;
+
+  getDesiredpassword(): string;
+  setDesiredpassword(value: string): UpdateUserInfoRequest;
+
+  getBirthday(): proto_common_pb.Date | undefined;
+  setBirthday(value?: proto_common_pb.Date): UpdateUserInfoRequest;
+  hasBirthday(): boolean;
+  clearBirthday(): UpdateUserInfoRequest;
+
+  getCity(): string;
+  setCity(value: string): UpdateUserInfoRequest;
+
+  getBio(): string;
+  setBio(value: string): UpdateUserInfoRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UpdateUserInfoRequest.AsObject;
@@ -259,7 +253,13 @@ export class UpdateUserInfoRequest extends jspb.Message {
 
 export namespace UpdateUserInfoRequest {
   export type AsObject = {
-    desiredinfo?: proto_common_pb.User.AsObject,
+    userid: number,
+    email: string,
+    desiredusername: string,
+    desiredpassword: string,
+    birthday?: proto_common_pb.Date.AsObject,
+    city: string,
+    bio: string,
   }
 }
 
@@ -271,11 +271,6 @@ export class UpdateUserInfoResponse extends jspb.Message {
   setUpdateduser(value?: proto_common_pb.User): UpdateUserInfoResponse;
   hasUpdateduser(): boolean;
   clearUpdateduser(): UpdateUserInfoResponse;
-
-  getErrorsList(): Array<AddUserError>;
-  setErrorsList(value: Array<AddUserError>): UpdateUserInfoResponse;
-  clearErrorsList(): UpdateUserInfoResponse;
-  addErrors(value: AddUserError, index?: number): UpdateUserInfoResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UpdateUserInfoResponse.AsObject;
@@ -289,7 +284,6 @@ export namespace UpdateUserInfoResponse {
   export type AsObject = {
     success: boolean,
     updateduser?: proto_common_pb.User.AsObject,
-    errorsList: Array<AddUserError>,
   }
 }
 
@@ -319,9 +313,6 @@ export class GetJWTTokenResponse extends jspb.Message {
   getToken(): string;
   setToken(value: string): GetJWTTokenResponse;
 
-  getError(): GetJWTTokenResponse.JWTError;
-  setError(value: GetJWTTokenResponse.JWTError): GetJWTTokenResponse;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetJWTTokenResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetJWTTokenResponse): GetJWTTokenResponse.AsObject;
@@ -333,22 +324,6 @@ export class GetJWTTokenResponse extends jspb.Message {
 export namespace GetJWTTokenResponse {
   export type AsObject = {
     token: string,
-    error: GetJWTTokenResponse.JWTError,
-  }
-
-  export enum JWTError { 
-    INVALID_PASSWORD = 0,
-    INVALID_USERNAME = 1,
   }
 }
 
-export enum AddUserError { 
-  DUPLICATE_EMAIL = 0,
-  DUPLICATE_USERNAME = 1,
-  INVALID_PASSWORD = 2,
-  BIRTHDAY_MALFORMED = 3,
-}
-export enum GetUserError { 
-  INVALID_USERNAME = 0,
-  INVALID_ID = 1,
-}

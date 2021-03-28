@@ -12,6 +12,17 @@ export class User extends jspb.Message {
   getEmail(): string;
   setEmail(value: string): User;
 
+  getBirthday(): Date | undefined;
+  setBirthday(value?: Date): User;
+  hasBirthday(): boolean;
+  clearBirthday(): User;
+
+  getCity(): string;
+  setCity(value: string): User;
+
+  getBio(): string;
+  setBio(value: string): User;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): User.AsObject;
   static toObject(includeInstance: boolean, msg: User): User.AsObject;
@@ -25,6 +36,9 @@ export namespace User {
     userid: number,
     username: string,
     email: string,
+    birthday?: Date.AsObject,
+    city: string,
+    bio: string,
   }
 }
 
@@ -37,6 +51,11 @@ export class File extends jspb.Message {
 
   getMetadataMap(): jspb.Map<string, string>;
   clearMetadataMap(): File;
+
+  getDatestored(): Date | undefined;
+  setDatestored(value?: Date): File;
+  hasDatestored(): boolean;
+  clearDatestored(): File;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): File.AsObject;
@@ -51,6 +70,7 @@ export namespace File {
     filename: string,
     filelocation: string,
     metadataMap: Array<[string, string]>,
+    datestored?: Date.AsObject,
   }
 }
 
