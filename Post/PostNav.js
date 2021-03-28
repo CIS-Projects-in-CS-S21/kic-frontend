@@ -5,9 +5,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import {createStackNavigator} from "@react-navigation/stack";
-import MentalHealthLog from "../Mental-Health/MentalHealthLog";
-import FindHelp from "../Mental-Health/FindHelp";
-import PersonalPage from "./PersonalPage";
 import Post from "./Post";
 import PostInfo from "./PostInfo";
 

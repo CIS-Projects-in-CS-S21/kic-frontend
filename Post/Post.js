@@ -1,47 +1,98 @@
 /**
 * @fileoverview The screen for user posting, where user can choose to post video or picture with caption
 */
-
-import { StatusBar } from 'expo-status-bar';
-import React, {useEffect, useReducer, useCallback, useState} from 'react';
-import {StyleSheet, Text, View, Image, Button, BackHandler,ScrollView} from 'react-native';
-import KIC_Style from "../Components/Style";
-
-
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
+import KIC_Style from '../Components/Style'
 
 
-/**
- * @class Contains function for rendering the Post page
- */
-class Post extends React.Component {
-    /**
-     * Renders post page components.
-     * @returns {Component}
-     */
-    render() {
-        return (
-            <View style={styles.container}>
-                <Image
-                    style={{width: 180, height: 180, resizeMode: 'contain'}}
-                    source = {require('../assets/kic.png')}
-                />
-                <Text>Keeping It Casual Post Page!</Text>
-                <StatusBar style="auto" />
-                {/* NAVIGATION */}
-                <Button
-                    title = "Next"
-                    onPress = {() =>
-                        this.props.navigation.navigate('PostInfo')
-                    }
+export default function Post({ navigation }) {
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+    const [hasCameraPermission, setHasCameraPermission] = useState(null);
+    const [camera, setCamera] = useState(null);
+    const [image, setImage] = useState(null);
+    const [type, setType] = useState(Camera.Constants.Type.back);
+
+    useEffect(() => {
+        (async () => {
+            const cameraStatus = await Camera.requestPermissionsAsync();
+            setHasCameraPermission(cameraStatus.status === 'granted');
+
+            const galleryStatus = await ImagePicker.requestCameraRollPermissionsAsync();
+            setHasGalleryPermission(galleryStatus.status === 'granted');
+
+
+        })();
+    }, []);
+
+    const takePicture = async () => {
+        if (camera) {
+            const data = await camera.takePictureAsync(null);
+            setImage(data.uri);
+        }
+    }
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
+        console.log(result);
+
+        if (!result.cancelled) {
+            setImage(result.uri);
+        }
+    };
+
+
+    if (hasCameraPermission === null || hasGalleryPermission === false) {
+        return <Text style = {KIC_Style}> No access to gallery or camera.  </Text>;
+    }
+    if (hasCameraPermission === false || hasGalleryPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
+    return (
+        <View style={{ flex: 1 }}>
+            <View style={styles.cameraContainer}>
+                <Camera
+                    ref={ref => setCamera(ref)}
+                    style={styles.fixedRatio}
+                    type={type}
+                    ratio={'1:1'}
                 />
             </View>
-        );
-    }
+
+            <Button
+                title="Flip Image"
+                onPress={() => {
+                    setType(
+                        type === Camera.Constants.Type.back
+                            ? Camera.Constants.Type.front
+                            : Camera.Constants.Type.back
+                    );
+                }}>
+            </Button>
+            <Button title="Take Picture" onPress={() => takePicture()} />
+            <Button title="Pick Image From Gallery" onPress={() => pickImage()} />
+            <Button title="Save" onPress={() => navigation.navigate('PostInfo', { image })} />
+            {image && <Image source={{ uri: image }} style={{ flex: 1 }} />}
+        </View>
+    );
 }
 
-/**
- * @constant styles creates stylesheet for post components
- */
-const styles = KIC_Style;
+const styles = StyleSheet.create({
+    cameraContainer: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    fixedRatio: {
+        flex: 1,
+        aspectRatio: 1
+    }
 
-export default Post;
+})
+
