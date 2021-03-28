@@ -1,56 +1,64 @@
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
-import { GetUserByUsernameRequest } from '../gen/proto/users_pb';
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import TokenManager from '../User-Authentication/TokenManager';
+import UsersClientManager from '../User-Authentication/UsersClientManager';
 
 export default class MyUser {
-    constructor(username) {
-        // test values
-        this.username = username;
-        this.userFirstName = "firstname";
-        this.userLastName = "lastname";
+    /*
+    * Class constructor
+    */
+    constructor(props) {
+        this.username = "default_username";
+        this.initMyUser();
     }
 
     /**
-    * Request and return a user's username from the server.
+    * Initializes a MyUser with details requested from the server and saves each one
     *
-    * @function getUsername
-    * @return String The user's username, retrieved from the server
+    * @function initMyUser
     */
-    getUsername() {
-        console.log("Trying to get username");
-        let url = "";
-
-        {/* Check if running in production or development*/ }
-        if (__DEV__) {
-          console.log("Running in development mode");
-          url = "http://test.api.keeping-it-casual.com";
-        } else {
-          console.log("Running in production mode");
-          url = "https://api.keeping-it-casual.com";
-        }
-        const client = new UsersClient(url);
+    initMyUser() {
+        {/* Init UsersClientManager & get client */}
+        let ucm = new UsersClientManager();
+        let client = ucm.createClient();
 
         {/* Init token manager */}
         let tm = new TokenManager();
 
-        {/* Set request for GetUserByUserNameRequest*/ }
-        let req = new GetUserByUsernameRequest();
-        req.setUsername("qdn12");
-        console.log("username: " + this.username)
+        {/* Init request for GetUserByIDRequest*/ }
+        let req = new GetUserByIDRequest();
+
+        {/* Get JWT from storage and use for authorization */}
         let authString = "Bearer "
         tm.getToken().then(value => {
             authString += value
-            {/* @Azsliah below is how you get the user id (its in the second console log)*/ }
-            let stuff = value.split(".")[0]
-            let stuff2 = value.split(".")[1]
-            console.log(atob(stuff))
-            console.log(atob(stuff2))
-            console.log({'Authorization': authString})
-            client.getUserByUsername(req, {'Authorization': authString}).then(res => {
-                console.log("Tried to get username: " + res);
 
-                //eventually return username from response
-                return this.username;
+            let extra = value.split(".")[0]
+            let token = value.split(".")[1]
+
+            //console.log(atob(extra))
+            console.log(atob(token))
+
+            var tokenObj = JSON.parse(atob(token));
+            console.log('User ID: ' + tokenObj.uid);
+            this.userID = tokenObj.uid;
+            req.setUserid(tokenObj.uid);
+
+            {/* Use token to make request */}
+            client.getUserByID(req, {'Authorization': authString}).then(res => {
+                console.log("User: " + res);
+
+                {/* Store user information */}
+                this.username = res.getUser().getUsername();
+                console.log("Username: " + this.username);
+
+                let bday = res.getUser().getBirthday().toString();
+                let year = bday.split(",")[0];
+                let month = bday.split(",")[1];
+                let day = bday.split(",")[2]
+                console.log("Birthday: " + year + " " + month + " " + day);
+
+                this.bio = res.getUser().getBio();
             }).catch(e => {
                 console.log(e);
                 alert("Could not get username.")
@@ -58,31 +66,38 @@ export default class MyUser {
         }, reason => {
             console.log(reason)
         });
-
-
-
-        {/* Request username using authorization bearer token header */}
-
     }
 
 
     /**
-    * Request and return a user's first name from the server.
+    * Returns username
     *
-    * @function getFirstName
-    * @return String The user's first name, retrieved from the server
+    * @function getUsername
+    * @return String The user's username, retrieved from the server
     */
-    getFirstName() {
-        return this.userFirstName;
+    getUsername() {
+        console.log("Returning username: " + this.username);
+        return this.username;
     }
 
     /**
-    * Request and return a user's last name from the server.
+    * Returns userID
     *
-    * @function getLastName
-    * @return String The user's last name, retrieved from the server
+    * @function getUserID
+    * @return String The user's unique userID
     */
-    getLastName() {
-        return this.userLastName;
+    getUserID() {
+        return this.userID;
     }
+
+    /**
+    * Returns birthday
+    *
+    * @function getBirthday
+    * @return Date The user's unique userID
+    */
+    getBirthday() {
+        return this.birthday;
+    }
+
 }

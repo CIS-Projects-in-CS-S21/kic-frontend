@@ -11,6 +11,7 @@ import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import {GetJWTTokenRequest, GetJWTTokenResponse} from '../gen/proto/users_pb';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TokenManager from './TokenManager';
+import UsersClientManager from './UsersClientManager.js';
 import { TouchableOpacity, View, Text } from "react-native";
 
 export default function logIn() {
@@ -23,17 +24,10 @@ export default function logIn() {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    let url = "";
 
-    {/* Check if running in production or development*/ }
-    if (__DEV__) {
-      console.log("Running in development mode");
-      url = "http://test.api.keeping-it-casual.com";
-    } else {
-      console.log("Running in production mode");
-      url = "https://api.keeping-it-casual.com";
-    }
-    const client = new UsersClient(url);
+    {/* Create UsersClientManager & create a UsersClient */}
+    let ucm = new UsersClientManager();
+    let client = ucm.createClient();
 
     {/* Set request for GetJWTTokenRequest*/ }
     let req = new GetJWTTokenRequest();

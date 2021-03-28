@@ -30,15 +30,12 @@ class ProfileHeader extends React.Component {
                   {/* User's display name and handle */}
                   <View style ={styles.userID}>
                       {/* Display name */}
-                      <Text style ={styles.textDisplayName}>{this.props.userFirstName} {this.props.userLastName}</Text>
-
-                      {/* Handle */}
-                      <Text style ={styles.textHandle}>@{this.props.userHandle}</Text>
+                      <Text style ={styles.textUsername}>@{this.props.username}</Text>
 
                   </View>
 
                   {/* User's bio */}
-                  <Text style ={styles.textBio}>{this.props.userBio}</Text>
+                  <Text style ={styles.textBio}>{this.props.bio}</Text>
               </View>
         </View>
       );
@@ -85,12 +82,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
     },
-    textDisplayName: {
+    textUsername: {
         fontSize: 18,
         marginRight: 5,
-    },
-    textHandle: {
-        fontSize: 18,
         fontWeight: "bold",
     },
     textBio: {

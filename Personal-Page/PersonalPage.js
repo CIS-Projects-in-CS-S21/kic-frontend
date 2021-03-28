@@ -9,8 +9,10 @@ import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, Touchable
 import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
-import TokenManager from '../User-Authentication/TokenManager';
 import MyUser from "../Components/MyUser";
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import TokenManager from '../User-Authentication/TokenManager';
+import UsersClientManager from '../User-Authentication/UsersClientManager';
 
 /**
  * @class Contains function for rendering the personal page.
@@ -22,17 +24,78 @@ class PersonalPage extends React.Component {
   constructor(props) {
     super();
 
-    let user = new MyUser();
-
     // Define the initial state:
     this.state = {
-      userFirstName: user.getFirstName(),
-      userLastName: user.getLastName(),
-      userHandle: user.getUsername(),
-      userBio: "This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. ",
-      numPosts: 6,
-      numFriends: 0,
+      username: "default",
+      bio: "bio",
+      birthDay: 0,
+      birthMonth: 0,
+      birthYear: 0,
     };
+
+    this.fetchUserInfo = this.fetchUserInfo.bind(this)
+
+  }
+
+  componentDidMount(){
+      this.fetchUserInfo()
+  }
+
+  fetchUserInfo(){
+    {/* Init UsersClientManager & get client */}
+    let ucm = new UsersClientManager();
+    let client = ucm.createClient();
+
+    {/* Init token manager */}
+    let tm = new TokenManager();
+
+    {/* Init request for GetUserByIDRequest*/ }
+    let req = new GetUserByIDRequest();
+
+    {/* Get JWT from storage and use for authorization */}
+    let authString = "Bearer "
+    tm.getToken().then(value => {
+        authString += value
+
+        let extra = value.split(".")[0]
+        let token = value.split(".")[1]
+
+        //console.log(atob(extra))
+        console.log(atob(token))
+
+        var tokenObj = JSON.parse(atob(token));
+        console.log('User ID: ' + tokenObj.uid);
+        this.userID = tokenObj.uid;
+        req.setUserid(tokenObj.uid);
+
+        {/* Use token to make request */}
+        client.getUserByID(req, {'Authorization': authString}).then(res => {
+            console.log("User: " + res);
+
+            {/* Store user information */}
+            let myusername = res.getUser().getUsername();
+            let bday = res.getUser().getBirthday().toString();
+            let mybirthyear = bday.split(",")[0];
+            let mybirthmonth = bday.split(",")[1];
+            let mybirthday = bday.split(",")[2]
+            let mybio = res.getUser().getBio();
+
+            this.setState({
+                username: myusername,
+                bio: mybio,
+                birthDay: mybirthday,
+                birthMonth: mybirthmonth,
+                birthYear: mybirthyear,
+            })
+
+        }).catch(e => {
+            console.log(e);
+            alert("Could not get username.")
+        });
+
+    }, reason => {
+        console.log(reason)
+    });
   }
 
   /**
@@ -40,13 +103,6 @@ class PersonalPage extends React.Component {
    */
   fetchPosts = () => {
       // Request posts for user
-  }
-
-  /**
-   * Gets user information (name, handle, bio, post & friend count)
-   */
-  fetchInformation = () => {
-      // Request user information and save to state
   }
 
   /**
@@ -66,11 +122,11 @@ class PersonalPage extends React.Component {
 
             {/* Display profile header with state information */}
             <ProfileHeader
-                userFirstName = {this.state.userFirstName}
-                userLastName = {this.state.userLastName}
-                userBio = {this.state.userBio}
-                userHandle = {this.state.userHandle}
-                userPosts = {this.state.userPosts}
+                username = {this.state.username}
+                bio = {this.state.bio}
+                birthDay = {this.state.birthDay}
+                birthMonth = {this.state.birthMonth}
+                birthYear = {this.state.birthYear}
                 />
 
             {/* Show posts */}
