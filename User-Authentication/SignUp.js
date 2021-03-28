@@ -5,8 +5,9 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { GetJWTTokenRequest, AddUserRequest } from "../gen/proto/users_pb";
+import { GetJWTTokenRequest, AddUserRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
+import UsersClientManager from './UsersClientManager.js';
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
 import { Text, TouchableOpacity, Image, View, TextInput } from "react-native";
@@ -51,8 +52,8 @@ export default function signUp() {
 
     const makeRequest = () => {
         {/* Create UsersClientManager & create a UsersClient */}
-        let ucm = new UsersClientManager();
-        let client = ucm.createClient();
+        let ucm = new UsersClientManager()
+        let client = ucm.createClient()
 
         let req = new AddUserRequest()
         let date = new Date()
@@ -64,9 +65,35 @@ export default function signUp() {
         req.setCity("test")
         req.setDesiredusername(username)
         req.setDesiredpassword(password1)
+
+        // req.setBio(bio)
+
+        // send adduser request
         client.addUser(req, {}).then(res => {
             {/* On successful signup, return user to login screen for login */ }
-            console.log(res)
+            console.log("Signup result: " + res)
+            console.log("Created user: " + res.getCreateduser())
+
+            // init request to update user info with bio
+            let reqbio = new UpdateUserInfoRequest()
+            reqbio.setBio(bio)
+            console.log("Bio: " + reqbio.getBio())
+
+            // pass the created user from addUser in? - gives a "s.setdesiredinfo() is not a function" error
+            //reqbio.setDesiredinfo(res.getCreateduser())
+
+            // send request to update user info? - gives an "unknown content type received" error
+            client.updateUserInfo(reqbio, {}).then(res2 => {
+                {/* On successful signup, return user to login screen for login */ }
+                console.log("UpdateUserInfo result: " + res2)
+                console.log("Updated user: " + res2.getUpdateduser())
+
+                navigation.navigate('LogIn')
+            }).catch(e => {
+                // updateuserinforequest failed
+                console.log(e);
+            });
+
             navigation.navigate('LogIn')
         }).catch(e => {
             console.log(e);
