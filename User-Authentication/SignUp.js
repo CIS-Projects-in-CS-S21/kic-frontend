@@ -52,7 +52,7 @@ export default function signUp() {
         }
     };
 
-    const makeRequest = () => {
+    const makeRequest = async () => {
         {/* Create UsersClientManager & create a UsersClient */}
         let ucm = new UsersClientManager()
         let client = ucm.createClient()
@@ -71,120 +71,73 @@ export default function signUp() {
         // CREATE USER
         client.addUser(req, {}).then(res => {
             {/* On successful signup, return user to login screen for login */ }
-            console.log("Signup result: " + res)
             console.log("Created user: " + res.getCreateduser())
 
-            /** GET JWT USING NEWLY CREATED ACCOUNT **/
             {/* Set request for GetJWTTokenRequest*/ }
             let reqjwt = new GetJWTTokenRequest();
-            console.log("Submitted credentials: username " + username + " and pw " + password1)
             reqjwt.setUsername(username);
             reqjwt.setPassword(password1);
 
             {/* Create TokenManager*/ }
             let tokenManager = new TokenManager();
 
-            {/* Try to log in with request*/ }
+            {/* Make request for JWT */ }
             client.getJWTToken(reqjwt, {}).then(res2 => {
-              {/* On successful login, store token and go to user feed*/ }
+              {/* Make sure we got a token */}
               if (res2.array.length > 0) {
-                {/* Log token to store*/ }
-                console.log("Should store: " + res2.getToken());
-
                 {/* Clear token*/ }
                 tokenManager.forgetToken();
 
                 {/* Store token*/ }
                 tokenManager.storeToken(res2.getToken());
 
-                {/* Try to retrieve token and log in console*/ }
-                let token = tokenManager.getToken();
-                console.log("Retrieved " + token);
+                {/* Get JWT from storage and use for authorization */}
+                let authString = "Bearer "
+                tokenManager.getToken().then(value => {
+                    authString += value
 
-                if(tokenManager.isAuthenticated()) {
-                    console.log("I am authenticated! Now trying to retrieve JWT")
+                    let extra = value.split(".")[0]
+                    let token = value.split(".")[1]
 
-                    /** GET AUTHENTICATION FROM JWT **/
-                    {/* Get JWT from storage and use for authorization */}
-                    let authString = "Bearer "
-                    tokenManager.getToken().then(value => {
-                        authString += value
+                    var tokenObj = JSON.parse(atob(token));
 
-                        let extra = value.split(".")[0]
-                        let token = value.split(".")[1]
+                    {/* Init request for GetUserByIDRequest*/ }
+                    let reqgetuser = new GetUserByIDRequest();
+                    reqgetuser.setUserid(tokenObj.uid);
 
-                        //console.log(atob(extra))
-                        console.log("Token: " + atob(token))
+                    {/* Use token to make request */}
+                    client.getUserByID(reqgetuser, {'Authorization': authString}).then(res3 => {
 
-                        var tokenObj = JSON.parse(atob(token));
-                        console.log('User ID from token: ' + tokenObj.uid);
+                        {/* Init request */}
+                        let reqbio = new UpdateUserInfoRequest()
+                        reqbio.setUserid(tokenObj.uid)
+                        reqbio.setBio(bio)
 
-                        {/* Init request for GetUserByIDRequest*/ }
-                        let reqgetuser = new GetUserByIDRequest();
-                        reqgetuser.setUserid(tokenObj.uid);
-
-                        /** LOOK UP THE USER THAT WAS JUST CREATED **/
-                        {/* Use token to make request */}
-                        client.getUserByID(reqgetuser, {'Authorization': authString}).then(res3 => {
-                            console.log("User found: " + res3);
-
-                            // init request to update user info with bio - setBio works
-                            let reqbio = new UpdateUserInfoRequest()
-                            console.log("User of id " + tokenObj.uid + ": " + res3)
-
-                            console.log("The updateuserinforequest: " + reqbio)
-                            reqbio.setUserid(tokenObj.uid)
-                            reqbio.setBio(bio)
-                            console.log("New bio to set: " + reqbio.getBio())
-                            console.log("The updateuserinforequest after setBio(): " + reqbio)
-
-                            /** USE THE USER WE FOUND TO UPDATE THEIR BIO **/
-                            client.updateUserInfo(reqbio, {'Authorization': authString}).then(res4 => {
-                                {/* After signup & bio storage, return user to login screen for login */ }
-
-                                //updateUserInfoResponse currently returns true
-                                console.log("UpdateUserInfo result: " + res4)
-
-                                //getUpdateduser() currently returns undefined
-                                console.log("Updated user: " + res4.getUpdateduser())
-
-                                //error - can't getBio() of undefined since getUpdateduser() returns undefined
-                                console.log("Updated user bio: " + res4.getUpdateduser().getBio())
-                            }).catch(e4 => {
-                                // updateuserinforequest failed
-                                console.log(e4);
-                            });
-                        }).catch(e3 => {
-                            console.log(e3);
-                            alert("Could not get username.")
+                        /** USE THE USER WE FOUND TO UPDATE THEIR BIO **/
+                        client.updateUserInfo(reqbio, {'Authorization': authString}).then(res4 => {
+                            console.log("Updated user: " + res4.getUpdateduser())
+                        }).catch(e4 => {
+                            // updateuserinforequest failed
+                            console.log(e4);
                         });
-                    }, reason => {
-                        console.log(reason)
+                    }).catch(e3 => {
+                        console.log(e3); //getUserByID() failed
                     });
-                }
-                else {
-                  alert("Invalid account.");
-                }
+                }, reason => {
+                    console.log(reason) //getToken() failed
+                });
               }
               else {
-                console.log("No token received!");
-                {/*ALERT USER: WRONG PASSWORD*/ }
-                alert("Incorrect password. Please try again");
+                console.log("No token received!"); //getJWTToken did not return token
               }
             }).catch(e2 => {
-              console.log(e2);
-              alert("Account does not exist. Please sign up or enter valid account credentials.")
+              console.log(e2); //getJWTToken error
             });
             navigation.navigate('LogIn')
         }).catch(e => {
             console.log(e);
             alert("Invalid signup. Please use different credentials and try again. If problem persists, contact administrators.")
         });
-
-
-
-
-
     }
 
 

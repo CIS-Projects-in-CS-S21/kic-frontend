@@ -1,0 +1,51 @@
+/**
+ * @fileoverview A class with functions for extracting information about Users
+ */
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UsersClient } from "../gen/proto/UsersServiceClientPb";
+import UsersClientManager from './UsersClientManager';
+import TokenManager from './TokenManager';
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+
+export default class UserManager {
+    /**
+    * Retrieves the active user's unique userid
+    *
+    * @function getMyUserID
+    * @return {Object} The token.uid object retrieved
+    */
+    getMyUserID = () => {
+        let tm = new TokenManager();
+        tm.getToken().then(value => {
+            let extra = value.split(".")[0]
+            let token = value.split(".")[1]
+
+            var tokenObj = JSON.parse(atob(token));
+            console.log('User ID from token: ' + tokenObj.uid);
+            return tokenObj.uid;
+        }, reason => {
+            console.log(reason)
+        });
+    }
+
+    /**
+    * Builds the authorization header string using the stored token
+    *
+    * @function getAuthString
+    * @return {String} The Authorization header built using the token
+    */
+    getAuthString = () => {
+        let tm = new TokenManager();
+
+        let authString = "Bearer "
+        tm.getToken().then(value => {
+            authString += value
+            console.log("Auth: " + authString)
+            return authString;
+        }, reason => {
+            console.log(reason)
+        });
+    }
+
+}
