@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import TokenManager from './TokenManager';
+import UserManager from './UserManager';
 import UsersClientManager from './UsersClientManager.js';
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
@@ -53,93 +54,71 @@ export default function signUp() {
     };
 
     const makeRequest = async () => {
-        {/* Create UsersClientManager & create a UsersClient */}
-        let ucm = new UsersClientManager()
-        let client = ucm.createClient()
-
-        let req = new AddUserRequest()
-        let date = new Date()
-        date.setYear(1998)
-        date.setMonth(8)
-        date.setDay(21)
-        req.setEmail(email)
-        req.setBirthday(date)
-        req.setCity("city")
-        req.setDesiredusername(username)
-        req.setDesiredpassword(password1)
-
-        // CREATE USER
-        client.addUser(req, {}).then(res => {
-            {/* On successful signup, return user to login screen for login */ }
-            console.log("Created user: " + res.getCreateduser())
-
-            {/* Set request for GetJWTTokenRequest*/ }
-            let reqjwt = new GetJWTTokenRequest();
-            reqjwt.setUsername(username);
-            reqjwt.setPassword(password1);
-
-            {/* Create TokenManager*/ }
-            let tokenManager = new TokenManager();
-
-            {/* Make request for JWT */ }
-            client.getJWTToken(reqjwt, {}).then(res2 => {
-              {/* Make sure we got a token */}
-              if (res2.array.length > 0) {
-                {/* Clear token*/ }
-                tokenManager.forgetToken();
-
-                {/* Store token*/ }
-                tokenManager.storeToken(res2.getToken());
-
-                {/* Get JWT from storage and use for authorization */}
-                let authString = "Bearer "
-                tokenManager.getToken().then(value => {
-                    authString += value
-
-                    let extra = value.split(".")[0]
-                    let token = value.split(".")[1]
-
-                    var tokenObj = JSON.parse(atob(token));
-
-                    {/* Init request for GetUserByIDRequest*/ }
-                    let reqgetuser = new GetUserByIDRequest();
-                    reqgetuser.setUserid(tokenObj.uid);
-
-                    {/* Use token to make request */}
-                    client.getUserByID(reqgetuser, {'Authorization': authString}).then(res3 => {
-
-                        {/* Init request */}
-                        let reqbio = new UpdateUserInfoRequest()
-                        reqbio.setUserid(tokenObj.uid)
-                        reqbio.setBio(bio)
-
-                        /** USE THE USER WE FOUND TO UPDATE THEIR BIO **/
-                        client.updateUserInfo(reqbio, {'Authorization': authString}).then(res4 => {
-                            console.log("Updated user: " + res4.getUpdateduser())
-                        }).catch(e4 => {
-                            // updateuserinforequest failed
-                            console.log(e4);
-                        });
-                    }).catch(e3 => {
-                        console.log(e3); //getUserByID() failed
-                    });
-                }, reason => {
-                    console.log(reason) //getToken() failed
-                });
-              }
-              else {
-                console.log("No token received!"); //getJWTToken did not return token
-              }
-            }).catch(e2 => {
-              console.log(e2); //getJWTToken error
-            });
-            navigation.navigate('LogIn')
-        }).catch(e => {
-            console.log(e);
-            alert("Invalid signup. Please use different credentials and try again. If problem persists, contact administrators.")
-        });
+      callAddUser().then(response => {
+        console.log("Successfully added user");
+      }).catch(error => {
+        console.log(error);
+      });
     }
+    const callAddUser = () => {
+        let ucm = new UsersClientManager();
+        let client = ucm.createClient();
 
+        let req = new AddUserRequest();
+        let date = new Date();
+        date.setYear(1998);
+        date.setMonth(8);
+        date.setDay(21);
+        req.setEmail(email);
+        req.setBirthday(date);
+        req.setCity("city");
+        req.setDesiredusername(username);
+        req.setDesiredpassword(password1);
+
+        return client.addUser(req, {}).then(res => {callGetJWTToken(client)});
+    }
+    const callGetJWTToken = (client) => {
+        let req = new GetJWTTokenRequest();
+        req.setUsername(username);
+        req.setPassword(password1);
+
+        return client.getJWTToken(req, {}).then(res => {callStoreToken(res)});
+    }
+    const callStoreToken = (res) => {
+        let tm = new TokenManager();
+        return tm.storeToken(res.getToken()).then(res => {callGetAuthString()});
+    }
+    const callGetAuthString = () => {
+        console.log("callgetauthstr");
+        let um = new UserManager();
+        return um.getAuthString().then(authString => {callGetUserID(um, authString)});
+    }
+    const callGetUserID = (um, authString) => {
+        console.log("callgetuserid");
+        return um.getMyUserID().then(userID => {callGetUserByUserID(authString, userID)});
+    }
+    const callGetUserByUserID = (authString, userID) => {
+        console.log("callgetuserbyuserid");
+        let ucm = new UsersClientManager();
+        let client = ucm.createClient();
+
+        let req = new GetUserByIDRequest();
+        req.setUserid(userID);
+
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {callUpdateUserInfo(client, authString, userID)});
+    }
+    const callUpdateUserInfo = (client, authString, userID) => {
+        console.log("callupdateuserinfo");
+        let req = new UpdateUserInfoRequest();
+        req.setUserid(userID);
+        req.setBio(bio);
+
+        return client.updateUserInfo(req, {'Authorization': authString}).then(res => { finishSignUp(res) });
+    }
+    const finishSignUp = (res) => {
+        console.log("User: " + res.getUpdateduser());
+        navigation.navigate('LogIn');
+    }
 
     return (
         <View style={KIC_Style.container}>
