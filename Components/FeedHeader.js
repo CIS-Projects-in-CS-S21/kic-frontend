@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         alignItems: 'center',
         alignContent: 'center',
-        top: 0,
+        top: 0
     },
     icon: {
         width: 75,
