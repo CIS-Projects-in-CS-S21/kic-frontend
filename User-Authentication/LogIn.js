@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { TextInput, Image } from 'react-native';
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
 import TokenManager from "../Managers/TokenManager";
-import UsersClientManager from "../Managers/UsersClientManager";
+import ClientManager from '../Managers/ClientManager';
 import UserManager from '../Managers/UserManager';
 import { TouchableOpacity, View, Text } from "react-native";
 
@@ -24,8 +24,8 @@ export default function logIn() {
     evt.preventDefault();
 
     {/* Create UsersClientManager & create a UsersClient */}
-    let ucm = new UsersClientManager();
-    let client = ucm.createClient();
+    let cm = new ClientManager();
+    let client = cm.createUsersClient();
 
     {/* Set request for GetJWTTokenRequest*/ }
     let req = new GetJWTTokenRequest();

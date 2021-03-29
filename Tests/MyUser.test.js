@@ -177,10 +177,10 @@ test('Test Mock User', () => {
 
     // Create mock user with username "TEST"
     let page = new MyUser("TEST");
-    let spy = jest.spyOn(page, 'getUserFirstName').mockImplementation(() => "Lorem");
+    let spy = jest.spyOn(page, 'getUsername').mockImplementation(() => "Lorem");
 
     // Expect getUserFirstName to return "Lorem"
-    expect(page.getUserFirstName()).toMatch("Lorem");
+    expect(page.getUsername()).toMatch("Lorem");
 
     // Restore spy
     spy.mockRestore();

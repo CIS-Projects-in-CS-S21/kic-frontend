@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import TokenManager from "../Managers/TokenManager";
-import UsersClientManager from "../Managers/UsersClientManager";
+import ClientManager from '../Managers/ClientManager';
 import UserManager from '../Managers/UserManager';
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
@@ -61,8 +61,8 @@ export default function signUp() {
       });
     }
     const callAddUser = () => {
-        let ucm = new UsersClientManager();
-        let client = ucm.createClient();
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
 
         let req = new AddUserRequest();
         let date = new Date();
@@ -82,26 +82,23 @@ export default function signUp() {
         req.setUsername(username);
         req.setPassword(password1);
 
-        return client.getJWTToken(req, {}).then(res => {callStoreToken(res)});
+        return client.getJWTToken(req, {}).then(res => {callStoreToken(client, res)});
     }
-    const callStoreToken = (res) => {
+    const callStoreToken = (client, res) => {
         let tm = new TokenManager();
-        return tm.storeToken(res.getToken()).then(res => {callGetAuthString()});
+        return tm.storeToken(res.getToken()).then(res => {callGetAuthString(client)});
     }
-    const callGetAuthString = () => {
+    const callGetAuthString = (client) => {
         console.log("callgetauthstr");
         let um = new UserManager();
-        return um.getAuthString().then(authString => {callGetUserID(um, authString)});
+        return um.getAuthString().then(authString => {callGetUserID(client, um, authString)});
     }
-    const callGetUserID = (um, authString) => {
+    const callGetUserID = (client, um, authString) => {
         console.log("callgetuserid");
-        return um.getMyUserID().then(userID => {callGetUserByUserID(authString, userID)});
+        return um.getMyUserID().then(userID => {callGetUserByUserID(client, authString, userID)});
     }
-    const callGetUserByUserID = (authString, userID) => {
+    const callGetUserByUserID = (client, authString, userID) => {
         console.log("callgetuserbyuserid");
-        let ucm = new UsersClientManager();
-        let client = ucm.createClient();
-
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
 

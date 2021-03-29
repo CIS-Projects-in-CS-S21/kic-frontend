@@ -1,7 +1,7 @@
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import TokenManager from "../Managers/TokenManager";
-import UsersClientManager from "../Managers/UsersClientManager";
+import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 
 export default class MyUser {
@@ -20,8 +20,8 @@ export default class MyUser {
     */
     initMyUser() {
         {/* Init UsersClientManager & get client */}
-        let ucm = new UsersClientManager();
-        let client = ucm.createClient();
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
 
         {/* Init token manager */}
         let tm = new TokenManager();

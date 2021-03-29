@@ -4,7 +4,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
-import UsersClientManager from './UsersClientManager';
+import ClientManager from './ClientManager';
 import TokenManager from './TokenManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 

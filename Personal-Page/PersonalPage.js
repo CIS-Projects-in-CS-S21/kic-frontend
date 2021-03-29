@@ -12,7 +12,7 @@ import PostsGrid from "../Components/PostsGrid";
 import MyUser from "../Components/MyUser";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import TokenManager from "../Managers/TokenManager";
-import UsersClientManager from "../Managers/UsersClientManager";
+import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 
 /**
@@ -58,8 +58,8 @@ class PersonalPage extends React.Component {
         return um.getMyUserID().then(userID => {this.callGetUserByUserID(authString, userID)});
     }
     callGetUserByUserID(authString, userID){
-        let ucm = new UsersClientManager();
-        let client = ucm.createClient();
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
 
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
