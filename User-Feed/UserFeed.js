@@ -5,10 +5,9 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
 import FeedHeader from '../Components/FeedHeader';
 import FeedPost from '../Components/FeedPost';
-import KIC_Style from "../Components/Style";
 
 
 /**
@@ -22,6 +21,7 @@ class UserFeed extends React.Component {
   render() {
       return (
         <View style={styles.container}>
+          <ScrollView>
           <FeedHeader/>
           <FeedPost 
             style={styles.feedPost} />
@@ -30,6 +30,7 @@ class UserFeed extends React.Component {
           <FeedPost 
             style={styles.feedPost}/>
           <StatusBar style="auto" />
+          </ScrollView>
         </View>
       );
   }
@@ -40,11 +41,9 @@ class UserFeed extends React.Component {
  */
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
+    justifyContent: 'flex-start',
     flexDirection: 'column',
-    minHeight: 0,
-    overflow: 'scroll',
-    flexWrap: 'nowrap',
+    flex: 1,
     backgroundColor: '#fff',
   },
   feedPost: {
