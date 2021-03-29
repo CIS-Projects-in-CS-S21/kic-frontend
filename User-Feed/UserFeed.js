@@ -14,15 +14,30 @@ import FeedPost from '../Components/FeedPost';
  * @class Contains function for rendering the user feed.
  */
 class UserFeed extends React.Component {
+  /*
+   * Class constructor
+   */
+  constructor(props) {
+    super();
+
+    // Define the initial state:
+    this.state = {
+
+    };
+  }
+  
   /**
    * Renders user feed components.
    * @returns {Component}
    */
+  
   render() {
       return (
         <View style={styles.container}>
           <ScrollView>
+            {/*Header containing logo and name*/}
           <FeedHeader/>
+          {/*Posts, eventually will need to become a stream injected into individual FeedPosts*/}
           <FeedPost 
             style={styles.feedPost} />
           <FeedPost 
