@@ -12,6 +12,7 @@ import TokenManager from "../Managers/TokenManager";
 import ClientManager from '../Managers/ClientManager';
 import UserManager from '../Managers/UserManager';
 import { TouchableOpacity, View, Text } from "react-native";
+import KIC_Style from "../Components/Style";
 
 export default function logIn() {
 
