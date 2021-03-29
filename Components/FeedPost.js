@@ -18,11 +18,14 @@ class FeedPost extends React.Component {
     render() {
       return (
         <View style ={styles.feedPost}>
+          {/* Handle of user who posted image */}
             <Text style = {styles.headerHandle}>@Handle</Text>
+            {/* Image of post */}
             <Image
               style ={styles.postImage}
               source = {require('../assets/default/default_icon_2.png')}
             />
+            {/* Handle of user who posted image and caption */}
             <Text style = {styles.bottomText}>@Handle: caption here</Text>
         </View>
       );
