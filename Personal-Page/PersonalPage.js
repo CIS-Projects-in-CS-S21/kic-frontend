@@ -27,6 +27,7 @@ class PersonalPage extends React.Component {
 
     // Define the initial state:
     this.state = {
+      userid: "0",
       username: "default",
       bio: "bio",
       birthDay: 0,
@@ -58,15 +59,15 @@ class PersonalPage extends React.Component {
         return um.getMyUserID().then(userID => {this.callGetUserByUserID(authString, userID)});
     }
     callGetUserByUserID(authString, userID){
+
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
-
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res)})
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res, userID)})
     }
-    setUserInfo(res){
+    setUserInfo(res, userID){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
@@ -75,8 +76,6 @@ class PersonalPage extends React.Component {
         let mybirthday = bday.split(",")[2]
         let mycity = res.getUser().getCity();
         let mybio = res.getUser().getBio();
-        console.log("This user's bio is: " + res.getUser().getBio());
-        console.log("The bio this page is displaying is: " + mybio);
 
         this.setState({
             username: myusername,
@@ -85,6 +84,7 @@ class PersonalPage extends React.Component {
             birthDay: mybirthday,
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
+            id: userID
         })
     }
 
@@ -120,7 +120,8 @@ class PersonalPage extends React.Component {
                 />
 
             {/* Show posts */}
-            <PostsGrid />
+            <PostsGrid
+                />
 
             {/* NAVIGATION */}
               <Button
@@ -132,7 +133,10 @@ class PersonalPage extends React.Component {
               <Button
                 title = "View a post"
                 onPress = {() =>
-                    this.props.navigation.navigate('DetailedPostView')
+                    this.props.navigation.navigate('DetailedPostView', {
+                        username: this.state.username,
+                        userid: this.state.userid
+                    })
                 }
               />
               <Button

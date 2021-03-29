@@ -60,7 +60,7 @@ class PostDetails extends React.Component {
                 />
 
                 {/* User's display name and handle */}
-                <Text style ={styles.userNamesText}>@{this.props.username}</Text>
+                <Text style ={styles.textUsername}>@{this.props.username}</Text>
             </View>
 
             <View style={styles.captionContainer}>
@@ -69,7 +69,7 @@ class PostDetails extends React.Component {
             </ScrollView>
             </View>
 
-            <Text style={styles.postTimestamp}>Posted on {this.state.day} {this.state.month} {this.state.year} at {this.state.hour}:{this.state.min} {this.state.ampm}</Text>
+            <Text style={styles.postTimestamp}>Posted on {this.state.day} {this.state.month} {this.state.year}</Text>
 
             <CommentSection
                 numComments = {this.state.numComments}
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 75,
         borderBottomLeftRadius: 75,
     },
-    userNamesText: {
+    textUsername: {
         textAlign: 'left',
         fontSize: 15,
         marginLeft: 5,
