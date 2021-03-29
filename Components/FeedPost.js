@@ -18,12 +18,12 @@ class FeedPost extends React.Component {
     render() {
       return (
         <View style ={styles.feedPost}>
-            <Text>@Handle</Text>
+            <Text style = {styles.headerHandle}>@Handle</Text>
             <Image
               style ={styles.postImage}
               source = {require('../assets/default/default_icon_2.png')}
             />
-            <Text>@Handle: caption here</Text>
+            <Text style = {styles.bottomText}>@Handle: caption here</Text>
         </View>
       );
     }
@@ -48,13 +48,13 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   headerHandle: {
-
+    alignSelf: 'auto'
   },
   postImage: {
     borderWidth: 5, 
     borderColor: 'black', 
-    width: 300,
-    height: 300,
+    width: 350,
+    height: 350,
     marginLeft: 5,
     marginRight: 5,
     marginTop: 5,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   bottomText: {
-
+    alignSelf: 'auto'
   },
 });
 
