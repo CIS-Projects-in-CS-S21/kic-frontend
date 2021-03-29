@@ -231,6 +231,166 @@ proto.kic.media.MediaStoragePromiseClient.prototype.checkForFileByName =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
+ *   !proto.kic.media.UpdateFilesWithMetadataRequest,
+ *   !proto.kic.media.UpdateFilesWithMetadataResponse>}
+ */
+const methodDescriptor_MediaStorage_UpdateFilesWithMetadata = new grpc.web.MethodDescriptor(
+  '/kic.media.MediaStorage/UpdateFilesWithMetadata',
+  grpc.web.MethodType.UNARY,
+  proto.kic.media.UpdateFilesWithMetadataRequest,
+  proto.kic.media.UpdateFilesWithMetadataResponse,
+  /**
+   * @param {!proto.kic.media.UpdateFilesWithMetadataRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.kic.media.UpdateFilesWithMetadataResponse.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.kic.media.UpdateFilesWithMetadataRequest,
+ *   !proto.kic.media.UpdateFilesWithMetadataResponse>}
+ */
+const methodInfo_MediaStorage_UpdateFilesWithMetadata = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.kic.media.UpdateFilesWithMetadataResponse,
+  /**
+   * @param {!proto.kic.media.UpdateFilesWithMetadataRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.kic.media.UpdateFilesWithMetadataResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.kic.media.UpdateFilesWithMetadataRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.kic.media.UpdateFilesWithMetadataResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.kic.media.UpdateFilesWithMetadataResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.kic.media.MediaStorageClient.prototype.updateFilesWithMetadata =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/kic.media.MediaStorage/UpdateFilesWithMetadata',
+      request,
+      metadata || {},
+      methodDescriptor_MediaStorage_UpdateFilesWithMetadata,
+      callback);
+};
+
+
+/**
+ * @param {!proto.kic.media.UpdateFilesWithMetadataRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.kic.media.UpdateFilesWithMetadataResponse>}
+ *     Promise that resolves to the response
+ */
+proto.kic.media.MediaStoragePromiseClient.prototype.updateFilesWithMetadata =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/kic.media.MediaStorage/UpdateFilesWithMetadata',
+      request,
+      metadata || {},
+      methodDescriptor_MediaStorage_UpdateFilesWithMetadata);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.kic.media.AddCommentToFileRequest,
+ *   !proto.kic.media.AddCommentToFileResponse>}
+ */
+const methodDescriptor_MediaStorage_AddCommentToFile = new grpc.web.MethodDescriptor(
+  '/kic.media.MediaStorage/AddCommentToFile',
+  grpc.web.MethodType.UNARY,
+  proto.kic.media.AddCommentToFileRequest,
+  proto.kic.media.AddCommentToFileResponse,
+  /**
+   * @param {!proto.kic.media.AddCommentToFileRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.kic.media.AddCommentToFileResponse.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.kic.media.AddCommentToFileRequest,
+ *   !proto.kic.media.AddCommentToFileResponse>}
+ */
+const methodInfo_MediaStorage_AddCommentToFile = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.kic.media.AddCommentToFileResponse,
+  /**
+   * @param {!proto.kic.media.AddCommentToFileRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.kic.media.AddCommentToFileResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.kic.media.AddCommentToFileRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.kic.media.AddCommentToFileResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.kic.media.AddCommentToFileResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.kic.media.MediaStorageClient.prototype.addCommentToFile =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/kic.media.MediaStorage/AddCommentToFile',
+      request,
+      metadata || {},
+      methodDescriptor_MediaStorage_AddCommentToFile,
+      callback);
+};
+
+
+/**
+ * @param {!proto.kic.media.AddCommentToFileRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.kic.media.AddCommentToFileResponse>}
+ *     Promise that resolves to the response
+ */
+proto.kic.media.MediaStoragePromiseClient.prototype.addCommentToFile =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/kic.media.MediaStorage/AddCommentToFile',
+      request,
+      metadata || {},
+      methodDescriptor_MediaStorage_AddCommentToFile);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
  *   !proto.kic.media.GetFilesByMetadataRequest,
  *   !proto.kic.media.GetFilesByMetadataResponse>}
  */
