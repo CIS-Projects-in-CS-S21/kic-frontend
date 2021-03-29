@@ -7,11 +7,10 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { TextInput, Image } from 'react-native';
-import { UsersClient } from "../gen/proto/UsersServiceClientPb";
-import {GetJWTTokenRequest, GetJWTTokenResponse} from '../gen/proto/users_pb';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import TokenManager from './TokenManager';
-import UsersClientManager from './UsersClientManager.js';
+import { GetJWTTokenRequest } from '../gen/proto/users_pb';
+import TokenManager from "../Managers/TokenManager";
+import UsersClientManager from "../Managers/UsersClientManager";
+import UserManager from '../Managers/UserManager';
 import { TouchableOpacity, View, Text } from "react-native";
 
 export default function logIn() {
@@ -20,7 +19,6 @@ export default function logIn() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
 
   const handleSubmit = evt => {
     evt.preventDefault();
@@ -38,9 +36,6 @@ export default function logIn() {
     client.getJWTToken(req, {}).then(res => {
       {/* On successful login, store token and go to user feed*/ }
       if (res.array.length > 0) {
-        {/* Log token to store*/ }
-        console.log("Should store: " + res.getToken());
-
         {/* Create TokenManager*/ }
         let tokenManager = new TokenManager();
 

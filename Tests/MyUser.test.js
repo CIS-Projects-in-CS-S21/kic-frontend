@@ -6,7 +6,7 @@ import MyUser from "../Components/MyUser";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetUserByUsernameRequest } from '../gen/proto/users_pb';
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
-import TokenManager from '../User-Authentication/TokenManager';
+import TokenManager from "../Managers/TokenManager";
 
 const un = "test14";
 const pw = "test14";

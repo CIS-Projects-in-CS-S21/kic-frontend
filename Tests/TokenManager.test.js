@@ -2,7 +2,7 @@
  * @fileoverview A testing suite for TokenManager functions, which handle token storage, maintenance, and deletion.
  */
 
-import TokenManager from "../User-Authentication/TokenManager";
+import TokenManager from "../Managers/TokenManager";
 import { AddUserRequest, GetJWTTokenRequest } from "../gen/proto/users_pb";
 import {UsersClient} from "../gen/proto/UsersServiceClientPb";
 

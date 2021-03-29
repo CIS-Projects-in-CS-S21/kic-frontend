@@ -1,7 +1,8 @@
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
-import TokenManager from '../User-Authentication/TokenManager';
-import UsersClientManager from '../User-Authentication/UsersClientManager';
+import TokenManager from "../Managers/TokenManager";
+import UsersClientManager from "../Managers/UsersClientManager";
+import UserManager from '../Managers/UserManager';
 
 export default class MyUser {
     /*

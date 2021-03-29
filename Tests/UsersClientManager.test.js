@@ -2,7 +2,7 @@
  * @fileoverview A testing suite for UsersClientManager functions, which manages the UsersClient of a session.
  */
 
-import UsersClientManager from "../User-Authentication/UsersClientManager";
+import UsersClientManager from "../Managers/UsersClientManager";
 
 test('createUsersClientIsTruthy', () => {
 

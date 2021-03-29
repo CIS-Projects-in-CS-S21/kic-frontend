@@ -11,9 +11,9 @@ import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
 import MyUser from "../Components/MyUser";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
-import TokenManager from '../User-Authentication/TokenManager';
-import UsersClientManager from '../User-Authentication/UsersClientManager';
-import UserManager from '../User-Authentication/UserManager';
+import TokenManager from "../Managers/TokenManager";
+import UsersClientManager from "../Managers/UsersClientManager";
+import UserManager from '../Managers/UserManager';
 
 /**
  * @class Contains function for rendering the personal page.
