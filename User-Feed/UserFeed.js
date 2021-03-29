@@ -6,6 +6,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import FeedHeader from '../Components/FeedHeader';
 
 /**
  * @class Contains function for rendering the user feed.
@@ -18,11 +19,8 @@ class UserFeed extends React.Component {
   render() {
       return (
         <View style={styles.container}>
-          <Image
-            style={{width: 180, height: 180, resizeMode: 'contain'}}
-            source = {require('../assets/kic.png')}
-          />
-          <Text>Keeping It Casual User Feed!</Text>
+          <FeedHeader/>
+          
           <StatusBar style="auto" />
         </View>
       );
@@ -36,8 +34,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 
