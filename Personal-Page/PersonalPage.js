@@ -72,11 +72,22 @@ class PersonalPage extends React.Component {
                 numFriends = {this.state.numFriends}
                 />
 
-
             {/* Show posts */}
             <PostsGrid />
 
             {/* NAVIGATION */}
+              <Button
+                title = "Friends!"
+                onPress = {() =>
+                    this.props.navigation.navigate('FriendsPage')
+                }
+              />
+              <Button
+                title = "View a post"
+                onPress = {() =>
+                    this.props.navigation.navigate('DetailedPostView')
+                }
+              />
               <Button
                 title = "Mental Health Tracker!"
                 onPress = {() =>
