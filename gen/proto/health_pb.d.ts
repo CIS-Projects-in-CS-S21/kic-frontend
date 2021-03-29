@@ -65,9 +65,6 @@ export namespace MentalHealthLog {
 }
 
 export class GetHealthDataForUserResponse extends jspb.Message {
-  getError(): HealthDataError;
-  setError(value: HealthDataError): GetHealthDataForUserResponse;
-
   getHealthdataList(): Array<MentalHealthLog>;
   setHealthdataList(value: Array<MentalHealthLog>): GetHealthDataForUserResponse;
   clearHealthdataList(): GetHealthDataForUserResponse;
@@ -83,7 +80,6 @@ export class GetHealthDataForUserResponse extends jspb.Message {
 
 export namespace GetHealthDataForUserResponse {
   export type AsObject = {
-    error: HealthDataError,
     healthdataList: Array<MentalHealthLog.AsObject>,
   }
 }
@@ -109,6 +105,24 @@ export namespace AddHealthDataForUserRequest {
   export type AsObject = {
     userid: number,
     newentry?: MentalHealthLog.AsObject,
+  }
+}
+
+export class AddHealthDataForUserResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): AddHealthDataForUserResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AddHealthDataForUserResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: AddHealthDataForUserResponse): AddHealthDataForUserResponse.AsObject;
+  static serializeBinaryToWriter(message: AddHealthDataForUserResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddHealthDataForUserResponse;
+  static deserializeBinaryFromReader(message: AddHealthDataForUserResponse, reader: jspb.BinaryReader): AddHealthDataForUserResponse;
+}
+
+export namespace AddHealthDataForUserResponse {
+  export type AsObject = {
+    success: boolean,
   }
 }
 
@@ -191,6 +205,24 @@ export namespace UpdateHealthDataForDateRequest {
   export type AsObject = {
     userid: number,
     desiredloginfo?: MentalHealthLog.AsObject,
+  }
+}
+
+export class UpdateHealthDataForDateResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): UpdateHealthDataForDateResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateHealthDataForDateResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateHealthDataForDateResponse): UpdateHealthDataForDateResponse.AsObject;
+  static serializeBinaryToWriter(message: UpdateHealthDataForDateResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateHealthDataForDateResponse;
+  static deserializeBinaryFromReader(message: UpdateHealthDataForDateResponse, reader: jspb.BinaryReader): UpdateHealthDataForDateResponse;
+}
+
+export namespace UpdateHealthDataForDateResponse {
+  export type AsObject = {
+    success: boolean,
   }
 }
 

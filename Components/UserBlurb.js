@@ -31,13 +31,10 @@ class UserBlurb extends React.Component {
                   {/* User's display name and handle */}
                   <View style ={styles.userID}>
                       {/* Display name */}
-                      <Text style ={styles.textDisplayName}>{this.props.userFirstName} {this.props.userLastName}</Text>
-
-                      {/* Handle */}
-                      <Text style ={styles.textHandle}>@{this.props.userHandle}</Text>
+                      <Text style ={styles.textUsername}>{this.props.username}</Text>
                   </View>
                   {/* # of posts and friends */}
-                  <Text style ={styles.textBio}>{this.props.userBio}</Text>
+                  <Text style ={styles.textBio}>{this.props.bio}</Text>
               </View>
 
           <StatusBar style="auto" />
@@ -87,16 +84,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
     },
-    textDisplayName: {
+    textUsername: {
         fontSize: 15,
         marginRight: 5,
-    },
-    textHandle: {
-        fontSize: 15,
         fontWeight: "bold",
     },
     textBio: {
-        fontSize: 12,
+        fontSize: 13,
     }
 });
 

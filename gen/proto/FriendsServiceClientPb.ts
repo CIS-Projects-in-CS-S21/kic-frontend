@@ -35,6 +35,86 @@ export class FriendsClient {
     this.options_ = options;
   }
 
+  methodInfoGetFriendsUsernamesForUser = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_friends_pb.GetFriendsUsernamesForUserResponse,
+    (request: proto_friends_pb.GetFriendsForUserRequest) => {
+      return request.serializeBinary();
+    },
+    proto_friends_pb.GetFriendsUsernamesForUserResponse.deserializeBinary
+  );
+
+  getFriendsUsernamesForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_friends_pb.GetFriendsUsernamesForUserResponse>;
+
+  getFriendsUsernamesForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_friends_pb.GetFriendsUsernamesForUserResponse) => void): grpcWeb.ClientReadableStream<proto_friends_pb.GetFriendsUsernamesForUserResponse>;
+
+  getFriendsUsernamesForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_friends_pb.GetFriendsUsernamesForUserResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.friends.Friends/GetFriendsUsernamesForUser',
+        request,
+        metadata || {},
+        this.methodInfoGetFriendsUsernamesForUser,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.friends.Friends/GetFriendsUsernamesForUser',
+    request,
+    metadata || {},
+    this.methodInfoGetFriendsUsernamesForUser);
+  }
+
+  methodInfoGetAwaitingFriendsUsernamesForUser = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_friends_pb.GetFriendsUsernamesForUserResponse,
+    (request: proto_friends_pb.GetFriendsForUserRequest) => {
+      return request.serializeBinary();
+    },
+    proto_friends_pb.GetFriendsUsernamesForUserResponse.deserializeBinary
+  );
+
+  getAwaitingFriendsUsernamesForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_friends_pb.GetFriendsUsernamesForUserResponse>;
+
+  getAwaitingFriendsUsernamesForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_friends_pb.GetFriendsUsernamesForUserResponse) => void): grpcWeb.ClientReadableStream<proto_friends_pb.GetFriendsUsernamesForUserResponse>;
+
+  getAwaitingFriendsUsernamesForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_friends_pb.GetFriendsUsernamesForUserResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.friends.Friends/GetAwaitingFriendsUsernamesForUser',
+        request,
+        metadata || {},
+        this.methodInfoGetAwaitingFriendsUsernamesForUser,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.friends.Friends/GetAwaitingFriendsUsernamesForUser',
+    request,
+    metadata || {},
+    this.methodInfoGetAwaitingFriendsUsernamesForUser);
+  }
+
   methodInfoGetFriendsForUser = new grpcWeb.AbstractClientBase.MethodInfo(
     proto_friends_pb.GetFriendsForUserResponse,
     (request: proto_friends_pb.GetFriendsForUserRequest) => {
@@ -73,6 +153,46 @@ export class FriendsClient {
     request,
     metadata || {},
     this.methodInfoGetFriendsForUser);
+  }
+
+  methodInfoGetAwaitingFriendsForUser = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_friends_pb.GetFriendsForUserResponse,
+    (request: proto_friends_pb.GetFriendsForUserRequest) => {
+      return request.serializeBinary();
+    },
+    proto_friends_pb.GetFriendsForUserResponse.deserializeBinary
+  );
+
+  getAwaitingFriendsForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_friends_pb.GetFriendsForUserResponse>;
+
+  getAwaitingFriendsForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_friends_pb.GetFriendsForUserResponse) => void): grpcWeb.ClientReadableStream<proto_friends_pb.GetFriendsForUserResponse>;
+
+  getAwaitingFriendsForUser(
+    request: proto_friends_pb.GetFriendsForUserRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_friends_pb.GetFriendsForUserResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.friends.Friends/GetAwaitingFriendsForUser',
+        request,
+        metadata || {},
+        this.methodInfoGetAwaitingFriendsForUser,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.friends.Friends/GetAwaitingFriendsForUser',
+    request,
+    metadata || {},
+    this.methodInfoGetAwaitingFriendsForUser);
   }
 
   methodInfoGetConnectionBetweenUsers = new grpcWeb.AbstractClientBase.MethodInfo(
@@ -193,6 +313,46 @@ export class FriendsClient {
     request,
     metadata || {},
     this.methodInfoCreateConnectionForUsers);
+  }
+
+  methodInfoAddAwaitingFriend = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_friends_pb.AddAwaitingFriendResponse,
+    (request: proto_friends_pb.AddAwaitingFriendRequest) => {
+      return request.serializeBinary();
+    },
+    proto_friends_pb.AddAwaitingFriendResponse.deserializeBinary
+  );
+
+  addAwaitingFriend(
+    request: proto_friends_pb.AddAwaitingFriendRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_friends_pb.AddAwaitingFriendResponse>;
+
+  addAwaitingFriend(
+    request: proto_friends_pb.AddAwaitingFriendRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_friends_pb.AddAwaitingFriendResponse) => void): grpcWeb.ClientReadableStream<proto_friends_pb.AddAwaitingFriendResponse>;
+
+  addAwaitingFriend(
+    request: proto_friends_pb.AddAwaitingFriendRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_friends_pb.AddAwaitingFriendResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.friends.Friends/AddAwaitingFriend',
+        request,
+        metadata || {},
+        this.methodInfoAddAwaitingFriend,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.friends.Friends/AddAwaitingFriend',
+    request,
+    metadata || {},
+    this.methodInfoAddAwaitingFriend);
   }
 
   methodInfoUpdateConnectionBetweenUsers = new grpcWeb.AbstractClientBase.MethodInfo(

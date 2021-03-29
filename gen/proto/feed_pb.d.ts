@@ -27,11 +27,6 @@ export class GenerateFeedForUserResponse extends jspb.Message {
   hasFileinfo(): boolean;
   clearFileinfo(): GenerateFeedForUserResponse;
 
-  getError(): GenerateFeedError;
-  setError(value: GenerateFeedError): GenerateFeedForUserResponse;
-
-  getDataCase(): GenerateFeedForUserResponse.DataCase;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GenerateFeedForUserResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GenerateFeedForUserResponse): GenerateFeedForUserResponse.AsObject;
@@ -43,17 +38,6 @@ export class GenerateFeedForUserResponse extends jspb.Message {
 export namespace GenerateFeedForUserResponse {
   export type AsObject = {
     fileinfo?: proto_common_pb.File.AsObject,
-    error: GenerateFeedError,
-  }
-
-  export enum DataCase { 
-    DATA_NOT_SET = 0,
-    FILEINFO = 1,
-    ERROR = 2,
   }
 }
 
-export enum GenerateFeedError { 
-  USER_NOT_FOUND = 0,
-  OUT_OF_POSTS = 1,
-}

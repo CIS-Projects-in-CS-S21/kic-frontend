@@ -7,30 +7,39 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import PostDetails from "./PostDetails";
+import { useNavigation } from '@react-navigation/native';
 
 /**
  * @class Contains function for rendering the detailed post view.
  */
 class DetailedPostView extends React.Component {
-
   /*
    * Class constructor
    */
-  constructor(props) {
-    super();
+    constructor(props) {
+        super();
 
-    // Define the initial state:
-    this.state = {
-      userFirstName: "First",
-      userLastName: "Last",
-      userHandle: "username",
-      yearPosted: 1998,
-      monthPosted: 3,
-      dayPosted: 16,
-      hourPosted: 2,
-      minutePosted: 15,
-    };
-  }
+        // Define the initial state:
+        this.state = {
+            userID: props.route.params.userid,
+            username: props.route.params.username,
+            yearPosted: 0,
+            monthPosted: 0,
+            dayPosted: 0,
+        };
+        this.setPosterInfo = this.setPosterInfo.bind(this)
+    }
+
+    componentDidMount() {
+      this.setPosterInfo();
+    }
+
+    setPosterInfo() {
+        console.log("Hi");
+        this.setState({
+            // do smth
+        })
+    }
 
   /**
    * Renders the DetailedPostView components.
@@ -47,14 +56,11 @@ class DetailedPostView extends React.Component {
 
                 {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
                 <PostDetails
-                    userFirstName = {this.state.userFirstName}
-                    userLastName = {this.state.userLastName}
-                    userHandle = {this.state.userHandle}
+                    userID = {this.state.userID}
+                    username = {this.state.username}
                     yearPosted = {this.state.yearPosted}
                     monthPosted = {this.state.monthPosted}
                     dayPosted = {this.state.dayPosted}
-                    hourPosted = {this.state.hourPosted}
-                    minutePosted = {this.state.minutePosted}
                 />
 
                   <StatusBar style="auto" />

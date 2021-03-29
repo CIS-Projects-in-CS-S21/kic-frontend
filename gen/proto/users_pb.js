@@ -1953,7 +1953,8 @@ proto.kic.users.UpdateUserInfoRequest.toObject = function(includeInstance, msg) 
     desiredusername: jspb.Message.getFieldWithDefault(msg, 3, ""),
     desiredpassword: jspb.Message.getFieldWithDefault(msg, 4, ""),
     birthday: (f = msg.getBirthday()) && proto_common_pb.Date.toObject(includeInstance, f),
-    city: jspb.Message.getFieldWithDefault(msg, 6, "")
+    city: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    bio: jspb.Message.getFieldWithDefault(msg, 7, "")
   };
 
   if (includeInstance) {
@@ -2014,6 +2015,10 @@ proto.kic.users.UpdateUserInfoRequest.deserializeBinaryFromReader = function(msg
     case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.setCity(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setBio(value);
       break;
     default:
       reader.skipField();
@@ -2084,6 +2089,13 @@ proto.kic.users.UpdateUserInfoRequest.serializeBinaryToWriter = function(message
   if (f.length > 0) {
     writer.writeString(
       6,
+      f
+    );
+  }
+  f = message.getBio();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
       f
     );
   }
@@ -2214,6 +2226,24 @@ proto.kic.users.UpdateUserInfoRequest.prototype.getCity = function() {
  */
 proto.kic.users.UpdateUserInfoRequest.prototype.setCity = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional string bio = 7;
+ * @return {string}
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.getBio = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.setBio = function(value) {
+  return jspb.Message.setProto3StringField(this, 7, value);
 };
 
 

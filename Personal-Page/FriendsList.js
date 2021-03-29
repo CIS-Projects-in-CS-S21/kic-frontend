@@ -13,28 +13,24 @@ import AddFriendButton from "../Components/AddFriendButton";
 */
 const FRIENDS = [
   {
-    firstName: 'Friend',
-    lastName: 'A',
-    username: 'friendA',
-    bio: 'This is Friend A',
+    id: '1',
+    username: 'friend1',
+    bio: 'bio',
   },
   {
-    firstName: 'Friend',
-    lastName: 'B',
-    username: 'friendB',
-    bio: 'TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT',
+    id: '2',
+    username: 'friend2',
+    bio: 'bio',
   },
   {
-    firstName: 'Friend',
-    lastName: 'C',
-    username: 'friendC',
-    bio: 'TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT',
+    id: '3',
+    username: 'friend3',
+    bio: 'bio',
   },
   {
-    firstName: 'Friend',
-    lastName: 'D',
-    username: 'friendD',
-    bio: 'TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT',
+    id: '4',
+    username: 'friend4',
+    bio: 'bio',
   },
 ];
 
@@ -58,10 +54,8 @@ class FriendsList extends React.Component {
         {/* Function for rendering comments */}
         const renderItem = ({ item }) => (
             <UserBlurb
-                userFirstName={item.firstName}
-                userLastName={item.lastName}
-                userHandle={item.username}
-                userBio={item.bio}
+                username = {item.username}
+                bio = {item.bio}
             />
         );
 

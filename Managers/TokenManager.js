@@ -34,10 +34,9 @@ export default class TokenManager {
     */
     getToken = async () => {
         try {
-            AsyncStorage.getItem('MyToken', (err, result) => {
-                console.log("Retrieved token successfully: " + result);
-                return result;
-            });
+            let token = await AsyncStorage.getItem('MyToken');
+            console.log("Retrieved token successfully: " + token);
+            return token
         } catch (error) {
             console.log("Error fetching token!");
             console.log(error);
@@ -51,7 +50,14 @@ export default class TokenManager {
     * @function forgetToken
     */
     forgetToken = async() => {
-        AsyncStorage.clear();
+        try {
+            let token = await AsyncStorage.removeItem('MyToken');
+            console.log("Removed token successfully: " + token);
+            return token
+        } catch (error) {
+            console.log("Error removing token!");
+            console.log(error);
+        }
     }
 
     /**

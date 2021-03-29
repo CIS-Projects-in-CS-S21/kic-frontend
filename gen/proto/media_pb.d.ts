@@ -118,15 +118,10 @@ export namespace DownloadFileRequest {
 }
 
 export class DownloadFileResponse extends jspb.Message {
-  getError(): DownloadFileByNameError;
-  setError(value: DownloadFileByNameError): DownloadFileResponse;
-
   getChunk(): Uint8Array | string;
   getChunk_asU8(): Uint8Array;
   getChunk_asB64(): string;
   setChunk(value: Uint8Array | string): DownloadFileResponse;
-
-  getDataCase(): DownloadFileResponse.DataCase;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DownloadFileResponse.AsObject;
@@ -138,14 +133,7 @@ export class DownloadFileResponse extends jspb.Message {
 
 export namespace DownloadFileResponse {
   export type AsObject = {
-    error: DownloadFileByNameError,
     chunk: Uint8Array | string,
-  }
-
-  export enum DataCase { 
-    DATA_NOT_SET = 0,
-    ERROR = 1,
-    CHUNK = 2,
   }
 }
 
@@ -214,8 +202,8 @@ export namespace DeleteFilesWithMetaDataRequest {
 }
 
 export class DeleteFilesWithMetaDataResponse extends jspb.Message {
-  getError(): DeleteFileError;
-  setError(value: DeleteFileError): DeleteFilesWithMetaDataResponse;
+  getSuccess(): boolean;
+  setSuccess(value: boolean): DeleteFilesWithMetaDataResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteFilesWithMetaDataResponse.AsObject;
@@ -227,20 +215,65 @@ export class DeleteFilesWithMetaDataResponse extends jspb.Message {
 
 export namespace DeleteFilesWithMetaDataResponse {
   export type AsObject = {
-    error: DeleteFileError,
+    success: boolean,
   }
 }
 
-export enum DownloadFileByNameError { 
-  FILE_NOT_FOUND = 0,
-  BUCKET_NOT_FOUND = 1,
+export class UpdateFilesWithMetadataRequest extends jspb.Message {
+  getDesiredmetadataMap(): jspb.Map<string, string>;
+  clearDesiredmetadataMap(): UpdateFilesWithMetadataRequest;
+
+  getFiltermetadataMap(): jspb.Map<string, string>;
+  clearFiltermetadataMap(): UpdateFilesWithMetadataRequest;
+
+  getStrictness(): MetadataStrictness;
+  setStrictness(value: MetadataStrictness): UpdateFilesWithMetadataRequest;
+
+  getUpdateflag(): UpdateFlag;
+  setUpdateflag(value: UpdateFlag): UpdateFilesWithMetadataRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateFilesWithMetadataRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateFilesWithMetadataRequest): UpdateFilesWithMetadataRequest.AsObject;
+  static serializeBinaryToWriter(message: UpdateFilesWithMetadataRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateFilesWithMetadataRequest;
+  static deserializeBinaryFromReader(message: UpdateFilesWithMetadataRequest, reader: jspb.BinaryReader): UpdateFilesWithMetadataRequest;
+}
+
+export namespace UpdateFilesWithMetadataRequest {
+  export type AsObject = {
+    desiredmetadataMap: Array<[string, string]>,
+    filtermetadataMap: Array<[string, string]>,
+    strictness: MetadataStrictness,
+    updateflag: UpdateFlag,
+  }
+}
+
+export class UpdateFilesWithMetadataResponse extends jspb.Message {
+  getNumfilesupdated(): number;
+  setNumfilesupdated(value: number): UpdateFilesWithMetadataResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateFilesWithMetadataResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateFilesWithMetadataResponse): UpdateFilesWithMetadataResponse.AsObject;
+  static serializeBinaryToWriter(message: UpdateFilesWithMetadataResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateFilesWithMetadataResponse;
+  static deserializeBinaryFromReader(message: UpdateFilesWithMetadataResponse, reader: jspb.BinaryReader): UpdateFilesWithMetadataResponse;
+}
+
+export namespace UpdateFilesWithMetadataResponse {
+  export type AsObject = {
+    numfilesupdated: number,
+  }
+}
+
+export enum UpdateFlag { 
+  OVERWRITE = 0,
+  APPEND = 1,
 }
 export enum MetadataStrictness { 
   STRICT = 0,
   CASUAL = 1,
   STRICTLY_OPPOSITE = 2,
   CASUALLY_OPPOSITE = 3,
-}
-export enum DeleteFileError { 
-  ACCESS_DENIED = 0,
 }

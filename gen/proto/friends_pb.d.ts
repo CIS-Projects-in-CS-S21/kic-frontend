@@ -43,6 +43,26 @@ export namespace GetFriendsForUserResponse {
   }
 }
 
+export class GetFriendsUsernamesForUserResponse extends jspb.Message {
+  getFriendsList(): Array<string>;
+  setFriendsList(value: Array<string>): GetFriendsUsernamesForUserResponse;
+  clearFriendsList(): GetFriendsUsernamesForUserResponse;
+  addFriends(value: string, index?: number): GetFriendsUsernamesForUserResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetFriendsUsernamesForUserResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetFriendsUsernamesForUserResponse): GetFriendsUsernamesForUserResponse.AsObject;
+  static serializeBinaryToWriter(message: GetFriendsUsernamesForUserResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetFriendsUsernamesForUserResponse;
+  static deserializeBinaryFromReader(message: GetFriendsUsernamesForUserResponse, reader: jspb.BinaryReader): GetFriendsUsernamesForUserResponse;
+}
+
+export namespace GetFriendsUsernamesForUserResponse {
+  export type AsObject = {
+    friendsList: Array<string>,
+  }
+}
+
 export class GetRecommendationsForUserRequest extends jspb.Message {
   getUser(): proto_common_pb.User | undefined;
   setUser(value?: proto_common_pb.User): GetRecommendationsForUserRequest;
@@ -136,9 +156,6 @@ export namespace GetConnectionBetweenUsersRequest {
 }
 
 export class ConnectionBetweenUsersResponse extends jspb.Message {
-  getError(): ConnectionError;
-  setError(value: ConnectionError): ConnectionBetweenUsersResponse;
-
   getConnectionstrength(): number;
   setConnectionstrength(value: number): ConnectionBetweenUsersResponse;
 
@@ -152,7 +169,6 @@ export class ConnectionBetweenUsersResponse extends jspb.Message {
 
 export namespace ConnectionBetweenUsersResponse {
   export type AsObject = {
-    error: ConnectionError,
     connectionstrength: number,
   }
 }
@@ -180,9 +196,6 @@ export namespace DeleteConnectionBetweenUsersRequest {
 }
 
 export class DeleteConnectionBetweenUsersResponse extends jspb.Message {
-  getError(): ConnectionError;
-  setError(value: ConnectionError): DeleteConnectionBetweenUsersResponse;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteConnectionBetweenUsersResponse.AsObject;
   static toObject(includeInstance: boolean, msg: DeleteConnectionBetweenUsersResponse): DeleteConnectionBetweenUsersResponse.AsObject;
@@ -193,7 +206,6 @@ export class DeleteConnectionBetweenUsersResponse extends jspb.Message {
 
 export namespace DeleteConnectionBetweenUsersResponse {
   export type AsObject = {
-    error: ConnectionError,
   }
 }
 
@@ -220,8 +232,8 @@ export namespace CreateConnectionForUsersRequest {
 }
 
 export class CreateConnectionForUsersResponse extends jspb.Message {
-  getError(): ConnectionError;
-  setError(value: ConnectionError): CreateConnectionForUsersResponse;
+  getSuccess(): boolean;
+  setSuccess(value: boolean): CreateConnectionForUsersResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreateConnectionForUsersResponse.AsObject;
@@ -233,12 +245,47 @@ export class CreateConnectionForUsersResponse extends jspb.Message {
 
 export namespace CreateConnectionForUsersResponse {
   export type AsObject = {
-    error: ConnectionError,
+    success: boolean,
   }
 }
 
-export enum ConnectionError { 
-  NO_FRIENDSHIP = 0,
-  USER_ONE_DNE = 1,
-  USER_TWO_DNE = 2,
+export class AddAwaitingFriendRequest extends jspb.Message {
+  getFirstuserid(): number;
+  setFirstuserid(value: number): AddAwaitingFriendRequest;
+
+  getSeconduserid(): number;
+  setSeconduserid(value: number): AddAwaitingFriendRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AddAwaitingFriendRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: AddAwaitingFriendRequest): AddAwaitingFriendRequest.AsObject;
+  static serializeBinaryToWriter(message: AddAwaitingFriendRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddAwaitingFriendRequest;
+  static deserializeBinaryFromReader(message: AddAwaitingFriendRequest, reader: jspb.BinaryReader): AddAwaitingFriendRequest;
 }
+
+export namespace AddAwaitingFriendRequest {
+  export type AsObject = {
+    firstuserid: number,
+    seconduserid: number,
+  }
+}
+
+export class AddAwaitingFriendResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): AddAwaitingFriendResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AddAwaitingFriendResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: AddAwaitingFriendResponse): AddAwaitingFriendResponse.AsObject;
+  static serializeBinaryToWriter(message: AddAwaitingFriendResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddAwaitingFriendResponse;
+  static deserializeBinaryFromReader(message: AddAwaitingFriendResponse, reader: jspb.BinaryReader): AddAwaitingFriendResponse;
+}
+
+export namespace AddAwaitingFriendResponse {
+  export type AsObject = {
+    success: boolean,
+  }
+}
+

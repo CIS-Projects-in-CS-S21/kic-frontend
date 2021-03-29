@@ -94,6 +94,46 @@ export class MediaStorageClient {
     this.methodInfoCheckForFileByName);
   }
 
+  methodInfoUpdateFilesWithMetadata = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_media_pb.UpdateFilesWithMetadataResponse,
+    (request: proto_media_pb.UpdateFilesWithMetadataRequest) => {
+      return request.serializeBinary();
+    },
+    proto_media_pb.UpdateFilesWithMetadataResponse.deserializeBinary
+  );
+
+  updateFilesWithMetadata(
+    request: proto_media_pb.UpdateFilesWithMetadataRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_media_pb.UpdateFilesWithMetadataResponse>;
+
+  updateFilesWithMetadata(
+    request: proto_media_pb.UpdateFilesWithMetadataRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_media_pb.UpdateFilesWithMetadataResponse) => void): grpcWeb.ClientReadableStream<proto_media_pb.UpdateFilesWithMetadataResponse>;
+
+  updateFilesWithMetadata(
+    request: proto_media_pb.UpdateFilesWithMetadataRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_media_pb.UpdateFilesWithMetadataResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.media.MediaStorage/UpdateFilesWithMetadata',
+        request,
+        metadata || {},
+        this.methodInfoUpdateFilesWithMetadata,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.media.MediaStorage/UpdateFilesWithMetadata',
+    request,
+    metadata || {},
+    this.methodInfoUpdateFilesWithMetadata);
+  }
+
   methodInfoGetFilesWithMetadata = new grpcWeb.AbstractClientBase.MethodInfo(
     proto_media_pb.GetFilesByMetadataResponse,
     (request: proto_media_pb.GetFilesByMetadataRequest) => {

@@ -5,8 +5,11 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { AddUserRequest } from "../gen/proto/users_pb";
+import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
+import TokenManager from "../Managers/TokenManager";
+import ClientManager from '../Managers/ClientManager';
+import UserManager from '../Managers/UserManager';
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
 import { Text, TouchableOpacity, Image, View, TextInput } from "react-native";
@@ -24,6 +27,8 @@ export default function signUp() {
     const [email, setEmail] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [bio, setBio] = useState("");
+    const [myUser, setMyUser] = useState("");
 
     const handleSubmit = evt => {
         evt.preventDefault();
@@ -41,37 +46,75 @@ export default function signUp() {
             alert('Error: Must include a valid email.');
         } else if (firstName == "" || lastName == "") {
             alert('Missing first or last name entries.');
+        } else if (bio.length >= 250) {
+            alert('Sorry, your bio must be less than 250 characters long!');
         } else {
             makeRequest();
         }
     };
 
-    const makeRequest = () => {
-        let url = "";
-        if (__DEV__) {
-            url = "http://test.api.keeping-it-casual.com";
-        } else {
-            url = "https://api.keeping-it-casual.com";
-        }
-        const client = new UsersClient(url);
-        let req = new AddUserRequest()
-        let date = new Date()
-        date.setYear(1998)
-        date.setMonth(8)
-        date.setDay(21)
-        req.setEmail(email)
-        req.setBirthday(date)
-        req.setCity("test")
-        req.setDesiredusername(username)
-        req.setDesiredpassword(password1)
-        client.addUser(req, {}).then(res => {
-            {/* On successful signup, return user to login screen for login */ }
-            console.log(res)
-            navigation.navigate('LogIn')
-        }).catch(e => {
-            console.log(e);
-            alert("Invalid signup. Please use different credentials and try again. If problem persists, contact administrators.")
-        });
+    const makeRequest = async () => {
+      callAddUser().then(response => {
+        console.log("Successfully added user");
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+    const callAddUser = () => {
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new AddUserRequest();
+        let date = new Date();
+        date.setYear(1998);
+        date.setMonth(8);
+        date.setDay(21);
+        req.setEmail(email);
+        req.setBirthday(date);
+        req.setCity("city");
+        req.setDesiredusername(username);
+        req.setDesiredpassword(password1);
+
+        return client.addUser(req, {}).then(res => {callGetJWTToken(client)});
+    }
+    const callGetJWTToken = (client) => {
+        let req = new GetJWTTokenRequest();
+        req.setUsername(username);
+        req.setPassword(password1);
+
+        return client.getJWTToken(req, {}).then(res => {callStoreToken(client, res)});
+    }
+    const callStoreToken = (client, res) => {
+        let tm = new TokenManager();
+        return tm.storeToken(res.getToken()).then(res => {callGetAuthString(client)});
+    }
+    const callGetAuthString = (client) => {
+        console.log("callgetauthstr");
+        let um = new UserManager();
+        return um.getAuthString().then(authString => {callGetUserID(client, um, authString)});
+    }
+    const callGetUserID = (client, um, authString) => {
+        console.log("callgetuserid");
+        return um.getMyUserID().then(userID => {callGetUserByUserID(client, authString, userID)});
+    }
+    const callGetUserByUserID = (client, authString, userID) => {
+        console.log("callgetuserbyuserid");
+        let req = new GetUserByIDRequest();
+        req.setUserid(userID);
+
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {callUpdateUserInfo(client, authString, userID)});
+    }
+    const callUpdateUserInfo = (client, authString, userID) => {
+        console.log("callupdateuserinfo");
+        let req = new UpdateUserInfoRequest();
+        req.setUserid(userID);
+        req.setBio(bio);
+
+        return client.updateUserInfo(req, {'Authorization': authString}).then(res => { finishSignUp(res) });
+    }
+    const finishSignUp = (res) => {
+        console.log("User: " + res.getUpdateduser());
+        navigation.navigate('LogIn');
     }
 
     return (
@@ -118,6 +161,11 @@ export default function signUp() {
                 placeholder=" Retype password"
                 required="required"
                 secureTextEntry={true} />
+            <TextInput
+                style={KIC_Style.input}
+                value={bio}
+                onChange={e => setBio(e.nativeEvent.text)}
+                placeholder=" Bio (max. 250 characters)" />
             <TouchableOpacity
                 style={KIC_Style.button}
                 onPress={handleSubmit}>

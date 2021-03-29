@@ -9,7 +9,11 @@ import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, Touchable
 import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
-import TokenManager from '../User-Authentication/TokenManager';
+import MyUser from "../Components/MyUser";
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import TokenManager from "../Managers/TokenManager";
+import ClientManager from "../Managers/ClientManager";
+import UserManager from '../Managers/UserManager';
 
 /**
  * @class Contains function for rendering the personal page.
@@ -23,27 +27,72 @@ class PersonalPage extends React.Component {
 
     // Define the initial state:
     this.state = {
-      userFirstName: "First",
-      userLastName: "Last",
-      userHandle: "username",
-      userBio: "This is an example biography. This is an example biography. This is an example biography. This is an example biography. This is an example biography. ",
-      numPosts: 6,
-      numFriends: 0,
+      userid: "0",
+      username: "default",
+      bio: "bio",
+      birthDay: 0,
+      birthMonth: 0,
+      birthYear: 0,
     };
+
+    this.fetchUserInfo = this.fetchUserInfo.bind(this)
+
   }
+
+    componentDidMount(){
+      //this.fetchUserInfo()
+      this.fetchUserInfo().then(response => {
+          console.log("Success");
+      }).catch(error => {
+          console.log(error)
+      });
+    }
+
+    fetchUserInfo() {
+        return this.callGetAuthString();
+    }
+    callGetAuthString(){
+        let um = new UserManager();
+        return um.getAuthString().then(authString => {this.callGetUserID(um, authString)});
+    }
+    callGetUserID(um, authString){
+        return um.getMyUserID().then(userID => {this.callGetUserByUserID(authString, userID)});
+    }
+    callGetUserByUserID(authString, userID){
+
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new GetUserByIDRequest();
+        req.setUserid(userID);
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res, userID)})
+    }
+    setUserInfo(res, userID){
+        {/* Store user information */}
+        let myusername = res.getUser().getUsername();
+        let bday = res.getUser().getBirthday().toString();
+        let mybirthyear = bday.split(",")[0];
+        let mybirthmonth = bday.split(",")[1];
+        let mybirthday = bday.split(",")[2]
+        let mycity = res.getUser().getCity();
+        let mybio = res.getUser().getBio();
+
+        this.setState({
+            username: myusername,
+            bio: mybio,
+            city: mycity,
+            birthDay: mybirthday,
+            birthMonth: mybirthmonth,
+            birthYear: mybirthyear,
+            id: userID
+        })
+    }
 
   /**
    * Gets user's posts. Returns an array of the user's posts.
    */
   fetchPosts = () => {
       // Request posts for user
-  }
-
-  /**
-   * Gets user information (name, handle, bio, post & friend count)
-   */
-  fetchInformation = () => {
-      // Request user information and save to state
   }
 
   /**
@@ -63,17 +112,16 @@ class PersonalPage extends React.Component {
 
             {/* Display profile header with state information */}
             <ProfileHeader
-                userFirstName = {this.state.userFirstName}
-                userLastName = {this.state.userLastName}
-                userBio = {this.state.userBio}
-                userHandle = {this.state.userHandle}
-                userPosts = {this.state.userPosts}
-                numPosts = {this.state.numPosts}
-                numFriends = {this.state.numFriends}
+                username = {this.state.username}
+                bio = {this.state.bio}
+                birthDay = {this.state.birthDay}
+                birthMonth = {this.state.birthMonth}
+                birthYear = {this.state.birthYear}
                 />
 
             {/* Show posts */}
-            <PostsGrid />
+            <PostsGrid
+                />
 
             {/* NAVIGATION */}
               <Button
@@ -85,7 +133,10 @@ class PersonalPage extends React.Component {
               <Button
                 title = "View a post"
                 onPress = {() =>
-                    this.props.navigation.navigate('DetailedPostView')
+                    this.props.navigation.navigate('DetailedPostView', {
+                        username: this.state.username,
+                        userid: this.state.userid
+                    })
                 }
               />
               <Button

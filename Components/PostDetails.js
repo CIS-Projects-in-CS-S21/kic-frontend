@@ -60,16 +60,16 @@ class PostDetails extends React.Component {
                 />
 
                 {/* User's display name and handle */}
-                <Text style ={styles.userNamesText}>{this.props.userFirstName} {this.props.userLastName} @{this.props.userHandle}</Text>
+                <Text style ={styles.textUsername}>@{this.props.username}</Text>
             </View>
 
             <View style={styles.captionContainer}>
             <ScrollView style ={styles.captionBox}>
-                <Text style ={styles.captionText}>This is a caption. It's ideally around eight lines long but a scrollbar will appear if the user will be allowed to write a description longer than eight lines' worth of words.</Text>
+                <Text style ={styles.captionText}>This is a caption. It can be as short as 0 characters and as long as 350 characters.</Text>
             </ScrollView>
             </View>
 
-            <Text style={styles.postTimestamp}>Posted on {this.state.day} {this.state.month} {this.state.year} at {this.state.hour}:{this.state.min} {this.state.ampm}</Text>
+            <Text style={styles.postTimestamp}>Posted on {this.state.day} {this.state.month} {this.state.year}</Text>
 
             <CommentSection
                 numComments = {this.state.numComments}
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 75,
         borderBottomLeftRadius: 75,
     },
-    userNamesText: {
+    textUsername: {
         textAlign: 'left',
         fontSize: 15,
         marginLeft: 5,

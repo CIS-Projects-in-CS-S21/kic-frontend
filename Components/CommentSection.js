@@ -12,26 +12,32 @@ import { StyleSheet, Text, View, FlatList } from 'react-native';
 const COMMENTS = [
   {
     id: '1',
-    commentText: 'First comment. First comment. First comment. First comment. ',
+    commenterUsername: 'One',
+    commentText: 'Comments should be a maximum of 150 characters long. ',
   },
   {
     id: '2',
+    commenterUsername: 'Two',
     commentText: 'Second comment',
   },
   {
     id: '3',
+    commenterUsername: 'Three',
     commentText: 'Third comment',
   },
   {
     id: '4',
+    commenterUsername: 'Four',
     commentText: 'Fourth comment',
   },
   {
     id: '5',
+    commenterUsername: 'Five',
     commentText: 'Fifth comment',
   },
   {
     id: '6',
+    commenterUsername: 'Six',
     commentText: 'Sixth comment',
   },
 ];
@@ -39,9 +45,10 @@ const COMMENTS = [
 /**
 * Format individual comment
 */
-const Comment = ({ commenterHandle, commenterPosterFirstName, commenterFirstName, commentText }) => (
-  <View style={styles.comment}>
-    <Text style={styles.commentText}>{commentText}</Text>
+const Comment = ({ commenterUsername, commentText }) => (
+  <View style={styles.comments}>
+    <Text style={styles.textCommenterUsername}>{commenterUsername} says...</Text>
+    <Text style={styles.textComment}>{commentText}</Text>
   </View>
 );
 
@@ -63,7 +70,7 @@ class CommentSection extends React.Component {
     render() {
       {/* Function for rendering comments */}
       const renderItem = ({ item }) => (
-        <Comment commentText={item.commentText} />
+        <Comment commenterUsername={item.commenterUsername} commentText={item.commentText} />
       );
 
       return (
@@ -92,7 +99,8 @@ const styles = StyleSheet.create({
         width: '100%',
         flex: 1,
     },
-    comment: {
+    comments: {
+        flexDirection: 'column',
         backgroundColor: '#fff',
         width: '95%',
         padding: 15,
@@ -101,12 +109,24 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 25,
         borderBottomLeftRadius: 25,
     },
+    commenterIcon: {
+        width: '10%',
+        height: '10%',
+    },
     commentCounter: {
         fontSize: 10,
         fontStyle: 'italic',
         color: '#707070',
         paddingBottom: 5,
         textAlign: 'right',
+    },
+    textCommenterUsername: {
+        fontSize: 11,
+        fontStyle: 'italic',
+        fontWeight: "bold",
+    },
+    textComment: {
+        fontSize: 11,
     }
 });
 
