@@ -3,7 +3,8 @@
  */
 
 import React, { useState } from 'react'
-import { View, TextInput, Image, Button } from 'react-native'
+import {View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
+import KIC_Style from "../Components/Style";
 
 
 
@@ -33,16 +34,20 @@ export default function PostInfo(props) {
     }
     return (
         <View style={{ flex: 1 }}>
-            <Image source={{ uri: props.route.params.image }} style={{ flex: 1 }}/>
-            <TextInput
+            <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', padding: 10}}/>
+            <TextInput style = {KIC_Style.input}
                 placeholder="Write a Caption . . ."
                 onChangeText={(caption) => setCaption(caption)}
             />
-            <TextInput
+            <TextInput style = {KIC_Style.input}
                 placeholder="Write any triggers in #format . . ."
                 onChangeText={(triggers) => setCaption(triggers)}
             />
-            <Button title="Save" onPress={() => uploadImage()} />
+            <TouchableOpacity
+                style={KIC_Style.button_post}
+                onPress={() => uploadImage()}>
+                <Text style={KIC_Style.button_font}> Upload </Text>
+            </TouchableOpacity>
         </View>
     )
 }

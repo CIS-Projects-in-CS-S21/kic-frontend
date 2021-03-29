@@ -22,7 +22,7 @@ export default function Post({ navigation }) {
 
     useEffect(() => {
         (async () => {
-            if (Platform.OS !== 'web') {
+           if (Platform.OS !== 'web') {
                 //request permission for camera
                 const cameraStatus = await Camera.requestPermissionsAsync();
                 setHasCameraPermission(cameraStatus.status === 'granted');
@@ -30,7 +30,7 @@ export default function Post({ navigation }) {
                 const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
                 setHasGalleryPermission(galleryStatus.status === 'granted');
 
-            }
+           }
 
 
         })();
@@ -41,6 +41,7 @@ export default function Post({ navigation }) {
         if (camera) {
             const data = await camera.takePictureAsync(null);
             setImage(data.uri);
+            alert("Picture taken!");
         }
     }
 
@@ -53,9 +54,9 @@ export default function Post({ navigation }) {
             quality: 1,
         });
         console.log(result);
-
         if (!result.cancelled) {
             setImage(result.uri);
+            alert("Picture selected!");
         }
     };
 
@@ -126,7 +127,8 @@ export default function Post({ navigation }) {
 const styles = StyleSheet.create({
     cameraContainer: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        padding: 10
     },
     fixedRatio: {
         flex: 1,

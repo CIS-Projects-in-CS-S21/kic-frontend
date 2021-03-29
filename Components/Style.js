@@ -26,6 +26,15 @@ const KIC_Style = StyleSheet.create({
         marginTop: 7,
         padding: 10,
     },
+    button_post: {
+        width: "100%",
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 1,
+        padding: 10,
+    },
     button_font: {
         color: '#ffff'
     },
