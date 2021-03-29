@@ -8,8 +8,8 @@ import React from 'react';
 import UserFeed from './User-Feed/UserFeed';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Explore from "./Explore-Page/Explore";
-import Post from "./Post/Post";
 import PersonalPageNav from "./Personal-Page/PersonalPageNav";
+import PostNav from "./Post/PostNav";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +18,7 @@ function MyTabs() {
         <Tab.Navigator>
             <Tab.Screen name="Feed" component={UserFeed} />
             <Tab.Screen name="Profile" component={PersonalPageNav} />
-            <Tab.Screen name="Post" component={Post} />
+            <Tab.Screen name="Post" component={PostNav} />
             <Tab.Screen name="Explore" component={Explore} />
         </Tab.Navigator>
     );

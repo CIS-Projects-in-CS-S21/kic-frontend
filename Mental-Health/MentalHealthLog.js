@@ -5,6 +5,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import KIC_Style from "../Components/Style";
 
 /**
  * @class Contains function for rendering MentalHealthLog screen.
