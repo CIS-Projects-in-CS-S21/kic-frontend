@@ -7,7 +7,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
 /**
-* @class Contains function for rendering the profile header.
+* @class Contains function for rendering the feed header.
 */
 class FeedHeader extends React.Component {
     /**
@@ -21,14 +21,14 @@ class FeedHeader extends React.Component {
                 style={styles.icon}
                 source={require('../assets/kic.png')}
             />
-            <Text style={style.headerText}>Keeping It Casual</Text>
+            <Text style={styles.headerText}>Keeping It Casual</Text>
         </View>
       );
     }
 }
 
 /**
-* @constant styles creates stylesheet for the profile header
+* @constant styles creates stylesheet for the feed header
 */
 const styles = StyleSheet.create({
     feedHeaderContainer: {
@@ -36,17 +36,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#b3d2db',
         paddingVertical: 10,
+        alignItems: 'center',
+        alignContent: 'center',
         top: 0,
     },
     icon: {
         width: 75,
         height: 75,
-        left: '50%',
-        right: '50%',
-        borderTopRightRadius: 20,
-        borderTopLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
+        padding: 20,
     },
     headerText: {
         color: '#ffff',
