@@ -17,7 +17,7 @@ export default class UserManager {
     */
     getMyUserID = () => {
         let tm = new TokenManager();
-        tm.getToken().then(value => {
+        return tm.getToken().then(value => {
             let extra = value.split(".")[0]
             let token = value.split(".")[1]
 
@@ -39,9 +39,8 @@ export default class UserManager {
         let tm = new TokenManager();
 
         let authString = "Bearer "
-        tm.getToken().then(value => {
+        return tm.getToken().then(value => {
             authString += value
-            console.log("Auth: " + authString)
             return authString;
         }, reason => {
             console.log(reason)
