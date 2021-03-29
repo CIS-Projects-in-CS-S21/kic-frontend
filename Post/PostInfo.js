@@ -33,7 +33,7 @@ export default function PostInfo(props) {
     }
     return (
         <View style={{ flex: 1 }}>
-            <Image source={{ uri: props.route.params.image }} />
+            <Image source={{ uri: props.route.params.image }} style={{ flex: 1 }}/>
             <TextInput
                 placeholder="Write a Caption . . ."
                 onChangeText={(caption) => setCaption(caption)}
