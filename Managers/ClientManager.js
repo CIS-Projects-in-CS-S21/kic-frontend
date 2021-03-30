@@ -20,7 +20,7 @@ export default class ClientManager {
         let url = "";
 
         {/* Check if running in production or development*/ }
-        if (url = __DEV__) {
+        if (__DEV__) {
           console.log("Running in development mode");
           url = "http://test.api.keeping-it-casual.com";
         } else {
