@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet} from 'react-native';
+import {StatusBar} from "expo-status-bar";
 
 const KIC_Style = StyleSheet.create({
     container: {
