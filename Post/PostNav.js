@@ -20,7 +20,11 @@ class PostNav extends React.Component {
      */
     render() {
         return (
-            <Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={{
+                    headerShown: false
+                }}
+            >
                 <Stack.Screen
                     name="Post"
                     component={Post}
