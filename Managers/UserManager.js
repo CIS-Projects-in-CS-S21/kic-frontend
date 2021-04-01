@@ -8,6 +8,12 @@ import ClientManager from './ClientManager';
 import TokenManager from './TokenManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 
+import {decode, encode} from 'base-64'
+
+if (!global.btoa) {  global.btoa = encode }
+
+if (!global.atob) { global.atob = decode }
+
 export default class UserManager {
     /**
     * Retrieves the active user's unique userid
