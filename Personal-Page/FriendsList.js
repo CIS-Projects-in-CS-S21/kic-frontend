@@ -35,6 +35,8 @@ const FRIENDS = [
 ];
 
 
+
+
 /**
 * @class Contains function for rendering the comment section.
 */
@@ -61,6 +63,7 @@ class FriendsList extends React.Component {
 
         return (
             <View
+                style={styles.friendsList}
                 onLayout={event => {
                 const layout = event.nativeEvent.layout;
                 console.log('height:', layout.height);
@@ -74,6 +77,7 @@ class FriendsList extends React.Component {
                 {/* The comment box of fixed height */}
                 <View style={styles.friendsList}>
                     <FlatList
+                        style={styles.listcontainer}
                         data={FRIENDS}
                         renderItem={renderItem}
                         keyExtractor={friend => friend.username}
@@ -90,13 +94,10 @@ class FriendsList extends React.Component {
 */
 const styles = StyleSheet.create({
     friendsList: {
-        flexGrow: 1,
-        height: 280,
-        width: '100%',
         flex: 1,
     },
     userBar: {
-    flex: 0,
+        //flex: 0,
         flexDirection: 'row',
     },
     friendBlurb: {
