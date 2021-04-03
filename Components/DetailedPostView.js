@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import PostDetails from "./PostDetails";
 import CommentSection from "./CommentSection";
@@ -48,7 +48,7 @@ class DetailedPostView extends React.Component {
    */
   render() {
       return (
-        <View style={{ alignItems: 'center', flex: 1, padding: 5 }}>
+        <SafeAreaView style={{ alignItems: 'center', flex: 1, padding: 5 }}>
             <FeedHeader />
             <View style={styles.container}>
                 <Image
@@ -71,7 +71,7 @@ class DetailedPostView extends React.Component {
                 <StatusBar style="auto" />
 
             </View>
-        </View>
+        </SafeAreaView>
       );
   }
 }
@@ -82,7 +82,7 @@ class DetailedPostView extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     paddingLeft: 15,
