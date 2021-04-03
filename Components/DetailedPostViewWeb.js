@@ -8,12 +8,12 @@ import { Dimensions, StyleSheet, Text, View, Image, Modal, Button, Pressable, To
 import KIC_Style from "../Components/Style";
 import PostDetails from "./PostDetails";
 import CommentSection from "./CommentSection";
-import FeedHeader from "./FeedHeader";
+import FeedHeader from '../Components/FeedHeader';
 
 /**
  * @class Contains function for rendering the detailed post view.
  */
-class DetailedPostView extends React.Component {
+class DetailedPostViewWeb extends React.Component {
   /*
    * Class constructor
    */
@@ -36,7 +36,7 @@ class DetailedPostView extends React.Component {
     }
 
     setPosterInfo() {
-        console.log("Mobile");
+        console.log("Hi");
         this.setState({
             // do smth
         })
@@ -48,28 +48,28 @@ class DetailedPostView extends React.Component {
    */
   render() {
       return (
-        <View style={{ alignItems: 'center', flex: 1, padding: 5 }}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10, }}>
             <FeedHeader />
             <View style={styles.container}>
                 <Image
                     style={styles.postImage}
                     source = {require('../assets/default/default_icon_2.png')}
-                />
+                    />
 
-                {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
-                <PostDetails
-                    userID = {this.state.userID}
-                    username = {this.state.username}
-                    yearPosted = {this.state.yearPosted}
-                    monthPosted = {this.state.monthPosted}
-                    dayPosted = {this.state.dayPosted}
-                />
-
-                <View style={{ flex: 1, alignItems: 'stretch', }}>
-                <CommentSection />
+                <View style={styles.detailsAndComments}>
+                    {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
+                    <PostDetails
+                        userID = {this.state.userID}
+                        username = {this.state.username}
+                        yearPosted = {this.state.yearPosted}
+                        monthPosted = {this.state.monthPosted}
+                        dayPosted = {this.state.dayPosted}
+                    />
+                    <View style={{ flex: 1, height: 200 }}>
+                        <CommentSection />
+                    </View>
+                    <StatusBar style="auto" />
                 </View>
-                <StatusBar style="auto" />
-
             </View>
         </View>
       );
@@ -81,18 +81,30 @@ class DetailedPostView extends React.Component {
  */
 const styles = StyleSheet.create({
   container: {
+    alignItems:'center',
     flex: 1,
-    alignItems: 'center',
-    flexDirection: 'column',
+    flexDirection:'row',
+    width: '60%',
+    backgroundColor: '#b3d2db',
     justifyContent: 'flex-start',
-    paddingLeft: 15,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    borderBottomLeftRadius: 40,
+    marginTop: 20,
     paddingRight: 15,
-    height: 'auto',
+  },
+  detailsAndComments: {
+    flex: 1,
+    flexDirection: 'column',
+    marginLeft: 10,
+    padding: 10,
   },
   postImage: {
-    width: Dimensions.get('window').width,
-    height: (Dimensions.get('window').width - 70),
+    borderTopLeftRadius: 40,
+    borderBottomLeftRadius: 40,
+    width: 475,
+    height: 475,
   }
 });
 
-export default DetailedPostView;
+export default DetailedPostViewWeb;

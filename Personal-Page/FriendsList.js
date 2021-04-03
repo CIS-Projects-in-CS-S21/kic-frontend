@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     userBar: {
-        //flex: 0,
         flexDirection: 'row',
     },
     friendBlurb: {
