@@ -3,9 +3,8 @@
  * Explore Page and Personal Page.
  */
 
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, StatusBar } from 'react-native';
 import FeedHeader from '../Components/FeedHeader';
 import FeedPost from '../Components/FeedPost';
 
@@ -59,7 +58,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     flex: 1,
-    backgroundColor: '#fff',
   },
   feedPost: {
     marginTop: 30

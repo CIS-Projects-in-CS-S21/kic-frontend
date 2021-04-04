@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet} from 'react-native';
+import {StatusBar} from "expo-status-bar";
 
 const KIC_Style = StyleSheet.create({
     container: {
@@ -21,6 +22,7 @@ const KIC_Style = StyleSheet.create({
         width: "80%",
         borderRadius: 25,
         alignItems: "center",
+        alignSelf: 'center',
         justifyContent: 'center',
         backgroundColor: "#7ab7dd",
         marginTop: 7,
