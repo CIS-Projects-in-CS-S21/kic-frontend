@@ -11,9 +11,9 @@ import {
     SafeAreaView,
     StyleSheet,
     ScrollView,
-    Modal,
     View,
 } from 'react-native';
+import Modal from "../Components/Modal";
 import KIC_Style from "../Components/Style";
 import { List } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
