@@ -22,6 +22,7 @@ const KIC_Style = StyleSheet.create({
         width: "80%",
         borderRadius: 25,
         alignItems: "center",
+        alignSelf: 'center',
         justifyContent: 'center',
         backgroundColor: "#7ab7dd",
         marginTop: 7,

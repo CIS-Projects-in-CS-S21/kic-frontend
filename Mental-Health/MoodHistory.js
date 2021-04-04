@@ -38,7 +38,7 @@ export default function MoodHistory() {
         <SafeAreaView style = {style.container}>
             <ScrollView>
                 <Image
-                    style={{width: 180, height: 180, resizeMode: 'contain'}}
+                    style={{width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center'}}
                     source = {require('../assets/kic.png')}
                 />
                 <Text style = {KIC_Style.title}>  Mood History Tracker  </Text>
@@ -123,6 +123,7 @@ const style= StyleSheet.create({
     button: {
         borderRadius: 20,
         padding: 10,
+        alignItems: 'center',
         elevation: 2
     },
     modalView: {
