@@ -41,6 +41,20 @@ const FRIENDS = [
 * @class Contains function for rendering the comment section.
 */
 class FriendsList extends React.Component {
+
+  /*
+   * Class constructor
+   */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            userid: props.userid,
+            username: props.username,
+        };
+    }
+
     /**
     * Gets this user's friends.
     */
@@ -72,7 +86,7 @@ class FriendsList extends React.Component {
                 console.log('y:', layout.y);
                 }}
                 >
-                <Text style={styles.friendCounter}>Displaying {FRIENDS.length} friends</Text>
+                <Text style={styles.friendCounter}>Displaying {FRIENDS.length} friends for @{this.state.username}</Text>
 
                 {/* The comment box of fixed height */}
                 <View style={styles.friendsList}>
