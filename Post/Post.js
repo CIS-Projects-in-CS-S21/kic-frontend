@@ -53,6 +53,7 @@ export default function Post({ navigation }) {
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
+
         });
         console.log(result);
         if (!result.cancelled) {
@@ -120,7 +121,6 @@ export default function Post({ navigation }) {
                 onPress={() => navigation.navigate('PostInfo', { image })}>
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
-            {/*{image && <Image source={{ uri: image }} style={{ flex: 1 }} />}*/}
         </View>
     );
 }

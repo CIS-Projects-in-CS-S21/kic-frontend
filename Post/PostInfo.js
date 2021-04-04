@@ -5,25 +5,41 @@
 import React, { useState } from 'react'
 import {View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
 import KIC_Style from "../Components/Style";
-
+import ClientManager from '../Managers/ClientManager';
+import UserManager from "../Managers/UserManager";
+import {UploadFileRequest} from "../gen/proto/media_pb";
 
 
 /**
  * @class Contains function for rendering the Post Info page
  */
 export default function PostInfo(props) {
-    const [caption, setCaption] = useState("")
 
-    const uploadImage = async () => {
-        const uri = props.route.params.image;
-        const childPath = ' ';
-        console.log(childPath)
-        console.log("Uploading image!");
+    {/* Create UsersClientManager & create a UsersClient */}
+    let cm = new ClientManager();
+    let client = cm.createMediaClient();
 
-        const response = await fetch(uri);
-        const blob = await response.blob();
-
+    const fetchUserInfo = async () => {
+        return this.callGetAuthString();
     }
+
+    //to get authorization string
+    const callGetAuthString = async () => {
+        let um = new UserManager();
+        return um.getAuthString().then(authString => {this.makeUploadFileRequest(authString)});
+    }
+
+    //make request to upload file with uri
+    const makeUploadFileRequest = async (authString) => {
+        const uri = props.route.params.image;
+        let req = new UploadFileRequest();
+        const childPath = ' ';
+        console.log(childPath);
+        req.setFileinfo(uri);
+        return null;
+    }
+
+    const [caption, setCaption] = useState("")
 
 
 
