@@ -5,7 +5,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
@@ -19,6 +19,7 @@ import UserManager from '../Managers/UserManager';
  * @class Contains function for rendering the personal page.
  */
 class PersonalPage extends React.Component {
+
   /*
    * Class constructor
    */
@@ -88,6 +89,20 @@ class PersonalPage extends React.Component {
         })
     }
 
+    handleViewPost = () => {
+        if (Platform.OS === 'web') {
+            this.props.navigation.navigate('DetailedPostViewWeb', {
+              username: this.state.username,
+              userid: this.state.userid
+            })
+        } else {
+            this.props.navigation.navigate('DetailedPostView', {
+              username: this.state.username,
+              userid: this.state.userid
+            })
+        }
+    }
+
   /**
    * Gets user's posts. Returns an array of the user's posts.
    */
@@ -132,12 +147,7 @@ class PersonalPage extends React.Component {
               />
               <Button
                 title = "View a post"
-                onPress = {() =>
-                    this.props.navigation.navigate('DetailedPostView', {
-                        username: this.state.username,
-                        userid: this.state.userid
-                    })
-                }
+                onPress = {this.handleViewPost}
               />
               <Button
                 title = "Mental Health Tracker!"
