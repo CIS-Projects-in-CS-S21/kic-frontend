@@ -5,12 +5,34 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 
 /**
 * @class Contains function for rendering the posts grid
 */
 class PostsGrid extends React.Component {
+
+  /*
+   * Class constructor
+   */
+    constructor(props) {
+        super();
+    }
+
+    handleViewPost = () => {
+        if (Platform.OS === 'web') {
+            this.props.navigation.navigate('DetailedPostViewWeb', {
+              username: this.props.username,
+              userid: this.props.userid
+            })
+        } else {
+            this.props.navigation.navigate('DetailedPostView', {
+              username: this.props.username,
+              userid: this.props.userid
+            })
+        }
+    }
+
     /**
     * Renders a grid of the user's posts
     * @returns {PostsGrid}
@@ -19,7 +41,7 @@ class PostsGrid extends React.Component {
       return (
         <View style ={styles.postGrid}>
             <TouchableOpacity
-                onPress={this.openDetailedView}
+                onPress={this.handleViewPost}
             >
             <Image
               style ={styles.postImage}

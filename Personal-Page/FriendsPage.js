@@ -19,17 +19,29 @@ class FriendsPage extends React.Component {
   /*
    * Class constructor
    */
-  constructor(props) {
-    super();
+    constructor(props) {
+        super();
 
-    // Define the initial state:
-    this.state = {
-      userFirstName: "First",
-      userLastName: "Last",
-      userHandle: "username",
-      userBio: "Bio blah blah blah blah blah bs sdkjfkjf dsjldfs jlkfdskjldsf lfkjsd kjldfs sdf lkjfs dlkjfsdkjl fsdkljfsdkjldsfkjlsdkjldfskljfsdklj sfdla hjgdhkjf jkgkjgf gfkjlfdfg kjlgfdkjl fdfdjlkfdlkj fdl kfdfd ddfgfd blah blah",
-    };
-  }
+        // Define the initial state:
+        this.state = {
+            userid: props.route.params.userid,
+            username: props.route.params.username,
+            yearPosted: 0,
+            monthPosted: 0,
+            dayPosted: 0,
+        };
+        this.setPosterInfo = this.setPosterInfo.bind(this)
+    }
+
+    componentDidMount() {
+      this.setPosterInfo();
+    }
+
+    setPosterInfo() {
+        this.setState({
+            // do smth
+        })
+    }
 
   /**
    * Renders the DetailedPostView components.
@@ -42,20 +54,10 @@ class FriendsPage extends React.Component {
       );
       return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.myHeader}>
-            {/* Display profile header with state information */}
-            <ProfileHeader
-                userFirstName = {this.state.userFirstName}
-                userLastName = {this.state.userLastName}
-                userBio = {this.state.userBio}
-                userHandle = {this.state.userHandle}
-                userPosts = {this.state.userPosts}
-                numPosts = {this.state.numPosts}
-                numFriends = {this.state.numFriends}
+            <FriendsList
+                userid = {this.state.userid}
+                username = {this.state.username}
             />
-            </View>
-
-            <FriendsList />
 
             <StatusBar style="auto" />
         </SafeAreaView>
@@ -81,6 +83,31 @@ const styles = StyleSheet.create({
     },
     myHeader: {
         alignSelf:'center',
+    },
+    icon: {
+        width: 100,
+        height: 100,
+        borderTopRightRadius: 50,
+        borderTopLeftRadius: 50,
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        marginRight: 20,
+        marginLeft: 20,
+    },
+    userInfo: {
+        flexDirection: 'column',
+        width: '80%',
+        paddingRight: 10,
+        flex: 1,
+    },
+    userID: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+    textUsername: {
+        fontSize: 18,
+        marginRight: 5,
+        fontWeight: "bold",
     },
 });
 
