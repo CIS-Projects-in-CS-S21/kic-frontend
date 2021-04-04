@@ -12,10 +12,37 @@ import ProfileHeader from "../Components/ProfileHeader";
 /**
  * @class Contains function for rendering the detailed post view.
  */
-class UserBlurb extends React.Component {
+class RequestBlurb extends React.Component {
 
-    handleAddFriend = () => {
-        console.log("Adding friend");
+  /*
+   * Class constructor
+   */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            canAdd: true,
+            status: "",
+        };
+    }
+
+    handleAccept = () => {
+        this.setState({
+            canAdd: false,
+            status: "Added", });
+        console.log("Accepting request");
+    }
+
+    handleDeny = () => {
+        this.setState({
+            canAdd: false,
+            status: "Denied", });
+        console.log("Rejecting request");
+    }
+
+    doNothing = () => {
+        //do nothing
     }
 
     /**
@@ -42,11 +69,21 @@ class UserBlurb extends React.Component {
                   <Text style ={styles.textBio}>{this.props.bio}</Text>
               </View>
 
-              <Button
-                style={styles.addFriendButton}
-                onPress={this.handleAddFriend}
-                title = "Add Friend"
-              />
+            {(this.state.canAdd) ?  <View><TouchableOpacity
+                                            style={styles.choiceButton}
+                                            onPress={this.handleAccept}>
+                                            <Text style={KIC_Style.button_font}>+</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={styles.choiceButton}
+                                            onPress={this.handleDeny}>
+                                            <Text style={KIC_Style.button_font}>X</Text>
+                                        </TouchableOpacity></View> :
+                                        <View><TouchableOpacity
+                                            style={KIC_Style.disabledButton}
+                                            onPress={this.doNothing}>
+                                            <Text style={{ color: '#000000' }}>{this.status}</Text>
+                                        </TouchableOpacity></View>}
 
           <StatusBar style="auto" />
         </View>
@@ -102,7 +139,26 @@ const styles = StyleSheet.create({
     },
     textBio: {
         fontSize: 13,
-    }
+    },
+    choiceButton: {
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 7,
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    disabledButton: {
+        width: "80%",
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#8a8a8a",
+        marginTop: 7,
+        padding: 10,
+    },
 });
 
-export default UserBlurb;
+export default RequestBlurb;

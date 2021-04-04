@@ -5,31 +5,31 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import UserBlurb from "../Components/UserBlurb";
+import RequestBlurb from "../Components/RequestBlurb";
 import AddFriendButton from "../Components/AddFriendButton";
 
 /*
-* Mock array of friends
+* Mock array of requests
 */
-const FRIENDS = [
+const REQUESTS = [
   {
-    id: '1',
-    username: 'friend1',
+    id: '5',
+    username: 'acquaintance1',
+    bio: 'I could be your new friend',
+  },
+  {
+    id: '6',
+    username: 'acquaintance2',
     bio: 'bio',
   },
   {
-    id: '2',
-    username: 'friend2',
+    id: '7',
+    username: 'acquaintance3',
     bio: 'bio',
   },
   {
-    id: '3',
-    username: 'friend3',
-    bio: 'bio',
-  },
-  {
-    id: '4',
-    username: 'friend4',
+    id: '8',
+    username: 'acquaintance4',
     bio: 'bio',
   },
 ];
@@ -38,9 +38,9 @@ const FRIENDS = [
 
 
 /**
-* @class Contains function for rendering the comment section.
+* @class Contains function for rendering the request list.
 */
-class FriendsList extends React.Component {
+class RequestsList extends React.Component {
 
   /*
    * Class constructor
@@ -56,34 +56,33 @@ class FriendsList extends React.Component {
     }
 
     /**
-    * Gets this user's friends.
+    * Gets this user's pending requests.
     */
-    fetchFriends = () => {
-      // Request this user's friends from backend.
+    fetchRequests = () => {
+      // Request this user's pending requests from backend.
     }
 
     /**
-    * Renders a scrollable FriendsList of user blurbs.
-    * @returns {FriendsList}
+    * Renders a scrollable RequestsList of user blurbs.
+    * @returns {RequestsList}
     */
     render() {
-        {/* Function for rendering comments */}
+        {/* Function for rendering users */}
         const renderItem = ({ item }) => (
-            <UserBlurb
+            <RequestBlurb
                 username = {item.username}
                 bio = {item.bio}
             />
         );
 
         return (
-            <View style={styles.friendsList}>
-                <Text style={styles.friendCounter}>Displaying {FRIENDS.length} friends for @{this.state.username}</Text>
+            <View style={styles.requestsList}>
+                <Text style={styles.requestsCounter}>{REQUESTS.length} pending requests</Text>
 
-                {/* The comment box of fixed height */}
-                <View style={styles.friendsList}>
+                <View style={styles.requestsList}>
                     <FlatList
                         style={styles.listcontainer}
-                        data={FRIENDS}
+                        data={REQUESTS}
                         renderItem={renderItem}
                         keyExtractor={friend => friend.username}
                     />
@@ -95,25 +94,16 @@ class FriendsList extends React.Component {
 }
 
 /**
-* @constant styles creates stylesheet for the Comment Section
+* @constant styles creates stylesheet for the RequestsList
 */
 const styles = StyleSheet.create({
-    friendsList: {
+    requestsList: {
         flex: 1,
     },
     userBar: {
         flexDirection: 'row',
     },
-    friendBlurb: {
-        backgroundColor: '#fff',
-        width: '95%',
-        padding: 15,
-        marginBottom: 10,
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
-        borderBottomRightRadius: 25,
-    },
-    friendCounter: {
+    requestsCounter: {
         fontSize: 18,
         fontStyle: 'italic',
         color: '#707070',
@@ -124,4 +114,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default FriendsList;
+export default RequestsList;
