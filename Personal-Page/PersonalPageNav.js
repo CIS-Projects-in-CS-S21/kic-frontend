@@ -11,6 +11,8 @@ import FindHelp from "../Mental-Health/FindHelp";
 import PersonalPage from "./PersonalPage";
 import FriendsPage from "./FriendsPage";
 import DetailedPostView from "../Components/DetailedPostView";
+import DetailedPostViewWeb from "../Components/DetailedPostViewWeb";
+import MoodHistory from "../Mental-Health/MoodHistory";
 
 const Stack = createStackNavigator();
 
@@ -24,7 +26,11 @@ class PersonalPageNav extends React.Component {
      */
     render() {
         return (
-                <Stack.Navigator>
+                <Stack.Navigator
+                    screenOptions={{
+                        headerShown: false
+                    }}
+                >
                     <Stack.Screen
                         name="Profile"
                         component={PersonalPage}
@@ -44,6 +50,14 @@ class PersonalPageNav extends React.Component {
                     <Stack.Screen
                         name="DetailedPostView"
                         component={DetailedPostView}
+                    />
+                    <Stack.Screen
+                        name="DetailedPostViewWeb"
+                        component={DetailedPostViewWeb}
+                    />
+                    <Stack.Screen
+                        name="MoodHistory"
+                        component={MoodHistory}
                     />
                 </Stack.Navigator>
         );

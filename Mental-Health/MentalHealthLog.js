@@ -29,6 +29,12 @@ class MentalHealthLog extends React.Component {
                 this.props.navigation.navigate('FindHelp')
             }
           />
+            <Button
+                title = "View History!"
+                onPress = {() =>
+                    this.props.navigation.navigate('MoodHistory')
+                }
+            />
 
           <Button
             title = "Return to Personal Page!"

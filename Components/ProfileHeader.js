@@ -6,11 +6,28 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import {useRoute} from '@react-navigation/native';
 
 /**
 * @class Contains function for rendering the profile header.
 */
 class ProfileHeader extends React.Component {
+
+  /*
+   * Class constructor
+   */
+  constructor(props) {
+    super();
+  }
+
+    goToFriends = () => {
+        console.log("ph user id is " + this.props.userid + " and username is " + this.props.username);
+        this.props.navigation.navigate('FriendsPage', {
+          username: this.props.username,
+          userid: this.props.userid,
+        })
+    }
+
     /**
     * Renders personal page components.
     * @returns {ProfileHeader}
@@ -31,8 +48,14 @@ class ProfileHeader extends React.Component {
                   <View style ={styles.userID}>
                       {/* Display name */}
                       <Text style ={styles.textUsername}>@{this.props.username}</Text>
-
                   </View>
+
+                  <TouchableOpacity
+                      style={styles.friendsButton}
+                      onPress = {this.goToFriends}
+                  >
+                      <Text>View friends</Text>
+                  </TouchableOpacity>
 
                   {/* User's bio */}
                   <Text style ={styles.textBio}>{this.props.bio}</Text>
@@ -90,6 +113,16 @@ const styles = StyleSheet.create({
     textBio: {
         paddingTop: 10,
         fontSize: 15,
+    },
+    friendsButton: {
+        paddingTop: 1,
+        paddingBottom: 1,
+        paddingLeft: 1,
+        paddingRight: 1,
+    },
+    textFriends: {
+        fontStyle: "italic",
+        fontSize: 13,
     },
 });
 

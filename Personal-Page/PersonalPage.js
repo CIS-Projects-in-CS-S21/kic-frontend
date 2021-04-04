@@ -5,7 +5,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
@@ -19,6 +19,7 @@ import UserManager from '../Managers/UserManager';
  * @class Contains function for rendering the personal page.
  */
 class PersonalPage extends React.Component {
+
   /*
    * Class constructor
    */
@@ -84,8 +85,22 @@ class PersonalPage extends React.Component {
             birthDay: mybirthday,
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
-            id: userID
+            userid: userID
         })
+    }
+
+    handleViewPost = () => {
+        if (Platform.OS === 'web') {
+            this.props.navigation.navigate('DetailedPostViewWeb', {
+              username: this.state.username,
+              userid: this.state.userid
+            })
+        } else {
+            this.props.navigation.navigate('DetailedPostView', {
+              username: this.state.username,
+              userid: this.state.userid
+            })
+        }
     }
 
   /**
@@ -108,11 +123,13 @@ class PersonalPage extends React.Component {
    */
   render() {
       return (
-        <View style={styles.container}><ScrollView>
+        <SafeAreaView style={styles.container}><ScrollView>
 
             {/* Display profile header with state information */}
             <ProfileHeader
+                navigation = {this.props.navigation}
                 username = {this.state.username}
+                userid = {this.state.userid}
                 bio = {this.state.bio}
                 birthDay = {this.state.birthDay}
                 birthMonth = {this.state.birthMonth}
@@ -121,24 +138,12 @@ class PersonalPage extends React.Component {
 
             {/* Show posts */}
             <PostsGrid
+                navigation = {this.props.navigation}
+                username = {this.state.username}
+                userid = {this.state.userid}
                 />
 
             {/* NAVIGATION */}
-              <Button
-                title = "Friends!"
-                onPress = {() =>
-                    this.props.navigation.navigate('FriendsPage')
-                }
-              />
-              <Button
-                title = "View a post"
-                onPress = {() =>
-                    this.props.navigation.navigate('DetailedPostView', {
-                        username: this.state.username,
-                        userid: this.state.userid
-                    })
-                }
-              />
               <Button
                 title = "Mental Health Tracker!"
                 onPress = {() =>
@@ -152,7 +157,7 @@ class PersonalPage extends React.Component {
                 }
               />
               <StatusBar style="auto" />
-        </ScrollView></View>
+        </ScrollView></SafeAreaView>
       );
   }
 }

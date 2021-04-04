@@ -74,8 +74,8 @@ class CommentSection extends React.Component {
       );
 
       return (
-        <View>
-            <Text style={styles.commentCounter}>{this.props.numComments} comments</Text>
+        <View style={{ flex: 1, alignItems: 'stretch' }}>
+            <Text style={styles.commentCounter}>{COMMENTS.length} comments</Text>
 
             {/* The comment box of fixed height */}
             <View style={styles.commentSection}>
@@ -95,14 +95,13 @@ class CommentSection extends React.Component {
 */
 const styles = StyleSheet.create({
     commentSection: {
-        height: 200,
-        width: '100%',
         flex: 1,
+        alignItems: 'stretch',
     },
     comments: {
+        flex: 1,
         flexDirection: 'column',
         backgroundColor: '#fff',
-        width: '95%',
         padding: 15,
         marginTop: 10,
         borderTopRightRadius: 25,

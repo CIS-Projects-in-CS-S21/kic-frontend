@@ -5,7 +5,8 @@ import React, { useState, useEffect } from 'react';
 import {StyleSheet, Text, View, Button, Image, TouchableOpacity} from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import KIC_Style from '../Components/Style'
+import KIC_Style from '../Components/Style';
+import {Platform} from 'react-native';
 
 
 export default function Post({ navigation }) {

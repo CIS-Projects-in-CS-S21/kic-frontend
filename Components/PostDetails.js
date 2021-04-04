@@ -6,7 +6,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, FlatList, ScrollView, SafeAreaView, Button } from 'react-native';
-import CommentSection from "./CommentSection";
 
 /**
 * @class Contains function for rendering a PostDetails component.
@@ -71,9 +70,6 @@ class PostDetails extends React.Component {
 
             <Text style={styles.postTimestamp}>Posted on {this.state.day} {this.state.month} {this.state.year}</Text>
 
-            <CommentSection
-                numComments = {this.state.numComments}
-            />
         </SafeAreaView>
       );
     }
@@ -85,10 +81,8 @@ class PostDetails extends React.Component {
 */
 const styles = StyleSheet.create({
     postDetailsContainer: {
-        paddingTop: 30,
-        paddingBottom: 30,
-        paddingLeft: 30,
-        paddingRight: -10,
+        marginTop: 10,
+        paddingTop: 10,
         flexDirection: 'column',
         flex: 1,
     },
