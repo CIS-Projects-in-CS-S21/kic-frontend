@@ -12,9 +12,6 @@ import {createStackNavigator} from "@react-navigation/stack";
 import TabNavigation from "./TabNavigation";
 import LogIn from "./User-Authentication/LogIn";
 import SignUp from "./User-Authentication/SignUp";
-import UserFeed from './User-Feed/UserFeed';
-import MentalHealthLog from './Mental-Health/MentalHealthLog';
-import FindHelp from './Mental-Health/FindHelp';
 
 const Stack = createStackNavigator();
 
