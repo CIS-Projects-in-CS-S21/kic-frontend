@@ -10,6 +10,7 @@ import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
 import UserBlurb from "../Components/UserBlurb";
 import FriendsList from "./FriendsList";
+import RequestsList from "./RequestsList";
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -29,6 +30,7 @@ class FriendsPage extends React.Component {
             yearPosted: 0,
             monthPosted: 0,
             dayPosted: 0,
+            showPending: false,
         };
         this.setPosterInfo = this.setPosterInfo.bind(this)
     }
@@ -54,12 +56,30 @@ class FriendsPage extends React.Component {
       );
       return (
         <SafeAreaView style={styles.container}>
-            <FriendsList
-                userid = {this.state.userid}
-                username = {this.state.username}
-            />
+            {(!this.state.showPending) ? <FriendsList
+                                           userid = {this.state.userid}
+                                           username = {this.state.username}
+                                       /> :
+                                       <RequestsList
+                                           userid = {this.state.userid}
+                                           username = {this.state.username}
+                                       />}
+            <View style={styles.content}>
+            {(!this.state.showPending) ?  <TouchableOpacity
+                                            style={KIC_Style.button}
+                                            onPress = {() =>
+                                                this.setState({ showPending:true })}>
+                                            <Text style={KIC_Style.button_font}>Pending Requests</Text>
+                                        </TouchableOpacity> :
+                                        <TouchableOpacity
+                                            style={KIC_Style.button}
+                                            onPress = {() =>
+                                                this.setState({ showPending:false })}>
+                                            <Text style={KIC_Style.button_font}>Friends</Text>
+                                        </TouchableOpacity>}
 
             <StatusBar style="auto" />
+            </View>
         </SafeAreaView>
       );
   }
@@ -81,8 +101,9 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingVertical: 20,
     },
-    myHeader: {
-        alignSelf:'center',
+    content: {
+        alignItems:'center',
+        paddingBottom: 5,
     },
     icon: {
         width: 100,
