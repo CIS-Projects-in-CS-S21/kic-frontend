@@ -13,7 +13,7 @@ import {
     ScrollView,
     View,
 } from 'react-native';
-import Modal from "../Components/Modal";
+import {Modal} from 'react-native';
 import KIC_Style from "../Components/Style";
 import { List } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -74,6 +74,7 @@ export default function MoodHistory() {
                 <Modal
                     animationType="slide"
                     transparent={true}
+                    onRequestClose={() => setModalVisible(false)}
                     visible={modalVisible}
                 >
 
