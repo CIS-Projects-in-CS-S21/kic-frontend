@@ -8,6 +8,7 @@ import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpaci
 import KIC_Style from "../Components/Style";
 import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
+import AddFriendButton from "../Components/AddFriendButton";
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -42,10 +43,9 @@ class UserBlurb extends React.Component {
                   <Text style ={styles.textBio}>{this.props.bio}</Text>
               </View>
 
-              <Button
-                style={styles.addFriendButton}
-                onPress={this.handleAddFriend}
-                title = "Add Friend"
+              <AddFriendButton
+                friendUsername = {this.props.friendUsername}
+                friendUserid = {this.props.friendUserid}
               />
 
           <StatusBar style="auto" />

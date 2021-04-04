@@ -7,6 +7,11 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import UserBlurb from "../Components/UserBlurb";
 import AddFriendButton from "../Components/AddFriendButton";
+import TokenManager from "../Managers/TokenManager";
+import ClientManager from "../Managers/ClientManager";
+import UserManager from '../Managers/UserManager';
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import { GetFriendsForUserRequest } from '../gen/proto/friends_pb';
 
 /*
 * Mock array of friends
@@ -52,14 +57,41 @@ class FriendsList extends React.Component {
         this.state = {
             userid: props.userid,
             username: props.username,
+            friends: [],
         };
+
+        this.fetchFriends = this.fetchFriends.bind(this)
+    }
+
+    componentDidMount(){
+      this.fetchFriends().then(response => {
+          console.log("Fetched friends successfully");
+      }).catch(error => {
+          console.log("Error fetching friends: " + error)
+      });
     }
 
     /**
     * Gets this user's friends.
     */
     fetchFriends = () => {
-      // Request this user's friends from backend.
+      return this.callGetAuthString();
+    }
+    callGetAuthString(){
+        let um = new UserManager();
+        return um.getAuthString().then(authString => {this.callGetUserByUserID(um, authString)});
+    }
+    callGetUserByUserID(){
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+        let req = new GetUserByIDRequest();
+        req.setUserid(this.state.userid);
+
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetFriendsForUser(cm, authString, userID, res)});
+    }
+    callGetFriendsForUser(cm, authString, userID, res){
+        let client = cm.createFriendsClient();
+        let req = new GetFriendsForUserRequest()
     }
 
     /**
@@ -72,6 +104,9 @@ class FriendsList extends React.Component {
             <UserBlurb
                 username = {item.username}
                 bio = {item.bio}
+                userid = {item.userid}
+                friendUsername = "barrybee3"
+                friendUserid = '70'
             />
         );
 
