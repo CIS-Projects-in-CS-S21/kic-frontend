@@ -73,7 +73,7 @@ class RequestBlurb extends React.Component {
             {(this.state.canAdd) ?  <View><TouchableOpacity
                                             style={styles.choiceButton}
                                             onPress={this.handleAccept}>
-                                            <Ionicons name="add-circle-outline" color='#ffff' size={25} />
+                                            <Ionicons name="checkmark-circle-outline" color='#ffff' size={25} />
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={styles.choiceButton}
