@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { StyleSheet, ScrollView, View, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import FeedHeader from '../Components/FeedHeader';
 import FeedPost from '../Components/FeedPost';
 
@@ -32,7 +33,7 @@ class UserFeed extends React.Component {
   
   render() {
       return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <ScrollView>
             {/*Header containing logo and name*/}
           <FeedHeader/>
@@ -45,7 +46,7 @@ class UserFeed extends React.Component {
             style={styles.feedPost}/>
           <StatusBar style="auto" />
           </ScrollView>
-        </View>
+        </SafeAreaView>
       );
   }
 }

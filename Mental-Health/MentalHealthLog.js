@@ -4,7 +4,9 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, SafeAreaView, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import KIC_Style from "../Components/Style";
 import {useNavigation} from "@react-navigation/native";
 import {DateTimePickerModal} from "react-native-paper-datetimepicker";
@@ -96,6 +98,7 @@ export default function MentalHealthLog({ navigation }) {
       </TouchableOpacity>
       <TouchableOpacity
             style={KIC_Style.button}
+
             onPress = {() =>
                 navigation.navigate('MoodHistory')}>
             <Text style={KIC_Style.button_font}> View Your Mood History </Text>
@@ -109,6 +112,7 @@ export default function MentalHealthLog({ navigation }) {
       <StatusBar style="auto" />
     </SafeAreaView>
   );
+
 
 }
 

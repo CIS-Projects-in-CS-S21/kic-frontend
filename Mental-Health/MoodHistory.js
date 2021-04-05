@@ -8,11 +8,11 @@ import {
     Text,
     Image,
     TouchableOpacity,
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {Modal} from 'react-native';
 import KIC_Style from "../Components/Style";
 import { List } from 'react-native-paper';
