@@ -17,7 +17,7 @@ class AddFriendButton extends React.Component {
     * Event for adding friend
     */
     handleClick = () => {
-      console.log("Trying to add " + this.props.friendUsername + " with id " + this.props.friendUserid)
+      console.log("Trying to add user id as a friend: " + this.props.friendUserid + " for " + this.props.myUserid)
     }
 
     /**

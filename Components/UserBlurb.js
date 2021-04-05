@@ -9,11 +9,70 @@ import KIC_Style from "../Components/Style";
 import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
 import AddFriendButton from "../Components/AddFriendButton";
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import ClientManager from "../Managers/ClientManager";
+import UserManager from '../Managers/UserManager';
 
 /**
  * @class Contains function for rendering the detailed post view.
  */
 class UserBlurb extends React.Component {
+
+  /*
+   * Class constructor
+   */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            authString: props.authString,
+            userid: props.userid,
+            username: "default",
+            bio: "bio",
+            birthDay: 0,
+            birthMonth: 0,
+            birthYear: 0,
+        };
+
+        this.fetch = this.callGetUserByUserID.bind(this)
+    }
+
+    componentDidMount(){
+      this.callGetUserByUserID().then(response => {
+          console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
+      }).catch(error => {
+          console.log("Error mounting userblurb for userid " + this.props.userid + ": " + error);
+      });
+    }
+
+    callGetUserByUserID(){
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new GetUserByIDRequest();
+        req.setUserid(this.props.userid);
+        return client.getUserByID(req, {'Authorization': this.props.authString}).then(res => {this.setUserInfo(res)})
+    }
+    setUserInfo(res, userID){
+        {/* Store user information */}
+        let myusername = res.getUser().getUsername();
+        let bday = res.getUser().getBirthday().toString();
+        let mybirthyear = bday.split(",")[0];
+        let mybirthmonth = bday.split(",")[1];
+        let mybirthday = bday.split(",")[2]
+        let mycity = res.getUser().getCity();
+        let mybio = res.getUser().getBio();
+
+        this.setState({
+            username: myusername,
+            bio: mybio,
+            city: mycity,
+            birthDay: mybirthday,
+            birthMonth: mybirthmonth,
+            birthYear: mybirthyear,
+        })
+    }
 
     handleAddFriend = () => {
         console.log("Adding friend");
@@ -37,15 +96,16 @@ class UserBlurb extends React.Component {
                   {/* User's display name and handle */}
                   <View style ={styles.userID}>
                       {/* Display name */}
-                      <Text style ={styles.textUsername}>{this.props.username}</Text>
+                      <Text style ={styles.textUsername}>{this.state.username}</Text>
                   </View>
-                  {/* # of posts and friends */}
-                  <Text style ={styles.textBio}>{this.props.bio}</Text>
+                  {/* # of friends */}
+                  <Text style ={styles.textBio}>{this.state.bio}</Text>
               </View>
 
               <AddFriendButton
-                friendUsername = {this.props.friendUsername}
-                friendUserid = {this.props.friendUserid}
+                myUsername = {this.props.myUsername}
+                myUserid = {this.props.myUserid}
+                friendUserid = {this.state.userid}
               />
 
           <StatusBar style="auto" />

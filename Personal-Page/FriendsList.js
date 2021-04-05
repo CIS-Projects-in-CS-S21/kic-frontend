@@ -55,6 +55,7 @@ class FriendsList extends React.Component {
 
         // Define the initial state:
         this.state = {
+            authString: "authstring",
             userid: props.userid,
             username: props.username,
             friends: [],
@@ -72,72 +73,116 @@ class FriendsList extends React.Component {
     }
 
     /**
-    * Gets this user's friends.
+    * The start of the process to fetch friends;
+    * Handles creating a UserManager to fetch the authstring
+    *
+    * @function fetchFriends
+    * @returns {String} authString The string necessary for the authorization to send requests,
+    * then calls the next function, callGetUserByUserID
     */
     fetchFriends = () => {
+        // Create a new UserManager, which will provide the authString
         let um = new UserManager();
         return um.getAuthString().then(authString => {this.callGetUserByUserID(authString)});
     }
-    //callGetAuthString(){
-    //
-    //}
+
+    /**
+    * Handles making the GetUserByID request
+    *
+    * @function callGetUserByUserID
+    * @param {String} authString the auth string to be used as part of the authorization header for requests
+    * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
+    */
     callGetUserByUserID(authString){
+
+        //Create a ClientManager & use to create a UsersClient
         let cm = new ClientManager();
         let client = cm.createUsersClient();
+
+        // Create the request and set the active user's ID
         let req = new GetUserByIDRequest();
         req.setUserid(this.state.userid);
 
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetFriendsForUser(cm, authString, res)});
     }
+
+    /**
+    * Handles making the GetFriendsForUserRequest
+    *
+    * @function callGetFriendsForUser
+    * @param {ClientManager} cm The ClientManager to be reused
+    * @param {String} authString The auth string to be used as part of the authorization header for requests
+    * @param {GetUserByIDRequest} res Returned in response to GetUserByIDRequest
+    * @returns {GetFriendsForUserResponse} res then calls the next function, parseFriends
+    */
     callGetFriendsForUser(cm, authString, res){
+
+        // Gets the user from GetUserByIDResponse
         let user = res.getUser()
         //console.log("user is: " + user);
+
+        // Create a FriendsClient
         let client = cm.createFriendsClient();
+
+        // Create the request & set the active user's ID
         let req = new GetFriendsForUserRequest();
         req.setUser(user);
-        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.parseFriends(client, authString, res)});
-    }
-    parseFriends(client, authString, res){
-        console.log("Users friends (IDs): " + res);
 
-        let req = new CreateConnectionForUsersRequest();
-        req.setFirstuserid(this.state.userid);
-        req.setSeconduserid('70');
-
-        return client.createConnectionForUsers(req, {'Authorization': authString}).then(res2 => {this.doSomething(res, res2)});
+        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.updateState(client, authString, res)});
     }
-    doSomething(res, res2){
+    updateState(client, authString, res){
+
+        // Save friends list to state
+        this.setState({
+            authString: authString,
+            friends: res.getFriendsList()
+        })
+
+        console.log("Resulting friends list :" + res);
+        console.log("state.friends: " + this.state.friends);
+    }
+    /*doSomething(authString, res, res2){
         console.log("Updated friends: " + res);
         console.log("Create connection result: " + res2);
+
+        //Create a ClientManager & use to create a UsersClient
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        // Create the request and set the active user's ID
+        let req = new GetUserByIDRequest();
+
+        let friendID = res.getFriendsList()[0];
+        console.log("First friend: " + friendID);
+
+        req.setUserid(friendID);
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.seeFriend(authString, res)});
     }
+    seeFriend(authString, res){
+        console.log("Friend: " + res.getUser());
+    }*/
 
     /**
     * Renders a scrollable FriendsList of user blurbs.
     * @returns {FriendsList}
     */
     render() {
-        {/* Function for rendering comments */}
-        const renderItem = ({ item }) => (
-            <UserBlurb
-                username = {item.username}
-                bio = {item.bio}
-                userid = {item.userid}
-                friendUsername = "barrybee3"
-                friendUserid = '70'
-            />
-        );
-
         return (
             <View style={styles.friendsList}>
-                <Text style={styles.friendCounter}>Displaying {FRIENDS.length} friends for @{this.state.username}</Text>
+                <Text style={styles.friendCounter}>Displaying {this.state.friends.length} friends for @{this.state.username}</Text>
 
                 {/* The comment box of fixed height */}
                 <View style={styles.friendsList}>
                     <FlatList
                         style={styles.listcontainer}
-                        data={FRIENDS}
-                        renderItem={renderItem}
-                        keyExtractor={friend => friend.username}
+                        data={this.state.friends}
+                        renderItem={({item}) => <UserBlurb
+                                                    authString = {this.state.authString}
+                                                    myUsername = {this.state.username}
+                                                    myUserid = {this.state.userid}
+                                                    userid = {item}
+                                                />}
+                        keyExtractor={friend => friend.userid}
                     />
                 </View>
 
