@@ -79,19 +79,27 @@ class FriendsList extends React.Component {
     }
     callGetAuthString(){
         let um = new UserManager();
-        return um.getAuthString().then(authString => {this.callGetUserByUserID(um, authString)});
+        return um.getAuthString().then(authString => {this.callGetUserByUserID(authString)});
     }
-    callGetUserByUserID(){
+    callGetUserByUserID(authString){
         let cm = new ClientManager();
         let client = cm.createUsersClient();
         let req = new GetUserByIDRequest();
         req.setUserid(this.state.userid);
 
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetFriendsForUser(cm, authString, userID, res)});
+        return client.getUserByID(req, {'Authorization': authString})
+            .then(res => {this.callGetFriendsForUser(cm, authString, res)});
     }
-    callGetFriendsForUser(cm, authString, userID, res){
+    callGetFriendsForUser(cm, authString, res){
+        //console.log("user is: " + res.getUser());
         let client = cm.createFriendsClient();
         let req = new GetFriendsForUserRequest();
+        req.setUser(res.getUser());
+        return client.getFriendsForUser(req, {'Authorization': authString})
+            .then(res => {this.parseFriends(authString, res)});
+    }
+    parseFriends(authString, res){
+        console.log("Users friends (IDs): " + res);
     }
 
     /**
