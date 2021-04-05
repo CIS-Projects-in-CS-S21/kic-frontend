@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, SafeAreaView} from 'react-native';
+import {StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, SafeAreaView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import KIC_Style from "../Components/Style";
 import {useNavigation} from "@react-navigation/native";
 import {DateTimePickerModal} from "react-native-paper-datetimepicker";
@@ -46,11 +46,12 @@ export default function MentalHealthLog({ navigation }) {
         source = {require('../assets/kic.png')}
       />
       <Text style = {KIC_Style.title}> Mental Health Tracker</Text>
-
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Text>
           Rate your mental health on a scale from -5 (extremely depressed) to 5 (extremely anxious).
           0 is neither anxious nor depressed.
       </Text>
+      </TouchableWithoutFeedback>
       <NumberSlider
             onValueChange={onValueChange}
             value={value}
@@ -60,9 +61,11 @@ export default function MentalHealthLog({ navigation }) {
             containerBackground='#b3d2db'
             selectedBackground='#7ab7dd'
       />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Text>  Write a journal entry expanding on your mood.
           How are you feeling?
           Why do you think you're feeling this way? </Text>
+      </TouchableWithoutFeedback>
       <TextInput
             multiline={true}
             style={KIC_Style.journalInput}
