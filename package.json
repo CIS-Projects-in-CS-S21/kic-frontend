@@ -25,6 +25,7 @@
     "formik": "^2.2.6",
     "google-protobuf": "^3.15.6",
     "grpc-web": "^1.2.1",
+    "intl": "^1.2.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-likert-scale": "^4.1.0",

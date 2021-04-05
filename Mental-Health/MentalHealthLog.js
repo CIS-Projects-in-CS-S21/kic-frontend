@@ -9,6 +9,8 @@ import KIC_Style from "../Components/Style";
 import {useNavigation} from "@react-navigation/native";
 import {DateTimePickerModal} from "react-native-paper-datetimepicker";
 import NumberSlider from 'react-native-number-slider'
+import 'intl';
+import 'intl/locale-data/jsonp/en'; // or any other locale you need
 
 
 
