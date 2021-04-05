@@ -5,8 +5,9 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Platform, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
 import MyUser from "../Components/MyUser";

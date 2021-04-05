@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import TokenManager from "../Managers/TokenManager";
 import ClientManager from '../Managers/ClientManager';
 import UserManager from '../Managers/UserManager';
@@ -118,7 +119,7 @@ export default function signUp() {
     }
 
     return (
-        <View style={KIC_Style.container}>
+        <SafeAreaView style={KIC_Style.container}>
             <Text style={KIC_Style.title}>Keeping It Casual: Sign Up Page</Text>
             <Image
                 style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
@@ -176,7 +177,7 @@ export default function signUp() {
                 onPress={() => navigation.navigate('LogIn')}>
                 <Text style={KIC_Style.button_font}>Log In</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 }
 
