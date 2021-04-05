@@ -4,6 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 
 
@@ -17,7 +18,7 @@ class Explore extends React.Component {
    * @returns {Component}
    */
       return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <Image
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('../assets/kic.png')}
@@ -30,7 +31,7 @@ class Explore extends React.Component {
                     this.props.navigation.navigate('Feed')
                 }
             />
-        </View>
+        </SafeAreaView>
       );
   }
 }

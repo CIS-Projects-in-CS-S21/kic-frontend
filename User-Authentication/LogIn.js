@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { TextInput, Image } from 'react-native';
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
@@ -71,7 +72,7 @@ export default function logIn() {
   };
 
   return (
-    <View style={KIC_Style.container}>
+    <SafeAreaView style={KIC_Style.container}>
       <Text style={KIC_Style.title}>Keeping It Casual: Log In Page</Text>
       <Image
         style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
@@ -102,6 +103,6 @@ export default function logIn() {
         onPress={() => navigation.navigate('SignUp')}>
         <Text style={KIC_Style.button_font}>Sign Up</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }

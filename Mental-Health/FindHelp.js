@@ -4,6 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 
 /**
@@ -16,7 +17,7 @@ class FindHelp extends React.Component {
    */
   render() {
       return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <Image
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('../assets/kic.png')}
@@ -29,7 +30,7 @@ class FindHelp extends React.Component {
             }
           />
           <StatusBar style="auto" />
-        </View>
+        </SafeAreaView>
       );
   }
 }

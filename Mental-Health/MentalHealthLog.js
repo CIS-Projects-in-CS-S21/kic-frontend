@@ -5,6 +5,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import KIC_Style from "../Components/Style";
 
 /**
@@ -17,7 +18,7 @@ class MentalHealthLog extends React.Component {
    */
   render() {
       return (
-        <View style={KIC_Style.container}>
+        <SafeAreaView style={KIC_Style.container}>
           <Image
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('../assets/kic.png')}
@@ -43,7 +44,7 @@ class MentalHealthLog extends React.Component {
             }
           />
           <StatusBar style="auto" />
-        </View>
+        </SafeAreaView>
       );
   }
 }
