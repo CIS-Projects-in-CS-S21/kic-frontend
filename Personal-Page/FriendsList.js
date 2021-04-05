@@ -11,7 +11,7 @@ import TokenManager from "../Managers/TokenManager";
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
-import GetFriendsForUserRequest from '../gen/proto/friends_pb';
+import { GetFriendsForUserRequest } from '../gen/proto/friends_pb';
 
 /*
 * Mock array of friends
@@ -91,7 +91,7 @@ class FriendsList extends React.Component {
     }
     callGetFriendsForUser(cm, authString, userID, res){
         let client = cm.createFriendsClient();
-        // let req = new GetFriendsForUserRequest();
+        let req = new GetFriendsForUserRequest();
     }
 
     /**
