@@ -8,6 +8,10 @@ import KIC_Style from "../Components/Style";
 import ClientManager from '../Managers/ClientManager';
 import UserManager from "../Managers/UserManager";
 import {UploadFileRequest} from "../gen/proto/media_pb";
+import { Buffer } from "buffer";
+import {File, Date} from "../gen/proto/common_pb";
+
+
 
 
 /**
@@ -19,35 +23,64 @@ export default function PostInfo(props) {
     let cm = new ClientManager();
     let client = cm.createMediaClient();
 
-    const fetchUserInfo = async () => {
-        return this.callGetAuthString();
+
+
+    const uploadImage = async () => {
+        return callGetAuthString();
     }
 
     //to get authorization string
     const callGetAuthString = async () => {
         let um = new UserManager();
-        return um.getAuthString().then(authString => {this.makeUploadFileRequest(authString)});
+        console.log("Obtained authorization string");
+        return um.getAuthString().then(authString  => {getUserID(authString, um)});
+    }
+
+    //get user ID
+    const getUserID = async(authString, um) => {
+        return um.getMyUserID().then(userID  => {makeUploadFileRequest(userID, authString)});
     }
 
     //make request to upload file with uri
-    const makeUploadFileRequest = async (authString) => {
+    const makeUploadFileRequest = async (userID, authString) => {
         const uri = props.route.params.image;
+        const base64 = props.route.params.base64;
+        console.log("Started Upload File Request");
         let req = new UploadFileRequest();
-        const childPath = ' ';
-        console.log(childPath);
-        req.setFileinfo(uri);
-        return null;
+        console.log("Auth: " + authString);
+        console.log("Did Upload File Request");
+        let file = new File();
+        file.setFilename("sjnglsia");
+        console.log("1");
+       // file.setDatestored(Date);
+        let map = file.getMetadataMap();
+        console.log("2");
+      //  map["userID"] = userID.toString();
+        let your_bytes = Buffer.from(base64, "base64");
+
+        console.log("3");
+        // let dataUriToBuffer = require('data-uri-to-buffer');
+        // // base64-encoded data is supported
+        // let decoded = dataUriToBuffer(uri);
+        // console.log(decoded.toString());
+        // 'Hello, World!'
+        req.setFile(Uint8Array.from(your_bytes));
+        console.log("Set File");
+        req.setFileinfo(file);
+        console.log("Set File Info");
+        return client.uploadFile(req,{'Authorization': authString}).then(res => {logResult(res)});
     }
+
+    const logResult = async(res) => {
+        console.log(res);
+    }
+
+
 
     const [caption, setCaption] = useState("")
 
 
 
-    const savePostData = (downloadURL) => {
-
-
-
-    }
     return (
         <View style={{ flex: 1 }}>
             <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', padding: 10}}/>

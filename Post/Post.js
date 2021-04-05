@@ -20,6 +20,8 @@ export default function Post({ navigation }) {
     const [image, setImage] = useState(null);
     //type variable, default set to back camera
     const [type, setType] = useState(Camera.Constants.Type.back);
+    //stores base64 of image
+    const[base64, setBase64] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -40,8 +42,9 @@ export default function Post({ navigation }) {
     //take picture if camera access is granted and set image
     const takePicture = async () => {
         if (camera) {
-            const data = await camera.takePictureAsync(null);
+            const data = await camera.takePictureAsync({base64: true});
             setImage(data.uri);
+            setBase64(data.base64);
             alert("Picture taken!");
         }
     }
@@ -53,11 +56,12 @@ export default function Post({ navigation }) {
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
-
+            base64: true
         });
         console.log(result);
         if (!result.cancelled) {
             setImage(result.uri);
+            setBase64(result.base64);
             alert("Picture selected!");
         }
     };
@@ -118,7 +122,7 @@ export default function Post({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button_post}
-                onPress={() => navigation.navigate('PostInfo', { image })}>
+                onPress={() => navigation.navigate('PostInfo', { image, base64 })}>
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
         </View>
