@@ -19,7 +19,7 @@ export default function Post({ navigation }) {
     //image variable
     const [image, setImage] = useState(null);
     //type variable, default set to back camera
-    const [type, setType] = useState(Camera.Constants.Type.back);
+    const [type, setType] = useState(Camera.Constants.Type.front);
     //stores base64 of image
     const[base64, setBase64] = useState(null);
 
@@ -27,14 +27,15 @@ export default function Post({ navigation }) {
     useEffect(() => {
         (async () => {
            if (Platform.OS !== 'web') {
-               //request permission for camera
                setNotWeb(true);
-               const cameraStatus = await Camera.requestPermissionsAsync();
-               setHasCameraPermission(cameraStatus.status === 'granted');
+
            } else {
                setNotWeb(false);
            }
-                //request permission for media library
+            //request permission for camera
+            const cameraStatus = await Camera.requestPermissionsAsync();
+            setHasCameraPermission(cameraStatus.status === 'granted');
+            //request permission for media library
             const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
             setHasGalleryPermission(galleryStatus.status === 'granted');
 
@@ -47,7 +48,11 @@ export default function Post({ navigation }) {
     //take picture if camera access is granted and set image
     const takePicture = async () => {
         if (camera) {
-            const data = await camera.takePictureAsync({base64: true});
+            const data = await camera.takePictureAsync({
+                base64: true
+
+
+            });
             setImage(data.uri);
             setBase64(data.base64);
             alert("Picture taken!");
@@ -73,9 +78,9 @@ export default function Post({ navigation }) {
 
     //if no camera possible (web) or no gallery permission, say sorry! no access to gallery or camera
     if (hasCameraPermission === null && hasGalleryPermission === false) {
-        return (<View style = {KIC_Style}>
+        return (<View style = {KIC_Style.container}>
             <Image
-                style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+                style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain', alignSelf:'center'}}
                 source={require('../assets/kic.png')}
             />
             <Text>
@@ -101,25 +106,26 @@ export default function Post({ navigation }) {
                     ref={ref => setCamera(ref)}
                     style={styles.fixedRatio}
                     type={type}
+                    poster = {"../Assets/kic.png"}
                     ratio={'1:1'}
                 />
             </View>
-            <TouchableOpacity
+            {notWeb && <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => {
                     setType(
-                        type === Camera.Constants.Type.back
-                            ? Camera.Constants.Type.front
-                            : Camera.Constants.Type.back
+                        type === Camera.Constants.Type.front
+                            ? Camera.Constants.Type.back
+                            : Camera.Constants.Type.front
                     );
                 }}>
                 <Text style={KIC_Style.button_font}>Flip Image</Text>
-            </TouchableOpacity>
-            {notWeb && <TouchableOpacity
+           </TouchableOpacity>}
+           <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => takePicture()}>
                 <Text style={KIC_Style.button_font}>Take Picture</Text>
-            </TouchableOpacity>}
+            </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => pickImage()}>
