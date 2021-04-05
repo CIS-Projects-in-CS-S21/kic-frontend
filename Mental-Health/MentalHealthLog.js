@@ -74,7 +74,7 @@ export default function MentalHealthLog({ navigation }) {
             onConfirm={onChange}
             label="Pick A Date"
       />
-      <TextInput value={date.toLocaleString()} />
+      // <TextInput value={date.toLocaleString()} />
       <TouchableOpacity
             style={KIC_Style.button}
             onPress ={() =>
