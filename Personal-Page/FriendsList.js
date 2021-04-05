@@ -11,7 +11,7 @@ import TokenManager from "../Managers/TokenManager";
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
-import { GetFriendsForUserRequest } from '../gen/proto/friends_pb';
+import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
 
 /*
 * Mock array of friends
@@ -91,16 +91,24 @@ class FriendsList extends React.Component {
     }
     callGetFriendsForUser(cm, authString, res){
         let user = res.getUser()
-        console.log("user is: " + user);
+        //console.log("user is: " + user);
         let client = cm.createFriendsClient();
         let req = new GetFriendsForUserRequest();
-
         req.setUser(user);
-        console.log("has user: " + req.hasUser());
-        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.parseFriends(authString, res)});
+        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.parseFriends(client, authString, res)});
     }
-    parseFriends(authString, res){
+    parseFriends(client, authString, res){
         console.log("Users friends (IDs): " + res);
+
+        let req = new CreateConnectionForUsersRequest();
+        req.setFirstuserid(this.state.userid);
+        req.setSeconduserid('70');
+
+        return client.createConnectionForUsers(req, {'Authorization': authString}).then(res2 => {this.doSomething(res, res2)});
+    }
+    doSomething(res, res2){
+        console.log("Updated friends: " + res);
+        console.log("Create connection result: " + res2);
     }
 
     /**
