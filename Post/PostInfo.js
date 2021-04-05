@@ -9,7 +9,7 @@ import ClientManager from '../Managers/ClientManager';
 import UserManager from "../Managers/UserManager";
 import { UploadFileRequest, CheckForFileRequest } from "../gen/proto/media_pb";
 import { Buffer } from "buffer";
-import {File, Date} from "../gen/proto/common_pb";
+import { File, Date as CommonDate } from "../gen/proto/common_pb";
 
 
 
@@ -45,29 +45,51 @@ export default function PostInfo(props) {
     const makeUploadFileRequest = async (userID, authString) => {
         const uri = props.route.params.image;
         const base64 = props.route.params.base64;
+
+        const regex = /\/.*?;base64/g;
+        const extractedExt = uri.match(regex);
+        let extensionNoBase = extractedExt.toString().replace(";base64", "");
+        let extension = extensionNoBase.replace("/", "");
+
         console.log("Started Upload File Request");
         let req = new UploadFileRequest();
         console.log("Auth: " + authString);
-        console.log("Did Upload File Request");
-        let file = new File();
-        file.setFilename("sjnglsia");
-        console.log("1");
-       // file.setDatestored(Date);
-        let map = file.getMetadataMap();
-        console.log("2");
-      //  map["userID"] = userID.toString();
-        let your_bytes = Buffer.from(uri, "base64");
 
-        console.log("3");
-        // let dataUriToBuffer = require('data-uri-to-buffer');
-        // // base64-encoded data is supported
-        // let decoded = dataUriToBuffer(uri);
-        // console.log(decoded.toString());
-        // 'Hello, World!'
+        let file = new File();
+        file.setFilename(userID + "@" + randomizeFileName() + "." + extension);
+        console.log("URI: " + uri);
+        console.log("Ext: " + extension);
+        console.log("File name: " + file.getFilename());
+
+        let map = file.getMetadataMap();
+
+        console.log("Metadata before set: ");
+        file.getMetadataMap().forEach(function(v, k) {
+            console.log(k, v);
+        });
+
+        map.set("userID", userID.toString()) ;
+        map.set("caption", caption);
+        map.set("trigger", triggers);
+
+        // Fetch the current date and set in file
+        let today = new Date();
+        let date = new CommonDate();
+        date.setDay(String(today.getDate()).padStart(2, '0'));
+        date.setMonth(String(today.getMonth() + 1).padStart(2, '0'));
+        date.setYear(today.getFullYear());
+        file.setDatestored(date);
+
+        let your_bytes = Buffer.from(uri, "base64");
         req.setFile(Uint8Array.from(your_bytes));
-        console.log("Set File");
         req.setFileinfo(file);
-        console.log("Set File Info");
+
+        console.log("Metadata after set: ");
+        file.getMetadataMap().forEach(function(v, k) {
+            console.log(k, v);
+        });
+
+        console.log("request: " + req);
 
         return client.uploadFile(req,{'Authorization': authString}).then(res => {logResult(res)});
     }
@@ -76,11 +98,26 @@ export default function PostInfo(props) {
         console.log(res);
     }
 
+    const randomizeFileName = () => {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
 
 
     const [caption, setCaption] = useState("")
+    const [triggers, setTriggers] = useState("")
 
+    const parseTriggers = (triggers) => {
+        let triggersNoCommas = triggers.replace(",", " ");
+        let triggersParsed = triggersNoCommas.split(/[' ',',',#]/);
+        triggersParsed = triggersParsed.filter(e => e !== '');
 
+        console.log("Parsed triggers: " + triggersParsed);
+
+        setTriggers(triggersParsed);
+    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -91,7 +128,7 @@ export default function PostInfo(props) {
             />
             <TextInput style = {KIC_Style.input}
                 placeholder="Write any triggers in #format . . ."
-                onChangeText={(triggers) => setCaption(triggers)}
+                onChangeText={(triggers) => parseTriggers(triggers)}
             />
             <TouchableOpacity
                 style={KIC_Style.button_post}
