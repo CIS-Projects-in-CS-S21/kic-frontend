@@ -12,7 +12,7 @@ const KIC_Style = StyleSheet.create({
     },
     title: {
         color: '#b3d2db',
-       // fontFamily: 'sans-serif',
+        //fontFamily: 'sans-serif',
         fontSize: 30,
         fontWeight: "bold",
         paddingBottom: 5

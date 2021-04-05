@@ -7,7 +7,7 @@ import {View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-nati
 import KIC_Style from "../Components/Style";
 import ClientManager from '../Managers/ClientManager';
 import UserManager from "../Managers/UserManager";
-import {UploadFileRequest} from "../gen/proto/media_pb";
+import { UploadFileRequest, CheckForFileRequest } from "../gen/proto/media_pb";
 import { Buffer } from "buffer";
 import {File, Date} from "../gen/proto/common_pb";
 
@@ -56,7 +56,7 @@ export default function PostInfo(props) {
         let map = file.getMetadataMap();
         console.log("2");
       //  map["userID"] = userID.toString();
-        let your_bytes = Buffer.from(base64, "base64");
+        let your_bytes = Buffer.from(uri, "base64");
 
         console.log("3");
         // let dataUriToBuffer = require('data-uri-to-buffer');
@@ -68,6 +68,7 @@ export default function PostInfo(props) {
         console.log("Set File");
         req.setFileinfo(file);
         console.log("Set File Info");
+
         return client.uploadFile(req,{'Authorization': authString}).then(res => {logResult(res)});
     }
 
