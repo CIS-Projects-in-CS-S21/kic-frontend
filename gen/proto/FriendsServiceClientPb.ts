@@ -13,7 +13,7 @@
 
 import * as grpcWeb from 'grpc-web';
 
-import * as proto_friends_pb from '../../../pro-keeping-it-casual/gen/grpc-web/proto/friends_pb';
+import * as proto_friends_pb from '../proto/friends_pb';
 
 
 export class FriendsClient {

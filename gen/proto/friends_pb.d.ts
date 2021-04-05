@@ -5,7 +5,7 @@
 /* eslint-disable */
 
 import * as jspb from "google-protobuf";
-import * as proto_common_pb from "../../../pro-keeping-it-casual/gen/nodejs/proto/common_pb";
+import * as proto_common_pb from "../proto/common_pb";
 
 export class GetFriendsForUserRequest extends jspb.Message { 
 
