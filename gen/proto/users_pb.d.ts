@@ -1,6 +1,6 @@
 import * as jspb from 'google-protobuf'
 
-import * as proto_common_pb from '../../../pro-keeping-it-casual/gen/grpc-web/proto/common_pb';
+import * as proto_common_pb from '../proto/common_pb';
 
 
 export class AddUserRequest extends jspb.Message {

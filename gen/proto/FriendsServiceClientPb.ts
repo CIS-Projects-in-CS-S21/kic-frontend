@@ -435,5 +435,45 @@ export class FriendsClient {
     this.methodInfoDeleteConnectionBetweenUsers);
   }
 
+  methodInfoDeleteAwaitingFriendBetweenUsers = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_friends_pb.DeleteConnectionBetweenUsersResponse,
+    (request: proto_friends_pb.DeleteConnectionBetweenUsersRequest) => {
+      return request.serializeBinary();
+    },
+    proto_friends_pb.DeleteConnectionBetweenUsersResponse.deserializeBinary
+  );
+
+  deleteAwaitingFriendBetweenUsers(
+    request: proto_friends_pb.DeleteConnectionBetweenUsersRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_friends_pb.DeleteConnectionBetweenUsersResponse>;
+
+  deleteAwaitingFriendBetweenUsers(
+    request: proto_friends_pb.DeleteConnectionBetweenUsersRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_friends_pb.DeleteConnectionBetweenUsersResponse) => void): grpcWeb.ClientReadableStream<proto_friends_pb.DeleteConnectionBetweenUsersResponse>;
+
+  deleteAwaitingFriendBetweenUsers(
+    request: proto_friends_pb.DeleteConnectionBetweenUsersRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_friends_pb.DeleteConnectionBetweenUsersResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.friends.Friends/DeleteAwaitingFriendBetweenUsers',
+        request,
+        metadata || {},
+        this.methodInfoDeleteAwaitingFriendBetweenUsers,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.friends.Friends/DeleteAwaitingFriendBetweenUsers',
+    request,
+    metadata || {},
+    this.methodInfoDeleteAwaitingFriendBetweenUsers);
+  }
+
 }
 

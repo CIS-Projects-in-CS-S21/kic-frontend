@@ -4,26 +4,20 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
-
-/**
-* Format individual comment
-*/
-const Comment = ({ commenterHandle, commenterPosterFirstName, commenterFirstName, commentText }) => (
-  <View style={styles.comment}>
-    <Text style={styles.commentText}>{commentText}</Text>
-  </View>
-);
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import KIC_Style from "../Components/Style";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 /**
 * @class Contains function for rendering the comment section.
 */
 class AddFriendButton extends React.Component {
+
     /**
     * Event for adding friend
     */
     handleClick = () => {
-      console.log("Clicked button")
+      console.log("Trying to add user id as a friend: " + this.props.friendUserid + " for " + this.props.myUserid)
     }
 
     /**
@@ -32,23 +26,30 @@ class AddFriendButton extends React.Component {
     */
     render() {
       return (
-        <Button
-          onPress={this.handleClick}
-          style={this.buttonStyle}
-          title="Add Friend"
-          color="#b3d2db"
-        />
+        <View>
+            <TouchableOpacity
+              style={styles.choiceButton}
+              onPress = {this.handleClick}>
+              <Ionicons name="person-add-outline" color='#ffff' size={25} />
+            </TouchableOpacity>
+        </View>
       );
     }
 }
 
 /**
-* @constant styles creates stylesheet for the Comment Section
-*/
+ * @constant styles creates stylesheet for an individual AddFriendButton's components.
+ */
 const styles = StyleSheet.create({
-    buttonStyle: {
-        height: 10,
-        width: 30,
+    choiceButton: {
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 7,
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
     },
 });
 

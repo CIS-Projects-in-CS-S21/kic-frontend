@@ -28,6 +28,7 @@ class FriendsPage extends React.Component {
         this.state = {
             userid: props.route.params.userid,
             username: props.route.params.username,
+            bio: props.route.params.bio,
             yearPosted: 0,
             monthPosted: 0,
             dayPosted: 0,
@@ -60,6 +61,7 @@ class FriendsPage extends React.Component {
             {(!this.state.showPending) ? <FriendsList
                                            userid = {this.state.userid}
                                            username = {this.state.username}
+                                           bio = {this.state.bio}
                                        /> :
                                        <RequestsList
                                            userid = {this.state.userid}

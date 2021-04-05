@@ -9,12 +9,10 @@ export class UploadFileRequest extends jspb.Message {
   hasFileinfo(): boolean;
   clearFileinfo(): UploadFileRequest;
 
-  getChunk(): Uint8Array | string;
-  getChunk_asU8(): Uint8Array;
-  getChunk_asB64(): string;
-  setChunk(value: Uint8Array | string): UploadFileRequest;
-
-  getDataCase(): UploadFileRequest.DataCase;
+  getFile(): Uint8Array | string;
+  getFile_asU8(): Uint8Array;
+  getFile_asB64(): string;
+  setFile(value: Uint8Array | string): UploadFileRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UploadFileRequest.AsObject;
@@ -27,13 +25,7 @@ export class UploadFileRequest extends jspb.Message {
 export namespace UploadFileRequest {
   export type AsObject = {
     fileinfo?: proto_common_pb.File.AsObject,
-    chunk: Uint8Array | string,
-  }
-
-  export enum DataCase { 
-    DATA_NOT_SET = 0,
-    FILEINFO = 1,
-    CHUNK = 2,
+    file: Uint8Array | string,
   }
 }
 

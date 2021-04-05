@@ -35,6 +35,46 @@ export class MediaStorageClient {
     this.options_ = options;
   }
 
+  methodInfoUploadFile = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_media_pb.UploadFileResponse,
+    (request: proto_media_pb.UploadFileRequest) => {
+      return request.serializeBinary();
+    },
+    proto_media_pb.UploadFileResponse.deserializeBinary
+  );
+
+  uploadFile(
+    request: proto_media_pb.UploadFileRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_media_pb.UploadFileResponse>;
+
+  uploadFile(
+    request: proto_media_pb.UploadFileRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_media_pb.UploadFileResponse) => void): grpcWeb.ClientReadableStream<proto_media_pb.UploadFileResponse>;
+
+  uploadFile(
+    request: proto_media_pb.UploadFileRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_media_pb.UploadFileResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.media.MediaStorage/UploadFile',
+        request,
+        metadata || {},
+        this.methodInfoUploadFile,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.media.MediaStorage/UploadFile',
+    request,
+    metadata || {},
+    this.methodInfoUploadFile);
+  }
+
   methodInfoDownloadFileByName = new grpcWeb.AbstractClientBase.MethodInfo(
     proto_media_pb.DownloadFileResponse,
     (request: proto_media_pb.DownloadFileRequest) => {

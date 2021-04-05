@@ -195,5 +195,85 @@ export class HealthTrackingClient {
     this.methodInfoUpdateHealthDataForDate);
   }
 
+  methodInfoGetMentalHealthScoreForUser = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_health_pb.GetMentalHealthScoreForUserResponse,
+    (request: proto_health_pb.GetMentalHealthScoreForUserRequest) => {
+      return request.serializeBinary();
+    },
+    proto_health_pb.GetMentalHealthScoreForUserResponse.deserializeBinary
+  );
+
+  getMentalHealthScoreForUser(
+    request: proto_health_pb.GetMentalHealthScoreForUserRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_health_pb.GetMentalHealthScoreForUserResponse>;
+
+  getMentalHealthScoreForUser(
+    request: proto_health_pb.GetMentalHealthScoreForUserRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_health_pb.GetMentalHealthScoreForUserResponse) => void): grpcWeb.ClientReadableStream<proto_health_pb.GetMentalHealthScoreForUserResponse>;
+
+  getMentalHealthScoreForUser(
+    request: proto_health_pb.GetMentalHealthScoreForUserRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_health_pb.GetMentalHealthScoreForUserResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.health.HealthTracking/GetMentalHealthScoreForUser',
+        request,
+        metadata || {},
+        this.methodInfoGetMentalHealthScoreForUser,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.health.HealthTracking/GetMentalHealthScoreForUser',
+    request,
+    metadata || {},
+    this.methodInfoGetMentalHealthScoreForUser);
+  }
+
+  methodInfoGetHealthDataByDate = new grpcWeb.AbstractClientBase.MethodInfo(
+    proto_health_pb.GetHealthDataByDateResponse,
+    (request: proto_health_pb.GetHealthDataByDateRequest) => {
+      return request.serializeBinary();
+    },
+    proto_health_pb.GetHealthDataByDateResponse.deserializeBinary
+  );
+
+  getHealthDataByDate(
+    request: proto_health_pb.GetHealthDataByDateRequest,
+    metadata: grpcWeb.Metadata | null): Promise<proto_health_pb.GetHealthDataByDateResponse>;
+
+  getHealthDataByDate(
+    request: proto_health_pb.GetHealthDataByDateRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: proto_health_pb.GetHealthDataByDateResponse) => void): grpcWeb.ClientReadableStream<proto_health_pb.GetHealthDataByDateResponse>;
+
+  getHealthDataByDate(
+    request: proto_health_pb.GetHealthDataByDateRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: proto_health_pb.GetHealthDataByDateResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/kic.health.HealthTracking/GetHealthDataByDate',
+        request,
+        metadata || {},
+        this.methodInfoGetHealthDataByDate,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/kic.health.HealthTracking/GetHealthDataByDate',
+    request,
+    metadata || {},
+    this.methodInfoGetHealthDataByDate);
+  }
+
 }
 
