@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import {StyleSheet, Text, View, Button, Image, TouchableOpacity} from 'react-native';
 import { Camera } from 'expo-camera';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import KIC_Style from '../Components/Style';
 import {Platform} from 'react-native';
@@ -85,7 +86,7 @@ export default function Post({ navigation }) {
         return <Text>No access to camera</Text>;
     }
     return (
-        <View style={KIC_Style.container}>
+        <SafeAreaView style={KIC_Style.container}>
             <View style={styles.cameraContainer}>
                 <Camera
                     ref={ref => setCamera(ref)}
@@ -121,7 +122,7 @@ export default function Post({ navigation }) {
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
             {/*{image && <Image source={{ uri: image }} style={{ flex: 1 }} />}*/}
-        </View>
+        </SafeAreaView>
     );
 }
 
