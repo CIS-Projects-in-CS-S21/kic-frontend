@@ -23,17 +23,22 @@ export default function Post({ navigation }) {
     //stores base64 of image
     const[base64, setBase64] = useState(null);
 
+    const [notWeb, setNotWeb] = useState(null);
     useEffect(() => {
         (async () => {
            if (Platform.OS !== 'web') {
-                //request permission for camera
-                const cameraStatus = await Camera.requestPermissionsAsync();
-                setHasCameraPermission(cameraStatus.status === 'granted');
-                //request permission for media library
-                const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                setHasGalleryPermission(galleryStatus.status === 'granted');
-
+               //request permission for camera
+               setNotWeb(true);
+               const cameraStatus = await Camera.requestPermissionsAsync();
+               setHasCameraPermission(cameraStatus.status === 'granted');
+           } else {
+               setNotWeb(false);
            }
+                //request permission for media library
+            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasGalleryPermission(galleryStatus.status === 'granted');
+
+
 
 
         })();
@@ -67,7 +72,7 @@ export default function Post({ navigation }) {
     };
 
     //if no camera possible (web) or no gallery permission, say sorry! no access to gallery or camera
-    if (hasCameraPermission === null || hasGalleryPermission === false) {
+    if (hasCameraPermission === null && hasGalleryPermission === false) {
         return (<View style = {KIC_Style}>
             <Image
                 style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
@@ -85,10 +90,10 @@ export default function Post({ navigation }) {
 
     )};
 
-    //if camera or gallery permission is not given:
-    if (hasCameraPermission === false || hasGalleryPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
+    // //if camera or gallery permission is not given:
+    // if (hasCameraPermission === false || hasGalleryPermission === false) {
+    //     return <Text>No access to camera </Text>;
+    // }
     return (
         <View style={KIC_Style.container}>
             <View style={styles.cameraContainer}>
@@ -110,11 +115,11 @@ export default function Post({ navigation }) {
                 }}>
                 <Text style={KIC_Style.button_font}>Flip Image</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {notWeb && <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => takePicture()}>
                 <Text style={KIC_Style.button_font}>Take Picture</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
             <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => pickImage()}>
@@ -125,6 +130,7 @@ export default function Post({ navigation }) {
                 onPress={() => navigation.navigate('PostInfo', { image, base64 })}>
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
+
         </View>
     );
 }
