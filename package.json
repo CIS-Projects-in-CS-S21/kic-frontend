@@ -31,6 +31,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
     "react-native-collapsible": "^1.5.3",
     "react-native-gesture-handler": "~1.8.0",
+    "react-native-number-slider": "^1.0.0",
     "react-native-paper": "^4.7.2",
     "react-native-paper-dates": "^0.4.3",
     "react-native-paper-datetimepicker": "^0.0.2",

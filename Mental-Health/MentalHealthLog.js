@@ -4,10 +4,12 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, Image, Button, TouchableOpacity, SafeAreaView, TextInput} from 'react-native';
+import {StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, SafeAreaView} from 'react-native';
 import KIC_Style from "../Components/Style";
 import {useNavigation} from "@react-navigation/native";
 import {DateTimePickerModal} from "react-native-paper-datetimepicker";
+import NumberSlider from 'react-native-number-slider'
+
 
 
 /**
@@ -29,6 +31,11 @@ export default function MentalHealthLog({ navigation }) {
         console.log({ date });
     }, []);
 
+    const [value, setValue] = useState(1)
+    const onValueChange = (value) => {
+        setValue(value)
+    }
+
     const date = new Date();
   return (
     <SafeAreaView style={KIC_Style.container}>
@@ -39,10 +46,23 @@ export default function MentalHealthLog({ navigation }) {
       <Text style = {KIC_Style.title}> Mental Health Tracker</Text>
 
       <Text>
-          Rate your mental health on a scale from -5 (extremely depressed) to 5 (extremely anxious). 0 is neither anxious nor depressed.
+          Rate your mental health on a scale from -5 (extremely depressed) to 5 (extremely anxious).
+          0 is neither anxious nor depressed.
       </Text>
-      <Text>  Write a journal entry expanding on your mood. How are you feeling? Why do you think you're feeling this way? </Text>
+      <NumberSlider
+            onValueChange={onValueChange}
+            value={value}
+            width={300}
+            displayValues= {[-5,-4,-3,-2,-1,0,1, 2, 3, 4, 5]}
+            fontSize={15}
+            containerBackground='#b3d2db'
+            selectedBackground='#7ab7dd'
+      />
+      <Text>  Write a journal entry expanding on your mood.
+          How are you feeling?
+          Why do you think you're feeling this way? </Text>
       <TextInput
+            multiline={true}
             style={KIC_Style.journalInput}
             value={entry}
             onChange={e => setEntry(e.nativeEvent.text)}
