@@ -6007,6 +6007,11 @@ md5-file@^3.2.3:
   dependencies:
     buffer-alloc "^1.1.0"
 
+"memoize-one@>=3.1.1 <6":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
+  integrity sha512-HKeeBpWvqiVJD57ZUAsJNm71eHTykffzcLZVYWiVfQeI1rJtuEaS7hQiEpWfVVk18donPwJEcFKIkCmPJNOhHA==
+
 merge-stream@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-1.0.1.tgz"
@@ -7123,6 +7128,18 @@ react-native-iphone-x-helper@^1.3.0, react-native-iphone-x-helper@^1.3.1:
   resolved "https://registry.npmjs.org/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz"
   integrity sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg==
 
+react-native-paper-dates@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-paper-dates/-/react-native-paper-dates-0.4.3.tgz#5c327b7129efcc27a3a87da015d864c1782b86a9"
+  integrity sha512-C2ol2dv1Krmo3NsFGW/4W1leOoMSgr43M2zokfRNNBzPKYrpiMZyJ2+ndsCs0X7+/GxtbNoTUUOclOOd2vqUfQ==
+
+react-native-paper-datetimepicker@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-paper-datetimepicker/-/react-native-paper-datetimepicker-0.0.2.tgz#d51d99f0ce066542b1fa25bb87dd8896141bbcc6"
+  integrity sha512-iLrmgz7dNErpjAczW6F1yhonTiLUkvLSvycSuIlNjYAgbM86mFDqx0KfitggE1jibkaA3Rve1QxjG79PrD+lbA==
+  dependencies:
+    react-native-web-hover "^0.2.7"
+
 react-native-paper@^4.7.2:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.7.2.tgz#a40d1da87af5b030d45b525313cd703d490876ff"
@@ -7162,6 +7179,11 @@ react-native-vector-icons@^8.1.0:
     lodash.template "^4.5.0"
     prop-types "^15.7.2"
     yargs "^16.1.1"
+
+react-native-web-hover@^0.2.7:
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/react-native-web-hover/-/react-native-web-hover-0.2.9.tgz#aee61d09cb92fce93f55fa7c9d6ebbd28899fded"
+  integrity sha512-6hXQMLptJPDn67xlgmA6eh42LWlHb2THjaedNqW5N8rwutEqsta/zoCYTAJNz+1U/tGW9ZrZVXitUnoLie/itQ==
 
 react-native-web@^0.15.5:
   version "0.15.5"
@@ -7219,6 +7241,14 @@ react-timer-mixin@^0.13.4:
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
+
+react-window@^1.8.6:
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.8.6.tgz#d011950ac643a994118632665aad0c6382e2a112"
+  integrity sha512-8VwEEYyjz6DCnGBsd+MgkD0KJ2/OXFULyDtorIiTz+QzwoP94tBoA7CnbtyXMm+cCeAUER5KJcPtWl9cpKbOBg==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    memoize-one ">=3.1.1 <6"
 
 react@16.13.1:
   version "16.13.1"
