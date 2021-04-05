@@ -4,24 +4,6 @@ import * as proto_common_pb from '../proto/common_pb';
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 
 
-export class HealthDataErrorResponse extends jspb.Message {
-  getError(): HealthDataError;
-  setError(value: HealthDataError): HealthDataErrorResponse;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): HealthDataErrorResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: HealthDataErrorResponse): HealthDataErrorResponse.AsObject;
-  static serializeBinaryToWriter(message: HealthDataErrorResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): HealthDataErrorResponse;
-  static deserializeBinaryFromReader(message: HealthDataErrorResponse, reader: jspb.BinaryReader): HealthDataErrorResponse;
-}
-
-export namespace HealthDataErrorResponse {
-  export type AsObject = {
-    error: HealthDataError,
-  }
-}
-
 export class GetHealthDataForUserRequest extends jspb.Message {
   getUserid(): number;
   setUserid(value: number): GetHealthDataForUserRequest;
@@ -49,6 +31,12 @@ export class MentalHealthLog extends jspb.Message {
   getScore(): number;
   setScore(value: number): MentalHealthLog;
 
+  getJournalname(): string;
+  setJournalname(value: string): MentalHealthLog;
+
+  getUserid(): number;
+  setUserid(value: number): MentalHealthLog;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MentalHealthLog.AsObject;
   static toObject(includeInstance: boolean, msg: MentalHealthLog): MentalHealthLog.AsObject;
@@ -61,6 +49,8 @@ export namespace MentalHealthLog {
   export type AsObject = {
     logdate?: proto_common_pb.Date.AsObject,
     score: number,
+    journalname: string,
+    userid: number,
   }
 }
 
@@ -81,6 +71,50 @@ export class GetHealthDataForUserResponse extends jspb.Message {
 export namespace GetHealthDataForUserResponse {
   export type AsObject = {
     healthdataList: Array<MentalHealthLog.AsObject>,
+  }
+}
+
+export class GetHealthDataByDateRequest extends jspb.Message {
+  getUserid(): number;
+  setUserid(value: number): GetHealthDataByDateRequest;
+
+  getLogdate(): proto_common_pb.Date | undefined;
+  setLogdate(value?: proto_common_pb.Date): GetHealthDataByDateRequest;
+  hasLogdate(): boolean;
+  clearLogdate(): GetHealthDataByDateRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetHealthDataByDateRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetHealthDataByDateRequest): GetHealthDataByDateRequest.AsObject;
+  static serializeBinaryToWriter(message: GetHealthDataByDateRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetHealthDataByDateRequest;
+  static deserializeBinaryFromReader(message: GetHealthDataByDateRequest, reader: jspb.BinaryReader): GetHealthDataByDateRequest;
+}
+
+export namespace GetHealthDataByDateRequest {
+  export type AsObject = {
+    userid: number,
+    logdate?: proto_common_pb.Date.AsObject,
+  }
+}
+
+export class GetHealthDataByDateResponse extends jspb.Message {
+  getHealthdata(): MentalHealthLog | undefined;
+  setHealthdata(value?: MentalHealthLog): GetHealthDataByDateResponse;
+  hasHealthdata(): boolean;
+  clearHealthdata(): GetHealthDataByDateResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetHealthDataByDateResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetHealthDataByDateResponse): GetHealthDataByDateResponse.AsObject;
+  static serializeBinaryToWriter(message: GetHealthDataByDateResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetHealthDataByDateResponse;
+  static deserializeBinaryFromReader(message: GetHealthDataByDateResponse, reader: jspb.BinaryReader): GetHealthDataByDateResponse;
+}
+
+export namespace GetHealthDataByDateResponse {
+  export type AsObject = {
+    healthdata?: MentalHealthLog.AsObject,
   }
 }
 
@@ -163,9 +197,6 @@ export namespace DeleteHealthDataForUserRequest {
 }
 
 export class DeleteHealthDataForUserResponse extends jspb.Message {
-  getError(): HealthDataError;
-  setError(value: HealthDataError): DeleteHealthDataForUserResponse;
-
   getEntriesdeleted(): number;
   setEntriesdeleted(value: number): DeleteHealthDataForUserResponse;
 
@@ -179,7 +210,6 @@ export class DeleteHealthDataForUserResponse extends jspb.Message {
 
 export namespace DeleteHealthDataForUserResponse {
   export type AsObject = {
-    error: HealthDataError,
     entriesdeleted: number,
   }
 }
@@ -226,7 +256,39 @@ export namespace UpdateHealthDataForDateResponse {
   }
 }
 
-export enum HealthDataError { 
-  USER_NOT_FOUND = 0,
-  DATE_NOT_FOUND = 1,
+export class GetMentalHealthScoreForUserRequest extends jspb.Message {
+  getUserid(): number;
+  setUserid(value: number): GetMentalHealthScoreForUserRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetMentalHealthScoreForUserRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetMentalHealthScoreForUserRequest): GetMentalHealthScoreForUserRequest.AsObject;
+  static serializeBinaryToWriter(message: GetMentalHealthScoreForUserRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetMentalHealthScoreForUserRequest;
+  static deserializeBinaryFromReader(message: GetMentalHealthScoreForUserRequest, reader: jspb.BinaryReader): GetMentalHealthScoreForUserRequest;
 }
+
+export namespace GetMentalHealthScoreForUserRequest {
+  export type AsObject = {
+    userid: number,
+  }
+}
+
+export class GetMentalHealthScoreForUserResponse extends jspb.Message {
+  getScore(): number;
+  setScore(value: number): GetMentalHealthScoreForUserResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetMentalHealthScoreForUserResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetMentalHealthScoreForUserResponse): GetMentalHealthScoreForUserResponse.AsObject;
+  static serializeBinaryToWriter(message: GetMentalHealthScoreForUserResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetMentalHealthScoreForUserResponse;
+  static deserializeBinaryFromReader(message: GetMentalHealthScoreForUserResponse, reader: jspb.BinaryReader): GetMentalHealthScoreForUserResponse;
+}
+
+export namespace GetMentalHealthScoreForUserResponse {
+  export type AsObject = {
+    score: number,
+  }
+}
+

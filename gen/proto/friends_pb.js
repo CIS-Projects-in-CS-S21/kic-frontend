@@ -12,7 +12,7 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
-var proto_common_pb = require('../proto/common_pb.d.ts');
+var proto_common_pb = require('../proto/common_pb.js');
 goog.object.extend(proto, proto_common_pb);
 goog.exportSymbol('proto.kic.friends.AddAwaitingFriendRequest', null, global);
 goog.exportSymbol('proto.kic.friends.AddAwaitingFriendResponse', null, global);
