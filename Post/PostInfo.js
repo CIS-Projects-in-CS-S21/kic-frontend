@@ -7,7 +7,7 @@ import {View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-nati
 import KIC_Style from "../Components/Style";
 import ClientManager from '../Managers/ClientManager';
 import UserManager from "../Managers/UserManager";
-import {UploadFileRequest} from "../gen/proto/media_pb";
+import { UploadFileRequest, CheckForFileRequest } from "../gen/proto/media_pb";
 import { Buffer } from "buffer";
 import {File, Date} from "../gen/proto/common_pb";
 
@@ -46,7 +46,7 @@ export default function PostInfo(props) {
         const uri = props.route.params.image;
         const base64 = props.route.params.base64;
         console.log("Started Upload File Request");
-        let req = new UploadFileRequest();
+        /*let req = new UploadFileRequest();
         console.log("Auth: " + authString);
         console.log("Did Upload File Request");
         let file = new File();
@@ -56,7 +56,7 @@ export default function PostInfo(props) {
         let map = file.getMetadataMap();
         console.log("2");
       //  map["userID"] = userID.toString();
-        let your_bytes = Buffer.from(base64, "base64");
+        let your_bytes = Buffer.from("my string", "base64");
 
         console.log("3");
         // let dataUriToBuffer = require('data-uri-to-buffer');
@@ -67,8 +67,15 @@ export default function PostInfo(props) {
         req.setFile(Uint8Array.from(your_bytes));
         console.log("Set File");
         req.setFileinfo(file);
-        console.log("Set File Info");
-        return client.uploadFile(req,{'Authorization': authString}).then(res => {logResult(res)});
+        console.log("Set File Info");*/
+
+        let file = new File();
+        file.setFilename("sjnglsia");
+
+        let req = new CheckForFileRequest();
+        req.setFileinfo(file);
+
+        return client.checkForFileByName(req,{'Authorization': authString}).then(res => {logResult(res)});
     }
 
     const logResult = async(res) => {
