@@ -8,6 +8,7 @@ import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpaci
 import KIC_Style from "../Components/Style";
 import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -30,7 +31,7 @@ class RequestBlurb extends React.Component {
     handleAccept = () => {
         this.setState({
             canAdd: false,
-            status: "Added", });
+            status: "Accepted", });
         console.log("Accepting request");
     }
 
@@ -72,12 +73,12 @@ class RequestBlurb extends React.Component {
             {(this.state.canAdd) ?  <View><TouchableOpacity
                                             style={styles.choiceButton}
                                             onPress={this.handleAccept}>
-                                            <Text style={KIC_Style.button_font}>+</Text>
+                                            <Ionicons name="add-circle-outline" color='#ffff' size={25} />
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={styles.choiceButton}
                                             onPress={this.handleDeny}>
-                                            <Text style={KIC_Style.button_font}>X</Text>
+                                            <Ionicons name="close-circle-outline" color='#ffff' size={25} />
                                         </TouchableOpacity></View> :
                                         <View><TouchableOpacity
                                             style={KIC_Style.disabledButton}
