@@ -166,7 +166,7 @@ class RequestsList extends React.Component {
                     <FlatList
                         style={styles.listcontainer}
                         data={this.state.requests}
-                        renderItem={({item}) => <UserBlurb
+                        renderItem={({item}) => <RequestBlurb
                                                     authString = {this.state.authString}
                                                     myUsername = {this.state.username}
                                                     myUserid = {this.state.userid}

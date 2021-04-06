@@ -51,7 +51,6 @@ class FriendsPage extends React.Component {
             {(!this.state.showPending) ? <FriendsList
                                            userid = {this.state.userid}
                                            username = {this.state.username}
-                                           bio = {this.state.bio}
                                        /> :
                                        <RequestsList
                                            userid = {this.state.userid}

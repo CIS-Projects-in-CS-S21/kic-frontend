@@ -17,6 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 /**
  * @class Contains function for rendering the detailed post view.
+ * TO USE THIS COMPONENT, YOU NEED TO PASS IN AN AUTHSTRING AND A USERID FOR THE USER BEING DISPLAYED.
  */
 class UserBlurb extends React.Component {
 
@@ -35,7 +36,7 @@ class UserBlurb extends React.Component {
             birthDay: 0,
             birthMonth: 0,
             birthYear: 0,
-            friendsWithUser: false,
+            isFriendable: false,
         };
 
         this.fetch = this.callGetUserByUserID.bind(this)
@@ -116,8 +117,8 @@ class UserBlurb extends React.Component {
         req.setFirstuserid(this.props.myUserid);
         req.setSeconduserid(this.state.userid);
 
-        return client.getConnectionBetweenUsers(req, {'Authorization': this.state.authString}).then(res => { this.handleAreFriends(); })
-                .catch(error => { this.handleAreNotFriends() });
+        return client.getConnectionBetweenUsers(req, {'Authorization': this.state.authString}).then(res => { this.allowFriendReqs(); })
+                .catch(error => { this.disallowFriendReqs() });
     }
 
     /**
@@ -125,9 +126,9 @@ class UserBlurb extends React.Component {
     *
     * @function handleAreFriends
     */
-    handleAreFriends(){
+    allowFriendReqs(){
         this.setState({
-            friendsWithUser: true,
+            isFriendable: true,
         })
     }
 
@@ -136,15 +137,27 @@ class UserBlurb extends React.Component {
     *
     * @function handleAreNotFriends
     */
-    handleAreNotFriends(){
+    disallowFriendReqs(){
         // console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.");
         this.setState({
-            friendsWithUser: false,
+            isFriendable: false,
         })
     }
 
     handleAddFriend() {
-        // create connection
+        let cm = new ClientManager();
+        let client = cm.createFriendsClient();
+
+        let req = new AddAwaitingFriendRequest();
+
+        //First user is the sender of the request (aka the active user)
+        req.setFirstuserid(this.props.myUserid);
+
+        //Second user is the receiver of the request (aka the user in this blurb)
+        req.setFirstuserid(this.state.userid);
+
+        return client.addAwaitingFriend(req, {'Authorization': this.state.authString}).then(res => { this.allowFriendReqs(); })
+                        .catch(error => { this.disallowFriendReqs() });
     }
 
     /**
@@ -172,7 +185,7 @@ class UserBlurb extends React.Component {
               </View>
 
                 {/* Only displays AddFriendButton if users aren't already friends */}
-                {(this.state.friendsWithUser) ?  <View></View> :
+                {(this.state.isFriendable) ?  <View></View> :
                                         <AddFriendButton
                                             myUsername = {this.props.myUsername}
                                             myUserid = {this.props.myUserid}
