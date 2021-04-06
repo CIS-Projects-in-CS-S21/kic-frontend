@@ -99,11 +99,17 @@ class UserBlurb extends React.Component {
         req.setSeconduserid(this.state.userid);
 
         return client.getConnectionBetweenUsers(req, {'Authorization': this.state.authString}).then(res => { this.handleAreFriends(); })
-                .catch(error => { console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.") });
+                .catch(error => { this.handleAreNotFriends() });
     }
     handleAreFriends(){
         this.setState({
             friendsWithUser: true,
+        })
+    }
+    handleAreNotFriends(){
+        console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.");
+        this.setState({
+            friendsWithUser: false,
         })
     }
 
