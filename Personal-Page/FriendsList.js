@@ -36,6 +36,11 @@ class FriendsList extends React.Component {
         this.fetchFriends = this.fetchFriends.bind(this)
     }
 
+    /**
+    * Runs when component first loads
+    *
+    * @function componentDidMount()
+    */
     componentDidMount(){
       this.fetchFriends().then(response => {
           console.log("Fetched friends successfully");
@@ -100,18 +105,17 @@ class FriendsList extends React.Component {
         let req = new GetFriendsForUserRequest();
         req.setUser(user);
 
-        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.updateState(client, authString, res)});
+        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.updateState(authString, res)});
     }
 
     /**
     * Retrieves the friend list from the response object and saves it to the state
     *
-    * @function callGetFriendsForUser
-    * @param {FriendsClient} client The FriendsClient to be reused
+    * @function updateState
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */
-    updateState(client, authString, res){
+    updateState(authString, res){
 
         // Save friends list to state
         this.setState({
@@ -129,8 +133,9 @@ class FriendsList extends React.Component {
             <View style={styles.friendsList}>
                 <Text style={styles.friendCounter}>Displaying {this.state.friends.length} friends for @{this.state.username}</Text>
 
-                {/* The comment box of fixed height */}
+                {/* Friend list container */}
                 <View style={styles.friendsList}>
+                    {/* FlatList that renders a UserBlurb per user in the friend list */}
                     <FlatList
                         style={styles.listcontainer}
                         data={this.state.friends}
@@ -143,7 +148,6 @@ class FriendsList extends React.Component {
                         keyExtractor={friend => friend.userid}
                     />
                 </View>
-
             </View>
         );
     }

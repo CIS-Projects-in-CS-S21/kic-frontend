@@ -14,7 +14,7 @@ import FriendsList from "./FriendsList";
 import RequestsList from "./RequestsList";
 
 /**
- * @class Contains function for rendering the detailed post view.
+ * @class Contains function for rendering the friends page.
  */
 class FriendsPage extends React.Component {
 
@@ -34,22 +34,11 @@ class FriendsPage extends React.Component {
             dayPosted: 0,
             showPending: false,
         };
-        this.setPosterInfo = this.setPosterInfo.bind(this)
-    }
-
-    componentDidMount() {
-      this.setPosterInfo();
-    }
-
-    setPosterInfo() {
-        this.setState({
-            // do smth
-        })
     }
 
   /**
-   * Renders the DetailedPostView components.
-   * @returns a {DetailedPostView}
+   * Renders the FriendsPage.
+   * @returns a {FriendsPage}
    */
   render() {
 
@@ -58,6 +47,7 @@ class FriendsPage extends React.Component {
       );
       return (
         <SafeAreaView style={styles.container}>
+            {/* Switches between friends/requests list */}
             {(!this.state.showPending) ? <FriendsList
                                            userid = {this.state.userid}
                                            username = {this.state.username}
@@ -68,6 +58,8 @@ class FriendsPage extends React.Component {
                                            username = {this.state.username}
                                        />}
             <View style={styles.content}>
+
+            {/* Allow user to switch between friends/requests list by clicking button */}
             {(!this.state.showPending) ?  <TouchableOpacity
                                             style={KIC_Style.button}
                                             onPress = {() =>

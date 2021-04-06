@@ -26,7 +26,7 @@ class UserBlurb extends React.Component {
     constructor(props) {
         super();
 
-        // Define the initial state; pro
+        // Define the initial state
         this.state = {
             authString: props.authString,
             userid: props.userid,
@@ -41,6 +41,11 @@ class UserBlurb extends React.Component {
         this.fetch = this.callGetUserByUserID.bind(this)
     }
 
+    /**
+    * Runs when component first loads
+    *
+    * @function componentDidMount()
+    */
     componentDidMount(){
         this.callGetUserByUserID().then(response => {
           console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
@@ -55,6 +60,13 @@ class UserBlurb extends React.Component {
         });
     }
 
+    /**
+    * Handles making the GetUserByID request
+    *
+    * @function callGetUserByUserID
+    * @param {String} authString the auth string to be used as part of the authorization header for requests
+    * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
+    */
     callGetUserByUserID(){
         let cm = new ClientManager();
         let client = cm.createUsersClient();
@@ -63,6 +75,13 @@ class UserBlurb extends React.Component {
         req.setUserid(this.props.userid);
         return client.getUserByID(req, {'Authorization': this.props.authString}).then(res => {this.setUserInfo(res)})
     }
+
+    /**
+    * Parses user information from a GetUserByIDRequest and updates the state
+    *
+    * @function callGetUserByUserID
+    * @param {GetUserByIDResponse} res The response object from a GetUserByIDRequest
+    */
     setUserInfo(res){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
@@ -87,12 +106,11 @@ class UserBlurb extends React.Component {
     * Builds the authorization header string using the stored token
     *
     * @function checkForFriendship
-    * @return {String} The Authorization header built using the token
+    * @return {Promise} A Promise object
     */
     checkForFriendship = () => {
         let cm = new ClientManager();
         let client = cm.createFriendsClient();
-        console.log("Checking on " + this.props.myUserid + " and " + this.state.userid);
 
         let req = new GetConnectionBetweenUsersRequest();
         req.setFirstuserid(this.props.myUserid);
@@ -101,13 +119,25 @@ class UserBlurb extends React.Component {
         return client.getConnectionBetweenUsers(req, {'Authorization': this.state.authString}).then(res => { this.handleAreFriends(); })
                 .catch(error => { this.handleAreNotFriends() });
     }
+
+    /**
+    * Sets state.friendsWithUser to true if users are friends
+    *
+    * @function handleAreFriends
+    */
     handleAreFriends(){
         this.setState({
             friendsWithUser: true,
         })
     }
+
+    /**
+    * Sets state.friendsWithUser to false if users are not friends
+    *
+    * @function handleAreNotFriends
+    */
     handleAreNotFriends(){
-        console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.");
+        // console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.");
         this.setState({
             friendsWithUser: false,
         })
@@ -137,19 +167,17 @@ class UserBlurb extends React.Component {
                       {/* Display name */}
                       <Text style ={styles.textUsername}>{this.state.username}</Text>
                   </View>
-                  {/* # of friends */}
+                  {/* Bio */}
                   <Text style ={styles.textBio}>{this.state.bio}</Text>
               </View>
 
+                {/* Only displays AddFriendButton if users aren't already friends */}
                 {(this.state.friendsWithUser) ?  <View></View> :
                                         <AddFriendButton
                                             myUsername = {this.props.myUsername}
                                             myUserid = {this.props.myUserid}
                                             friendUserid = {this.state.userid}
                                         />}
-
-
-
           <StatusBar style="auto" />
         </View>
       );
