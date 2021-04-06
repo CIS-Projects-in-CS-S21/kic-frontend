@@ -5,9 +5,10 @@
  import React from 'react';
  import Icon from 'react-native-vector-icons/Ionicons';
  import KIC_Style from '../Components/Style'; 
+ import { NavigationContainer, useNavigation } from '@react-navigation/native';
  import AppIntroSlider from 'react-native-app-intro-slider';
  import { SafeAreaView } from 'react-native-safe-area-context';
- import { StyleSheet, Text, Image, Button } from 'react-native';
+ import { StyleSheet, Text, View, Image, Button } from 'react-native';
  
  /**
   * @class Contains function for rendering Home screen.
@@ -16,21 +17,21 @@
   const slides = [
     {
       key: 1,
-      title: 'Title 1',
-      text: 'Description.\nSay something cool',
-      backgroundColor: '#59b2ab',
+      title: 'Keeping It Casual',
+      text: 'Stay connected to friends and family while fostering a healthy mindset!',
+      backgroundColor: '#7bb4dc',
     },
     {
       key: 2,
-      title: 'Title 2',
-      text: 'Other cool stuff',
-      backgroundColor: '#febe29',
+      title: 'Features:',
+      text: 'Profile curated by you, feed of friends, with a mental health page dedicated to journaling your days and getting connected to professionals',
+      backgroundColor: '#cde1e5',
     },
     {
       key: 3,
-      title: 'Rocket guy',
-      text: 'I\'m already out of descriptions\n\nLorem ipsum bla bla bla',
-      backgroundColor: '#22bcb5',
+      title: 'Join the movement today!',
+      text: 'Sign up to start connecting.',
+      backgroundColor: '#b3d3dc',
     }
   ];
 
@@ -49,27 +50,20 @@
 
     _renderItem = ({ item }) => {
       return (
-        <SafeAreaView style={KIC_Style.container}>
-          <Image
-        style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
-        source={require('../assets/kic.png')}
-      />
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.text}>{item.text}</Text>
+        <SafeAreaView style = {[styles.container, {backgroundColor: item.backgroundColor}]} >
+          <Text style={[KIC_Style.title, {color: 'white'}]}>{item.title}</Text>
+          <Text style={[KIC_Style.title, {color: 'white'}]} >{item.text}</Text>
+          <Text style={{bottom:0}}></Text>
         </SafeAreaView>
       );
     }
     _onDone = () => {
       // User finished the introduction. Show real app through
       // navigation or simply by controlling state
-      this.setState({ showRealApp: true });
+      this.props.navigation.navigate('SignUp');
     }
     render() {
-      if (this.state.showRealApp) {
-        return <App />;
-      } else {
-        return <AppIntroSlider renderItem={this._renderItem} data={slides} onDone={this._onDone}/>;
-      }
+        return <AppIntroSlider showPrevButton showNextButton doneLabel = {'Sign Up'} renderItem={this._renderItem} data={slides} onDone={this._onDone}/>;
     }
   }
 
@@ -89,10 +83,10 @@
     alignItems: 'center',
   },
    container: {
-     flex: 1,
-     backgroundColor: '#fff',
+     flex:1,
      alignItems: 'center',
      justifyContent: 'center',
+     backgroundColor: 'blue'
    },
  });
  
