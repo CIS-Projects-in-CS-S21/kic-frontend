@@ -13,34 +13,6 @@ import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
 
-/*
-* Mock array of friends
-*/
-const FRIENDS = [
-  {
-    id: '1',
-    username: 'friend1',
-    bio: 'bio',
-  },
-  {
-    id: '2',
-    username: 'friend2',
-    bio: 'bio',
-  },
-  {
-    id: '3',
-    username: 'friend3',
-    bio: 'bio',
-  },
-  {
-    id: '4',
-    username: 'friend4',
-    bio: 'bio',
-  },
-];
-
-
-
 
 /**
 * @class Contains function for rendering the comment section.
@@ -112,7 +84,7 @@ class FriendsList extends React.Component {
     * @function callGetFriendsForUser
     * @param {ClientManager} cm The ClientManager to be reused
     * @param {String} authString The auth string to be used as part of the authorization header for requests
-    * @param {GetUserByIDRequest} res Returned in response to GetUserByIDRequest
+    * @param {GetUserByIDResponse} res Returned in response to GetUserByIDRequest
     * @returns {GetFriendsForUserResponse} res then calls the next function, parseFriends
     */
     callGetFriendsForUser(cm, authString, res){
@@ -130,6 +102,15 @@ class FriendsList extends React.Component {
 
         return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.updateState(client, authString, res)});
     }
+
+    /**
+    * Retrieves the friend list from the response object and saves it to the state
+    *
+    * @function callGetFriendsForUser
+    * @param {FriendsClient} client The FriendsClient to be reused
+    * @param {String} authString The auth string to be used as part of the authorization header for requests
+    * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
+    */
     updateState(client, authString, res){
 
         // Save friends list to state
@@ -137,30 +118,7 @@ class FriendsList extends React.Component {
             authString: authString,
             friends: res.getFriendsList()
         })
-
-        console.log("Resulting friends list :" + res);
-        console.log("state.friends: " + this.state.friends);
     }
-    /*doSomething(authString, res, res2){
-        console.log("Updated friends: " + res);
-        console.log("Create connection result: " + res2);
-
-        //Create a ClientManager & use to create a UsersClient
-        let cm = new ClientManager();
-        let client = cm.createUsersClient();
-
-        // Create the request and set the active user's ID
-        let req = new GetUserByIDRequest();
-
-        let friendID = res.getFriendsList()[0];
-        console.log("First friend: " + friendID);
-
-        req.setUserid(friendID);
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.seeFriend(authString, res)});
-    }
-    seeFriend(authString, res){
-        console.log("Friend: " + res.getUser());
-    }*/
 
     /**
     * Renders a scrollable FriendsList of user blurbs.

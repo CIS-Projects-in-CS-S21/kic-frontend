@@ -10,8 +10,10 @@ import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
 import AddFriendButton from "../Components/AddFriendButton";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import { GetConnectionBetweenUsersRequest } from '../gen/proto/friends_pb';
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -24,7 +26,7 @@ class UserBlurb extends React.Component {
     constructor(props) {
         super();
 
-        // Define the initial state:
+        // Define the initial state; pro
         this.state = {
             authString: props.authString,
             userid: props.userid,
@@ -33,17 +35,24 @@ class UserBlurb extends React.Component {
             birthDay: 0,
             birthMonth: 0,
             birthYear: 0,
+            friendsWithUser: false,
         };
 
         this.fetch = this.callGetUserByUserID.bind(this)
     }
 
     componentDidMount(){
-      this.callGetUserByUserID().then(response => {
+        this.callGetUserByUserID().then(response => {
           console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
-      }).catch(error => {
+        }).catch(error => {
           console.log("Error mounting userblurb for userid " + this.props.userid + ": " + error);
-      });
+        });
+
+        this.checkForFriendship().then(response => {
+            console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
+        }).catch(error => {
+            console.log("Error mounting userblurb for userid " + this.props.userid + ": " + error);
+        });
     }
 
     callGetUserByUserID(){
@@ -54,7 +63,7 @@ class UserBlurb extends React.Component {
         req.setUserid(this.props.userid);
         return client.getUserByID(req, {'Authorization': this.props.authString}).then(res => {this.setUserInfo(res)})
     }
-    setUserInfo(res, userID){
+    setUserInfo(res){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
@@ -74,8 +83,32 @@ class UserBlurb extends React.Component {
         })
     }
 
-    handleAddFriend = () => {
-        console.log("Adding friend");
+    /**
+    * Builds the authorization header string using the stored token
+    *
+    * @function checkForFriendship
+    * @return {String} The Authorization header built using the token
+    */
+    checkForFriendship = () => {
+        let cm = new ClientManager();
+        let client = cm.createFriendsClient();
+        console.log("Checking on " + this.props.myUserid + " and " + this.state.userid);
+
+        let req = new GetConnectionBetweenUsersRequest();
+        req.setFirstuserid(this.props.myUserid);
+        req.setSeconduserid(this.state.userid);
+
+        return client.getConnectionBetweenUsers(req, {'Authorization': this.state.authString}).then(res => { this.handleAreFriends(); })
+                .catch(error => { console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.") });
+    }
+    handleAreFriends(){
+        this.setState({
+            friendsWithUser: true,
+        })
+    }
+
+    handleAddFriend() {
+        // create connection
     }
 
     /**
@@ -102,11 +135,14 @@ class UserBlurb extends React.Component {
                   <Text style ={styles.textBio}>{this.state.bio}</Text>
               </View>
 
-              <AddFriendButton
-                myUsername = {this.props.myUsername}
-                myUserid = {this.props.myUserid}
-                friendUserid = {this.state.userid}
-              />
+                {(this.state.friendsWithUser) ?  <View></View> :
+                                        <AddFriendButton
+                                            myUsername = {this.props.myUsername}
+                                            myUserid = {this.props.myUserid}
+                                            friendUserid = {this.state.userid}
+                                        />}
+
+
 
           <StatusBar style="auto" />
         </View>
@@ -162,7 +198,17 @@ const styles = StyleSheet.create({
     },
     textBio: {
         fontSize: 13,
-    }
+    },
+    disabledButton: {
+        width: "80%",
+        borderRadius: 25,
+        alignItems: "center",
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#565657",
+        marginTop: 7,
+        padding: 10,
+    },
 });
 
 export default UserBlurb;
