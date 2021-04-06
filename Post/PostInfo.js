@@ -46,6 +46,7 @@ export default function PostInfo(props) {
         const uri = props.route.params.image;
         const base64 = props.route.params.base64;
 
+        //isolates extension of image/video
         const regex = /\/.*?;base64/g;
         const extractedExt = uri.match(regex);
         let extensionNoBase = extractedExt.toString().replace(";base64", "");
@@ -67,10 +68,11 @@ export default function PostInfo(props) {
         file.getMetadataMap().forEach(function(v, k) {
             console.log(k, v);
         });
-
+        let comments = []; //create empty array for comments
         map.set("userID", userID.toString()) ;
         map.set("caption", caption);
         map.set("trigger", triggers);
+        map.set("comments", comments);
 
         // Fetch the current date and set in file
         let today = new Date();
@@ -100,7 +102,7 @@ export default function PostInfo(props) {
 
     const randomizeFileName = () => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
       });
     }
