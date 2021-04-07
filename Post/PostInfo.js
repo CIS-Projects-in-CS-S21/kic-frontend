@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react'
-import {View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
+import {Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
 import KIC_Style from "../Components/Style";
 import ClientManager from '../Managers/ClientManager';
 import UserManager from "../Managers/UserManager";
@@ -46,11 +46,23 @@ export default function PostInfo(props) {
         const uri = props.route.params.image;
         const base64 = props.route.params.base64;
 
+        let extension = "";
+
         //isolates extension of image/video
-        const regex = /\/.*?;base64/g;
-        const extractedExt = uri.match(regex);
-        let extensionNoBase = extractedExt.toString().replace(";base64", "");
-        let extension = extensionNoBase.replace("/", "");
+        if (Platform.OS === 'web') {
+            const regex = /\/.*?;base64/g;
+            //isolate format of image/video
+            const regex2 = /\/.*?:/g;
+            const extractedFormat = uri.match(regex2);
+            console.log("extracted format:" + extractedFormat);
+            const extractedExt = uri.match(regex);
+            let extensionNoBase = extractedExt.toString().replace(";base64", "");
+            extension = extensionNoBase.replace("/", "");
+        } else {
+            const parsedURI = uri.split(/[/]/);
+            console.log("parsed uri:" + parsedURI);
+
+        }
 
         console.log("Started Upload File Request");
         let req = new UploadFileRequest();
@@ -64,6 +76,7 @@ export default function PostInfo(props) {
 
         let map = file.getMetadataMap();
 
+
         console.log("Metadata before set: ");
         file.getMetadataMap().forEach(function(v, k) {
             console.log(k, v);
@@ -73,13 +86,15 @@ export default function PostInfo(props) {
         map.set("caption", caption);
         map.set("trigger", triggers);
         map.set("comments", comments);
+        map.set("tag", tags);
+        map.set("ext", extension);
 
         // Fetch the current date and set in file
         let today = new Date();
         let date = new CommonDate();
         date.setDay(String(today.getDate()).padStart(2, '0'));
         date.setMonth(String(today.getMonth() + 1).padStart(2, '0'));
-        date.setYear(today.getFullYear());
+        date.setYear(String(today.getFullYear()).padStart(2, '0'));
         file.setDatestored(date);
 
         let your_bytes = Buffer.from(uri, "base64");
@@ -93,7 +108,14 @@ export default function PostInfo(props) {
 
         console.log("request: " + req);
 
-        return client.uploadFile(req,{'Authorization': authString}).then(res => {logResult(res)});
+        return client.uploadFile(req,{'Authorization': authString}).then(
+            res => {
+                console.log(res);
+                logResult(res)
+            })
+            .catch(error =>{
+                console.log(String(error));
+            });
     }
 
     const logResult = async(res) => {
@@ -110,15 +132,25 @@ export default function PostInfo(props) {
 
     const [caption, setCaption] = useState("")
     const [triggers, setTriggers] = useState("")
+    const [tags, setTags] = useState("")
 
     const parseTriggers = (triggers) => {
         let triggersNoCommas = triggers.replace(",", " ");
-        let triggersParsed = triggersNoCommas.split(/[' ',',',#]/);
+        let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
         triggersParsed = triggersParsed.filter(e => e !== '');
 
         console.log("Parsed triggers: " + triggersParsed);
 
         setTriggers(triggersParsed);
+    }
+    const parseTags = (tags) => {
+        let tagsNoCommas = tags.replace(",", " ");
+        let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);
+        tagsParsed = tagsParsed.filter(e => e !== '');
+
+        console.log("Parsed tags: " + tagsParsed);
+
+        setTags(tagsParsed);
     }
 
     return (
@@ -129,7 +161,11 @@ export default function PostInfo(props) {
                 onChangeText={(caption) => setCaption(caption)}
             />
             <TextInput style = {KIC_Style.input}
-                placeholder="Write any triggers in #format . . ."
+                       placeholder="Write any tags in # format . . ."
+                       onChangeText={(tags) => parseTags(tags)}
+            />
+            <TextInput style = {KIC_Style.input}
+                placeholder="Write any triggers in //format . . ."
                 onChangeText={(triggers) => parseTriggers(triggers)}
             />
             <TouchableOpacity
