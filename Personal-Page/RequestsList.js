@@ -13,34 +13,6 @@ import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
 
-/*
-* Mock array of requests
-*/
-const REQUESTS = [
-  {
-    id: '5',
-    username: 'acquaintance1',
-    bio: 'I could be your new friend',
-  },
-  {
-    id: '6',
-    username: 'acquaintance2',
-    bio: 'bio',
-  },
-  {
-    id: '7',
-    username: 'acquaintance3',
-    bio: 'bio',
-  },
-  {
-    id: '8',
-    username: 'acquaintance4',
-    bio: 'bio',
-  },
-];
-
-
-
 
 /**
 * @class Contains function for rendering the request list.
@@ -145,7 +117,7 @@ class RequestsList extends React.Component {
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */
     updateState(authString, res){
-
+        console.log("Requests (IDs): " + res.getFriendsList())
         // Save friends list to state
         this.setState({
             authString: authString,

@@ -116,7 +116,7 @@ class FriendsList extends React.Component {
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */
     updateState(authString, res){
-
+        console.log("User's friends' by ID: " + res.getFriendsList());
         // Save friends list to state
         this.setState({
             authString: authString,
@@ -147,6 +147,7 @@ class FriendsList extends React.Component {
                                                 />}
                         keyExtractor={friend => friend.userid}
                     />
+
                 </View>
             </View>
         );

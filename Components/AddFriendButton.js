@@ -7,6 +7,8 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { AddAwaitingFriendRequest } from '../gen/proto/friends_pb';
+import ClientManager from "../Managers/ClientManager";
 
 /**
 * @class Contains function for rendering the comment section.
@@ -14,10 +16,24 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 class AddFriendButton extends React.Component {
 
     /**
-    * Event for adding friend
+    * Handles sending a friend request from the active user to the target user
+    *
+    * @function handleSendRequest
     */
-    handleClick = () => {
-      console.log("Trying to add user id as a friend: " + this.props.friendUserid + " for " + this.props.myUserid)
+    handleSendRequest() {
+        let cm = new ClientManager();
+        let client = cm.createFriendsClient();
+
+        let req = new AddAwaitingFriendRequest();
+
+        //First user is the sender of the request (aka the active user)
+        req.setFirstuserid(this.props.myUserid);
+
+        //Second user is the receiver of the request (aka the potential friend)
+        req.setSeconduserid(this.props.userid);
+
+        return client.addAwaitingFriend(req, {'Authorization': this.state.authString}).then(res => { this.allowFriendReqs(); })
+                        .catch(error => { this.disallowFriendReqs() });
     }
 
     /**
@@ -29,7 +45,7 @@ class AddFriendButton extends React.Component {
         <View>
             <TouchableOpacity
               style={styles.choiceButton}
-              onPress = {this.handleClick}>
+              onPress = {this.handleSendRequest}>
               <Ionicons name="person-add-outline" color='#ffff' size={25} />
             </TouchableOpacity>
         </View>

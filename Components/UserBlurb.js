@@ -10,7 +10,7 @@ import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
 import AddFriendButton from "../Components/AddFriendButton";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
-import { GetConnectionBetweenUsersRequest } from '../gen/proto/friends_pb';
+import { GetConnectionBetweenUsersRequest, AddAwaitingFriendRequest } from '../gen/proto/friends_pb';
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -29,7 +29,6 @@ class UserBlurb extends React.Component {
 
         // Define the initial state
         this.state = {
-            authString: props.authString,
             userid: props.userid,
             username: "default",
             bio: "bio",
@@ -39,7 +38,8 @@ class UserBlurb extends React.Component {
             isFriendable: false,
         };
 
-        this.fetch = this.callGetUserByUserID.bind(this)
+        this.callGetUserByUserID = this.callGetUserByUserID.bind(this)
+        this.checkForFriendship = this.checkForFriendship.bind(this)
     }
 
     /**
@@ -55,9 +55,9 @@ class UserBlurb extends React.Component {
         });
 
         this.checkForFriendship().then(response => {
-            console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
+            console.log("This user (userid " + this.props.userid + ") and active user (userid " + this.props.myUserid + ") are friends");
         }).catch(error => {
-            console.log("Error mounting userblurb for userid " + this.props.userid + ": " + error);
+            console.log("This user (userid " + this.props.userid + ") and active user (userid " + this.props.myUserid + ") are not friends");
         });
     }
 
@@ -117,7 +117,9 @@ class UserBlurb extends React.Component {
         req.setFirstuserid(this.props.myUserid);
         req.setSeconduserid(this.state.userid);
 
-        return client.getConnectionBetweenUsers(req, {'Authorization': this.state.authString}).then(res => { this.allowFriendReqs(); })
+        console.log("Me: " + this.props.myUserid);
+
+        return client.getConnectionBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { this.allowFriendReqs(); })
                 .catch(error => { this.disallowFriendReqs() });
     }
 
@@ -144,7 +146,12 @@ class UserBlurb extends React.Component {
         })
     }
 
-    handleAddFriend() {
+    /**
+    * Handles sending a friend request from the active user to the target user
+    *
+    * @function handleSendRequest
+    */
+    handleSendRequest = () => {
         let cm = new ClientManager();
         let client = cm.createFriendsClient();
 
@@ -154,9 +161,11 @@ class UserBlurb extends React.Component {
         req.setFirstuserid(this.props.myUserid);
 
         //Second user is the receiver of the request (aka the user in this blurb)
-        req.setFirstuserid(this.state.userid);
+        req.setSeconduserid(this.state.userid);
 
-        return client.addAwaitingFriend(req, {'Authorization': this.state.authString}).then(res => { this.allowFriendReqs(); })
+        console.log("Sending friend request from userid (me) " + this.props.myUserid + " to userid " + this.state.userid);
+
+        return client.addAwaitingFriend(req, {'Authorization': this.props.authString}).then(res => { this.allowFriendReqs(); })
                         .catch(error => { this.disallowFriendReqs() });
     }
 
@@ -186,11 +195,13 @@ class UserBlurb extends React.Component {
 
                 {/* Only displays AddFriendButton if users aren't already friends */}
                 {(this.state.isFriendable) ?  <View></View> :
-                                        <AddFriendButton
-                                            myUsername = {this.props.myUsername}
-                                            myUserid = {this.props.myUserid}
-                                            friendUserid = {this.state.userid}
-                                        />}
+                                            <View>
+                                                <TouchableOpacity
+                                                  style={styles.choiceButton}
+                                                  onPress = {this.handleSendRequest}>
+                                                  <Ionicons name="person-add-outline" color='#ffff' size={25} />
+                                                </TouchableOpacity>
+                                            </View>}
           <StatusBar style="auto" />
         </View>
       );
