@@ -22,6 +22,7 @@ class KIC_Image extends React.Component {
         this.state = {
             authString: props.authString,
             fileInfo: props.fileInfo,
+            imageSrc: ""
         };
 
         this.fetch = this.fetchImage.bind(this)
@@ -46,7 +47,20 @@ class KIC_Image extends React.Component {
 
     convertImage(res) {
         let byte64 = res.getChunk_asB64();
-        let imageSrc = "data:image/" + this.props.fileInfo.ext + ";base64," + byte64;
+        let imageSrc = this.props.fileInfo.uri;
+        setState({imageSrc: imageSrc});
+
+    }
+
+    render() {
+        return(
+           <View>
+               <Image
+                   style={{width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center'}}
+                   source={this.state.imageSrc}>
+               </Image>
+           </View>
+        )
     }
 
 
