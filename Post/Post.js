@@ -7,6 +7,7 @@ import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import KIC_Style from '../Components/Style';
 import {Platform} from 'react-native';
+import * as Permissions from 'expo-permissions';
 
 
 export default function Post({ navigation }) {
@@ -24,17 +25,27 @@ export default function Post({ navigation }) {
     const[base64, setBase64] = useState(null);
 
     const [notWeb, setNotWeb] = useState(null);
+
+    const [permission, askPermission] = Permissions.usePermissions(
+        Permissions.CAMERA,
+    );
+
     useEffect(() => {
         (async () => {
            if (Platform.OS !== 'web') {
+               //iOS or Android
                setNotWeb(true);
-
+               const cameraStatus = await Camera.requestPermissionsAsync();
+               setHasCameraPermission(cameraStatus.status === 'granted');
            } else {
                setNotWeb(false);
+               if (permission?.permissions?.camera?.granted) {
+                   setHasCameraPermission(permission?.permissions?.camera?.granted === 'granted')
+               } else {
+                   await askPermission();
+               }
            }
-            //request permission for camera
-            const cameraStatus = await Camera.requestPermissionsAsync();
-            setHasCameraPermission(cameraStatus.status === 'granted');
+
             //request permission for media library
             const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
             setHasGalleryPermission(galleryStatus.status === 'granted');
@@ -43,7 +54,7 @@ export default function Post({ navigation }) {
 
 
         })();
-    }, []);
+    }, [permission?.permissions?.camera, askPermission]);
 
     //take picture if camera access is granted and set image
     const takePicture = async () => {
