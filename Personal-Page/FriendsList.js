@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import UserBlurb from "../Components/UserBlurb";
 import AddFriendButton from "../Components/AddFriendButton";
 import TokenManager from "../Managers/TokenManager";
@@ -28,12 +28,15 @@ class FriendsList extends React.Component {
         // Define the initial state:
         this.state = {
             authString: "authstring",
+            myUserid: props.myUserid,
             userid: props.userid,
             username: props.username,
+            isMyPage: false,
             friends: [],
+            renderer: 0,
         };
 
-        this.fetchFriends = this.fetchFriends.bind(this)
+        this.fetchFriends = this.fetchFriends.bind(this);
     }
 
     /**
@@ -42,11 +45,29 @@ class FriendsList extends React.Component {
     * @function componentDidMount()
     */
     componentDidMount(){
-      this.fetchFriends().then(response => {
+        this.fetchFriends().then(response => {
           console.log("Fetched friends successfully");
-      }).catch(error => {
+        }).catch(error => {
           console.log("Error fetching friends: " + error)
-      });
+        });
+    }
+
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+
+          this.setState({
+              myUserid: this.props.myUserid,
+              userid: this.props.userid,
+              username: this.props.username,
+              isMyPage: this.props.isMyPage,
+          })
+          this.fetchFriends().then(response => {
+              console.log("Fetched friends successfully");
+          }).catch(error => {
+              console.log("Error fetching friends: " + error)
+          });
+      }
     }
 
     /**
@@ -122,6 +143,7 @@ class FriendsList extends React.Component {
             authString: authString,
             friends: res.getFriendsList()
         })
+
     }
 
     /**
@@ -140,14 +162,15 @@ class FriendsList extends React.Component {
                         style={styles.listcontainer}
                         data={this.state.friends}
                         renderItem={({item}) => <UserBlurb
+                                                    navigation = {this.props.navigation}
                                                     authString = {this.state.authString}
                                                     myUsername = {this.state.username}
-                                                    myUserid = {this.state.userid}
+                                                    myUserid = {this.props.myUserid}
                                                     userid = {item}
+                                                    isMyPage = {this.props.isMyPage}
                                                 />}
                         keyExtractor={friend => friend.userid}
                     />
-
                 </View>
             </View>
         );

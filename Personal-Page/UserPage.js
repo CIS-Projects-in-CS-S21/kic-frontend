@@ -19,7 +19,7 @@ import UserManager from '../Managers/UserManager';
 /**
  * @class Contains function for rendering the personal page.
  */
-class PersonalPage extends React.Component {
+class UserPage extends React.Component {
 
   /*
    * Class constructor
@@ -29,9 +29,10 @@ class PersonalPage extends React.Component {
 
     // Define the initial state:
     this.state = {
-      userid: "0",
-      username: "default",
-      bio: "bio",
+      myUserid: props.route.params.myUserid,
+      userid: props.route.params.userid,
+      username: props.route.params.username,
+      bio: props.route.params.bio,
       birthDay: 0,
       birthMonth: 0,
       birthYear: 0,
@@ -48,11 +49,12 @@ class PersonalPage extends React.Component {
       }).catch(error => {
           console.log(error)
       });
+      console.log("USER PAGE: I am id " + this.state.myUserid);
     }
 
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
-      if (this.props.userid !== prevProps.userid) {
+      if (this.state.userid !== prevProps.userid) {
         this.fetchUserInfo().then(response => {
             console.log("Success");
         }).catch(error => {
@@ -66,19 +68,15 @@ class PersonalPage extends React.Component {
     }
     callGetAuthString(){
         let um = new UserManager();
-        return um.getAuthString().then(authString => {this.callGetUserID(um, authString)});
+        return um.getAuthString().then(authString => {this.callGetUserByUserID(authString)});
     }
-    callGetUserID(um, authString){
-        return um.getMyUserID().then(userID => {this.callGetUserByUserID(authString, userID)});
-    }
-    callGetUserByUserID(authString, userID){
-
+    callGetUserByUserID(authString){
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
         let req = new GetUserByIDRequest();
-        req.setUserid(userID);
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res, userID)})
+        req.setUserid(this.state.userid);
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res)})
     }
     setUserInfo(res, userID){
         {/* Store user information */}
@@ -97,7 +95,6 @@ class PersonalPage extends React.Component {
             birthDay: mybirthday,
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
-            userid: userID
         })
     }
 
@@ -116,20 +113,6 @@ class PersonalPage extends React.Component {
     }
 
   /**
-   * Gets user's posts. Returns an array of the user's posts.
-   */
-  fetchPosts = () => {
-      // Request posts for user
-  }
-
-  /**
-   * Gets a post's corresponding image to display in the grid.
-   */
-  fetchPostImage = () => {
-      // Request the image from backend
-  }
-
-  /**
    * Renders personal page components.
    * @returns {PersonalPage}
    */
@@ -140,7 +123,7 @@ class PersonalPage extends React.Component {
             {/* Display profile header with state information */}
             <ProfileHeader
                 navigation = {this.props.navigation}
-                myUserid = {this.state.userid}
+                myUserid = {this.state.myUserid}
                 username = {this.state.username}
                 userid = {this.state.userid}
                 bio = {this.state.bio}
@@ -186,4 +169,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PersonalPage;
+export default UserPage;

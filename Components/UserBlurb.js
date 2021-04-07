@@ -10,10 +10,11 @@ import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
 import AddFriendButton from "../Components/AddFriendButton";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
-import { GetConnectionBetweenUsersRequest, AddAwaitingFriendRequest } from '../gen/proto/friends_pb';
+import { GetConnectionBetweenUsersRequest, AddAwaitingFriendRequest, DeleteConnectionBetweenUsersRequest } from '../gen/proto/friends_pb';
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useRoute} from '@react-navigation/native';
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -29,6 +30,7 @@ class UserBlurb extends React.Component {
 
         // Define the initial state
         this.state = {
+            myUserid: props.myUserid,
             userid: props.userid,
             username: "default",
             bio: "bio",
@@ -36,8 +38,12 @@ class UserBlurb extends React.Component {
             birthMonth: 0,
             birthYear: 0,
             isFriendable: false,
+            wasRemoved: false,
+            isMyPage: props.isMyPage,
+            areFriends: false,
         };
 
+        this.initBlurb = this.initBlurb.bind(this)
         this.callGetUserByUserID = this.callGetUserByUserID.bind(this)
         this.checkForFriendship = this.checkForFriendship.bind(this)
     }
@@ -48,17 +54,40 @@ class UserBlurb extends React.Component {
     * @function componentDidMount()
     */
     componentDidMount(){
+      this.initBlurb();
+    }
+
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+          this.setState({
+              myUserid: this.props.myUserid,
+              userid: this.props.userid,
+              username: this.props.username,
+              isFriendable: false,
+              wasRemoved: false,
+              isMyPage: this.props.isMyPage,
+              areFriends: false,
+          })
+          this.initBlurb();
+      }
+    }
+
+    initBlurb() {
+        // Populate blurb with given user info
         this.callGetUserByUserID().then(response => {
-          console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
+          //console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
         }).catch(error => {
           console.log("Error mounting userblurb for userid " + this.props.userid + ": " + error);
         });
 
+        // Run friendship checker
         this.checkForFriendship().then(response => {
-            console.log("This user (userid " + this.props.userid + ") and active user (userid " + this.props.myUserid + ") are friends");
+            //console.log("This user (userid " + this.props.userid + ") and active user (userid " + this.props.myUserid + ") are friends");
         }).catch(error => {
             console.log("This user (userid " + this.props.userid + ") and active user (userid " + this.props.myUserid + ") are not friends");
         });
+
     }
 
     /**
@@ -117,32 +146,70 @@ class UserBlurb extends React.Component {
         req.setFirstuserid(this.props.myUserid);
         req.setSeconduserid(this.state.userid);
 
-        console.log("Me: " + this.props.myUserid);
-
-        return client.getConnectionBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { this.allowFriendReqs(); })
-                .catch(error => { this.disallowFriendReqs() });
+        return client.getConnectionBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { this.handleAreFriends(); })
+                .catch(error => { this.handleAreNotFriends() });
     }
 
     /**
-    * Sets state.friendsWithUser to true if users are friends
+    * Sets state.wasRemoved to true if the user was just unfriended.
     *
-    * @function handleAreFriends
+    * @function handleRemovedFriend
     */
-    allowFriendReqs(){
+    handleRemovedFriend(){
         this.setState({
-            isFriendable: true,
+            wasRemoved: true,
+            areFriends: false,
         })
     }
 
     /**
-    * Sets state.friendsWithUser to false if users are not friends
+    * Sets state.isFriendable to true. Signifies that this user can be sent a friend req.
     *
-    * @function handleAreNotFriends
+    * @function handleAreFriends
     */
-    disallowFriendReqs(){
-        // console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.");
+    handleAreFriends(){
         this.setState({
             isFriendable: false,
+            areFriends: true,
+        })
+    }
+
+    /**
+    * Sets state.isFriendable to true. Signifies that this user can't be sent a friend req.
+    *
+    * @function disallowFriendReqs
+    */
+    handleAreNotFriends(){
+        // console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.");
+        this.setState({
+            isFriendable: true,
+            areFriends: false,
+        })
+    }
+
+    /**
+    * Sets state.isFriendable to false and state.areFriends to false. Signifies that this user can't be sent another friend req, but they aren't friends yet either.
+    *
+    * @function handleRequestSent
+    */
+    handleRequestSent(){
+        // console.log("Request from " +  this.props.myUserid + " was sent to " + this.state.userid + ".");
+        this.setState({
+            isFriendable: false,
+            areFriends: false,
+        })
+    }
+
+    /**
+    * Sets state.isFriendable to true and state.areFriends to false. Signifies that this user can still be sent a friend req, but they aren't friends yet.
+    *
+    * @function handleRequestFailedToSend
+    */
+    handleRequestFailedToSend(){
+        // console.log("Request from " +  this.props.myUserid + " failed to send to " + this.state.userid + ".");
+        this.setState({
+            isFriendable: true,
+            areFriends: false,
         })
     }
 
@@ -158,15 +225,40 @@ class UserBlurb extends React.Component {
         let req = new AddAwaitingFriendRequest();
 
         //First user is the sender of the request (aka the active user)
-        req.setFirstuserid(this.props.myUserid);
+        req.setFirstuserid(this.state.myUserid);
 
         //Second user is the receiver of the request (aka the user in this blurb)
         req.setSeconduserid(this.state.userid);
 
         console.log("Sending friend request from userid (me) " + this.props.myUserid + " to userid " + this.state.userid);
 
-        return client.addAwaitingFriend(req, {'Authorization': this.props.authString}).then(res => { this.allowFriendReqs(); })
-                        .catch(error => { this.disallowFriendReqs() });
+        return client.addAwaitingFriend(req, {'Authorization': this.props.authString}).then(res => { this.handleRequestSent(); })
+                        .catch(error => { this.handleRequestFailedToSend() });
+    }
+
+    /**
+    * Handles removing a friend from user's friendlist
+    *
+    * @function handleRemoveFriend
+    */
+    handleRemoveFriend = () => {
+        let req = new DeleteConnectionBetweenUsersRequest();
+        req.setFirstuserid(this.state.userid);
+        req.setSeconduserid(this.state.myUserid);
+
+        let cm = new ClientManager();
+        let client = cm.createFriendsClient();
+        return client.deleteConnectionBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { this.allowFriendReqs(); });
+    }
+
+    goToUserPage = () => {
+        this.props.navigation.navigate('UserPage', {
+          myUserid: this.props.myUserid,
+          username: this.props.username,
+          userid: this.props.userid,
+          bio: this.props.bio,
+          myUserid: this.state.myUserid,
+        })
     }
 
     /**
@@ -177,10 +269,13 @@ class UserBlurb extends React.Component {
       return (
         <View style={styles.container}>
               {/* User's icon */}
-              <Image
-                style={styles.icon}
-                source = {require('../assets/default/default_icon_2.png')}
-              />
+              <TouchableOpacity
+                    onPress = {this.goToUserPage}>
+                    <Image
+                        style={styles.icon}
+                        source = {require('../assets/default/default_icon_2.png')}
+                    />
+              </TouchableOpacity>
 
               {/* User's blurb */}
               <View style ={styles.userInfo}>
@@ -193,15 +288,24 @@ class UserBlurb extends React.Component {
                   <Text style ={styles.textBio}>{this.state.bio}</Text>
               </View>
 
-                {/* Only displays AddFriendButton if users aren't already friends */}
-                {(this.state.isFriendable) ?  <View></View> :
-                                            <View>
-                                                <TouchableOpacity
-                                                  style={styles.choiceButton}
-                                                  onPress = {this.handleSendRequest}>
-                                                  <Ionicons name="person-add-outline" color='#ffff' size={25} />
-                                                </TouchableOpacity>
-                                            </View>}
+                {/* Display SendReq button only if this  */}
+                {(this.state.isFriendable && !this.state.areFriends) ? <View>
+                                                    <TouchableOpacity
+                                                      style={styles.choiceButton}
+                                                      onPress = {this.handleSendRequest}>
+                                                      <Ionicons name="person-add-outline" color='#ffff' size={25} />
+                                                    </TouchableOpacity>
+                                                 </View>
+                                                 :
+                 (this.state.isMyPage && this.state.areFriends) ? <View>
+                                                     <TouchableOpacity
+                                                       style={styles.choiceButton}
+                                                       onPress = {this.handleRemoveFriend}>
+                                                       <Ionicons name="person-remove-outline" color='#ffff' size={25} />
+                                                     </TouchableOpacity>
+                                                  </View>
+                                                 : <View></View>}
+
           <StatusBar style="auto" />
         </View>
       );
