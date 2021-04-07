@@ -47,14 +47,15 @@ export default function PostInfo(props) {
         const base64 = props.route.params.base64;
 
         let extension = "";
+        let format = null;
 
         //isolates extension of image/video
         if (Platform.OS === 'web') {
             const regex = /\/.*?;base64/g;
             //isolate format of image/video
-            const regex2 = /\/.*?:/g;
-            const extractedFormat = uri.match(regex2);
-            console.log("extracted format:" + extractedFormat);
+            const extractedFormat = uri.split(/[:, /]/);
+            format = extractedFormat[1];
+            console.log("Format: " + format);
             const extractedExt = uri.match(regex);
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
@@ -89,6 +90,8 @@ export default function PostInfo(props) {
         map.set("comments", comments);
         map.set("tag", tags);
         map.set("ext", extension);
+        map.set("format", format);
+        map.set("uri", uri);
 
         // Fetch the current date and set in file
         let today = new Date();
@@ -111,11 +114,10 @@ export default function PostInfo(props) {
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {
-                console.log(res);
                 logResult(res)
             })
             .catch(error =>{
-                console.log(String(error));
+               logResult(error)
             });
     }
 
