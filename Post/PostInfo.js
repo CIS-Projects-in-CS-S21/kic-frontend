@@ -59,8 +59,9 @@ export default function PostInfo(props) {
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
         } else {
-            const parsedURI = uri.split(/[/]/);
-            console.log("parsed uri:" + parsedURI);
+            const parsedURI = uri.split(/[.]/);
+            extension = parsedURI[parsedURI.length-1];
+            console.log("mobile ext:" + extension);
 
         }
 
