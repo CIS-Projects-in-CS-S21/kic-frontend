@@ -24,32 +24,34 @@ export default function PostInfo(props) {
     let client = cm.createMediaClient();
 
 
-
+    //to upload image, start chain of functions
     const uploadImage = async () => {
         return callGetAuthString();
     }
 
-    //to get authorization string
+    //first, do this to get authorization string
     const callGetAuthString = async () => {
         let um = new UserManager();
         console.log("Obtained authorization string");
         return um.getAuthString().then(authString  => {getUserID(authString, um)});
     }
 
-    //get user ID
+    //then, get user ID
     const getUserID = async(authString, um) => {
         return um.getMyUserID().then(userID  => {makeUploadFileRequest(userID, authString)});
     }
 
-    //make request to upload file with uri
+    //then, make request to upload file with uri
     const makeUploadFileRequest = async (userID, authString) => {
+       //obtain uri and base64 from Post.js
         const uri = props.route.params.image;
         const base64 = props.route.params.base64;
 
+        //need to get extension (jpeg, png, etc) and format [if on web] (image or video) for metadata for file request
         let extension = "";
         let format = null;
 
-        //isolates extension of image/video
+        //isolates extension and format of image/video, different for web and mobile
         if (Platform.OS === 'web') {
             const regex = /\/.*?;base64/g;
             //isolate format of image/video
@@ -65,11 +67,12 @@ export default function PostInfo(props) {
             console.log("mobile ext:" + extension);
 
         }
-
+        //start new file request
         console.log("Started Upload File Request");
         let req = new UploadFileRequest();
         console.log("Auth: " + authString);
 
+        //create file and add to its metadata map
         let file = new File();
         file.setFilename(userID + "@" + randomizeFileName() + "." + extension);
         console.log("URI: " + uri);
@@ -84,6 +87,8 @@ export default function PostInfo(props) {
             console.log(k, v);
         });
         let comments = []; //create empty array for comments
+
+        //each image is associated with a userID, array of captions, triggers, comments, and tags, its uri, extension of the image, and the format of the image
         map.set("userID", userID.toString()) ;
         map.set("caption", caption);
         map.set("trigger", triggers);
@@ -101,10 +106,12 @@ export default function PostInfo(props) {
         date.setYear(String(today.getFullYear()).padStart(2, '0'));
         file.setDatestored(date);
 
+        //convert uri to int 8 Array which is needed for setting File
         let your_bytes = Buffer.from(uri, "base64");
         req.setFile(Uint8Array.from(your_bytes));
         req.setFileinfo(file);
 
+        //set metadata and check that it is set correctly
         console.log("Metadata after set: ");
         file.getMetadataMap().forEach(function(v, k) {
             console.log(k, v);
@@ -125,6 +132,7 @@ export default function PostInfo(props) {
         console.log(res);
     }
 
+    //For generating file name
     const randomizeFileName = () => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -132,11 +140,12 @@ export default function PostInfo(props) {
       });
     }
 
-
+    //declare constants for caption, triggers, and tags
     const [caption, setCaption] = useState("")
     const [triggers, setTriggers] = useState("")
     const [tags, setTags] = useState("")
 
+    //parse triggers from text input (given in //trigger format)
     const parseTriggers = (triggers) => {
         let triggersNoCommas = triggers.replace(",", " ");
         let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
@@ -146,6 +155,8 @@ export default function PostInfo(props) {
 
         setTriggers(triggersParsed);
     }
+
+    //parse tags from text input (given in #tag format)
     const parseTags = (tags) => {
         let tagsNoCommas = tags.replace(",", " ");
         let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);

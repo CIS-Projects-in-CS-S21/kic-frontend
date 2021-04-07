@@ -24,12 +24,15 @@ export default function Post({ navigation }) {
     //stores base64 of image
     const[base64, setBase64] = useState(null);
 
+    //state for determining if on web
     const [notWeb, setNotWeb] = useState(null);
 
+    //permissions for camera
     const [permission, askPermission] = Permissions.usePermissions(
         Permissions.CAMERA,
     );
 
+    //if we are on web, use permissions to get camera permissions. otherwise, use requestPermissionsAsync() function
     useEffect(() => {
         (async () => {
            if (Platform.OS !== 'web') {
@@ -56,7 +59,7 @@ export default function Post({ navigation }) {
         })();
     }, [permission?.permissions?.camera, askPermission]);
 
-    //take picture if camera access is granted and set image
+    //take picture if camera access is granted and set image and base64
     const takePicture = async () => {
         if (camera) {
             const data = await camera.takePictureAsync({
@@ -70,7 +73,7 @@ export default function Post({ navigation }) {
         }
     }
 
-    //pick image from image library
+    //pick image from image library and set image and base64
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,//allows access to images and videos
@@ -106,10 +109,6 @@ export default function Post({ navigation }) {
 
     )};
 
-    // //if camera or gallery permission is not given:
-    // if (hasCameraPermission === false || hasGalleryPermission === false) {
-    //     return <Text>No access to camera </Text>;
-    // }
     return (
         <View style={KIC_Style.container}>
             <View style={styles.cameraContainer}>
