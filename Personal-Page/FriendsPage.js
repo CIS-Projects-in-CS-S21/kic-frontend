@@ -37,7 +37,7 @@ class FriendsPage extends React.Component {
             monthPosted: 0,
             dayPosted: 0,
             showFriends: true,
-            isMyPage: false,
+            isMyPage: true,
         };
 
         this.compareIDs = this.compareIDs.bind(this)
@@ -50,11 +50,6 @@ class FriendsPage extends React.Component {
     * @function componentDidMount()
     */
     componentDidMount(){
-      this.setState({
-          myUserid: this.props.route.params.myUserid,
-          userid: this.props.route.params.userid,
-          username: this.props.route.params.username,
-      })
       this.compareIDs();
     }
 
@@ -64,6 +59,7 @@ class FriendsPage extends React.Component {
             myUserid: this.props.route.params.myUserid,
             userid: this.props.route.params.userid,
             username: this.props.route.params.username,
+            isMyPage: this.props.isMyPage,
         })
         this.compareIDs();
       }
@@ -97,7 +93,7 @@ class FriendsPage extends React.Component {
       return (
         <SafeAreaView style={styles.container}>
             {/* Switches between friends/requests list */}
-            {(!this.state.showFriends && this.state.isMyPage) ? <RequestsList
+            {(!this.state.showFriends) ? <RequestsList
                                                                   userid = {this.state.userid}
                                                                   username = {this.state.username}
                                                                 /> :
@@ -106,18 +102,17 @@ class FriendsPage extends React.Component {
                                            userid = {this.props.route.params.userid}
                                            username = {this.props.route.params.username}
                                            myUserid = {this.props.route.params.myUserid}
-                                           isMyPage = {this.props.route.params.isMyPage}
                                        />}
             <View style={styles.content}>
 
             {/* Allow user to switch between friends/requests list by clicking button */}
-            {(this.state.showFriends && this.state.isMyPage) ?  <TouchableOpacity
+            {(this.state.showFriends) ?  <TouchableOpacity
                                             style={KIC_Style.button}
                                             onPress = {() =>
                                                 this.setState({ showFriends:false })}>
                                             <Text style={KIC_Style.button_font}>Pending Requests</Text>
                                         </TouchableOpacity> :
-             (!this.state.showFriends && this.state.isMyPage) ?
+             (!this.state.showFriends) ?
                                         <TouchableOpacity
                                             style={KIC_Style.button}
                                             onPress = {() =>

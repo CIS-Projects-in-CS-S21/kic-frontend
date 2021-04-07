@@ -30,8 +30,16 @@ class UserBlurb extends React.Component {
 
         // Define the initial state
         this.state = {
+            authString: props.authString,
+
+            // myUserid is the id of the current active user
             myUserid: props.myUserid,
+
+            // userid is the id of the user who owns this friendlist (if applicable)
             userid: props.userid,
+
+            // userid is the id of the user featured on this blurb
+            blurbUserid: props.blurbUserid,
             username: "default",
             bio: "bio",
             birthDay: 0,
@@ -39,13 +47,11 @@ class UserBlurb extends React.Component {
             birthYear: 0,
             isFriendable: false,
             wasRemoved: false,
-            isMyPage: props.isMyPage,
+            isMyBlurb: false,
             areFriends: false,
         };
 
         this.initBlurb = this.initBlurb.bind(this)
-        this.callGetUserByUserID = this.callGetUserByUserID.bind(this)
-        this.checkForFriendship = this.checkForFriendship.bind(this)
     }
 
     /**
@@ -59,14 +65,16 @@ class UserBlurb extends React.Component {
 
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
-      if (this.props.userid !== prevProps.userid) {
+      if (this.props.blurbUserid !== prevProps.blurbUserid) {
           this.setState({
               myUserid: this.props.myUserid,
               userid: this.props.userid,
+
+              blurbUserid: this.props.blurbUserid,
               username: this.props.username,
+              bio: this.props.bio,
               isFriendable: false,
               wasRemoved: false,
-              isMyPage: this.props.isMyPage,
               areFriends: false,
           })
           this.initBlurb();
@@ -76,16 +84,9 @@ class UserBlurb extends React.Component {
     initBlurb() {
         // Populate blurb with given user info
         this.callGetUserByUserID().then(response => {
-          //console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
+          console.log("Fetched info for user blurb for userid " + this.state.blurbUserid + " successfully");
         }).catch(error => {
-          console.log("Error mounting userblurb for userid " + this.props.userid + ": " + error);
-        });
-
-        // Run friendship checker
-        this.checkForFriendship().then(response => {
-            //console.log("This user (userid " + this.props.userid + ") and active user (userid " + this.props.myUserid + ") are friends");
-        }).catch(error => {
-            console.log("This user (userid " + this.props.userid + ") and active user (userid " + this.props.myUserid + ") are not friends");
+          console.log("Error mounting userblurb for userid " + this.state.blurbUserid + ": " + error);
         });
 
     }
@@ -102,12 +103,12 @@ class UserBlurb extends React.Component {
         let client = cm.createUsersClient();
 
         let req = new GetUserByIDRequest();
-        req.setUserid(this.props.userid);
-        return client.getUserByID(req, {'Authorization': this.props.authString}).then(res => {this.setUserInfo(res)})
+        req.setUserid(this.props.blurbUserid);
+        return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.setUserInfo(res)})
     }
 
     /**
-    * Parses user information from a GetUserByIDRequest and updates the state
+    * Parses user information from a GetUserByIDRequest, checks if this active user's blurb, and updates the state
     *
     * @function callGetUserByUserID
     * @param {GetUserByIDResponse} res The response object from a GetUserByIDRequest
@@ -130,23 +131,28 @@ class UserBlurb extends React.Component {
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
         })
-    }
 
-    /**
-    * Builds the authorization header string using the stored token
-    *
-    * @function checkForFriendship
-    * @return {Promise} A Promise object
-    */
-    checkForFriendship = () => {
+        console.log("Blurb belongs to " + this.state.username)
+
+        if (this.state.blurbUserid == this.state.myUserid){
+            this.setState({
+                isMyBlurb: true,
+            })
+        } else {
+            this.setState({
+                isMyBlurb: false,
+            })
+        }
+
+        // This part checks for an existing friendship
         let cm = new ClientManager();
         let client = cm.createFriendsClient();
 
         let req = new GetConnectionBetweenUsersRequest();
-        req.setFirstuserid(this.props.myUserid);
-        req.setSeconduserid(this.state.userid);
+        req.setFirstuserid(this.state.myUserid);
+        req.setSeconduserid(this.state.blurbUserid);
 
-        return client.getConnectionBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { this.handleAreFriends(); })
+        return client.getConnectionBetweenUsers(req, {'Authorization': this.state.authString}).then(res => { this.handleAreFriends(); })
                 .catch(error => { this.handleAreNotFriends() });
     }
 
@@ -228,9 +234,9 @@ class UserBlurb extends React.Component {
         req.setFirstuserid(this.state.myUserid);
 
         //Second user is the receiver of the request (aka the user in this blurb)
-        req.setSeconduserid(this.state.userid);
+        req.setSeconduserid(this.state.blurbUserid);
 
-        console.log("Sending friend request from userid (me) " + this.props.myUserid + " to userid " + this.state.userid);
+        console.log("Sending friend request from userid (me) " + this.state.myUserid + " to userid " + this.state.blurbUserid);
 
         return client.addAwaitingFriend(req, {'Authorization': this.props.authString}).then(res => { this.handleRequestSent(); })
                         .catch(error => { this.handleRequestFailedToSend() });
@@ -243,7 +249,7 @@ class UserBlurb extends React.Component {
     */
     handleRemoveFriend = () => {
         let req = new DeleteConnectionBetweenUsersRequest();
-        req.setFirstuserid(this.state.userid);
+        req.setFirstuserid(this.state.blurbUserid);
         req.setSeconduserid(this.state.myUserid);
 
         let cm = new ClientManager();
@@ -253,11 +259,10 @@ class UserBlurb extends React.Component {
 
     goToUserPage = () => {
         this.props.navigation.navigate('UserPage', {
-          myUserid: this.props.myUserid,
-          username: this.props.username,
-          userid: this.props.userid,
-          bio: this.props.bio,
           myUserid: this.state.myUserid,
+          userid: this.state.blurbUserid,
+          username: this.state.username,
+          bio: this.state.bio,
         })
     }
 
@@ -289,7 +294,7 @@ class UserBlurb extends React.Component {
               </View>
 
                 {/* Display SendReq button only if this  */}
-                {(this.state.isFriendable && !this.state.areFriends) ? <View>
+                {(this.state.isFriendable && !this.state.areFriends && !this.state.isMyBlurb) ? <View>
                                                     <TouchableOpacity
                                                       style={styles.choiceButton}
                                                       onPress = {this.handleSendRequest}>
@@ -297,7 +302,7 @@ class UserBlurb extends React.Component {
                                                     </TouchableOpacity>
                                                  </View>
                                                  :
-                 (this.state.isMyPage && this.state.areFriends) ? <View>
+                 (this.state.areFriends) ? <View>
                                                      <TouchableOpacity
                                                        style={styles.choiceButton}
                                                        onPress = {this.handleRemoveFriend}>

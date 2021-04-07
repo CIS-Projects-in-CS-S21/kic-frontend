@@ -22,16 +22,10 @@ class ProfileHeader extends React.Component {
         // Define the initial state:
         this.state = {
             myUserid: props.myUserid,
+            userid: props.userid,
+            username: props.username,
+            bio: props.bio,
         };
-    }
-
-    componentDidMount(prevProps) {
-      this.setState({
-          userid: this.props.userid,
-          username: this.props.username,
-          bio: this.props.bio,
-          myUserid: this.props.myUserid,
-      })
     }
 
     componentDidUpdate(prevProps) {

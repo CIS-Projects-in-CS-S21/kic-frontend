@@ -31,7 +31,6 @@ class FriendsList extends React.Component {
             myUserid: props.myUserid,
             userid: props.userid,
             username: props.username,
-            isMyPage: false,
             friends: [],
             renderer: 0,
         };
@@ -60,7 +59,6 @@ class FriendsList extends React.Component {
               myUserid: this.props.myUserid,
               userid: this.props.userid,
               username: this.props.username,
-              isMyPage: this.props.isMyPage,
           })
           this.fetchFriends().then(response => {
               console.log("Fetched friends successfully");
@@ -99,7 +97,7 @@ class FriendsList extends React.Component {
 
         // Create the request and set the active user's ID
         let req = new GetUserByIDRequest();
-        req.setUserid(this.state.userid);
+        req.setUserid(this.props.userid);
 
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetFriendsForUser(cm, authString, res)});
     }
@@ -137,7 +135,7 @@ class FriendsList extends React.Component {
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */
     updateState(authString, res){
-        console.log("User's friends' by ID: " + res.getFriendsList());
+        console.log("User " + this.props.userid + "s friends' by ID: " + res.getFriendsList());
         // Save friends list to state
         this.setState({
             authString: authString,
@@ -166,8 +164,8 @@ class FriendsList extends React.Component {
                                                     authString = {this.state.authString}
                                                     myUsername = {this.state.username}
                                                     myUserid = {this.props.myUserid}
-                                                    userid = {item}
-                                                    isMyPage = {this.props.isMyPage}
+                                                    userid = {this.props.userid}
+                                                    blurbUserid = {item}
                                                 />}
                         keyExtractor={friend => friend.userid}
                     />

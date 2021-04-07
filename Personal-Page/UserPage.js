@@ -27,7 +27,8 @@ class UserPage extends React.Component {
   constructor(props) {
     super();
 
-    // Define the initial state:
+    // Define the initial state: myUserid is the ID of the current active user and userid is the ID of
+    // the user whose page is currently on display
     this.state = {
       myUserid: props.route.params.myUserid,
       userid: props.route.params.userid,
@@ -45,18 +46,17 @@ class UserPage extends React.Component {
     componentDidMount(){
       //this.fetchUserInfo()
       this.fetchUserInfo().then(response => {
-          console.log("Success");
+          //console.log("Success");
       }).catch(error => {
           console.log(error)
       });
-      console.log("USER PAGE: I am id " + this.state.myUserid);
     }
 
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.state.userid !== prevProps.userid) {
         this.fetchUserInfo().then(response => {
-            console.log("Success");
+            //console.log("Success");
         }).catch(error => {
             console.log(error)
         });
@@ -101,11 +101,13 @@ class UserPage extends React.Component {
     handleViewPost = () => {
         if (Platform.OS === 'web') {
             this.props.navigation.navigate('DetailedPostViewWeb', {
+              myUserid: this.state.myUserid,
               username: this.state.username,
               userid: this.state.userid
             })
         } else {
             this.props.navigation.navigate('DetailedPostView', {
+              myUserid: this.state.myUserid,
               username: this.state.username,
               userid: this.state.userid
             })
