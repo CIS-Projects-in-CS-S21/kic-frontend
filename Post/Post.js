@@ -10,6 +10,9 @@ import KIC_Style from '../Components/Style';
 import {Platform} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import exampleImage from '../assets/kic.png';
+import FeedHeader from '../Components/FeedHeader';
+
+
 
 export default function Post({ navigation }) {
     //allows for permission to use image library
@@ -128,6 +131,7 @@ export default function Post({ navigation }) {
 
     return (
         <SafeAreaView style={KIC_Style.container}>
+          <FeedHeader/>
             <View style={styles.cameraContainer}>
                  <Camera
                     ref={ref => setCamera(ref)}

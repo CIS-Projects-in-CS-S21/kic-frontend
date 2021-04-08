@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {Modal} from 'react-native';
 import KIC_Style from "../Components/Style";
+import FeedHeader from '../Components/FeedHeader';
 import { List } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
@@ -36,6 +37,7 @@ export default function MoodHistory() {
     const navigation = useNavigation();
     return (
         <SafeAreaView style = {style.container}>
+          <FeedHeader/>
             <ScrollView>
                 <Image
                     style={{width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center'}}

@@ -16,7 +16,6 @@ const KIC_Style = StyleSheet.create({
         fontSize: 30,
         fontWeight: "bold",
         paddingBottom: 5
-        
     },
     titlePost: {
         color: '#b3d2db',

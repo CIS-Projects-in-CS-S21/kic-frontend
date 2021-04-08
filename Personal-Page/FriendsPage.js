@@ -15,6 +15,8 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
+import FeedHeader from '../Components/FeedHeader';
+
 
 /**
  * @class Contains function for rendering the friends page.
@@ -91,6 +93,8 @@ class FriendsPage extends React.Component {
         <Item title={item.title} />
       );
       return (
+        <SafeAreaView style={KIC_Style.outContainer}>
+        <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
             {/* Switches between friends/requests list */}
             {(!this.state.showFriends) ? <RequestsList
@@ -123,6 +127,7 @@ class FriendsPage extends React.Component {
 
             <StatusBar style="auto" />
             </View>
+        </SafeAreaView>
         </SafeAreaView>
       );
   }
