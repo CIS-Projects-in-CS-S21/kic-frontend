@@ -38,26 +38,24 @@ export default function PostInfo(props) {
 
     //then, get user ID
     const getUserID = async(authString, um) => {
-        um.getMyUserID().then(userID  => {parseTriggers(userID, authString, triggerString)});
+        um.getMyUserID().then(userID  => makeUploadFileRequest(userID, authString));
     }
 
 
     //parse triggers from text input (given in //trigger format)
-    const parseTriggers = async(userID, authString, triggers) => {
-        let triggersNoCommas = triggers.replace(",", " ");
+    const parseTriggers = (triggerString) => {
+        let triggersNoCommas = triggerString.replace(",", " ");
         let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
         triggersParsed = triggersParsed.filter(e => e !== '');
-        setTriggers(triggersParsed)
-        return parseTags(userID, authString,tagString);
+        return triggersParsed;
     }
 
     //parse tags from text input (given in #tag format)
-    const parseTags = async (userID, authString, tags) => {
+    const parseTags = (tags) => {
         let tagsNoCommas = tags.replace(",", " ");
         let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);
         tagsParsed = tagsParsed.filter(e => e !== '');
-        setTags(tagsParsed)
-        return makeUploadFileRequest(userID, authString);
+        return tagsParsed;
     }
 
     //then, make request to upload file with uri
@@ -110,9 +108,9 @@ export default function PostInfo(props) {
         //each image is associated with a userID, array of captions, triggers, comments, and tags, its uri, extension of the image, and the format of the image
         map.set("userID", userID.toString()) ;
         map.set("caption", caption);
-        map.set("trigger", triggers);
+        map.set("trigger", triggerString);
         map.set("comments", comments);
-        map.set("tag", tags);
+        map.set("tag", tagString);
         map.set("ext", extension);
         map.set("format", format);
         map.set("uri", uri);
