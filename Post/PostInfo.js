@@ -10,7 +10,7 @@ import UserManager from "../Managers/UserManager";
 import { UploadFileRequest, CheckForFileRequest } from "../gen/proto/media_pb";
 import { Buffer } from "buffer";
 import { File, Date as CommonDate } from "../gen/proto/common_pb";
-
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -22,7 +22,7 @@ export default function PostInfo(props) {
     {/* Create UsersClientManager & create a UsersClient */}
     let cm = new ClientManager();
     let client = cm.createMediaClient();
-
+    const navigation = useNavigation();
 
     //to upload image, start chain of functions
     const uploadImage = async () => {
@@ -143,6 +143,7 @@ export default function PostInfo(props) {
                console.log("file id:" + res.fileid);
                console.log("bytesRead:" + res.bytesread);
                console.log(res);
+               navigation.navigate('Profile')
             })
             .catch(error =>{
                console.log("There is an error :(");
