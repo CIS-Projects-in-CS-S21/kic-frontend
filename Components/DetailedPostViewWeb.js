@@ -4,8 +4,9 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
+import {SafeAreaView} from 'react-native-safe-area-context';
 import PostDetails from "./PostDetails";
 import CommentSection from "./CommentSection";
 import FeedHeader from '../Components/FeedHeader';
@@ -17,62 +18,64 @@ class DetailedPostViewWeb extends React.Component {
   /*
    * Class constructor
    */
-    constructor(props) {
-        super();
+  constructor(props) {
+    super();
 
-        // Define the initial state:
-        this.state = {
-            userID: props.route.params.userid,
-            username: props.route.params.username,
-            yearPosted: 0,
-            monthPosted: 0,
-            dayPosted: 0,
-        };
-        this.setPosterInfo = this.setPosterInfo.bind(this)
-    }
+    // Define the initial state:
+    this.state = {
+      userID: props.route.params.userid,
+      username: props.route.params.username,
+      yearPosted: 0,
+      monthPosted: 0,
+      dayPosted: 0,
+    };
+    this.setPosterInfo = this.setPosterInfo.bind(this)
+  }
 
-    componentDidMount() {
-      this.setPosterInfo();
-    }
+  componentDidMount() {
+    this.setPosterInfo();
+  }
 
-    setPosterInfo() {
-        console.log("Hi");
-        this.setState({
-            // do smth
-        })
-    }
+  setPosterInfo() {
+    console.log("Hi");
+    this.setState({
+      // do smth
+    })
+  }
 
   /**
    * Renders the DetailedPostView components.
    * @returns a {DetailedPostView}
    */
   render() {
-      return (
+    return (
+      <SafeAreaView style={KIC_Style.outContainer}>
+        <FeedHeader navigation={this.props.navigation} />
         <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10, }}>
-          <FeedHeader navigation={this.props.navigation}/>
-            <View style={styles.container}>
-                <Image
-                    style={styles.postImage}
-                    source = {require('../assets/default/default_icon_2.png')}
-                    />
+          <View style={styles.container}>
+            <Image
+              style={styles.postImage}
+              source={require('../assets/default/default_icon_2.png')}
+            />
 
-                <View style={styles.detailsAndComments}>
-                    {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
-                    <PostDetails
-                        userID = {this.state.userID}
-                        username = {this.state.username}
-                        yearPosted = {this.state.yearPosted}
-                        monthPosted = {this.state.monthPosted}
-                        dayPosted = {this.state.dayPosted}
-                    />
-                    <View style={{ flex: 1, height: 200 }}>
-                        <CommentSection />
-                    </View>
-                    <StatusBar style="auto" />
-                </View>
+            <View style={styles.detailsAndComments}>
+              {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
+              <PostDetails
+                userID={this.state.userID}
+                username={this.state.username}
+                yearPosted={this.state.yearPosted}
+                monthPosted={this.state.monthPosted}
+                dayPosted={this.state.dayPosted}
+              />
+              <View style={{ flex: 1, height: 200 }}>
+                <CommentSection />
+              </View>
+              <StatusBar style="auto" />
             </View>
+          </View>
         </View>
-      );
+      </SafeAreaView>
+    );
   }
 }
 
@@ -81,9 +84,9 @@ class DetailedPostViewWeb extends React.Component {
  */
 const styles = StyleSheet.create({
   container: {
-    alignItems:'center',
+    alignItems: 'center',
     flex: 1,
-    flexDirection:'row',
+    flexDirection: 'row',
     width: '60%',
     backgroundColor: '#b3d2db',
     justifyContent: 'flex-start',
@@ -92,6 +95,20 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 40,
     marginTop: 20,
     paddingRight: 15,
+    ...Platform.select({
+      ios: {
+        top:30,
+        marginBottom:30,
+      },
+      android: {
+        top:30,
+        marginBottom:30,
+      },
+      default: {
+        top:60,
+        marginBottom: 60,
+      }
+    }),
   },
   detailsAndComments: {
     flex: 1,

@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import TokenManager from "../Managers/TokenManager";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Platform, TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 /**
 * @class Contains function for rendering the feed header.
@@ -44,7 +45,7 @@ class FeedHeader extends React.Component {
 
     render() {
       return (
-        <View style={styles.feedHeaderContainer}>
+        <SafeAreaView style={styles.feedHeaderContainer}>
             <Icon.Button 
                 name="arrow-back-circle-outline" 
                 size={30} 
@@ -66,7 +67,7 @@ class FeedHeader extends React.Component {
                     this.logOutPress() 
                 }
                 />
-        </View>
+        </SafeAreaView>
 
       );
     }
@@ -80,11 +81,14 @@ const styles = StyleSheet.create({
         flex: 1, 
         flexDirection: 'row',
         width: '100%',
-        height: 60,
+        height: 80,
         justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: '#b3d2db',
         top: 0,
-        position: 'fixed'
+        position: 'absolute',
+        zIndex: 100,
+        marginBottom: 90,
     },
     logo: {
         width: 50,

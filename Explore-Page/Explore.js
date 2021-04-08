@@ -7,6 +7,7 @@ import React from 'react';
 import FeedHeader from '../Components/FeedHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import KIC_Style from '../Components/Style';
 
 
 /**
@@ -14,27 +15,29 @@ import { StyleSheet, Text, View, Image, Button } from 'react-native';
  */
 class Explore extends React.Component {
   render() {
-  /**
-   * Renders Explore screen components.
-   * @returns {Component}
-   */
-      return (
-        <SafeAreaView style={styles.container}>
-          <FeedHeader navigation={this.props.navigation}/>
+    /**
+     * Renders Explore screen components.
+     * @returns {Component}
+     */
+    return (
+      <SafeAreaView style={KIC_Style.outContainer}>
+        <FeedHeader navigation={this.props.navigation} />
+        <SafeAreaView style={KIC_Style.innerContainer}>
           <Image
-            style={{width: 180, height: 180, resizeMode: 'contain'}}
-            source = {require('../assets/kic.png')}
+            style={{ width: 180, height: 180, resizeMode: 'contain' }}
+            source={require('../assets/kic.png')}
           />
           <Text>Keeping It Casual Explore Page!</Text>
           <StatusBar style="auto" />
-            <Button
-                title = "Back to User Feed!"
-                onPress = {() =>
-                    this.props.navigation.navigate('Feed')
-                }
-            />
+          <Button
+            title="Back to User Feed!"
+            onPress={() =>
+              this.props.navigation.navigate('Feed')
+            }
+          />
         </SafeAreaView>
-      );
+      </SafeAreaView>
+    );
   }
 }
 
