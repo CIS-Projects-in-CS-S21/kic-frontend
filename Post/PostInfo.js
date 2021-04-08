@@ -68,7 +68,7 @@ export default function PostInfo(props) {
 
         //need to get extension (jpeg, png, etc) and format [if on web] (image or video) for metadata for file request
         let extension = "";
-        let format = null;
+        let format = "";
 
         //isolates extension and format of image/video, different for web and mobile
         if (Platform.OS === 'web') {
@@ -93,7 +93,7 @@ export default function PostInfo(props) {
 
         //create file and add to its metadata map
         let file = new File();
-        file.setFilename(userID + "@" + randomizeFileName() + "." + extension);
+        file.setFilename(userID + "@" + await randomizeFileName() + "." + extension);
         console.log("URI: " + uri);
         console.log("Ext: " + extension);
         console.log("File name: " + file.getFilename());
