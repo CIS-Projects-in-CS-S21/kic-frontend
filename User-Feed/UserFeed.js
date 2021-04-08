@@ -36,7 +36,7 @@ class UserFeed extends React.Component {
         <SafeAreaView style={styles.container}>
           <ScrollView>
             {/*Header containing logo and name*/}
-          <FeedHeader/>
+          <FeedHeader navigation={this.props.navigation}/>
           {/*Posts, eventually will need to become a stream injected into individual FeedPosts*/}
           <FeedPost 
             style={styles.feedPost} />

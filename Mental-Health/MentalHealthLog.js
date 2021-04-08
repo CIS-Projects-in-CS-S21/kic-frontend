@@ -43,7 +43,7 @@ export default function MentalHealthLog({ navigation }) {
     const date = new Date();
   return (
     <SafeAreaView style={KIC_Style.container}>
-      <FeedHeader/>
+    <FeedHeader navigation={navigation}/>
       <Image
         style={{width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center'}}
         source = {require('../assets/kic.png')}

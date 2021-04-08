@@ -49,7 +49,7 @@ class DetailedPostView extends React.Component {
   render() {
       return (
         <SafeAreaView style={{ alignItems: 'center', flex: 1, padding: 5 }}>
-            <FeedHeader />
+          <FeedHeader navigation={this.props.navigation}/>
             <View style={styles.container}>
                 <Image
                     style={styles.postImage}

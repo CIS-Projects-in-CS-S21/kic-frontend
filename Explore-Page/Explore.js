@@ -20,7 +20,7 @@ class Explore extends React.Component {
    */
       return (
         <SafeAreaView style={styles.container}>
-          <FeedHeader/>
+          <FeedHeader navigation={this.props.navigation}/>
           <Image
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('../assets/kic.png')}

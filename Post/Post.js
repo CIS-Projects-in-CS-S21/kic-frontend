@@ -131,7 +131,7 @@ export default function Post({ navigation }) {
 
     return (
         <SafeAreaView style={KIC_Style.container}>
-          <FeedHeader/>
+          <FeedHeader navigation={navigation}/>
             <View style={styles.cameraContainer}>
                  <Camera
                     ref={ref => setCamera(ref)}

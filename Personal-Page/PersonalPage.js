@@ -108,12 +108,14 @@ class PersonalPage extends React.Component {
         if (Platform.OS === 'web') {
             this.props.navigation.navigate('DetailedPostViewWeb', {
               username: this.state.username,
-              userid: this.state.userid
+              userid: this.state.userid,
+              navigation: this.props.navigation
             })
         } else {
             this.props.navigation.navigate('DetailedPostView', {
               username: this.state.username,
-              userid: this.state.userid
+              userid: this.state.userid,
+              navigation: this.props.navigation
             })
         }
     }
@@ -139,7 +141,7 @@ class PersonalPage extends React.Component {
   render() {
       return (
         <SafeAreaView style={styles.container}>
-          <FeedHeader/>
+          <FeedHeader navigation={this.props.navigation}/>
           <ScrollView>
             {/* Display profile header with state information */}
             <ProfileHeader
