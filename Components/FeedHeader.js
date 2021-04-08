@@ -7,7 +7,7 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import TokenManager from "../Managers/TokenManager";
 import Icon from 'react-native-vector-icons/Ionicons';
-import { TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native';
+import { Platform, TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native';
 
 /**
 * @class Contains function for rendering the feed header.
@@ -26,7 +26,11 @@ class FeedHeader extends React.Component {
     }
 
     homeNavigation() {
-        this.props.navigation.navigate('HomePage');
+        if(Platform.OS === 'web') {
+            this.props.navigation.navigate('HomePageWeb');
+          } else {
+            this.props.navigation.navigate('HomePageMobile');
+          }
     }
 
     logOutPress() {
