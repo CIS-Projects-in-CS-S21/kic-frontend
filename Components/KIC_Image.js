@@ -25,11 +25,11 @@ class KIC_Image extends React.Component {
             imageSrc: ""
         };
 
-        this.fetch = this.fetchImage.bind(this)
+        this.fetchImage = this.fetchImage.bind(this)
     }
 
     componentDidMount(){
-        this.callGetUserByUserID().then(response => {
+        this.fetchImage().then(response => {
             console.log("Fetched info for image for userid " + this.props.userid + " successfully");
         }).catch(error => {
             console.log("Error mounting image for userid " + this.props.userid + ": " + error);
