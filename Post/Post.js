@@ -2,12 +2,12 @@
 * @fileoverview The screen for user posting, where user can choose to post video or picture with caption
 */
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, Text, View, Button, Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import KIC_Style from '../Components/Style';
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import FeedHeader from '../Components/FeedHeader';
 
 
@@ -26,7 +26,7 @@ export default function Post({ navigation }) {
 
     useEffect(() => {
         (async () => {
-           if (Platform.OS !== 'web') {
+            if (Platform.OS !== 'web') {
                 //request permission for camera
                 const cameraStatus = await Camera.requestPermissionsAsync();
                 setHasCameraPermission(cameraStatus.status === 'granted');
@@ -34,7 +34,7 @@ export default function Post({ navigation }) {
                 const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
                 setHasGalleryPermission(galleryStatus.status === 'granted');
 
-           }
+            }
 
 
         })();
@@ -66,65 +66,72 @@ export default function Post({ navigation }) {
 
     //if no camera possible (web) or no gallery permission, say sorry! no access to gallery or camera
     if (hasCameraPermission === null || hasGalleryPermission === false) {
-        return (<View style = {KIC_Style}>
-            <Image
-                style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
-                source={require('../assets/kic.png')}
-            />
-            <Text>
-                Sorry! No access to gallery or camera. This feature is only available on mobile!
+        return (
+            <SafeAreaView style={KIC_Style.outContainer}>
+                <FeedHeader navigation={navigation} />
+                <SafeAreaView style={KIC_Style.innerContainer}>
+                    <Image
+                        style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+                        source={require('../assets/kic.png')}
+                    />
+                    <Text>
+                        Sorry! No access to gallery or camera. This feature is only available on mobile!
             </Text>
-            <TouchableOpacity
-                style={KIC_Style.button}
-                onPress={() => navigation.navigate('Profile')}>
-                <Text style={KIC_Style.button_font}>Personal Page</Text>
-            </TouchableOpacity>
-        </View>
+                    <TouchableOpacity
+                        style={KIC_Style.button}
+                        onPress={() => navigation.navigate('Profile')}>
+                        <Text style={KIC_Style.button_font}>Personal Page</Text>
+                    </TouchableOpacity>
+                </SafeAreaView>
+            </SafeAreaView>
 
-    )};
+        )
+    };
 
     //if camera or gallery permission is not given:
     if (hasCameraPermission === false || hasGalleryPermission === false) {
         return <Text>No access to camera</Text>;
     }
     return (
-        <SafeAreaView style={KIC_Style.container}>
-          <FeedHeader navigation={navigation}/>
-            <View style={styles.cameraContainer}>
-                <Camera
-                    ref={ref => setCamera(ref)}
-                    style={styles.fixedRatio}
-                    type={type}
-                    ratio={'1:1'}
-                />
-            </View>
-            <TouchableOpacity
-                style={KIC_Style.button_post}
-                onPress={() => {
-                    setType(
-                        type === Camera.Constants.Type.back
-                            ? Camera.Constants.Type.front
-                            : Camera.Constants.Type.back
-                    );
-                }}>
-                <Text style={KIC_Style.button_font}>Flip Image</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={KIC_Style.button_post}
-                onPress={() => takePicture()}>
-                <Text style={KIC_Style.button_font}>Take Picture</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={KIC_Style.button_post}
-                onPress={() => pickImage()}>
-                <Text style={KIC_Style.button_font}>Select Image from Gallery</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={KIC_Style.button_post}
-                onPress={() => navigation.navigate('PostInfo', { image })}>
-                <Text style={KIC_Style.button_font}>Save</Text>
-            </TouchableOpacity>
-            {/*{image && <Image source={{ uri: image }} style={{ flex: 1 }} />}*/}
+        <SafeAreaView style={KIC_Style.outContainer}>
+            <FeedHeader navigation={navigation} />
+            <SafeAreaView style={KIC_Style.innerContainer}>
+                <View style={styles.cameraContainer}>
+                    <Camera
+                        ref={ref => setCamera(ref)}
+                        style={styles.fixedRatio}
+                        type={type}
+                        ratio={'1:1'}
+                    />
+                </View>
+                <TouchableOpacity
+                    style={KIC_Style.button_post}
+                    onPress={() => {
+                        setType(
+                            type === Camera.Constants.Type.back
+                                ? Camera.Constants.Type.front
+                                : Camera.Constants.Type.back
+                        );
+                    }}>
+                    <Text style={KIC_Style.button_font}>Flip Image</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={KIC_Style.button_post}
+                    onPress={() => takePicture()}>
+                    <Text style={KIC_Style.button_font}>Take Picture</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={KIC_Style.button_post}
+                    onPress={() => pickImage()}>
+                    <Text style={KIC_Style.button_font}>Select Image from Gallery</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={KIC_Style.button_post}
+                    onPress={() => navigation.navigate('PostInfo', { image })}>
+                    <Text style={KIC_Style.button_font}>Save</Text>
+                </TouchableOpacity>
+                {/*{image && <Image source={{ uri: image }} style={{ flex: 1 }} />}*/}
+            </SafeAreaView>
         </SafeAreaView>
     );
 }

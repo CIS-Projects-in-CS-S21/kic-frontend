@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Platform} from 'react-native';
 import KIC_Style from "../Components/Style";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PostDetails from "../Components/PostDetails";
@@ -20,9 +20,9 @@ import FeedHeader from '../Components/FeedHeader';
  */
 class FriendsPage extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /*
+     * Class constructor
+     */
     constructor(props) {
         super();
 
@@ -40,7 +40,7 @@ class FriendsPage extends React.Component {
     }
 
     componentDidMount() {
-      this.setPosterInfo();
+        this.setPosterInfo();
     }
 
     setPosterInfo() {
@@ -49,46 +49,48 @@ class FriendsPage extends React.Component {
         })
     }
 
-  /**
-   * Renders the DetailedPostView components.
-   * @returns a {DetailedPostView}
-   */
-  render() {
+    /**
+     * Renders the DetailedPostView components.
+     * @returns a {DetailedPostView}
+     */
+    render() {
 
-      const renderItem = ({ item }) => (
-        <Item title={item.title} />
-      );
-      return (
-        <SafeAreaView style={styles.container}>
-          <FeedHeader navigation={this.props.navigation}/>
-            {(!this.state.showPending) ? <FriendsList
-                                           userid = {this.state.userid}
-                                           username = {this.state.username}
-                                           bio = {this.state.bio}
-                                       /> :
-                                       <RequestsList
-                                           userid = {this.state.userid}
-                                           username = {this.state.username}
-                                       />}
-            <View style={styles.content}>
-            {(!this.state.showPending) ?  <TouchableOpacity
-                                            style={KIC_Style.button}
-                                            onPress = {() =>
-                                                this.setState({ showPending:true })}>
-                                            <Text style={KIC_Style.button_font}>Pending Requests</Text>
-                                        </TouchableOpacity> :
-                                        <TouchableOpacity
-                                            style={KIC_Style.button}
-                                            onPress = {() =>
-                                                this.setState({ showPending:false })}>
-                                            <Text style={KIC_Style.button_font}>Friends</Text>
-                                        </TouchableOpacity>}
+        const renderItem = ({ item }) => (
+            <Item title={item.title} />
+        );
+        return (
+            <SafeAreaView style={KIC_Style.outContainer}>
+                <FeedHeader navigation={this.props.navigation} />
+                <SafeAreaView style={styles.container}>
+                    {(!this.state.showPending) ? <FriendsList
+                        userid={this.state.userid}
+                        username={this.state.username}
+                        bio={this.state.bio}
+                    /> :
+                        <RequestsList
+                            userid={this.state.userid}
+                            username={this.state.username}
+                        />}
+                    <View style={styles.content}>
+                        {(!this.state.showPending) ? <TouchableOpacity
+                            style={KIC_Style.button}
+                            onPress={() =>
+                                this.setState({ showPending: true })}>
+                            <Text style={KIC_Style.button_font}>Pending Requests</Text>
+                        </TouchableOpacity> :
+                            <TouchableOpacity
+                                style={KIC_Style.button}
+                                onPress={() =>
+                                    this.setState({ showPending: false })}>
+                                <Text style={KIC_Style.button_font}>Friends</Text>
+                            </TouchableOpacity>}
 
-            <StatusBar style="auto" />
-            </View>
-        </SafeAreaView>
-      );
-  }
+                        <StatusBar style="auto" />
+                    </View>
+                </SafeAreaView>
+            </SafeAreaView>
+        );
+    }
 }
 
 /**
@@ -106,9 +108,23 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         paddingVertical: 20,
+        ...Platform.select({
+            ios: {
+              top:30,
+              marginBottom:30,
+            },
+            android: {
+              top:30,
+              marginBottom:30,
+            },
+            default: {
+              top:60,
+              marginBottom: 60,
+            }
+          }),
     },
     content: {
-        alignItems:'center',
+        alignItems: 'center',
         paddingBottom: 5,
     },
     icon: {
