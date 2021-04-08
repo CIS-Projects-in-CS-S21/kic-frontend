@@ -12,7 +12,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import TabNavigation from "./TabNavigation";
 import LogIn from "./User-Authentication/LogIn";
 import SignUp from "./User-Authentication/SignUp";
-import HomePage from './Home-Page/HomePage';
+import HomePageNav from './Home-Page/HomePageNav';
 
 const Stack = createStackNavigator();
 
@@ -34,8 +34,8 @@ class App extends React.Component {
                       }}
                   >
                       <Stack.Screen
-                          name="HomePage"
-                          component={HomePage}
+                          name="HomePageNav"
+                          component={HomePageNav}
                       />
                       <Stack.Screen
                           name="LogIn"

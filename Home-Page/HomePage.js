@@ -3,38 +3,14 @@
  */
 
  import React from 'react';
- import Icon from 'react-native-vector-icons/Ionicons';
- import KIC_Style from '../Components/Style'; 
- import { NavigationContainer, useNavigation } from '@react-navigation/native';
- import AppIntroSlider from 'react-native-app-intro-slider';
  import { SafeAreaView } from 'react-native-safe-area-context';
- import { StyleSheet, Text, View, Image, Button } from 'react-native';
+ import { Platform, StyleSheet, Text } from 'react-native';
+ import { createStackNavigator } from '@react-navigation/stack';
+ import HomePageWeb from './HomePageWeb';
+ import HomePageMobile from './HomePageMobile';
+import { TextInput } from 'react-native-gesture-handler';
  
- /**
-  * @class Contains function for rendering Home screen.
-  */
-  
-  const slides = [
-    {
-      key: 1,
-      title: 'Keeping It Casual',
-      text: 'Stay connected to friends and family while fostering a healthy mindset!',
-      backgroundColor: '#7bb4dc',
-      image: '../assets/kic.png'
-    },
-    {
-      key: 2,
-      title: 'Features:',
-      text: 'Profile curated by you, feed of friends, with a mental health page dedicated to journaling your days and getting connected to professionals',
-      backgroundColor: '#cde1e5',
-    },
-    {
-      key: 3,
-      title: 'Join the movement today!',
-      text: 'Sign up to start connecting.',
-      backgroundColor: '#b3d3dc',
-    }
-  ];
+ const Stack = createStackNavigator(); 
 
  class HomePage extends React.Component {
    /**
@@ -44,28 +20,22 @@
 
     constructor(props) {
       super();
-      this.state = {
-        showRealApp: false
       }
-    }
 
-    _renderItem = ({ item }) => {
-      return (
-        <SafeAreaView style = {[styles.container, {backgroundColor: item.backgroundColor}]} >
-          <Text style={[KIC_Style.title, {color: 'white'}]}>{item.title}</Text>
-          <Text style={[KIC_Style.title, {color: 'white'}]} >{item.text}</Text>
-        </SafeAreaView>
-      );
-    }
-    _onDone = () => {
-      // User finished the introduction. Show real app through
-      // navigation or simply by controlling state
-      this.props.navigation.navigate('SignUp');
-    }
+      componentDidMount() {
+        if(Platform.OS === 'web') {
+          this.props.navigation.navigate('HomePageWeb');
+        } else {
+          this.props.navigation.navigate('HomePageMobile');
+        }
+      }
+
     render() {
-        return <AppIntroSlider showPrevButton showNextButton doneLabel = {'Sign Up'} renderItem={this._renderItem} data={slides} onDone={this._onDone}/>;
-    }
+      return(
+        <Text></Text>
+      )
   }
+}
 
     
 
