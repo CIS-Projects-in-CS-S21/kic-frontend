@@ -13,7 +13,7 @@
  /**
   * @class Contains function for rendering Home screen.
   */
-
+  
   const slides = [
     {
       key: 1,

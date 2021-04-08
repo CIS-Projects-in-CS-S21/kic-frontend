@@ -4,6 +4,8 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import TokenManager from "../Managers/TokenManager";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native';
 
@@ -15,9 +17,27 @@ class FeedHeader extends React.Component {
     * Renders personal page components.
     * @returns {FeedHeader}
     */
-   constructor(props) {
-       super(props)
-   }
+
+    
+
+    logOut() {
+        let tokenManager = new TokenManager();
+        tokenManager.forgetToken();
+    }
+
+    homeNavigation() {
+        this.props.navigation.navigate('HomePage');
+    }
+
+    logOutPress() {
+        this.logOut();
+        this.homeNavigation();
+    }
+
+    backNavigation() {
+        this.props.navigation.goBack(); 
+    }
+
     render() {
       return (
         <View style={styles.feedHeaderContainer}>
@@ -26,6 +46,8 @@ class FeedHeader extends React.Component {
                 size={30} 
                 backgroundColor='#b3d2db'
                 borderRadius={0}
+                onPress={()=>
+                    this.backNavigation()}
                  />
             <Image 
                 style={styles.logo}
@@ -36,6 +58,9 @@ class FeedHeader extends React.Component {
                 size={30} 
                 backgroundColor='#b3d2db'
                 borderRadius={0}
+                onPress={() => 
+                    this.logOutPress() 
+                }
                 />
         </View>
 

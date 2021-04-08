@@ -49,7 +49,7 @@ class DetailedPostViewWeb extends React.Component {
   render() {
       return (
         <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10, }}>
-            <FeedHeader />
+          <FeedHeader navigation={this.props.navigation}/>
             <View style={styles.container}>
                 <Image
                     style={styles.postImage}

@@ -60,7 +60,7 @@ class FriendsPage extends React.Component {
       );
       return (
         <SafeAreaView style={styles.container}>
-          <FeedHeader/>
+          <FeedHeader navigation={this.props.navigation}/>
             {(!this.state.showPending) ? <FriendsList
                                            userid = {this.state.userid}
                                            username = {this.state.username}
