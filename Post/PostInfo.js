@@ -38,7 +38,26 @@ export default function PostInfo(props) {
 
     //then, get user ID
     const getUserID = async(authString, um) => {
-        return um.getMyUserID().then(userID  => {makeUploadFileRequest(userID, authString)});
+        um.getMyUserID().then(userID  => {parseTriggers(userID, authString, triggerString)});
+    }
+
+
+    //parse triggers from text input (given in //trigger format)
+    const parseTriggers = async(userID, authString, triggers) => {
+        let triggersNoCommas = triggers.replace(",", " ");
+        let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
+        triggersParsed = triggersParsed.filter(e => e !== '');
+        setTriggers(triggersParsed)
+        return parseTags(userID, authString,tagString);
+    }
+
+    //parse tags from text input (given in #tag format)
+    const parseTags = async (userID, authString, tags) => {
+        let tagsNoCommas = tags.replace(",", " ");
+        let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);
+        tagsParsed = tagsParsed.filter(e => e !== '');
+        setTags(tagsParsed)
+        return makeUploadFileRequest(userID, authString);
     }
 
     //then, make request to upload file with uri
@@ -121,19 +140,19 @@ export default function PostInfo(props) {
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {
-                logResult(res)
+               console.log("file id:" + res.fileid);
+               console.log("bytesRead:" + res.bytesread);
+               console.log(res);
             })
             .catch(error =>{
-               logResult(error)
+               console.log("There is an error :(");
+               console.log(error);
             });
     }
 
-    const logResult = async(res) => {
-        console.log(res);
-    }
 
     //For generating file name
-    const randomizeFileName = () => {
+    const randomizeFileName = async() => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
@@ -142,45 +161,30 @@ export default function PostInfo(props) {
 
     //declare constants for caption, triggers, and tags
     const [caption, setCaption] = useState("")
-    const [triggers, setTriggers] = useState("")
-    const [tags, setTags] = useState("")
+    const [triggers, setTriggers] = useState([])
+    const [tags, setTags] = useState([])
+    const [triggerString, setTriggerString] = useState("")
+    const [tagString, setTagString] = useState("")
 
-    //parse triggers from text input (given in //trigger format)
-    const parseTriggers = (triggers) => {
-        let triggersNoCommas = triggers.replace(",", " ");
-        let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
-        triggersParsed = triggersParsed.filter(e => e !== '');
-
-        console.log("Parsed triggers: " + triggersParsed);
-
-        setTriggers(triggersParsed);
-    }
-
-    //parse tags from text input (given in #tag format)
-    const parseTags = (tags) => {
-        let tagsNoCommas = tags.replace(",", " ");
-        let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);
-        tagsParsed = tagsParsed.filter(e => e !== '');
-
-        console.log("Parsed tags: " + tagsParsed);
-
-        setTags(tagsParsed);
-    }
 
     return (
         <View style={{ flex: 1 }}>
             <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', padding: 10}}/>
-            <TextInput style = {KIC_Style.input}
+            <TextInput
+                style={KIC_Style.input}
+                value={caption}
+                onChange={(e) => setCaption(e.nativeEvent.text)}
                 placeholder="Write a Caption . . ."
-                onChangeText={(caption) => setCaption(caption)}
             />
-            <TextInput style = {KIC_Style.input}
-                       placeholder="Write any tags in # format . . ."
-                       onChangeText={(tags) => parseTags(tags)}
+            <TextInput
+                style={KIC_Style.input}
+                onChange={(e) => setTagString(e.nativeEvent.text)}
+                placeholder="Write any tags in # format . . ."
             />
-            <TextInput style = {KIC_Style.input}
-                placeholder="Write any triggers in //format . . ."
-                onChangeText={(triggers) => parseTriggers(triggers)}
+            <TextInput
+                style={KIC_Style.input}
+                onChange={(e) => setTriggerString(e.nativeEvent.text)}
+                placeholder="Write any triggers in // format . . ."
             />
             <TouchableOpacity
                 style={KIC_Style.button_post}
