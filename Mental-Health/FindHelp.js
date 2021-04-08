@@ -3,6 +3,7 @@
  */
 
 import { StatusBar } from 'expo-status-bar';
+import FeedHeader from '../Components/FeedHeader';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
@@ -18,6 +19,7 @@ class FindHelp extends React.Component {
   render() {
       return (
         <SafeAreaView style={styles.container}>
+          <FeedHeader/>
           <Image
             style={{width: 180, height: 180, resizeMode: 'contain'}}
             source = {require('../assets/kic.png')}

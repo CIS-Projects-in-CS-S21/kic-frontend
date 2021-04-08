@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import FeedHeader from '../Components/FeedHeader';
 import KIC_Style from "../Components/Style";
 import {useNavigation} from "@react-navigation/native";
 import {DateTimePickerModal} from "react-native-paper-datetimepicker";
@@ -43,6 +43,7 @@ export default function MentalHealthLog({ navigation }) {
     const date = new Date();
   return (
     <SafeAreaView style={KIC_Style.container}>
+      <FeedHeader/>
       <Image
         style={{width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center'}}
         source = {require('../assets/kic.png')}

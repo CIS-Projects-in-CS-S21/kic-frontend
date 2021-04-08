@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
 import MyUser from "../Components/MyUser";
+import FeedHeader from '../Components/FeedHeader';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import TokenManager from "../Managers/TokenManager";
 import ClientManager from "../Managers/ClientManager";
@@ -124,8 +125,9 @@ class PersonalPage extends React.Component {
    */
   render() {
       return (
-        <SafeAreaView style={styles.container}><ScrollView>
-
+        <SafeAreaView style={styles.container}>
+          <FeedHeader/>
+          <ScrollView>
             {/* Display profile header with state information */}
             <ProfileHeader
                 navigation = {this.props.navigation}

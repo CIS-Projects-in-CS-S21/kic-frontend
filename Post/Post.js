@@ -8,6 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import KIC_Style from '../Components/Style';
 import {Platform} from 'react-native';
+import FeedHeader from '../Components/FeedHeader';
+
 
 
 export default function Post({ navigation }) {
@@ -87,6 +89,7 @@ export default function Post({ navigation }) {
     }
     return (
         <SafeAreaView style={KIC_Style.container}>
+          <FeedHeader/>
             <View style={styles.cameraContainer}>
                 <Camera
                     ref={ref => setCamera(ref)}

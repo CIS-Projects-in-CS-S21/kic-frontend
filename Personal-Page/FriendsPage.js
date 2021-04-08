@@ -12,6 +12,8 @@ import ProfileHeader from "../Components/ProfileHeader";
 import UserBlurb from "../Components/UserBlurb";
 import FriendsList from "./FriendsList";
 import RequestsList from "./RequestsList";
+import FeedHeader from '../Components/FeedHeader';
+
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -58,6 +60,7 @@ class FriendsPage extends React.Component {
       );
       return (
         <SafeAreaView style={styles.container}>
+          <FeedHeader/>
             {(!this.state.showPending) ? <FriendsList
                                            userid = {this.state.userid}
                                            username = {this.state.username}

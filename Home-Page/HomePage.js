@@ -20,6 +20,7 @@
       title: 'Keeping It Casual',
       text: 'Stay connected to friends and family while fostering a healthy mindset!',
       backgroundColor: '#7bb4dc',
+      image: '../assets/kic.png'
     },
     {
       key: 2,
@@ -53,7 +54,6 @@
         <SafeAreaView style = {[styles.container, {backgroundColor: item.backgroundColor}]} >
           <Text style={[KIC_Style.title, {color: 'white'}]}>{item.title}</Text>
           <Text style={[KIC_Style.title, {color: 'white'}]} >{item.text}</Text>
-          <Text style={{bottom:0}}></Text>
         </SafeAreaView>
       );
     }
@@ -81,6 +81,11 @@
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  image: {
+    width: 320,
+    height: 320,
+    marginVertical: 32,
   },
    container: {
      flex:1,

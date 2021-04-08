@@ -4,7 +4,8 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native';
 
 /**
 * @class Contains function for rendering the feed header.
@@ -14,15 +15,30 @@ class FeedHeader extends React.Component {
     * Renders personal page components.
     * @returns {FeedHeader}
     */
+   constructor(props) {
+       super(props)
+   }
     render() {
       return (
         <View style={styles.feedHeaderContainer}>
+            <Icon.Button 
+                name="arrow-back-circle-outline" 
+                size={30} 
+                backgroundColor='#b3d2db'
+                borderRadius={0}
+                 />
             <Image 
-                style={styles.icon}
-                source={require('../assets/kic.png')}
+                style={styles.logo}
+                source={require('../assets/Logo_BlueBG.png')}
             />
-            <Text style={styles.headerText}>Keeping It Casual</Text>
+            <Icon.Button 
+                name="log-out-outline" 
+                size={30} 
+                backgroundColor='#b3d2db'
+                borderRadius={0}
+                />
         </View>
+
       );
     }
 }
@@ -32,26 +48,24 @@ class FeedHeader extends React.Component {
 */
 const styles = StyleSheet.create({
     feedHeaderContainer: {
-        width: '100%',
+        flex: 1, 
         flexDirection: 'row',
+        width: '100%',
+        height: 60,
+        justifyContent: 'space-between',
         backgroundColor: '#b3d2db',
-        paddingVertical: 10,
-        alignItems: 'center',
-        alignContent: 'center',
-        top: 0
+        top: 0,
+        position: 'fixed'
+    },
+    logo: {
+        width: 50,
+        height: 50,
+        top:0,
+        bottom:0
     },
     icon: {
-        width: 75,
-        height: 75,
-        padding: 20,
-    },
-    headerText: {
-        color: '#ffff',
-        fontFamily: 'sans-serif',
-        fontSize: 30,
-        fontWeight: "bold",
-        paddingBottom: 5
-    },
+        backgroundColor: '#b3d2db',
+    }
 });
 
 export default FeedHeader;
