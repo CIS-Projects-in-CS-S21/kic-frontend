@@ -68,7 +68,13 @@ export default function Post({ navigation }) {
 
             });
             setImage(data.uri);
-            setBase64(data.base64);
+            if (Platform.OS === "web") {
+                //this is the base 64
+                const parsedURI = data.uri.split(/[,]/);
+                setBase64(parsedURI[1]);
+            } else {
+                setBase64(data.base64);
+            }
             alert("Picture taken!");
         }
     }
@@ -85,7 +91,14 @@ export default function Post({ navigation }) {
         console.log(result);
         if (!result.cancelled) {
             setImage(result.uri);
-            setBase64(result.base64);
+            if (Platform.OS === "web") {
+                //this is the base 64
+                const parsedURI = result.uri.split(/[,]/);
+                setBase64(parsedURI[1]);
+            } else {
+                setBase64(result.base64);
+            }
+
             alert("Picture selected!");
         }
     };

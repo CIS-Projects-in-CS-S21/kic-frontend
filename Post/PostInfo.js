@@ -63,7 +63,7 @@ export default function PostInfo(props) {
        //obtain uri and base64 from Post.js
         const uri = props.route.params.image;
         const base64 = props.route.params.base64;
-
+        console.log(base64);
         //need to get extension (jpeg, png, etc) and format [if on web] (image or video) for metadata for file request
         let extension = "";
         let format = "";
@@ -114,6 +114,7 @@ export default function PostInfo(props) {
         map.set("ext", extension);
         map.set("format", format);
         map.set("uri", uri);
+        map.set("base64", base64);
 
         // Fetch the current date and set in file
         let today = new Date();
@@ -160,8 +161,6 @@ export default function PostInfo(props) {
 
     //declare constants for caption, triggers, and tags
     const [caption, setCaption] = useState("")
-    const [triggers, setTriggers] = useState([])
-    const [tags, setTags] = useState([])
     const [triggerString, setTriggerString] = useState("")
     const [tagString, setTagString] = useState("")
 
