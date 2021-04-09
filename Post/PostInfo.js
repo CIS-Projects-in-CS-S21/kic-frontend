@@ -92,7 +92,6 @@ export default function PostInfo(props) {
         //create file and add to its metadata map
         let file = new File();
         file.setFilename(userID + "@" + await randomizeFileName() + "." + extension);
-        console.log("URI: " + uri);
         console.log("Ext: " + extension);
         console.log("File name: " + file.getFilename());
 
@@ -113,8 +112,8 @@ export default function PostInfo(props) {
         map.set("tag", tagString);
         map.set("ext", extension);
         map.set("format", format);
-        map.set("uri", uri);
-        map.set("base64", base64);
+        // map.set("uri", uri);
+        // map.set("base64", base64);
 
         // Fetch the current date and set in file
         let today = new Date();
@@ -125,8 +124,9 @@ export default function PostInfo(props) {
         file.setDatestored(date);
 
         //convert uri to int 8 Array which is needed for setting File
-        let your_bytes = Buffer.from(base64, "base64");
-        req.setFile(Uint8Array.from(your_bytes));
+       // let your_bytes = Buffer.from(base64, "base64");
+       // req.setFile(Uint8Array.from(your_bytes));
+        req.setFile(Uint8Array.from(base64));
         req.setFileinfo(file);
 
         //set metadata and check that it is set correctly
@@ -135,7 +135,7 @@ export default function PostInfo(props) {
             console.log(k, v);
         });
 
-        console.log("request: " + req);
+    //    console.log("request: " + req);
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {
