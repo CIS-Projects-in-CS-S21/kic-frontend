@@ -45,6 +45,13 @@ const KIC_Style = StyleSheet.create({
         borderWidth: .2,
         borderColor: '#CDCDCD',
         padding: 1
+    },
+    journalInput: {
+        borderWidth: .2,
+        borderColor: '#CDCDCD',
+        padding: 1,
+        minHeight: 50,
+        width: "70%",
     }
 
 });

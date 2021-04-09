@@ -25,6 +25,7 @@ class ProfileHeader extends React.Component {
         this.props.navigation.navigate('FriendsPage', {
           username: this.props.username,
           userid: this.props.userid,
+          bio: this.props.bio,
         })
     }
 

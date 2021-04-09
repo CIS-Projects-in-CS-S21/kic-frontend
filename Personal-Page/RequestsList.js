@@ -50,16 +50,13 @@ class RequestsList extends React.Component {
 
         // Define the initial state:
         this.state = {
+            authString: "authstring",
             userid: props.userid,
             username: props.username,
+            pending: [],
         };
-    }
 
-    /**
-    * Gets this user's pending requests.
-    */
-    fetchRequests = () => {
-      // Request this user's pending requests from backend.
+        //this.fetchPending = this.fetchPending.bind(this)
     }
 
     /**
