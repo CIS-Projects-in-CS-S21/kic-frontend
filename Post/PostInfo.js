@@ -63,7 +63,7 @@ export default function PostInfo(props) {
        //obtain uri and base64 from Post.js
         const uri = props.route.params.image;
         const base64 = props.route.params.base64;
-        console.log(base64);
+
         //need to get extension (jpeg, png, etc) and format [if on web] (image or video) for metadata for file request
         let extension = "";
         let format = "";
