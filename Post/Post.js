@@ -63,8 +63,9 @@ export default function Post({ navigation }) {
     const takePicture = async () => {
         if (camera) {
             const data = await camera.takePictureAsync({
-                base64: true
-
+                base64: true,
+               // quality: 0.5
+                quality:0
 
             });
             setImage(data.uri);
@@ -75,6 +76,7 @@ export default function Post({ navigation }) {
             } else {
                 setBase64(data.base64);
             }
+            console.log(data.base64.slice(0,1000));
             alert("Picture taken!");
         }
     }
