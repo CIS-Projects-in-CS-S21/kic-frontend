@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import KIC_Style from '../Components/Style';
 import {Platform} from 'react-native';
+import * as Permissions from 'expo-permissions';
 
 
 export default function Post({ navigation }) {
@@ -20,53 +21,96 @@ export default function Post({ navigation }) {
     //image variable
     const [image, setImage] = useState(null);
     //type variable, default set to back camera
-    const [type, setType] = useState(Camera.Constants.Type.back);
+    const [type, setType] = useState(Camera.Constants.Type.front);
+    //stores base64 of image
+    const[base64, setBase64] = useState(null);
 
+    //state for determining if on web
+    const [notWeb, setNotWeb] = useState(null);
+
+    //permissions for camera
+    const [permission, askPermission] = Permissions.usePermissions(
+        Permissions.CAMERA,
+    );
+
+    //if we are on web, use permissions to get camera permissions. otherwise, use requestPermissionsAsync() function
     useEffect(() => {
         (async () => {
            if (Platform.OS !== 'web') {
-                //request permission for camera
-                const cameraStatus = await Camera.requestPermissionsAsync();
-                setHasCameraPermission(cameraStatus.status === 'granted');
-                //request permission for media library
-                const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                setHasGalleryPermission(galleryStatus.status === 'granted');
-
+               //iOS or Android
+               setNotWeb(true);
+               const cameraStatus = await Camera.requestPermissionsAsync();
+               setHasCameraPermission(cameraStatus.status === 'granted');
+           } else {
+               setNotWeb(false);
+               if (permission?.permissions?.camera?.granted) {
+                   setHasCameraPermission(permission?.permissions?.camera?.granted === 'granted')
+               } else {
+                   await askPermission();
+               }
            }
+
+            //request permission for media library
+            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasGalleryPermission(galleryStatus.status === 'granted');
+
+
 
 
         })();
-    }, []);
+    }, [permission?.permissions?.camera, askPermission]);
 
-    //take picture if camera access is granted and set image
+    //take picture if camera access is granted and set image and base64
     const takePicture = async () => {
         if (camera) {
-            const data = await camera.takePictureAsync(null);
+            const data = await camera.takePictureAsync({
+                base64: true,
+               // quality: 0.5
+                quality:0
+
+            });
             setImage(data.uri);
+            if (Platform.OS === "web") {
+                //this is the base 64
+                const parsedURI = data.uri.split(/[,]/);
+                setBase64(parsedURI[1]);
+            } else {
+                setBase64(data.base64);
+            }
+            console.log(data.base64.slice(0,1000));
             alert("Picture taken!");
         }
     }
 
-    //pick image from image library
+    //pick image from image library and set image and base64
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,//allows access to images and videos
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
+            base64: true
         });
         console.log(result);
         if (!result.cancelled) {
             setImage(result.uri);
+            if (Platform.OS === "web") {
+                //this is the base 64
+                const parsedURI = result.uri.split(/[,]/);
+                setBase64(parsedURI[1]);
+            } else {
+                setBase64(result.base64);
+            }
+
             alert("Picture selected!");
         }
     };
 
     //if no camera possible (web) or no gallery permission, say sorry! no access to gallery or camera
-    if (hasCameraPermission === null || hasGalleryPermission === false) {
-        return (<View style = {KIC_Style}>
+    if (hasCameraPermission === null && hasGalleryPermission === false) {
+        return (<View style = {KIC_Style.container}>
             <Image
-                style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+                style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain', alignSelf:'center'}}
                 source={require('../assets/kic.png')}
             />
             <Text>
@@ -81,10 +125,6 @@ export default function Post({ navigation }) {
 
     )};
 
-    //if camera or gallery permission is not given:
-    if (hasCameraPermission === false || hasGalleryPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
     return (
         <SafeAreaView style={KIC_Style.container}>
             <View style={styles.cameraContainer}>
@@ -92,21 +132,22 @@ export default function Post({ navigation }) {
                     ref={ref => setCamera(ref)}
                     style={styles.fixedRatio}
                     type={type}
+                    poster = {"../Assets/kic.png"}
                     ratio={'1:1'}
                 />
             </View>
-            <TouchableOpacity
+            {notWeb && <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => {
                     setType(
-                        type === Camera.Constants.Type.back
-                            ? Camera.Constants.Type.front
-                            : Camera.Constants.Type.back
+                        type === Camera.Constants.Type.front
+                            ? Camera.Constants.Type.back
+                            : Camera.Constants.Type.front
                     );
                 }}>
                 <Text style={KIC_Style.button_font}>Flip Image</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+           </TouchableOpacity>}
+           <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => takePicture()}>
                 <Text style={KIC_Style.button_font}>Take Picture</Text>
@@ -118,10 +159,9 @@ export default function Post({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button_post}
-                onPress={() => navigation.navigate('PostInfo', { image })}>
+                onPress={() => navigation.navigate('PostInfo', { image, base64 })}>
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
-            {/*{image && <Image source={{ uri: image }} style={{ flex: 1 }} />}*/}
         </SafeAreaView>
     );
 }
