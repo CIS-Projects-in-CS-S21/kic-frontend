@@ -35,6 +35,7 @@ class PersonalPage extends React.Component {
       birthDay: 0,
       birthMonth: 0,
       birthYear: 0,
+      finishedLoading: false,
     };
 
     this.fetchUserInfo = this.fetchUserInfo.bind(this)
@@ -86,7 +87,8 @@ class PersonalPage extends React.Component {
             birthDay: mybirthday,
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
-            userid: userID
+            userid: userID,
+            finishedLoading: true,
         })
     }
 
@@ -138,11 +140,11 @@ class PersonalPage extends React.Component {
                 />
 
             {/* Show posts */}
-            <PostsGrid
+            {(this.state.finishedLoading) ? <PostsGrid
                 navigation = {this.props.navigation}
                 username = {this.state.username}
                 userid = {this.state.userid}
-                />
+                /> : <View></View>}
 
             {/* NAVIGATION */}
             <TouchableOpacity
@@ -167,7 +169,7 @@ class PersonalPage extends React.Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'flex-start',
     flexDirection: 'column',
     flex: 1,
