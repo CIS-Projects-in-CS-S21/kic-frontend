@@ -10,6 +10,7 @@ import MentalHealthLog from "../Mental-Health/MentalHealthLog";
 import FindHelp from "../Mental-Health/FindHelp";
 import PersonalPage from "./PersonalPage";
 import FriendsPage from "./FriendsPage";
+import UserPage from "./UserPage";
 import DetailedPostView from "../Components/DetailedPostView";
 import DetailedPostViewWeb from "../Components/DetailedPostViewWeb";
 import MoodHistory from "../Mental-Health/MoodHistory";
@@ -46,6 +47,10 @@ class PersonalPageNav extends React.Component {
                     <Stack.Screen
                         name="FriendsPage"
                         component={FriendsPage}
+                    />
+                    <Stack.Screen
+                        name="UserPage"
+                        component={UserPage}
                     />
                     <Stack.Screen
                         name="DetailedPostView"

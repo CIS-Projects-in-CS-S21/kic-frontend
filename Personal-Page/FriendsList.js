@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import UserBlurb from "../Components/UserBlurb";
 import AddFriendButton from "../Components/AddFriendButton";
 import TokenManager from "../Managers/TokenManager";
@@ -28,20 +28,44 @@ class FriendsList extends React.Component {
         // Define the initial state:
         this.state = {
             authString: "authstring",
+            myUserid: props.myUserid,
             userid: props.userid,
             username: props.username,
             friends: [],
+            renderer: 0,
         };
 
-        this.fetchFriends = this.fetchFriends.bind(this)
+        this.fetchFriends = this.fetchFriends.bind(this);
     }
 
+    /**
+    * Runs when component first loads
+    *
+    * @function componentDidMount()
+    */
     componentDidMount(){
-      this.fetchFriends().then(response => {
+        this.fetchFriends().then(response => {
           console.log("Fetched friends successfully");
-      }).catch(error => {
+        }).catch(error => {
           console.log("Error fetching friends: " + error)
-      });
+        });
+    }
+
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+
+          this.setState({
+              myUserid: this.props.myUserid,
+              userid: this.props.userid,
+              username: this.props.username,
+          })
+          this.fetchFriends().then(response => {
+              console.log("Fetched friends successfully");
+          }).catch(error => {
+              console.log("Error fetching friends: " + error)
+          });
+      }
     }
 
     /**
@@ -73,7 +97,7 @@ class FriendsList extends React.Component {
 
         // Create the request and set the active user's ID
         let req = new GetUserByIDRequest();
-        req.setUserid(this.state.userid);
+        req.setUserid(this.props.userid);
 
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetFriendsForUser(cm, authString, res)});
     }
@@ -100,24 +124,24 @@ class FriendsList extends React.Component {
         let req = new GetFriendsForUserRequest();
         req.setUser(user);
 
-        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.updateState(client, authString, res)});
+        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.updateState(authString, res)});
     }
 
     /**
     * Retrieves the friend list from the response object and saves it to the state
     *
-    * @function callGetFriendsForUser
-    * @param {FriendsClient} client The FriendsClient to be reused
+    * @function updateState
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */
-    updateState(client, authString, res){
-
+    updateState(authString, res){
+        console.log("User " + this.props.userid + "s friends' by ID: " + res.getFriendsList());
         // Save friends list to state
         this.setState({
             authString: authString,
             friends: res.getFriendsList()
         })
+
     }
 
     /**
@@ -129,21 +153,23 @@ class FriendsList extends React.Component {
             <View style={styles.friendsList}>
                 <Text style={styles.friendCounter}>Displaying {this.state.friends.length} friends for @{this.state.username}</Text>
 
-                {/* The comment box of fixed height */}
+                {/* Friend list container */}
                 <View style={styles.friendsList}>
+                    {/* FlatList that renders a UserBlurb per user in the friend list */}
                     <FlatList
                         style={styles.listcontainer}
                         data={this.state.friends}
                         renderItem={({item}) => <UserBlurb
+                                                    navigation = {this.props.navigation}
                                                     authString = {this.state.authString}
                                                     myUsername = {this.state.username}
-                                                    myUserid = {this.state.userid}
-                                                    userid = {item}
+                                                    myUserid = {this.props.myUserid}
+                                                    userid = {this.props.userid}
+                                                    blurbUserid = {item}
                                                 />}
                         keyExtractor={friend => friend.userid}
                     />
                 </View>
-
             </View>
         );
     }

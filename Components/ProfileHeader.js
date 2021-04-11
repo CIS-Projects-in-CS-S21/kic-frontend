@@ -16,16 +16,37 @@ class ProfileHeader extends React.Component {
   /*
    * Class constructor
    */
-  constructor(props) {
-    super();
-  }
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            myUserid: props.myUserid,
+            userid: props.userid,
+            username: props.username,
+            bio: props.bio,
+        };
+    }
+
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+          this.setState({
+              userid: this.props.userid,
+              username: this.props.username,
+              bio: this.props.bio,
+              myUserid: this.props.myUserid,
+          })
+      }
+    }
 
     goToFriends = () => {
-        console.log("ph user id is " + this.props.userid + " and username is " + this.props.username);
+        //console.log("I am id " + this.props.myUserid + " and this page has user id " + this.props.userid + " and username is " + this.props.username);
         this.props.navigation.navigate('FriendsPage', {
           username: this.props.username,
           userid: this.props.userid,
           bio: this.props.bio,
+          myUserid: this.props.myUserid,
         })
     }
 
