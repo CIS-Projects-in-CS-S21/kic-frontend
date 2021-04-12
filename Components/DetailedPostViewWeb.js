@@ -186,7 +186,7 @@ class DetailedPostViewWeb extends React.Component {
         filtermap.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
 
         // Overwrite the previous comments array (since we manually concatenate the new and old comments above)
-        req.setUpdateflag(1);
+        req.setUpdateflag(0);
 
         // Set the map to be updated -- we are updating the comments array with the updatedComments array
         let desiredmap = req.getDesiredmetadataMap();
