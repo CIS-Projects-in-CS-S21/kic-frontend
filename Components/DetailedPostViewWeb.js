@@ -4,19 +4,22 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Platform, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import PostDetails from "./PostDetails";
 import CommentSection from "./CommentSection";
 import FeedHeader from '../Components/FeedHeader';
 import ClientManager from "../Managers/ClientManager";
-import { DeleteFilesWithMetaDataRequest } from "../gen/proto/media_pb";
+import { DeleteFilesWithMetaDataRequest, UpdateFilesWithMetadataRequest } from "../gen/proto/media_pb";
+import { GetUserByIDRequest } from '../gen/proto/users_pb';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 /**
  * @class Contains function for rendering the detailed post view.
  */
 class DetailedPostViewWeb extends React.Component {
+
   /*
    * Class constructor
    */
@@ -27,6 +30,7 @@ class DetailedPostViewWeb extends React.Component {
         this.state = {
             // active user's userid & authstring
             myUserid: props.route.params.myUserid,
+            myUsername: 'default',
             authString: props.route.params.authString,
             navigation: props.route.params.navigation,
 
@@ -47,9 +51,16 @@ class DetailedPostViewWeb extends React.Component {
 
             finishedInit: false,
             isMyPost: false,
+
+            // For comment adding
+            comment: {},
+            commentText: '',
+            commentID: '',
+            commenterUsername: '',
         };
         this.initPostView = this.initPostView.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
+        this.handleAddComment = this.handleAddComment.bind(this)
     }
 
     async componentDidMount() {
@@ -85,6 +96,21 @@ class DetailedPostViewWeb extends React.Component {
             caption: this.state.fileinfo.getMetadataMap().get("caption"),
             finishedInit: true,
         })
+
+        // Get active user's username
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+        let req = new GetUserByIDRequest();
+        req.setUserid(this.state.myUserid);
+        return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.setMyUsername(res)})
+    }
+
+    setMyUsername(res){
+        let myusername = res.getUser().getUsername();
+        this.setState({
+            myUsername: myusername,
+        })
+        console.log("active user's username is: " + this.state.myUsername);
     }
 
     handleDelete() {
@@ -101,6 +127,65 @@ class DetailedPostViewWeb extends React.Component {
     redirectUser(res) {
         alert("Post deleted!");
         this.props.navigation.navigate('Profile');
+    }
+
+   setCommentText = (text) => {
+      this.setState({ commentText: text })
+      //console.log("Comment: " + this.state.commentText);
+   }
+
+    async handleAddComment() {
+        await this.randomizeCommentID();
+
+        let commenterusername = this.state.myUsername;
+        this.setState({
+            commenterUsername: commenterusername,
+            comments: this.state.fileinfo.getMetadataMap().get("comments"),
+        })
+        console.log("Comment: " + this.state.commentText + " // comment id: " + this.state.commentID + " // text: " + this.state.commentText);
+
+        let comment = {
+            commentID: this.state.commentID,
+            commenterUsername: this.state.commenterUsername,
+            commentText: this.state.commentText,
+          }
+
+        // Add
+        let comments = [];
+        comments.push(comment);
+
+        let updatedComments = this.state.comments.concat(comments);
+        console.log("comment id: " + comment.commentID);
+        console.log("comment id from comment map: " + comments[0].commentID);
+        console.log("comment id from concatenated comment map: " + updatedComments[0].commentID);
+
+        this.setState({
+            comments: updatedComments,
+        })
+
+        // Send update file request
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+        let req = new UpdateFilesWithMetadataRequest();
+        let filtermap = req.getFiltermetadataMap();
+        filtermap.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
+
+        let desiredmap = req.getDesiredmetadataMap();
+        desiredmap.set("comments", updatedComments);
+
+        req.setUpdateflag(0);
+
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)});
+    }
+
+    async randomizeCommentID() {
+      let string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+      this.setState({
+        commentID: string,
+      })
     }
 
   /**
@@ -139,6 +224,19 @@ class DetailedPostViewWeb extends React.Component {
                         <CommentSection
                             comments = {this.state.comments}
                         />
+                    </View>
+
+                    <View style={{flexDirection: 'row'}}>
+                        <TextInput
+                            style={KIC_Style.commentInput}
+                            textAlign = {'center'}
+                            onChange={(e) => this.setCommentText(e.nativeEvent.text)}
+                            placeholder="Leave a comment . . ."
+                        />
+                        <TouchableOpacity
+                            onPress = {this.handleAddComment}>
+                            <Ionicons name="chatbubble-ellipses-outline" color='#ffff' size={25} />
+                        </TouchableOpacity>
                     </View>
                     <StatusBar style="auto" />
                 </View>

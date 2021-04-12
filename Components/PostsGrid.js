@@ -37,10 +37,28 @@ class PostsGrid extends React.Component {
 
     componentDidMount(){
       this.callGetAuthString().then(response => {
-          console.log("Mounted profile success");
+          console.log("Mounted posts for user id " + this.state.userid + " successfully");
       }).catch(error => {
           console.log(error)
       });
+    }
+
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+
+          this.setState({
+              myUserid: this.props.myUserid,
+              userid: this.props.userid,
+              username: this.props.username,
+              finishedFetching: false,
+          })
+          this.fetchFriends().then(response => {
+              console.log("Updated with posts for user id " + this.state.userid + " successfully");
+          }).catch(error => {
+              console.log("Error fetching posts: " + error)
+          });
+      }
     }
 
     callGetAuthString(){
@@ -55,9 +73,9 @@ class PostsGrid extends React.Component {
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
-        console.log("For userid " + this.props.userid)
+        console.log("For userid " + this.state.userid)
         let req = new GetUserByIDRequest();
-        req.setUserid(this.props.userid);
+        req.setUserid(this.state.userid);
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.getUser(cm, res)})
     }
 
@@ -71,8 +89,8 @@ class PostsGrid extends React.Component {
         // Create a new request that will search for files with metadata containing user's userid
         let req = new GetFilesByMetadataRequest();
         let desiredMap = req.getDesiredmetadataMap();
-        desiredMap.set("userID", this.props.userid);
-        console.log("REQUESTING FILES FOR " + this.props.userid);
+        desiredMap.set("userID", this.state.userid);
+        console.log("REQUESTING FILES FOR " + this.state.userid);
 
         let client = cm.createMediaClient();
 
@@ -89,8 +107,8 @@ class PostsGrid extends React.Component {
             finishedFetching: true,
         })
 
-        console.log("FILES FOR " + this.props.userid + ": " + myfiles);
-        console.log("FILES FOR " + this.props.userid + ": " + this.state.myFiles);
+        console.log("FILES FOR " + this.state.userid + ": " + myfiles);
+        console.log("FILES FOR " + this.state.userid + ": " + this.state.myFiles);
 
         //console.log("Files for the active user id " + this.state.myUserid + ": " + this.state.myFiles);
         //console.log("All feed files: " + this.state.feedFiles);
@@ -106,7 +124,7 @@ class PostsGrid extends React.Component {
         const renderItem = ({ item }) => (
             <ProfilePost
                 navigation = {this.props.navigation}
-                myUserid = {this.props.myUserid}
+                myUserid = {this.state.myUserid}
                 authString = {this.state.authString}
                 file = {item}
                 filename = {item.filename}
@@ -114,7 +132,7 @@ class PostsGrid extends React.Component {
         );
         return (
             <View style ={styles.postGrid}>
-                {(this.props.finishedFetching && (this.state.myFiles.length > 0)) ? <FlatList
+                {(this.state.finishedFetching && (this.state.myFiles.length > 0)) ? <FlatList
                     data={this.state.myFiles}
                     renderItem={renderItem}
                     keyExtractor={file => file.filename}

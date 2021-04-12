@@ -47,7 +47,7 @@ class UserPage extends React.Component {
   }
 
     componentDidMount(){
-      //this.fetchUserInfo()
+      console.log("User page mounted");
       this.fetchUserInfo().then(response => {
           //console.log("Success");
       }).catch(error => {
@@ -58,8 +58,14 @@ class UserPage extends React.Component {
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userid !== prevProps.userid) {
+        this.setState({
+          myUserid: this.props.myUserid,
+          userid: this.props.userid,
+          username: this.props.username,
+          finishedLoading: false,
+        })
         this.fetchUserInfo().then(response => {
-            //console.log("Success");
+          console.log("User page updated");
         }).catch(error => {
             console.log(error)
         });

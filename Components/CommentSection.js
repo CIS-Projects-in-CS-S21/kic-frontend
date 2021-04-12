@@ -91,7 +91,7 @@ class CommentSection extends React.Component {
     render() {
       {/* Function for rendering comments */}
       const renderItem = ({ item }) => (
-        <Comment commenterUsername={item.get("commenterusername")} commentText={item.get("commentText")} />
+        <Comment commenterUsername={item.commenterUsername} commentText={item.commentText} />
       );
 
       return (
@@ -103,7 +103,7 @@ class CommentSection extends React.Component {
                 <FlatList
                     data={this.props.comments}
                     renderItem={renderItem}
-                    keyExtractor={comment => comment.id}
+                    keyExtractor={comment => comment.commentID}
                 />
             </View>
         </View>
