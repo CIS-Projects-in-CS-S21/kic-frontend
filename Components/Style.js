@@ -19,6 +19,17 @@ const KIC_Style = StyleSheet.create({
         paddingBottom: 5
         
     },
+    titlePost: {
+        color: '#b3d2db',
+        //fontFamily: 'sans-serif',
+        fontSize: 30,
+        alignSelf: 'center',
+        flex: 1,
+        fontWeight: "bold",
+        paddingBottom: 5
+
+    },
+
     button: {
         width: "80%",
         borderRadius: 25,

@@ -134,7 +134,10 @@ export default function Post({ navigation }) {
                     style={styles.fixedRatio}
                     type={type}
                     ratio={'1:1'}
+                    onMountError={({ message }) => console.log("onMountError: " + message)}
+                    onCameraReady={console.log("Camera ready!")}
                 />
+                {!notWeb && <Text style = {KIC_Style.titlePost}> Take a picture or select an image! </Text>}
             </View>
             {notWeb && <TouchableOpacity
                 style={KIC_Style.button_post}
@@ -169,11 +172,11 @@ export default function Post({ navigation }) {
 const styles = StyleSheet.create({
     cameraContainer: {
         flex: 1,
-        flexDirection: 'row',
-        padding: 10
+        flexDirection: 'column',
+        padding: 10,
     },
     fixedRatio: {
-        flex: 1,
+        flex: 6,
         aspectRatio: 1
     }
 

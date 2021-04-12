@@ -169,7 +169,7 @@ export default function PostInfo(props) {
             flex: 1,
             backgroundColor: '#ffff'
            }}>
-            <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', padding: 10, margin: 10, aspectRatio: 1}}/>
+            <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>
             <TextInput
                 style={KIC_Style.postInput}
                 textAlign = {'center'}
