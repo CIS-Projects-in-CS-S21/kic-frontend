@@ -128,7 +128,7 @@ export default function PostInfo(props) {
         //convert uri to int 8 Array which is needed for setting File
         let uri2 = uri + "xx";
        let your_bytes = Buffer.from(uri2, "base64");
-       req.setFile(Uint8Array.from(your_bytes));
+       req.setFileuri(uri);
         req.setFileinfo(file);
 
         //console.log("URI FROM UPLOAD: " + uri);
@@ -140,7 +140,6 @@ export default function PostInfo(props) {
         });
 
     //    console.log("request: " + req);
-        console.log("Size of bytes array: ", req.getFile().length)
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {

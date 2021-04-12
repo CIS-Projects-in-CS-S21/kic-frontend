@@ -58,18 +58,7 @@ class KIC_Image extends React.Component {
         stream.on('data', function (response) {
             // This function receives the chunks of data and appends them to the byte64 string
             // Currently, only the first chunk matches the first part of the uri; the rest of the chunks don't match any part of the uri
-            let u8 = response.getChunk_asU8();
-            byte64 += bytesToBase64(u8);
-            // console.log("This chunk is a " + typeof(chunk));
-
-            //console.log("response: " + response);
-
-            //let b64 = Buffer.from(response.getChunk_asU8(), 'base64');
-            //console.log("response in b64: " + b64.toString('ascii'))
-
-
-
-            console.log("U8 CHUNK: " + res);
+            byte64 += response.getChunk();
 
         });
 
@@ -97,40 +86,11 @@ class KIC_Image extends React.Component {
             // Rebuilds the header with special characters for images taken from web app ("data:image/png;base64" format)
             if (!src1.toString().includes("mobile")) {
                 console.log("This image was taken from web");
-                // Add : after "data"
-                let src2 = src1.toString().replace("data", "data:");
 
-                // Add ; after extension
-                let fixedext = ext + ";";
-                let src3 = src2.toString().replace(ext, fixedext);
-
-                // Add , after "base64"
-                let src4 = src3.toString().replace("base64", "base64,");
-
-                // Erase extra "=" at the end
-                let src5 = src4.slice(0, -2);
-
-                finalsrc = src5;
+                finalsrc = byte64;
             } else { //Rebuild the header for images taken from mobile app
                 console.log("This image was taken from mobile");
-
-                // Last two characters of the string are always an incorrect extension
-                let src2 = src1.slice(0, -2) + '.' + ext;
-                //console.log("after adding ext: " + src2);
-
-                // Add a : after "file"
-                let src3 = src2.toString().replace("file", "file:");
-
-                // Replace all + with -
-                let src4 = src3.toString().replace(/\+/g, "-");
-
-                // Add a % before "2540"
-                let src5 = src4.toString().replace("2540", "%2540");
-
-                // Add a % before "252F"
-                let src6 = src5.toString().replace("252F", "%252F");
-
-                finalsrc = src6;
+                finalsrc = byte64;
             }
             // Save the fixed uri to state
             this.setState({
