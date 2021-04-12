@@ -11,7 +11,7 @@ import { UploadFileRequest, CheckForFileRequest } from "../gen/proto/media_pb";
 import { Buffer } from "buffer";
 import { File, Date as CommonDate } from "../gen/proto/common_pb";
 import { useNavigation } from '@react-navigation/native';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 /**
@@ -165,29 +165,35 @@ export default function PostInfo(props) {
 
 
     return (
-        <View style={{ flex: 1 }}>
-            <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', padding: 10}}/>
+        <SafeAreaView style={{
+            flex: 1,
+            backgroundColor: '#ffff'
+           }}>
+            <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>
             <TextInput
-                style={KIC_Style.input}
+                style={KIC_Style.postInput}
+                textAlign = {'center'}
                 value={caption}
                 onChange={(e) => setCaption(e.nativeEvent.text)}
                 placeholder="Write a Caption . . ."
             />
             <TextInput
-                style={KIC_Style.input}
+                style={KIC_Style.postInput}
+                textAlign = {'center'}
                 onChange={(e) => setTagString(e.nativeEvent.text)}
                 placeholder="Write any tags in # format . . ."
             />
             <TextInput
-                style={KIC_Style.input}
+                style={KIC_Style.postInput}
+                textAlign = {'center'}
                 onChange={(e) => setTriggerString(e.nativeEvent.text)}
                 placeholder="Write any triggers in // format . . ."
             />
             <TouchableOpacity
-                style={KIC_Style.button_post}
+                style={KIC_Style.button2}
                 onPress={() => uploadImage()}>
                 <Text style={KIC_Style.button_font}> Upload </Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     )
 }

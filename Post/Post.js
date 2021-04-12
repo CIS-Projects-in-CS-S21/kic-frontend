@@ -2,14 +2,14 @@
 * @fileoverview The screen for user posting, where user can choose to post video or picture with caption
 */
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, Text, View, Button, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, Button, Image, TouchableOpacity, StatusBar} from 'react-native';
 import { Camera } from 'expo-camera';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import KIC_Style from '../Components/Style';
 import {Platform} from 'react-native';
 import * as Permissions from 'expo-permissions';
-
+import exampleImage from '../assets/kic.png';
 
 export default function Post({ navigation }) {
     //allows for permission to use image library
@@ -66,7 +66,8 @@ export default function Post({ navigation }) {
             const data = await camera.takePictureAsync({
                 base64: true,
                // quality: 0.5
-                quality:0
+                quality:0,
+                ratio: "1:1",
 
             });
             setImage(data.uri);
@@ -85,7 +86,7 @@ export default function Post({ navigation }) {
     //pick image from image library and set image and base64
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,//allows access to images and videos
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,//allows access to images and videos
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
@@ -128,13 +129,15 @@ export default function Post({ navigation }) {
     return (
         <SafeAreaView style={KIC_Style.container}>
             <View style={styles.cameraContainer}>
-                <Camera
+                 <Camera
                     ref={ref => setCamera(ref)}
                     style={styles.fixedRatio}
                     type={type}
-                    poster = {"../Assets/kic.png"}
                     ratio={'1:1'}
+                    onMountError={({ message }) => console.log("onMountError: " + message)}
+                    onCameraReady={console.log("Camera ready!")}
                 />
+                {!notWeb && <Text style = {KIC_Style.titlePost}> Take a picture or select an image! </Text>}
             </View>
             {notWeb && <TouchableOpacity
                 style={KIC_Style.button_post}
@@ -169,11 +172,11 @@ export default function Post({ navigation }) {
 const styles = StyleSheet.create({
     cameraContainer: {
         flex: 1,
-        flexDirection: 'row',
-        padding: 10
+        flexDirection: 'column',
+        padding: 10,
     },
     fixedRatio: {
-        flex: 1,
+        flex: 6,
         aspectRatio: 1
     }
 
