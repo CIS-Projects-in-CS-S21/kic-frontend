@@ -72,6 +72,7 @@ class PostsGrid extends React.Component {
         let req = new GetFilesByMetadataRequest();
         let desiredMap = req.getDesiredmetadataMap();
         desiredMap.set("userID", this.props.userid);
+        console.log("REQUESTING FILES FOR " + this.props.userid);
 
         let client = cm.createMediaClient();
 
@@ -88,8 +89,8 @@ class PostsGrid extends React.Component {
             finishedFetching: true,
         })
 
-        console.log("FILES FOR " + this.state.userid + ": " + myfiles);
-        console.log("FILES FOR " + this.state.userid + ": " + this.state.myFiles);
+        console.log("FILES FOR " + this.props.userid + ": " + myfiles);
+        console.log("FILES FOR " + this.props.userid + ": " + this.state.myFiles);
 
         //console.log("Files for the active user id " + this.state.myUserid + ": " + this.state.myFiles);
         //console.log("All feed files: " + this.state.feedFiles);
@@ -105,7 +106,7 @@ class PostsGrid extends React.Component {
         const renderItem = ({ item }) => (
             <ProfilePost
                 navigation = {this.props.navigation}
-                myUserid = {this.state.myUserid}
+                myUserid = {this.props.myUserid}
                 authString = {this.state.authString}
                 file = {item}
                 filename = {item.filename}
@@ -113,7 +114,7 @@ class PostsGrid extends React.Component {
         );
         return (
             <View style ={styles.postGrid}>
-                {(this.state.finishedFetching && (this.state.myFiles.length > 0)) ? <FlatList
+                {(this.props.finishedFetching && (this.state.myFiles.length > 0)) ? <FlatList
                     data={this.state.myFiles}
                     renderItem={renderItem}
                     keyExtractor={file => file.filename}
