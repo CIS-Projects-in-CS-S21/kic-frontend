@@ -15,6 +15,7 @@ import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } f
 import TokenManager from "../Managers/TokenManager";
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
+import FeedHeader from '../Components/FeedHeader';
 
 /**
  * @class Contains function for rendering the personal page.
@@ -120,7 +121,9 @@ class UserPage extends React.Component {
    */
   render() {
       return (
-        <SafeAreaView style={styles.container}><ScrollView>
+        <SafeAreaView style={KIC_Style.outContainer}>
+          <FeedHeader navigation={this.props.navigation}/>
+        <SafeAreaView style={KIC_Style.innerContainer}><ScrollView>
 
             {/* Display profile header with state information */}
             <ProfileHeader
@@ -153,7 +156,8 @@ class UserPage extends React.Component {
                 <Text style={KIC_Style.button_font}>User Feed</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
-        </ScrollView></SafeAreaView>
+        </ScrollView></SafeAreaView>        </SafeAreaView>
+
       );
   }
 }
