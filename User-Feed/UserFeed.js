@@ -28,141 +28,95 @@ class UserFeed extends React.Component {
   constructor(props) {
     super();
 
-     // Define the initial state:
-     this.state = {
+    // Define the initial state:
+    this.state = {
       myUser: null,
       myUserid: '',
       authString: '',
-      feedFiles: [],
-      myFiles: [],
-      myFriends: [],
-      friendsFiles: [],
+      feedFiles: []
     };
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     this.fetchUserInfo().then(response => {
-        console.log("Mounted userfeed success");
+      console.log("Mounted userfeed success");
     }).catch(error => {
-        console.log(error)
+      console.log(error)
     });
   }
 
   // Starts the process of fetching active user info.
   fetchUserInfo() {
-      return this.callGetAuthString();
+    return this.callGetAuthString();
   }
 
   // Uses UserManager to fetch authstring then calls callgetUserID
-  callGetAuthString(){
-      let um = new UserManager();
-      return um.getAuthString().then(authString => {this.callGetUserID(um, authString)});
+  callGetAuthString() {
+    let um = new UserManager();
+    return um.getAuthString().then(authString => { this.callGetUserID(um, authString) });
   }
 
   // Sets the authstring to the state and calls getMyUserID
-  callGetUserID(um, authString){
-      this.setState({
-          authString: authString,
-      })
-      return um.getMyUserID().then(userID => {this.callGetUserByUserID(userID)});
+  callGetUserID(um, authString) {
+    this.setState({
+      authString: authString,
+    })
+    return um.getMyUserID().then(userID => { this.callGetUserByUserID(userID) });
   }
 
   // Inits GetUserByIDRequest and sends it through client
-  callGetUserByUserID(userID){
-      let cm = new ClientManager();
-      let client = cm.createUsersClient();
+  callGetUserByUserID(userID) {
+    let cm = new ClientManager();
+    let client = cm.createUsersClient();
 
-      let req = new GetUserByIDRequest();
-      req.setUserid(userID);
-      return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.setUserInfo(cm, res, userID)})
+    let req = new GetUserByIDRequest();
+    req.setUserid(userID);
+    return client.getUserByID(req, { 'Authorization': this.state.authString }).then(res => { this.setUserInfo(cm, res, userID) })
   }
 
   // Sets the active userID to the state and then inits a GetFilesByMetadataRequest to retrieve user's own posts
-  setUserInfo(cm, res, userID){
-      let user = res.getUser();
-      //let myusername = user.getUsername();
-      this.setState({
-          myUserid: userID,
-          myUser: user,
-      })
-
-      // Create a new request that will search for files with metadata containing ACTIVE USER's userid
-      let req = new GetFilesByMetadataRequest();
-      let desiredMap = req.getDesiredmetadataMap();
-      desiredMap.set("userID", this.state.myUserid);
-
-      let client = cm.createMediaClient();
-
-
-      return client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {this.setMyFilesAndGetFriends(cm, res)})
-  }
-
-  // Retrieves the array of ACTIVE USER's files from the response object and saves to state
-  setMyFilesAndGetFriends(cm, res){
-
-      let myfiles = res.getFileinfosList();
-
-      let feedfiles = this.state.feedFiles;
-
-      let combinedfiles = myfiles.concat(feedfiles);
-
-      this.setState({
-          myFiles: myfiles,
-          feedFiles: combinedfiles,
-      })
-
-      console.log("Files for the active user id " + this.state.myUserid + ": " + this.state.myFiles);
-      console.log("All feed files: " + this.state.feedFiles);
-      console.log("First filename: " + this.state.feedFiles[0].getFilename());
-
-      let client = cm.createFriendsClient();
-      let req = new GetFriendsForUserRequest();
-      req.setUser(this.state.myUser);
-
-      return client.getFriendsForUser(req, {'Authorization': this.state.authString}).then(resp => {this.getFriendsFiles(cm, resp)});
-  }
-
-  getFriendsFiles(cm, resp){
-      let myfriends = resp.getFriendsList();
-      this.setState({
-          myFriends: myfriends,
-      })
-
-      console.log("Friends for the active user id: " +this.state.myFriends);
-
-      /* Next, we need to iterate through the state.myFriends arrays, which is an array of userIDs
-       * For each userID in the array, we conduct the same GetFilesByMetadataRequest, using a desired map
-       * with the "userid" set to the friend's id
-      */
-      
-      this.state.myFriends.forEach(friend => {
-        console.log("My friend is: " +friend);
-        
-        let req = new GetFilesByMetadataRequest();
-        let desiredMap = req.getDesiredmetadataMap();
-        desiredMap.set("userID", friend.toString());
-
-        let client = cm.createMediaClient();
-
-        client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(result => {this.setFriendFiles(result)});
-      
-      });
-  }
-
-  setFriendFiles(result) {
-    console.log("Result: " + result)
- 
-    let friendfiles = result.getFileinfosList();
-    let feedfiles = this.state.feedFiles; 
-    let combinedfiles = feedfiles.concat(friendfiles);
-    //console.log("Result of file infos list " + foundfiles); 
-
+  setUserInfo(cm, res, userID) {
+    let user = res.getUser();
+    //let myusername = user.getUsername();
     this.setState({
-      feedFiles : combinedfiles
+      myUserid: userID,
+      myUser: user,
     })
-    //console.log("Friend files: " + this.state.friendFiles);
-    console.log("This many pictures for feed: " +this.state.feedFiles.length);
+
+    // Create a new request that will create a stream for files for ACTIVE USERS userid
+    let req = new GenerateFeedForUserRequest();
+    req.setUserid(this.state.myUserid);
+
+    let client = cm.createFeedClient();
+
+    let stream = client.generateFeedForUser(req, { 'Authorization': this.state.authString });
+    //Take stream of files, store them to the file posts array
+    stream.on('data', function (response) {
+      //console.log(response);
+      //console.log(response.getFileinfo()); 
+
+      let file = response.getFileinfo(); 
+      console.log("Files: " + file);
+      let files = this.state.feedFiles; 
+      let combinedfiles = files.concat(file);
+      
+      this.setState({
+        feedFiles : combinedfiles
+      })
+
+    }.bind(this));
+
+    //Prints and handles errors
+    stream.on('status', function (status) {
+
+    });
+
+    //When stream is over
+    stream.on('end', function (end) {
+
+    });
   }
+
 
   /**
    * Renders user feed components.
@@ -176,17 +130,17 @@ class UserFeed extends React.Component {
         <SafeAreaView style={styles.container}>
           <ScrollView>
             {/* FlatList that renders a UserBlurb per user in the friend list */}
-                    <FlatList
-                        style={styles.listcontainer}
-                        data={this.state.feedFiles}
-                        renderItem={({item}) => <FeedPost
-                                                    navigation = {this.props.navigation}
-                                                    authString = {this.state.authString}
-                                                    myUserid = {this.props.myUserid}
-                                                    file = {item}
-                                                />}
-                        keyExtractor={friend => friend.userid}
-                    />
+            <FlatList
+              style={styles.listcontainer}
+              data={this.state.feedFiles}
+              renderItem={({ item }) => <FeedPost
+                navigation={this.props.navigation}
+                authString={this.state.authString}
+                myUserid={this.props.myUserid}
+                file={item}
+              />}
+              keyExtractor={friend => friend.userid}
+            />
             <StatusBar style="auto" />
           </ScrollView>
         </SafeAreaView>
@@ -202,15 +156,15 @@ const styles = StyleSheet.create({
   container: {
     ...Platform.select({
       ios: {
-        top:30,
-        marginBottom:30,
+        top: 30,
+        marginBottom: 30,
       },
       android: {
-        top:30,
-        marginBottom:30,
+        top: 30,
+        marginBottom: 30,
       },
       default: {
-        top:60,
+        top: 60,
         marginBottom: 60,
       }
     }),
