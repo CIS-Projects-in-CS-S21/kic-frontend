@@ -142,8 +142,11 @@ class DetailedPostViewWeb extends React.Component {
             commenterUsername: commenterusername,
             comments: this.state.fileinfo.getMetadataMap().get("comments"),
         })
-        console.log("Comment: " + this.state.commentText + " // comment id: " + this.state.commentID + " // text: " + this.state.commentText);
 
+        // Log new comment
+        console.log("Comment: " + this.state.commentText + " // comment id: " + this.state.commentID + " // commenter: " + this.state.commenterUsername);
+
+        // Create a Comment object with commentID, commenterUsername, and commentTest as keys
         let comment = {
             commentID: this.state.commentID,
             commenterUsername: this.state.commenterUsername,
@@ -154,20 +157,23 @@ class DetailedPostViewWeb extends React.Component {
         let comments = [];
         comments.push(comment);
 
+        /* OVERWRITE METHOD - if overwriting, concatenate old and new comments manually and set desiredmap to updatedComments, not comments
         // Concatenate the current state.comments with the new comments -- adds new comment to comments array
         // We have to concat and not just setState due to state array immutability
         // updatedComments should be an array of the previous comments and the newly added comment
-        let updatedComments = this.state.comments.concat(comments);
+        //let oldComments = this.state.comments;
+        //let updatedComments = oldComments.concat(comments);
+        */
 
         // Checks: should all be the same id (not undefined)
         console.log("comment id: " + comment.commentID);
         console.log("comment id from comment map: " + comments[0].commentID);
-        console.log("comment id from concatenated comment map: " + updatedComments[0].commentID);
+        //console.log("comment id from concatenated comment map: " + updatedComments[0].commentID);
 
         // Set state.comments to the updatedComments array. Allows updated comments to show up onscreen
-        this.setState({
+        /*this.setState({
             comments: updatedComments,
-        })
+        })*/
 
         // Send update file request
         let cm = new ClientManager();
@@ -179,11 +185,11 @@ class DetailedPostViewWeb extends React.Component {
         filtermap.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
 
         // Overwrite the previous comments array (since we manually concatenate the new and old comments above)
-        req.setUpdateflag(0);
+        req.setUpdateflag(1);
 
         // Set the map to be updated -- we are updating the comments array with the updatedComments array
         let desiredmap = req.getDesiredmetadataMap();
-        desiredmap.set("comments", updatedComments);
+        desiredmap.set("comments", comments);
 
         // Send the request and print the # of files updated
         return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)});
