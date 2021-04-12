@@ -4,6 +4,7 @@ import KIC_Style from "../Components/Style";
 import ClientManager from "../Managers/ClientManager";
 import {DownloadFileRequest} from "../gen/proto/media_pb";
 import {Buffer} from "buffer";
+import {bytesToBase64} from "../util/BytesDecoder"
 
 
 // { image, base64 }
@@ -57,11 +58,8 @@ class KIC_Image extends React.Component {
         stream.on('data', function (response) {
             // This function receives the chunks of data and appends them to the byte64 string
             // Currently, only the first chunk matches the first part of the uri; the rest of the chunks don't match any part of the uri
-            let chunk = response.getChunk_asB64();
-            let bytes = response.getChunk_asU8().length;
-            console.log("Bytes received on KIC_Image: " + bytes);
-            console.log("CHUNK: " + chunk);
-            byte64 += chunk.toString();
+            let u8 = response.getChunk_asU8();
+            byte64 += bytesToBase64(u8);
             // console.log("This chunk is a " + typeof(chunk));
 
             //console.log("response: " + response);
@@ -69,8 +67,9 @@ class KIC_Image extends React.Component {
             //let b64 = Buffer.from(response.getChunk_asU8(), 'base64');
             //console.log("response in b64: " + b64.toString('ascii'))
 
-            let u8 = response.getChunk_asU8();
-            //console.log("U8 CHUNK: " + u8);
+
+
+            console.log("U8 CHUNK: " + res);
 
         });
 
