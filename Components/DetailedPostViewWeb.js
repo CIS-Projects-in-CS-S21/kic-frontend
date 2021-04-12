@@ -157,23 +157,24 @@ class DetailedPostViewWeb extends React.Component {
         let comments = [];
         comments.push(comment);
 
-        /* OVERWRITE METHOD - if overwriting, concatenate old and new comments manually and set desiredmap to updatedComments, not comments
+        // OVERWRITE METHOD - if overwriting, concatenate old and new comments manually and set desiredmap to updatedComments, not comments
         // Concatenate the current state.comments with the new comments -- adds new comment to comments array
         // We have to concat and not just setState due to state array immutability
         // updatedComments should be an array of the previous comments and the newly added comment
-        //let oldComments = this.state.comments;
-        //let updatedComments = oldComments.concat(comments);
-        */
+        let oldComments = this.state.comments;
+        let updatedComments = oldComments.concat(comments);
 
-        // Checks: should all be the same id (not undefined)
+
+        // Checks: all 3 should be the same id (not undefined)
         console.log("comment id: " + comment.commentID);
         console.log("comment id from comment map: " + comments[0].commentID);
-        //console.log("comment id from concatenated comment map: " + updatedComments[0].commentID);
+        // updatedComments logs undefined - it looks like this.state.comments is undefined for some reason?
+        console.log("comment id from concatenated comment map: " + updatedComments[0].commentID);
 
         // Set state.comments to the updatedComments array. Allows updated comments to show up onscreen
-        /*this.setState({
+        this.setState({
             comments: updatedComments,
-        })*/
+        })
 
         // Send update file request
         let cm = new ClientManager();
@@ -189,7 +190,7 @@ class DetailedPostViewWeb extends React.Component {
 
         // Set the map to be updated -- we are updating the comments array with the updatedComments array
         let desiredmap = req.getDesiredmetadataMap();
-        desiredmap.set("comments", comments);
+        desiredmap.set("comments", updatedComments);
 
         // Send the request and print the # of files updated
         return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)});
