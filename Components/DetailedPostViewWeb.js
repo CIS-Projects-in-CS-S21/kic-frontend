@@ -44,7 +44,7 @@ class DetailedPostViewWeb extends React.Component {
             dayPosted: 0,
             fileinfo: props.route.params.fileinfo,
             filename: '',
-            comments: props.route.params.fileinfo.getMetadataMap().get("comments"),
+            comments: JSON.parse(props.route.params.fileinfo.getMetadataMap().get("comments")),
             metadata: [],
             imageSrc: props.route.params.imageSrc,
             caption: 'Default caption',
@@ -176,6 +176,7 @@ class DetailedPostViewWeb extends React.Component {
         req.setUpdateflag(0);
 
         let desiredComments = this.state.comments;
+        let desiredCommentsJSON = JSON.stringify(desiredComments);
 
         // Checks: All IDs logged should match (not undefined)
         // Check ID from comment object
@@ -187,7 +188,7 @@ class DetailedPostViewWeb extends React.Component {
 
         // Set the map to be updated -- we are updating the comments array with the updatedComments array
         let desiredmap = req.getDesiredmetadataMap();
-        desiredmap.set("comments", desiredComments);
+        desiredmap.set("comments", desiredCommentsJSON);
         // Send the request and print the # of files updated
         return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)}).catch(error => console.log("Saving comment failed: " + error));
     }
@@ -248,6 +249,7 @@ class DetailedPostViewWeb extends React.Component {
                             placeholder="Leave a comment . . ."
                         />
                         <TouchableOpacity
+                            style={{ justifyContent: 'center' }}
                             onPress = {this.handleAddComment}>
                             <Ionicons name="chatbubble-ellipses-outline" color='#ffff' size={25} />
                         </TouchableOpacity>
