@@ -143,7 +143,6 @@ class PersonalPage extends React.Component {
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
-          <ScrollView>
             {/* Display profile header with state information */}
             <ProfileHeader
                 navigation = {this.props.navigation}
@@ -176,7 +175,7 @@ class PersonalPage extends React.Component {
                 <Text style={KIC_Style.button_font}>User Feed</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
-          </ScrollView></SafeAreaView>
+          </SafeAreaView>
       </SafeAreaView>
     );
   }
