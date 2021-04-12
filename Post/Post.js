@@ -10,6 +10,9 @@ import KIC_Style from '../Components/Style';
 import {Platform} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import exampleImage from '../assets/kic.png';
+import FeedHeader from '../Components/FeedHeader';
+
+
 
 export default function Post({ navigation }) {
     //allows for permission to use image library
@@ -108,8 +111,12 @@ export default function Post({ navigation }) {
     };
 
     //if no camera possible (web) or no gallery permission, say sorry! no access to gallery or camera
+
     if (hasCameraPermission === null && hasGalleryPermission === false) {
-        return (<View style = {KIC_Style.container}>
+        return (
+          <SafeAreaView style={KIC_Style.outContainer}>
+                <FeedHeader navigation={navigation} />
+                <SafeAreaView style={KIC_Style.innerContainer}>
             <Image
                 style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain', alignSelf:'center'}}
                 source={require('../assets/kic.png')}
@@ -117,17 +124,21 @@ export default function Post({ navigation }) {
             <Text>
                 Sorry! No access to gallery or camera. This feature is only available on mobile!
             </Text>
-            <TouchableOpacity
-                style={KIC_Style.button}
-                onPress={() => navigation.navigate('Profile')}>
-                <Text style={KIC_Style.button_font}>Personal Page</Text>
-            </TouchableOpacity>
-        </View>
+                    <TouchableOpacity
+                        style={KIC_Style.button}
+                        onPress={() => navigation.navigate('Profile')}>
+                        <Text style={KIC_Style.button_font}>Personal Page</Text>
+                    </TouchableOpacity>
+                </SafeAreaView>
+            </SafeAreaView>
 
-    )};
+        )
+    };
 
     return (
-        <SafeAreaView style={KIC_Style.container}>
+        <SafeAreaView style={KIC_Style.outContainer}>
+            <FeedHeader navigation={navigation} />
+            <SafeAreaView style={KIC_Style.innerContainer}>
             <View style={styles.cameraContainer}>
                  <Camera
                     ref={ref => setCamera(ref)}
@@ -165,6 +176,7 @@ export default function Post({ navigation }) {
                 onPress={() => navigation.navigate('PostInfo', { image, base64 })}>
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
+            </SafeAreaView>
         </SafeAreaView>
     );
 }

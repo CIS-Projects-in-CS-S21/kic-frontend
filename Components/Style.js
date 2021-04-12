@@ -1,8 +1,12 @@
 import React from 'react';
-import { StyleSheet} from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import {StatusBar} from "expo-status-bar";
 
 const KIC_Style = StyleSheet.create({
+    outContainer: {
+        flex:1,
+        flexDirection: 'column',
+    },
     container: {
         flex: 1,
         backgroundColor: '#ffff',
@@ -10,13 +14,34 @@ const KIC_Style = StyleSheet.create({
         justifyContent: 'center',
         color: '#7ab7dd',
     },
+    innerContainer: {
+        flex: 1,
+        backgroundColor: '#ffff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#7ab7dd',
+        ...Platform.select({
+            ios: {
+              top:30,
+              marginBottom:30,
+            },
+            android: {
+              top:30,
+              marginBottom:30,
+            },
+            default: {
+              top:60,
+              marginBottom: 60,
+            }
+          }),
+    },
+
     title: {
         color: '#b3d2db',
         //fontFamily: 'sans-serif',
         fontSize: 30,
         fontWeight: "bold",
         paddingBottom: 5
-        
     },
     titlePost: {
         color: '#b3d2db',

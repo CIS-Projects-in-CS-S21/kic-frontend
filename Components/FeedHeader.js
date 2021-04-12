@@ -4,7 +4,11 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import TokenManager from "../Managers/TokenManager";
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Platform, TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 /**
 * @class Contains function for rendering the feed header.
@@ -14,15 +18,57 @@ class FeedHeader extends React.Component {
     * Renders personal page components.
     * @returns {FeedHeader}
     */
+
+    
+
+    logOut() {
+        let tokenManager = new TokenManager();
+        tokenManager.forgetToken();
+    }
+
+    homeNavigation() {
+        if(Platform.OS === 'web') {
+            this.props.navigation.navigate('HomePageWeb');
+          } else {
+            this.props.navigation.navigate('HomePageMobile');
+          }
+    }
+
+    logOutPress() {
+        this.logOut();
+        this.homeNavigation();
+    }
+
+    backNavigation() {
+        this.props.navigation.goBack(); 
+    }
+
     render() {
       return (
-        <View style={styles.feedHeaderContainer}>
+        <SafeAreaView style={styles.feedHeaderContainer}>
+            <Icon.Button 
+                name="arrow-back-circle-outline" 
+                size={30} 
+                backgroundColor='#b3d2db'
+                borderRadius={0}
+                onPress={()=>
+                    this.backNavigation()}
+                 />
             <Image 
-                style={styles.icon}
-                source={require('../assets/kic.png')}
+                style={styles.logo}
+                source={require('../assets/Logo_BlueBG.png')}
             />
-            <Text style={styles.headerText}>Keeping It Casual</Text>
-        </View>
+            <Icon.Button 
+                name="log-out-outline" 
+                size={30} 
+                backgroundColor='#b3d2db'
+                borderRadius={0}
+                onPress={() => 
+                    this.logOutPress() 
+                }
+                />
+        </SafeAreaView>
+
       );
     }
 }
@@ -32,26 +78,27 @@ class FeedHeader extends React.Component {
 */
 const styles = StyleSheet.create({
     feedHeaderContainer: {
-        width: '100%',
+        flex: 1, 
         flexDirection: 'row',
-        backgroundColor: '#b3d2db',
-        paddingVertical: 10,
+        width: '100%',
+        height: 80,
+        justifyContent: 'space-between',
         alignItems: 'center',
-        alignContent: 'center',
-        top: 0
+        backgroundColor: '#b3d2db',
+        top: 0,
+        position: 'absolute',
+        zIndex: 100,
+        marginBottom: 90,
+    },
+    logo: {
+        width: 50,
+        height: 50,
+        top:0,
+        bottom:0
     },
     icon: {
-        width: 75,
-        height: 75,
-        padding: 20,
-    },
-    headerText: {
-        color: '#ffff',
-        fontFamily: 'sans-serif',
-        fontSize: 30,
-        fontWeight: "bold",
-        paddingBottom: 5
-    },
+        backgroundColor: '#b3d2db',
+    }
 });
 
 export default FeedHeader;
