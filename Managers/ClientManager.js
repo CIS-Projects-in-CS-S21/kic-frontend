@@ -25,7 +25,7 @@ export default class ClientManager {
           url = "http://test.api.keeping-it-casual.com";
         } else {
           console.log("Running in production mode");
-          url = "https://test.api.keeping-it-casual.com";
+          url = "https://api.keeping-it-casual.com";
         }
         return url;
     }
