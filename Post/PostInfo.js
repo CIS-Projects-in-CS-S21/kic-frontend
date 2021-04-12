@@ -91,7 +91,8 @@ export default function PostInfo(props) {
 
         //create file and add to its metadata map
         let file = new File();
-        file.setFilename(userID + "@" + await randomizeFileName() + "." + extension);
+        let filename = userID + "@" + await randomizeFileName() + "." + extension;
+        file.setFilename(filename);
         console.log("Ext: " + extension);
         console.log("File name: " + file.getFilename());
 
@@ -106,6 +107,7 @@ export default function PostInfo(props) {
 
         //each image is associated with a userID, array of captions, triggers, comments, and tags, its uri, extension of the image, and the format of the image
         map.set("userID", userID.toString()) ;
+        map.set("filename", filename),
         map.set("caption", caption);
         map.set("trigger", triggerString);
         map.set("comments", comments);

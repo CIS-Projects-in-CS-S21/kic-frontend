@@ -15,6 +15,7 @@ import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } f
 import TokenManager from "../Managers/TokenManager";
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
+import FeedHeader from '../Components/FeedHeader';
 
 /**
  * @class Contains function for rendering the personal page.
@@ -31,12 +32,14 @@ class UserPage extends React.Component {
     // the user whose page is currently on display
     this.state = {
       myUserid: props.route.params.myUserid,
+      navigation: props.route.params.navigation,
       userid: props.route.params.userid,
       username: props.route.params.username,
       bio: props.route.params.bio,
       birthDay: 0,
       birthMonth: 0,
       birthYear: 0,
+      finishedLoading: false,
     };
 
     this.fetchUserInfo = this.fetchUserInfo.bind(this)
@@ -44,7 +47,7 @@ class UserPage extends React.Component {
   }
 
     componentDidMount(){
-      //this.fetchUserInfo()
+      console.log("User page mounted");
       this.fetchUserInfo().then(response => {
           //console.log("Success");
       }).catch(error => {
@@ -54,9 +57,15 @@ class UserPage extends React.Component {
 
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
-      if (this.state.userid !== prevProps.userid) {
+      if (this.props.userid !== prevProps.userid) {
+        this.setState({
+          myUserid: this.props.myUserid,
+          userid: this.props.userid,
+          username: this.props.username,
+          finishedLoading: false,
+        })
         this.fetchUserInfo().then(response => {
-            //console.log("Success");
+          console.log("User page updated");
         }).catch(error => {
             console.log(error)
         });
@@ -95,21 +104,22 @@ class UserPage extends React.Component {
             birthDay: mybirthday,
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
+            finishedLoading: true,
         })
     }
 
     handleViewPost = () => {
         if (Platform.OS === 'web') {
-            this.props.navigation.navigate('DetailedPostViewWeb', {
-              myUserid: this.state.myUserid,
-              username: this.state.username,
-              userid: this.state.userid
+            this.state.navigation.navigate('DetailedPostViewWeb', {
+                username: this.state.username,
+                userid: this.state.userid,
+                navigation: this.state.navigation
             })
         } else {
-            this.props.navigation.navigate('DetailedPostView', {
-              myUserid: this.state.myUserid,
-              username: this.state.username,
-              userid: this.state.userid
+            this.state.navigation.navigate('DetailedPostView', {
+                username: this.state.username,
+                userid: this.state.userid,
+                navigation: this.state.navigation
             })
         }
     }
@@ -120,11 +130,12 @@ class UserPage extends React.Component {
    */
   render() {
       return (
-        <SafeAreaView style={styles.container}><ScrollView>
-
+      <SafeAreaView style={KIC_Style.outContainer}>
+        <FeedHeader navigation={this.state.navigation} />
+        <SafeAreaView style={styles.container}>
             {/* Display profile header with state information */}
             <ProfileHeader
-                navigation = {this.props.navigation}
+                navigation = {this.state.navigation}
                 myUserid = {this.state.myUserid}
                 username = {this.state.username}
                 userid = {this.state.userid}
@@ -135,25 +146,27 @@ class UserPage extends React.Component {
                 />
 
             {/* Show posts */}
-            <PostsGrid
-                navigation = {this.props.navigation}
+            {(this.state.finishedLoading) ? <PostsGrid
+                myUserid = {this.state.myUserid}
+                navigation = {this.state.navigation}
                 username = {this.state.username}
                 userid = {this.state.userid}
-                />
+                /> : <View></View>}
 
             {/* NAVIGATION */}
             <TouchableOpacity
                 style={KIC_Style.button}
-                onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
+                onPress={() => this.state.navigation.navigate('MentalHealthLog')}>
                 <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button}
-                onPress={() => this.props.navigation.navigate('Feed')}>
+                onPress={() => this.state.navigation.navigate('Feed')}>
                 <Text style={KIC_Style.button_font}>User Feed</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
-        </ScrollView></SafeAreaView>
+          </SafeAreaView>
+      </SafeAreaView>
       );
   }
 }
@@ -163,8 +176,22 @@ class UserPage extends React.Component {
  */
 const styles = StyleSheet.create({
   container: {
+    ...Platform.select({
+      ios: {
+        top:30,
+        marginBottom:30,
+      },
+      android: {
+        top:30,
+        marginBottom:30,
+      },
+      default: {
+        top:60,
+        marginBottom: 60,
+      }
+    }),
     backgroundColor: '#fff',
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'flex-start',
     flexDirection: 'column',
     flex: 1,
