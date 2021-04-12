@@ -24,6 +24,7 @@ class PostsGrid extends React.Component {
 
         // Define the initial state:
         this.state = {
+            myUserid: props.myUserid,
             username: props.username,
             userid: props.userid,
             user: null,
@@ -112,12 +113,12 @@ class PostsGrid extends React.Component {
         );
         return (
             <View style ={styles.postGrid}>
-                {(this.state.finishedFetching) ? <FlatList
+                {(this.state.finishedFetching && (this.state.myFiles.length > 0)) ? <FlatList
                     data={this.state.myFiles}
                     renderItem={renderItem}
                     keyExtractor={file => file.filename}
                     numColumns={3}
-                /> : <View></View>}
+                /> : <View><Text style = {{fontStyle: 'italic'}}>No posts to show.</Text></View>}
             </View>
         );
     }

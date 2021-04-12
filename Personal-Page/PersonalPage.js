@@ -153,6 +153,7 @@ class PersonalPage extends React.Component {
 
             {/* Show posts */}
             {(this.state.finishedLoading) ? <PostsGrid
+                myUserid = {this.state.userid}
                 navigation = {this.props.navigation}
                 username = {this.state.username}
                 userid = {this.state.userid}

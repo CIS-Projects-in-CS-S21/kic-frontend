@@ -20,6 +20,13 @@ class KIC_Image extends React.Component {
 
         // Define the initial state; pro
         this.state = {
+            // id of active user
+            myUserid: props.myUserid,
+
+            // id of poster
+            userid: props.userid,
+            username: props.username,
+
             navigation: props.navigation,
             authString: props.authString,
             fileInfo: props.fileInfo,
@@ -138,17 +145,23 @@ class KIC_Image extends React.Component {
     handleViewPost = () => {
         if (Platform.OS === 'web') {
             this.props.navigation.navigate('DetailedPostViewWeb', {
-              username: this.props.username,
+              myUserid: this.props.myUserid,
+              authString: this.props.authString,
+              navigation: this.props.navigation,
               userid: this.props.userid,
+              username: this.props.username,
               imageSrc: this.state.imageSrc,
-              metadata: this.state.metadata,
+              fileinfo: this.props.fileInfo,
             })
         } else {
             this.props.navigation.navigate('DetailedPostView', {
-              username: this.props.username,
+              myUserid: this.props.myUserid,
+              authString: this.props.authString,
+              navigation: this.props.navigation,
               userid: this.props.userid,
+              username: this.props.username,
               imageSrc: this.state.imageSrc,
-              metadata: this.state.metadata,
+              fileinfo: this.props.fileInfo,
             })
         }
     }
@@ -161,7 +174,7 @@ class KIC_Image extends React.Component {
                    <TouchableOpacity
                         onPress={this.handleViewPost}>
                        <Image
-                           style={{width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center'}}
+                           style={{width: 180, height: 180, alignSelf: 'center'}}
                            source={this.state.imageSrc}>
                        </Image>
                    </TouchableOpacity>

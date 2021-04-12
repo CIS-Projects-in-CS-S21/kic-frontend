@@ -8,7 +8,9 @@ import { Dimensions, SafeAreaView, StyleSheet, Text, View, Image, Modal, Button,
 import KIC_Style from "../Components/Style";
 import PostDetails from "./PostDetails";
 import CommentSection from "./CommentSection";
-import FeedHeader from "./FeedHeader";
+import FeedHeader from '../Components/FeedHeader';
+import ClientManager from "../Managers/ClientManager";
+import { DeleteFilesWithMetaDataRequest } from "../gen/proto/media_pb";
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -22,24 +24,82 @@ class DetailedPostView extends React.Component {
 
         // Define the initial state:
         this.state = {
-            userID: props.route.params.userid,
+            // active user's userid & authstring
+            myUserid: props.route.params.myUserid,
+            authString: props.route.params.authString,
+            navigation: props.route.params.navigation,
+
+             // poster's userid and username
+            userid: props.route.params.userid,
             username: props.route.params.username,
+
+            // image info
             yearPosted: 0,
             monthPosted: 0,
             dayPosted: 0,
+            fileinfo: props.route.params.fileinfo,
+            filename: '',
+            comments: [],
+            metadata: [],
+            imageSrc: props.route.params.imageSrc,
+            caption: 'Default caption',
+
+            finishedInit: false,
+            isMyPost: false,
         };
-        this.setPosterInfo = this.setPosterInfo.bind(this)
+        this.initPostView = this.initPostView.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
     }
 
-    componentDidMount() {
-      this.setPosterInfo();
+    async componentDidMount() {
+      await this.initPostView();
     }
 
-    setPosterInfo() {
-        console.log("Mobile");
-        this.setState({
-            // do smth
-        })
+    initPostView() {
+            console.log("Web");
+            console.log("My id: " + this.state.myUserid + " // poster id: " + this.state.userid);
+
+            // Check if this is the active user's own post
+            if (this.state.myUserid == this.state.userid){
+                this.setState({
+                    isMyPost: true,
+                })
+            } else {
+                this.setState({
+                    isMyPost: false,
+                })
+            }
+
+            // Month name strings
+            let monthNames = ["January", "February", "March", "April", "May", "June",
+              "July", "August", "September", "October", "November", "December"
+            ];
+
+            this.setState({
+                filename: this.state.fileinfo.getMetadataMap().get("filename"),
+                comments: this.state.fileinfo.getMetadataMap().get("comments"),
+                yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
+                monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()],
+                dayPosted: this.state.fileinfo.getDatestored().getDay().toString(),
+                caption: this.state.fileinfo.getMetadataMap().get("caption"),
+                finishedInit: true,
+            })
+        }
+
+    handleDelete() {
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+        let req = new DeleteFilesWithMetaDataRequest();
+        let map = req.getMetadataMap();
+        console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
+        map.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
+
+        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser});
+    }
+
+    redirectUser(res) {
+        alert("Post deleted!");
+        this.props.navigation.navigate('Profile');
     }
 
   /**
@@ -49,11 +109,10 @@ class DetailedPostView extends React.Component {
   render() {
       return (
         <SafeAreaView style={{ alignItems: 'center', flex: 1, padding: 5 }}>
-            <FeedHeader />
-            <View style={styles.container}>
+            {(this.state.finishedInit) ? <View style={styles.container}>
                 <Image
                     style={styles.postImage}
-                    source = {require('../assets/default/default_icon_2.png')}
+                    source = {this.state.imageSrc}
                 />
 
                 {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
@@ -63,14 +122,22 @@ class DetailedPostView extends React.Component {
                     yearPosted = {this.state.yearPosted}
                     monthPosted = {this.state.monthPosted}
                     dayPosted = {this.state.dayPosted}
+                    caption = {this.state.caption}
                 />
 
+                {/* Only show display button if this is active user's own post */}
+                {(this.state.isMyPost) ? <TouchableOpacity
+                    onPress = {this.handleDelete}>
+                        <Text style = {{ textAlign: 'right', fontSize: 10, fontStyle: 'italic', color: '#707070', }} >Delete post</Text>
+                </TouchableOpacity> : <View></View>}
+
                 <View style={{ flex: 1, alignItems: 'stretch', }}>
-                <CommentSection />
+                    <CommentSection
+                        comments = {this.state.comments}
+                    />
                 </View>
                 <StatusBar style="auto" />
-
-            </View>
+            </View> : <View></View>}
         </SafeAreaView>
       );
   }
