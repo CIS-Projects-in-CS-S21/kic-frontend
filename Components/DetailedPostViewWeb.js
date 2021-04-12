@@ -149,7 +149,7 @@ class DetailedPostViewWeb extends React.Component {
             commentID: this.state.commentID,
             commenterUsername: this.state.commenterUsername,
             commentText: this.state.commentText,
-          }
+        }
 
         // Create an array containing the single new comment
         //let comments = [];
@@ -188,9 +188,8 @@ class DetailedPostViewWeb extends React.Component {
         // Set the map to be updated -- we are updating the comments array with the updatedComments array
         let desiredmap = req.getDesiredmetadataMap();
         desiredmap.set("comments", desiredComments);
-
         // Send the request and print the # of files updated
-        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)});
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)}).catch(error => console.log("Saving comment failed: " + error));
     }
 
     async randomizeCommentID() {
