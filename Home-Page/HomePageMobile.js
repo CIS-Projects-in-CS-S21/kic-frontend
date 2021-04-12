@@ -16,20 +16,20 @@
   
   const slides = [
     {
-      key: 1,
+      key: '1',
       title: 'Keeping It Casual',
       text: 'Stay connected to friends and family while fostering a healthy mindset!',
       backgroundColor: '#7bb4dc',
       image: '../assets/kic.png'
     },
     {
-      key: 2,
+      key: '2',
       title: 'Features:',
       text: 'Profile curated by you, feed of friends, with a mental health page dedicated to journaling your days and getting connected to professionals',
       backgroundColor: '#cde1e5',
     },
     {
-      key: 3,
+      key: '3',
       title: 'Join the movement today!',
       text: 'Sign up to start connecting.',
       backgroundColor: '#b3d3dc',
@@ -63,7 +63,13 @@
       this.props.navigation.navigate('SignUp');
     }
     render() {
-        return <AppIntroSlider showPrevButton showNextButton doneLabel = {'Sign Up'} renderItem={this._renderItem} data={slides} onDone={this._onDone}/>;
+        return <AppIntroSlider 
+          showPrevButton 
+          showNextButton 
+          doneLabel = {'Sign Up'} 
+          renderItem={this._renderItem} 
+          data={slides} 
+          onDone={this._onDone}/>;
     }
   }
 
