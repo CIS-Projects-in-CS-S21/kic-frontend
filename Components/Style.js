@@ -9,7 +9,7 @@ const KIC_Style = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         color: '#7ab7dd',
-        textColor: '#7ab7dd',
+        // textColor: '#7ab7dd',
     },
     title: {
         color: '#b3d2db',
