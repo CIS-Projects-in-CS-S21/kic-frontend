@@ -137,11 +137,13 @@ export default function PostInfo(props) {
         });
 
     //    console.log("request: " + req);
+        console.log("Size of bytes array: ", req.getFile().length)
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {
-               console.log("file id:" + res.fileid);
-               console.log("bytesRead:" + res.bytesread);
+               console.log("file id:" + res.getFileid());
+               console.log("bytesRead:" + res.getBytesread());
+               
                console.log(res);
                navigation.navigate('Profile')
             })
