@@ -150,15 +150,21 @@ class DetailedPostViewWeb extends React.Component {
             commentText: this.state.commentText,
           }
 
-        // Add
+        // Create an array containing the single new comment
         let comments = [];
         comments.push(comment);
 
+        // Concatenate the current state.comments with the new comments -- adds new comment to comments array
+        // We have to concat and not just setState due to state array immutability
+        // updatedComments should be an array of the previous comments and the newly added comment
         let updatedComments = this.state.comments.concat(comments);
+
+        // Checks: should all be the same id (not undefined)
         console.log("comment id: " + comment.commentID);
         console.log("comment id from comment map: " + comments[0].commentID);
         console.log("comment id from concatenated comment map: " + updatedComments[0].commentID);
 
+        // Set state.comments to the updatedComments array. Allows updated comments to show up onscreen
         this.setState({
             comments: updatedComments,
         })
@@ -167,14 +173,19 @@ class DetailedPostViewWeb extends React.Component {
         let cm = new ClientManager();
         let client = cm.createMediaClient();
         let req = new UpdateFilesWithMetadataRequest();
+
+        // Search for this file using its unique filename
         let filtermap = req.getFiltermetadataMap();
         filtermap.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
 
+        // Overwrite the previous comments array (since we manually concatenate the new and old comments above)
+        req.setUpdateflag(0);
+
+        // Set the map to be updated -- we are updating the comments array with the updatedComments array
         let desiredmap = req.getDesiredmetadataMap();
         desiredmap.set("comments", updatedComments);
 
-        req.setUpdateflag(0);
-
+        // Send the request and print the # of files updated
         return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)});
     }
 
