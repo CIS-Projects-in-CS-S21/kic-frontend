@@ -5,32 +5,94 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Platform, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, Modal, Button, FlatList, TouchableOpacity } from 'react-native';
+import ProfilePost from "../Personal-Page/ProfilePost";
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import { GetFilesByMetadataRequest } from "../gen/proto/media_pb";
+import ClientManager from "../Managers/ClientManager";
+import UserManager from '../Managers/UserManager';
 
 /**
-* @class Contains function for rendering the posts grid
+* @class Contains function for rendering the posts grid. Takes in a username and userid
 */
 class PostsGrid extends React.Component {
-
-  /*
-   * Class constructor
-   */
+    /*
+    * Class constructor
+    */
     constructor(props) {
         super();
+
+        // Define the initial state:
+        this.state = {
+            username: props.username,
+            userid: props.userid,
+            user: null,
+            authString: '',
+            myFiles: [],
+            finishedFetching: false,
+        };
+        this.callGetAuthString = this.callGetAuthString.bind(this);
     }
 
-    handleViewPost = () => {
-        if (Platform.OS === 'web') {
-            this.props.navigation.navigate('DetailedPostViewWeb', {
-              username: this.props.username,
-              userid: this.props.userid
-            })
-        } else {
-            this.props.navigation.navigate('DetailedPostView', {
-              username: this.props.username,
-              userid: this.props.userid
-            })
-        }
+    componentDidMount(){
+      this.callGetAuthString().then(response => {
+          console.log("Mounted profile success");
+      }).catch(error => {
+          console.log(error)
+      });
+    }
+
+    callGetAuthString(){
+        let um = new UserManager();
+        return um.getAuthString().then(authString => {this.callGetUserByUserID(um, authString)});
+    }
+    callGetUserByUserID(um, authString){
+        this.setState({
+            authString: authString,
+        })
+
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        console.log("For userid " + this.props.userid)
+        let req = new GetUserByIDRequest();
+        req.setUserid(this.props.userid);
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.getUser(cm, res)})
+    }
+
+    // Sets the active userID to the state and then inits a GetFilesByMetadataRequest to retrieve user's own posts
+    getUser(cm, res){
+        let user = res.getUser();
+        this.setState({
+            user: user,
+        })
+
+        // Create a new request that will search for files with metadata containing user's userid
+        let req = new GetFilesByMetadataRequest();
+        let desiredMap = req.getDesiredmetadataMap();
+        desiredMap.set("userID", this.props.userid);
+
+        let client = cm.createMediaClient();
+
+        return client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {this.getMyFiles(cm, res)})
+    }
+
+    // Retrieves the array of user's files from the response object and saves to state
+    getMyFiles(cm, res){
+
+        let myfiles = res.getFileinfosList();
+
+        this.setState({
+            myFiles: myfiles,
+            finishedFetching: true,
+        })
+
+        console.log("FILES FOR " + this.state.userid + ": " + myfiles);
+        console.log("FILES FOR " + this.state.userid + ": " + this.state.myFiles);
+
+        //console.log("Files for the active user id " + this.state.myUserid + ": " + this.state.myFiles);
+        //console.log("All feed files: " + this.state.feedFiles);
+        //console.log("First filename: " + this.state.feedFiles[0].getFilename());
     }
 
     /**
@@ -38,40 +100,26 @@ class PostsGrid extends React.Component {
     * @returns {PostsGrid}
     */
     render() {
-      return (
-        <View style ={styles.postGrid}>
-            <TouchableOpacity
-                onPress={this.handleViewPost}
-            >
-            <Image
-              style ={styles.postImage}
-              source = {require('../assets/default/default_icon_2.png')}
+        {/* Function for rendering comments */}
+        const renderItem = ({ item }) => (
+            <ProfilePost
+                navigation = {this.props.navigation}
+                myUserid = {this.state.myUserid}
+                authString = {this.state.authString}
+                file = {item}
+                filename = {item.filename}
             />
-            </TouchableOpacity>
-
-            <Image
-              style ={styles.postImage}
-              source = {require('../assets/default/default_icon_2.png')}
-            />
-            <Image
-              style ={styles.postImage}
-              source = {require('../assets/default/default_icon_2.png')}
-            />
-            <Image
-              style ={styles.postImage}
-              source = {require('../assets/default/default_icon_2.png')}
-            />
-
-            <Image
-              style ={styles.postImage}
-              source = {require('../assets/default/default_icon_2.png')}
-            />
-            <Image
-              style ={styles.postImage}
-              source = {require('../assets/default/default_icon_2.png')}
-            />
-        </View>
-      );
+        );
+        return (
+            <View style ={styles.postGrid}>
+                {(this.state.finishedFetching) ? <FlatList
+                    data={this.state.myFiles}
+                    renderItem={renderItem}
+                    keyExtractor={file => file.filename}
+                    numColumns={3}
+                /> : <View></View>}
+            </View>
+        );
     }
 }
 
