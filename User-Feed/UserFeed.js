@@ -93,6 +93,7 @@ class UserFeed extends React.Component {
 
       let client = cm.createMediaClient();
 
+
       return client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {this.setMyFilesAndGetFriends(cm, res)})
   }
 
@@ -137,28 +138,32 @@ class UserFeed extends React.Component {
       this.state.myFriends.forEach(friend => {
         console.log("My friend is: " +friend);
         
-        let client = cm.createMediaClient();
         let req = new GetFilesByMetadataRequest();
         let desiredMap = req.getDesiredmetadataMap();
-        desiredMap.set("userID", friend);
+        desiredMap.set("userID", friend.toString());
 
-        return client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(result => {this.setFriendFiles(cm, result)});
+        let client = cm.createMediaClient();
+
+        client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(result => {this.setFriendFiles(result)});
       
       });
   }
 
-  setFriendFiles(cm, result) {
-    let foundfiles = result.getFileinfosList();
-    let friendfiles = this.state.friendsFiles; 
-    let combinedfiles = foundfiles.concat(friendfiles); 
-
-    console.log("Result of file request: " + foundfiles); 
+  setFriendFiles(result) {
+    console.log("Result: " + result)
+ 
+    let friendfiles = result.getFileinfosList();
+    let feedfiles = this.state.feedFiles; 
+    let combinedfiles = feedfiles.concat(friendfiles);
+    //console.log("Result of file infos list " + foundfiles); 
 
     this.setState({
-      friendFiles: combinedfiles
+      feedFiles : combinedfiles
     })
-    console.log("Friend files: " + this.state.friendFiles);
+    //console.log("Friend files: " + this.state.friendFiles);
+    console.log("This many pictures for feed: " +this.state.feedFiles.length);
   }
+
   /**
    * Renders user feed components.
    * @returns {Component}
@@ -170,11 +175,18 @@ class UserFeed extends React.Component {
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
           <ScrollView>
-            {/*Header containing logo and name*/}
-            {/*Posts, eventually will need to become a stream injected into individual FeedPosts*/}
-            <View style={{ flex: 1, alignSelf: 'center' }}>
- 
-            </View>
+            {/* FlatList that renders a UserBlurb per user in the friend list */}
+                    <FlatList
+                        style={styles.listcontainer}
+                        data={this.state.feedFiles}
+                        renderItem={({item}) => <FeedPost
+                                                    navigation = {this.props.navigation}
+                                                    authString = {this.state.authString}
+                                                    myUserid = {this.props.myUserid}
+                                                    file = {item}
+                                                />}
+                        keyExtractor={friend => friend.userid}
+                    />
             <StatusBar style="auto" />
           </ScrollView>
         </SafeAreaView>

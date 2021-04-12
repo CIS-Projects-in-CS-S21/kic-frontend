@@ -60,7 +60,7 @@ class FeedPost extends React.Component {
   }
 
   parseFileinfo(){
-      console.log("My naem is " + this.state.file)
+      //console.log("My name is " + this.state.file)
       let map = this.state.file.getMetadataMap();
       let posterid = map.get("userID");
       let caption = map.get("caption");
@@ -102,6 +102,7 @@ class FeedPost extends React.Component {
             {/* Image of post */}
             <KIC_Image
               authString = {this.props.authString}
+              navigation = {this.props.navigation}
               fileInfo = {this.props.file}
             />
             {/* Handle of user who posted image and caption */}
