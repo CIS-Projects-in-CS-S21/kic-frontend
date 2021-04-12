@@ -44,7 +44,7 @@ class DetailedPostViewWeb extends React.Component {
             dayPosted: 0,
             fileinfo: props.route.params.fileinfo,
             filename: '',
-            comments: JSON.parse(props.route.params.fileinfo.getMetadataMap().get("comments")),
+            comments: props.route.params.fileinfo.getMetadataMap().get("comments"),
             metadata: [],
             imageSrc: props.route.params.imageSrc,
             caption: 'Default caption',
@@ -87,6 +87,7 @@ class DetailedPostViewWeb extends React.Component {
           "July", "August", "September", "October", "November", "December"
         ];
 
+        // Extract metadata info
         this.setState({
             filename: this.state.fileinfo.getMetadataMap().get("filename"),
             yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
@@ -95,6 +96,13 @@ class DetailedPostViewWeb extends React.Component {
             caption: this.state.fileinfo.getMetadataMap().get("caption"),
             finishedInit: true,
         })
+
+        // Only parse if there are comments to avoid error
+        if (this.state.comments.length > 0){
+            this.setState({
+                comments: JSON.parse(this.state.fileinfo.getMetadataMap().get("comments")),
+            })
+        }
 
         // Get active user's username
         let cm = new ClientManager();
@@ -109,7 +117,6 @@ class DetailedPostViewWeb extends React.Component {
         this.setState({
             myUsername: myusername,
         })
-        console.log("active user's username is: " + this.state.myUsername);
     }
 
     handleDelete() {
@@ -117,7 +124,7 @@ class DetailedPostViewWeb extends React.Component {
         let client = cm.createMediaClient();
         let req = new DeleteFilesWithMetaDataRequest();
         let map = req.getMetadataMap();
-        console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
+        //console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
         map.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
 
         return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser});
