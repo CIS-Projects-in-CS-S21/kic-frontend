@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Platform} from 'react-native';
 import KIC_Style from "../Components/Style";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PostDetails from "../Components/PostDetails";
@@ -15,15 +15,17 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
+import FeedHeader from '../Components/FeedHeader';
+
 
 /**
  * @class Contains function for rendering the friends page.
  */
 class FriendsPage extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /*
+     * Class constructor
+     */
     constructor(props) {
         super();
 
@@ -91,6 +93,8 @@ class FriendsPage extends React.Component {
         <Item title={item.title} />
       );
       return (
+        <SafeAreaView style={KIC_Style.outContainer}>
+        <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
             {/* Switches between friends/requests list */}
             {(!this.state.showFriends) ? <RequestsList
@@ -124,6 +128,7 @@ class FriendsPage extends React.Component {
             <StatusBar style="auto" />
             </View>
         </SafeAreaView>
+        </SafeAreaView>
       );
   }
 }
@@ -143,9 +148,23 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         paddingVertical: 20,
+        ...Platform.select({
+            ios: {
+              top:30,
+              marginBottom:30,
+            },
+            android: {
+              top:30,
+              marginBottom:30,
+            },
+            default: {
+              top:60,
+              marginBottom: 60,
+            }
+          }),
     },
     content: {
-        alignItems:'center',
+        alignItems: 'center',
         paddingBottom: 5,
     },
     icon: {
