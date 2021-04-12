@@ -108,7 +108,7 @@ class KIC_Image extends React.Component {
                 let src4 = src3.toString().replace("base64", "base64,");
 
                 // Erase extra "=" at the end
-                let src5 = src4.toString().replace("==", "=");
+                let src5 = src4.slice(0, -2);
 
                 finalsrc = src5;
             } else { //Rebuild the header for images taken from mobile app

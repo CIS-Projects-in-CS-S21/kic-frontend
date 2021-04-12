@@ -126,11 +126,12 @@ export default function PostInfo(props) {
         file.setDatestored(date);
 
         //convert uri to int 8 Array which is needed for setting File
-       let your_bytes = Buffer.from(uri, "base64");
+        let uri2 = uri + "xx";
+       let your_bytes = Buffer.from(uri2, "base64");
        req.setFile(Uint8Array.from(your_bytes));
         req.setFileinfo(file);
 
-        console.log("URI FROM UPLOAD: " + uri);
+        //console.log("URI FROM UPLOAD: " + uri);
 
         //set metadata and check that it is set correctly
         console.log("Metadata after set: ");
