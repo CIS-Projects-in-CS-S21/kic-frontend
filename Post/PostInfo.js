@@ -126,9 +126,12 @@ export default function PostInfo(props) {
         file.setDatestored(date);
 
         //convert uri to int 8 Array which is needed for setting File
-       let your_bytes = Buffer.from(uri, "base64");
-       req.setFile(Uint8Array.from(your_bytes));
+        let uri2 = uri + "xx";
+       let your_bytes = Buffer.from(uri2, "base64");
+       req.setFileuri(uri);
         req.setFileinfo(file);
+
+        //console.log("URI FROM UPLOAD: " + uri);
 
         //set metadata and check that it is set correctly
         console.log("Metadata after set: ");
@@ -140,8 +143,9 @@ export default function PostInfo(props) {
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {
-               console.log("file id:" + res.fileid);
-               console.log("bytesRead:" + res.bytesread);
+               console.log("file id:" + res.getFileid());
+               console.log("bytesRead:" + res.getBytesread());
+               
                console.log(res);
                navigation.navigate('Profile')
             })

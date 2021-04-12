@@ -136,7 +136,7 @@ class PostsGrid extends React.Component {
                     data={this.state.myFiles}
                     renderItem={renderItem}
                     keyExtractor={file => file.filename}
-                    numColumns={3}
+                    numColumns={6}
                 /> : <View><Text style = {{fontStyle: 'italic'}}>No posts to show.</Text></View>}
             </View>
         );
