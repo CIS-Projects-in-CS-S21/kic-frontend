@@ -44,7 +44,7 @@ class DetailedPostViewWeb extends React.Component {
             dayPosted: 0,
             fileinfo: props.route.params.fileinfo,
             filename: '',
-            comments: [],
+            comments: props.route.params.fileinfo.getMetadataMap().get("comments"),
             metadata: [],
             imageSrc: props.route.params.imageSrc,
             caption: 'Default caption',
@@ -89,7 +89,6 @@ class DetailedPostViewWeb extends React.Component {
 
         this.setState({
             filename: this.state.fileinfo.getMetadataMap().get("filename"),
-            comments: this.state.fileinfo.getMetadataMap().get("comments"),
             yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
             monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()],
             dayPosted: this.state.fileinfo.getDatestored().getDay().toString(),
@@ -140,7 +139,6 @@ class DetailedPostViewWeb extends React.Component {
         let commenterusername = this.state.myUsername;
         this.setState({
             commenterUsername: commenterusername,
-            comments: this.state.fileinfo.getMetadataMap().get("comments"),
         })
 
         // Log new comment
@@ -154,26 +152,15 @@ class DetailedPostViewWeb extends React.Component {
           }
 
         // Create an array containing the single new comment
-        let comments = [];
-        comments.push(comment);
+        //let comments = [];
+        //comments.push(comment);
 
-        // OVERWRITE METHOD - if overwriting, concatenate old and new comments manually and set desiredmap to updatedComments, not comments
-        // Concatenate the current state.comments with the new comments -- adds new comment to comments array
-        // We have to concat and not just setState due to state array immutability
-        // updatedComments should be an array of the previous comments and the newly added comment
-        let oldComments = this.state.comments;
-        let updatedComments = oldComments.concat(comments);
-
-
-        // Checks: all 3 should be the same id (not undefined)
-        console.log("comment id: " + comment.commentID);
-        console.log("comment id from comment map: " + comments[0].commentID);
-        // updatedComments logs undefined - it looks like this.state.comments is undefined for some reason?
-        console.log("comment id from concatenated comment map: " + updatedComments[0].commentID);
-
-        // Set state.comments to the updatedComments array. Allows updated comments to show up onscreen
+        // Set the state with new comment
         this.setState({
-            comments: updatedComments,
+            comments: [
+              ...this.state.comments,
+              comment
+            ]
         })
 
         // Send update file request
@@ -188,9 +175,19 @@ class DetailedPostViewWeb extends React.Component {
         // Overwrite the previous comments array (since we manually concatenate the new and old comments above)
         req.setUpdateflag(0);
 
+        let desiredComments = this.state.comments;
+
+        // Checks: All IDs logged should match (not undefined)
+        // Check ID from comment object
+        console.log("comment id: " + comment.commentID);
+        // Check ID from state.comments
+        console.log("comment id from state concatenated comment map: " + this.state.comments[0].commentID);
+        // Check ID from desiredComments (metadata used in update request)
+        console.log("Comment id from desiredComments (the metadata in update req): " + desiredComments[0].commentID);
+
         // Set the map to be updated -- we are updating the comments array with the updatedComments array
         let desiredmap = req.getDesiredmetadataMap();
-        desiredmap.set("comments", updatedComments);
+        desiredmap.set("comments", desiredComments);
 
         // Send the request and print the # of files updated
         return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)});
