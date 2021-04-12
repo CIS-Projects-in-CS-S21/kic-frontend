@@ -4,8 +4,9 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, Dimensions, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
+import {SafeAreaView} from 'react-native-safe-area-context';
 import PostDetails from "./PostDetails";
 import CommentSection from "./CommentSection";
 import FeedHeader from '../Components/FeedHeader';
@@ -56,7 +57,7 @@ class DetailedPostView extends React.Component {
     }
 
     initPostView() {
-            console.log("Web");
+            console.log("Mobile");
             console.log("My id: " + this.state.myUserid + " // poster id: " + this.state.userid);
 
             // Check if this is the active user's own post
@@ -107,7 +108,9 @@ class DetailedPostView extends React.Component {
    * @returns a {DetailedPostView}
    */
   render() {
-      return (
+    return (
+      <SafeAreaView style={KIC_Style.outContainer}>
+        <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={{ alignItems: 'center', flex: 1, padding: 5 }}>
             {(this.state.finishedInit) ? <View style={styles.container}>
                 <Image
@@ -139,7 +142,8 @@ class DetailedPostView extends React.Component {
                 <StatusBar style="auto" />
             </View> : <View></View>}
         </SafeAreaView>
-      );
+      </SafeAreaView>
+    );
   }
 }
 
@@ -155,6 +159,20 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     height: 'auto',
+    ...Platform.select({
+      ios: {
+        top:30,
+        marginBottom:30,
+      },
+      android: {
+        top:30,
+        marginBottom:30,
+      },
+      default: {
+        top:60,
+        marginBottom: 60,
+      }
+    }),
   },
   postImage: {
     width: Dimensions.get('window').width,

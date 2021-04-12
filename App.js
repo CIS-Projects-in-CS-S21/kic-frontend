@@ -12,6 +12,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import TabNavigation from "./TabNavigation";
 import LogIn from "./User-Authentication/LogIn";
 import SignUp from "./User-Authentication/SignUp";
+import HomePageNav from './Home-Page/HomePageNav';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,10 @@ class App extends React.Component {
                           headerShown: false
                       }}
                   >
+                      <Stack.Screen
+                          name="HomePageNav"
+                          component={HomePageNav}
+                      />
                       <Stack.Screen
                           name="LogIn"
                           component={LogIn}

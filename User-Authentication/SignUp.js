@@ -59,6 +59,9 @@ export default function signUp() {
         console.log("Successfully added user");
       }).catch(error => {
         console.log(error);
+        if(error.message == 'User already exists') {
+            alert('Error: Username already exists.');
+        }
       });
     }
     const callAddUser = () => {

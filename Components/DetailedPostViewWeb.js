@@ -4,8 +4,9 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
+import {SafeAreaView} from 'react-native-safe-area-context';
 import PostDetails from "./PostDetails";
 import CommentSection from "./CommentSection";
 import FeedHeader from '../Components/FeedHeader';
@@ -107,9 +108,10 @@ class DetailedPostViewWeb extends React.Component {
    * @returns a {DetailedPostView}
    */
   render() {
-      return (
+    return (
+      <SafeAreaView style={KIC_Style.outContainer}>
+        <FeedHeader navigation={this.props.navigation} />
         <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10, }}>
-            <FeedHeader />
             {(this.state.finishedInit) ? <View style={styles.container}>
                 <Image
                     style={styles.postImage}
@@ -143,7 +145,8 @@ class DetailedPostViewWeb extends React.Component {
 
             </View> : <View></View>}
         </View>
-      );
+      </SafeAreaView>
+    );
   }
 }
 
@@ -152,9 +155,9 @@ class DetailedPostViewWeb extends React.Component {
  */
 const styles = StyleSheet.create({
   container: {
-    alignItems:'center',
+    alignItems: 'center',
     flex: 1,
-    flexDirection:'row',
+    flexDirection: 'row',
     width: '60%',
     backgroundColor: '#b3d2db',
     justifyContent: 'flex-start',
@@ -163,6 +166,20 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 40,
     marginTop: 20,
     paddingRight: 15,
+    ...Platform.select({
+      ios: {
+        top:30,
+        marginBottom:30,
+      },
+      android: {
+        top:30,
+        marginBottom:30,
+      },
+      default: {
+        top:60,
+        marginBottom: 60,
+      }
+    }),
   },
   detailsAndComments: {
     flex: 1,
