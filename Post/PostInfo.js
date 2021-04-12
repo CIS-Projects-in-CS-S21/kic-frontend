@@ -130,6 +130,8 @@ export default function PostInfo(props) {
        req.setFile(Uint8Array.from(your_bytes));
         req.setFileinfo(file);
 
+        console.log("URI FROM UPLOAD: " + uri);
+
         //set metadata and check that it is set correctly
         console.log("Metadata after set: ");
         file.getMetadataMap().forEach(function(v, k) {

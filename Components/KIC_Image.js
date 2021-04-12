@@ -58,7 +58,9 @@ class KIC_Image extends React.Component {
             // This function receives the chunks of data and appends them to the byte64 string
             // Currently, only the first chunk matches the first part of the uri; the rest of the chunks don't match any part of the uri
             let chunk = response.getChunk_asB64();
-            //console.log("CHUNK: " + chunk);
+            let bytes = response.getChunk_asU8().length;
+            console.log("Bytes received on KIC_Image: " + bytes);
+            console.log("CHUNK: " + chunk);
             byte64 += chunk.toString();
             // console.log("This chunk is a " + typeof(chunk));
 
