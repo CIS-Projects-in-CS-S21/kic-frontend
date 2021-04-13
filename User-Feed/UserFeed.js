@@ -38,12 +38,13 @@ class UserFeed extends React.Component {
   }
 
   async componentDidMount() {
-    this.fetchUserInfo().then(response => {
-      console.log("Mounted userfeed success");
-    }).catch(error => {
-      console.log(error)
-    });
+      this.fetchUserInfo().then(response => {
+        console.log("Mounted userfeed success");
+      }).catch(error => {
+        console.log(error)
+      });
   }
+
 
   // Starts the process of fetching active user info.
   fetchUserInfo() {
@@ -81,6 +82,7 @@ class UserFeed extends React.Component {
     this.setState({
       myUserid: userID,
       myUser: user,
+      feedFiles : []
     })
 
     // Create a new request that will create a stream for files for ACTIVE USERS userid
@@ -141,7 +143,7 @@ class UserFeed extends React.Component {
               />}
               keyExtractor={friend => friend.userid}
             />
-            <Text style={KIC_Style.titlePost}>End of feed!</Text>
+            <Text>End of feed!</Text>
             <StatusBar style="auto" />
           </ScrollView>
         </SafeAreaView>

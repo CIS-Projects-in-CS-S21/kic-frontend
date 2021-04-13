@@ -104,6 +104,8 @@ class FeedPost extends React.Component {
               authString = {this.props.authString}
               navigation = {this.props.navigation}
               fileInfo = {this.props.file}
+              userid = {this.state.posterid}
+              myUserid = {this.props.myUserid}
             />
             {/* Handle of user who posted image and caption */}
             <Text style = {styles.bottomText}>@{this.state.posterusername}: {this.state.caption}</Text>
