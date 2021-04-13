@@ -6,14 +6,14 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import FeedHeader from '../Components/FeedHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, View, ScrollView, Image, Button } from 'react-native';
+import { StyleSheet, Text, TextInput, View, ScrollView, Image, Button, TouchableOpacity } from 'react-native';
 import KIC_Style from '../Components/Style';
 import UserBlurb from "../Components/UserBlurb";
 import TokenManager from "../Managers/TokenManager";
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
-import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 /**
@@ -36,10 +36,13 @@ class Explore extends React.Component {
       birthDay: 0,
       birthMonth: 0,
       birthYear: 0,
+      searchString: '',
       finishedLoading: false,
     };
 
     this.callGetAuthString = this.callGetAuthString.bind(this)
+    this.setSearchString = this.setSearchString(this)
+    this.handleSearch = this.handleSearch(this)
 
   }
 
@@ -107,6 +110,14 @@ class Explore extends React.Component {
         })
     }
 
+    setSearchString = (text) => {
+      this.setState({ searchString: text })
+    }
+
+    handleSearch() {
+        //do smth
+    }
+
   render() {
     /**
      * Renders Explore screen components.
@@ -116,7 +127,22 @@ class Explore extends React.Component {
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={this.props.navigation} />
             <SafeAreaView style={KIC_Style.innerContainer}>
-            <Text style={styles.toptext}>Displaying friend recommendations for {this.state.username}</Text>
+                <View style={{flexDirection: 'row', marginTop: 30, justifyContent: 'center' }}>
+                    <TextInput
+                        style={KIC_Style.searchInput}
+                        textAlign = {'center'}
+                        onChange={(e) => this.setSearchString(e.nativeEvent.text)}
+                        placeholder="Search for a user . . ."
+                    />
+                    <TouchableOpacity
+                        style={{ backgroundColor: '#b3d2db', borderRadius: 10, height: 30, justifyContent: 'center' }}
+                        onPress = {this.handleSearch}>
+                        <Ionicons name="search-circle-outline" color='#ffff' size={25} />
+                    </TouchableOpacity>
+                </View>
+
+                <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
+
                 {(this.state.finishedLoading) ? <ScrollView>
                     <UserBlurb
                         navigation = {this.props.navigation}
