@@ -123,7 +123,18 @@ const KIC_Style = StyleSheet.create({
         width: "90%",
         margin: 10
     },
-
+    searchInput: {
+        alignSelf: 'center',
+        backgroundColor: '#ffff',
+        fontColor: '#0000',
+        borderWidth: .2,
+        borderColor: '#b3d2db',
+        borderRadius: 20,
+        padding: 10,
+        minHeight: 10,
+        width: "90%",
+        margin: 10
+    },
 });
 
 export default KIC_Style;
