@@ -75,8 +75,8 @@ class PersonalPage extends React.Component {
     }
     callGetUserByUserID(authString, userID){
 
-    let cm = new ClientManager();
-    let client = cm.createUsersClient();
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
 
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
@@ -124,14 +124,14 @@ class PersonalPage extends React.Component {
    * Gets user's posts. Returns an array of the user's posts.
    */
   fetchPosts = () => {
-    // Request posts for user
+      // Request posts for user
   }
 
   /**
    * Gets a post's corresponding image to display in the grid.
    */
   fetchPostImage = () => {
-    // Request the image from backend
+      // Request the image from backend
   }
 
   /**
@@ -143,7 +143,6 @@ class PersonalPage extends React.Component {
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
-          <ScrollView>
             {/* Display profile header with state information */}
             <ProfileHeader
                 navigation = {this.props.navigation}
@@ -158,6 +157,7 @@ class PersonalPage extends React.Component {
 
             {/* Show posts */}
             {(this.state.finishedLoading) ? <PostsGrid
+                myUserid = {this.state.userid}
                 navigation = {this.props.navigation}
                 username = {this.state.username}
                 userid = {this.state.userid}
@@ -165,17 +165,17 @@ class PersonalPage extends React.Component {
 
             {/* NAVIGATION */}
             <TouchableOpacity
-              style={KIC_Style.button}
-              onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
-              <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
+                style={KIC_Style.button}
+                onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
+                <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={KIC_Style.button}
-              onPress={() => this.props.navigation.navigate('Feed')}>
-              <Text style={KIC_Style.button_font}>User Feed</Text>
+                style={KIC_Style.button}
+                onPress={() => this.props.navigation.navigate('Feed')}>
+                <Text style={KIC_Style.button_font}>User Feed</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
-          </ScrollView></SafeAreaView>
+          </SafeAreaView>
       </SafeAreaView>
     );
   }
