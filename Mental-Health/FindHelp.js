@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import FeedHeader from '../Components/FeedHeader';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import {StyleSheet, Text, View, Image, Button, TouchableOpacity} from 'react-native';
 import KIC_Style from '../Components/Style';
 
 /**
@@ -23,16 +23,16 @@ class FindHelp extends React.Component {
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={KIC_Style.innerContainer}>
           <Image
-            style={{ width: 180, height: 180, resizeMode: 'contain' }}
-            source={require('../assets/kic.png')}
+            style={{ width: "100%", height: "80%", alignItems: "center", resizeMode: 'contain' }}
+            source={require('../assets/googlemap_sample.png')}
           />
           <Text>Keeping It Casual Find Help Page!</Text>
-          <Button
-            title="Return to Mental Health Log!"
-            onPress={() =>
-              this.props.navigation.navigate('MentalHealthLog')
-            }
-          />
+          <TouchableOpacity
+              style={KIC_Style.button}
+              onPress={() =>
+                  this.props.navigation.navigate('MentalHealthLog')}>
+            <Text style={KIC_Style.button_font}> Return to Mental Health Log </Text>
+          </TouchableOpacity>
           <StatusBar style="auto" />
         </SafeAreaView>
       </SafeAreaView>
