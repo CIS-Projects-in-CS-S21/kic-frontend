@@ -138,7 +138,7 @@ class UserFeed extends React.Component {
               renderItem={({ item }) => <FeedPost
                 navigation={this.props.navigation}
                 authString={this.state.authString}
-                myUserid={this.props.myUserid}
+                myUserid={this.state.myUserid}
                 file={item}
               />}
               keyExtractor={friend => friend.userid}
