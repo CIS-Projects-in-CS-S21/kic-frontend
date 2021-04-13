@@ -43,6 +43,20 @@ class KIC_Image extends React.Component {
         this.fetchImage();
     }
 
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+
+          this.setState({
+              myUserid: this.props.myUserid,
+              userid: this.props.userid,
+              username: this.props.username,
+              navigation: this.props.navigation,
+              authString: this.props.authString,
+          })
+          this.fetchImage();
+      }
+    }
 
     fetchImage() {
         let cm = new ClientManager();

@@ -45,6 +45,8 @@ class FeedPost extends React.Component {
 
           // The image caption
           caption: "Caption",
+
+          finishedUpdating: false,
       };
 
       this.parseFileinfo = this.parseFileinfo.bind(this)
@@ -89,6 +91,7 @@ class FeedPost extends React.Component {
 
       this.setState({
           posterusername: posterusername,
+          finishedUpdating: true,
       })
 
 
@@ -100,13 +103,14 @@ class FeedPost extends React.Component {
           {/* Handle of user who posted image */}
             <Text style = {styles.headerHandle}>@{this.state.posterusername}</Text>
             {/* Image of post */}
-            <KIC_Image
+            { (this.state.finishedUpdating) ? <KIC_Image
               authString = {this.props.authString}
               navigation = {this.props.navigation}
               fileInfo = {this.props.file}
               userid = {this.state.posterid}
+              username = {this.state.posterusername}
               myUserid = {this.props.myUserid}
-            />
+            /> : <View></View>}
             {/* Handle of user who posted image and caption */}
             <Text style = {styles.bottomText}>@{this.state.posterusername}: {this.state.caption}</Text>
         </View>
