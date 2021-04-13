@@ -38,11 +38,17 @@ class UserFeed extends React.Component {
   }
 
   async componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.fetchUserInfo().then(response => {
         console.log("Mounted userfeed success");
       }).catch(error => {
         console.log(error)
       });
+    })
+  }
+
+  componentWillUnmount(){
+    this._unsubscribe();
   }
 
 
