@@ -169,11 +169,6 @@ class PersonalPage extends React.Component {
                 onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
                 <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={KIC_Style.button}
-                onPress={() => this.props.navigation.navigate('Feed')}>
-                <Text style={KIC_Style.button_font}>User Feed</Text>
-            </TouchableOpacity>
             <StatusBar style="auto" />
           </SafeAreaView>
       </SafeAreaView>
