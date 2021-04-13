@@ -97,8 +97,15 @@ export default function MentalHealthLog({ navigation }) {
                     onPress={() =>
                         alert("Entry stored!")
                     }>
-                    <Text style={KIC_Style.button_font}> Locate A Professional </Text>
+                    <Text style={KIC_Style.button_font}> Store Entry </Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                       style={KIC_Style.button}
+                       onPress={() =>
+                           navigation.navigate('FindHelp')
+                       }>
+                       <Text style={KIC_Style.button_font}> Locate A Professional </Text>
+                   </TouchableOpacity>
                 <TouchableOpacity
                     style={KIC_Style.button}
 
