@@ -313,7 +313,7 @@ proto.kic.media.UploadFileRequest.prototype.toObject = function(opt_includeInsta
 proto.kic.media.UploadFileRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     fileinfo: (f = msg.getFileinfo()) && proto_common_pb.File.toObject(includeInstance, f),
-    fileuri: jspb.Message.getFieldWithDefault(msg, 2, "")
+    file: msg.getFile_asB64()
   };
 
   if (includeInstance) {
@@ -356,8 +356,8 @@ proto.kic.media.UploadFileRequest.deserializeBinaryFromReader = function(msg, re
       msg.setFileinfo(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setFileuri(value);
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setFile(value);
       break;
     default:
       reader.skipField();
@@ -396,9 +396,9 @@ proto.kic.media.UploadFileRequest.serializeBinaryToWriter = function(message, wr
       proto_common_pb.File.serializeBinaryToWriter
     );
   }
-  f = message.getFileuri();
+  f = message.getFile_asU8();
   if (f.length > 0) {
-    writer.writeString(
+    writer.writeBytes(
       2,
       f
     );
@@ -444,20 +444,44 @@ proto.kic.media.UploadFileRequest.prototype.hasFileinfo = function() {
 
 
 /**
- * optional string fileURI = 2;
+ * optional bytes file = 2;
  * @return {string}
  */
-proto.kic.media.UploadFileRequest.prototype.getFileuri = function() {
+proto.kic.media.UploadFileRequest.prototype.getFile = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * @param {string} value
+ * optional bytes file = 2;
+ * This is a type-conversion wrapper around `getFile()`
+ * @return {string}
+ */
+proto.kic.media.UploadFileRequest.prototype.getFile_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getFile()));
+};
+
+
+/**
+ * optional bytes file = 2;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getFile()`
+ * @return {!Uint8Array}
+ */
+proto.kic.media.UploadFileRequest.prototype.getFile_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getFile()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
  * @return {!proto.kic.media.UploadFileRequest} returns this
  */
-proto.kic.media.UploadFileRequest.prototype.setFileuri = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+proto.kic.media.UploadFileRequest.prototype.setFile = function(value) {
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
@@ -1085,7 +1109,7 @@ proto.kic.media.DownloadFileResponse.prototype.toObject = function(opt_includeIn
  */
 proto.kic.media.DownloadFileResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    chunk: jspb.Message.getFieldWithDefault(msg, 1, "")
+    chunk: msg.getChunk_asB64()
   };
 
   if (includeInstance) {
@@ -1123,7 +1147,7 @@ proto.kic.media.DownloadFileResponse.deserializeBinaryFromReader = function(msg,
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setChunk(value);
       break;
     default:
@@ -1155,9 +1179,9 @@ proto.kic.media.DownloadFileResponse.prototype.serializeBinary = function() {
  */
 proto.kic.media.DownloadFileResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getChunk();
+  f = message.getChunk_asU8();
   if (f.length > 0) {
-    writer.writeString(
+    writer.writeBytes(
       1,
       f
     );
@@ -1166,7 +1190,7 @@ proto.kic.media.DownloadFileResponse.serializeBinaryToWriter = function(message,
 
 
 /**
- * optional string chunk = 1;
+ * optional bytes chunk = 1;
  * @return {string}
  */
 proto.kic.media.DownloadFileResponse.prototype.getChunk = function() {
@@ -1175,11 +1199,35 @@ proto.kic.media.DownloadFileResponse.prototype.getChunk = function() {
 
 
 /**
- * @param {string} value
+ * optional bytes chunk = 1;
+ * This is a type-conversion wrapper around `getChunk()`
+ * @return {string}
+ */
+proto.kic.media.DownloadFileResponse.prototype.getChunk_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getChunk()));
+};
+
+
+/**
+ * optional bytes chunk = 1;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getChunk()`
+ * @return {!Uint8Array}
+ */
+proto.kic.media.DownloadFileResponse.prototype.getChunk_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getChunk()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
  * @return {!proto.kic.media.DownloadFileResponse} returns this
  */
 proto.kic.media.DownloadFileResponse.prototype.setChunk = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 

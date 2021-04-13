@@ -56,27 +56,6 @@ const Comment = ({ commenterUsername, commentText }) => (
 * @class Contains function for rendering the comment section.
 */
 class CommentSection extends React.Component {
-
-  /*
-   * Class constructor
-   */
-    constructor(props) {
-        super();
-
-        // Define the initial state:
-        this.state = {
-            // active user's userid
-            myuserid: props.userid,
-
-            // poster's username & userid
-            userid: props.userid,
-            username: props.username,
-            fileinfo: props.fileinfo,
-            comments: props.comments,
-        };
-
-    }
-
     /**
     * Gets a post's comments to render on the page.
     */
@@ -96,14 +75,14 @@ class CommentSection extends React.Component {
 
       return (
         <View style={{ flex: 1, alignItems: 'stretch' }}>
-            <Text style={styles.commentCounter}>{this.props.comments.length} comments</Text>
+            <Text style={styles.commentCounter}>{COMMENTS.length} comments</Text>
 
             {/* The comment box of fixed height */}
             <View style={styles.commentSection}>
                 <FlatList
-                    data={this.props.comments}
+                    data={COMMENTS}
                     renderItem={renderItem}
-                    keyExtractor={comment => comment.commentID}
+                    keyExtractor={comment => comment.id}
                 />
             </View>
         </View>

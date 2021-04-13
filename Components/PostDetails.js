@@ -18,20 +18,28 @@ class PostDetails extends React.Component {
         super();
 
         this.state = {
-            day: props.dayPosted,
-            month: props.monthPosted,
-            year: props.yearPosted,
-            caption: props.caption,
+            day: 16,
+            month: 'March',
+            year: 1998,
+            min: 23,
+            hour: 2,
+            ampm: 'AM',
+            numComments: 7,
         };
-
-        this.fetchPostDetails = this.fetchPostDetails.bind(this);
     }
 
     /**
     * Gets post's description.
     */
-    fetchPostDetails = () => {
-       console.log("Day posted: " + this.state.day + " // from props: " + this.props.dayPosted)
+    fetchPostDescription = () => {
+       // Request the description from backend
+    }
+
+    /**
+    * Gets post's metadata.
+    */
+    fetchPostMetadata = () => {
+       // Request post metadata from backend
     }
 
     /**
@@ -56,7 +64,7 @@ class PostDetails extends React.Component {
 
             <View style={styles.captionContainer}>
             <ScrollView style ={styles.captionBox}>
-                <Text style ={styles.captionText}>{this.props.caption}</Text>
+                <Text style ={styles.captionText}>This is a caption. It can be as short as 0 characters and as long as 350 characters.</Text>
             </ScrollView>
             </View>
 

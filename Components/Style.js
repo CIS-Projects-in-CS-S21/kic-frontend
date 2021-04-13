@@ -110,19 +110,7 @@ const KIC_Style = StyleSheet.create({
         padding: 1,
         minHeight: 50,
         width: "70%",
-    },
-    commentInput: {
-        alignSelf: 'center',
-        backgroundColor: '#ffff',
-        fontColor: '#0000',
-        borderWidth: .2,
-        borderColor: '#b3d2db',
-        borderRadius: 20,
-        padding: 10,
-        minHeight: 10,
-        width: "90%",
-        margin: 10
-    },
+    }
 
 });
 

@@ -91,8 +91,7 @@ export default function PostInfo(props) {
 
         //create file and add to its metadata map
         let file = new File();
-        let filename = userID + "@" + await randomizeFileName() + "." + extension;
-        file.setFilename(filename);
+        file.setFilename(userID + "@" + await randomizeFileName() + "." + extension);
         console.log("Ext: " + extension);
         console.log("File name: " + file.getFilename());
 
@@ -107,7 +106,6 @@ export default function PostInfo(props) {
 
         //each image is associated with a userID, array of captions, triggers, comments, and tags, its uri, extension of the image, and the format of the image
         map.set("userID", userID.toString()) ;
-        map.set("filename", filename),
         map.set("caption", caption);
         map.set("trigger", triggerString);
         map.set("comments", comments);
@@ -126,12 +124,9 @@ export default function PostInfo(props) {
         file.setDatestored(date);
 
         //convert uri to int 8 Array which is needed for setting File
-        let uri2 = uri + "xx";
-       let your_bytes = Buffer.from(uri2, "base64");
-       req.setFileuri(uri);
+       let your_bytes = Buffer.from(uri, "base64");
+       req.setFile(Uint8Array.from(your_bytes));
         req.setFileinfo(file);
-
-        //console.log("URI FROM UPLOAD: " + uri);
 
         //set metadata and check that it is set correctly
         console.log("Metadata after set: ");
@@ -143,9 +138,8 @@ export default function PostInfo(props) {
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {
-               console.log("file id:" + res.getFileid());
-               console.log("bytesRead:" + res.getBytesread());
-               
+               console.log("file id:" + res.fileid);
+               console.log("bytesRead:" + res.bytesread);
                console.log(res);
                navigation.navigate('Profile')
             })

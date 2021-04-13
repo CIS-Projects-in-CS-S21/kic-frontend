@@ -32,14 +32,12 @@ class UserPage extends React.Component {
     // the user whose page is currently on display
     this.state = {
       myUserid: props.route.params.myUserid,
-      navigation: props.route.params.navigation,
       userid: props.route.params.userid,
       username: props.route.params.username,
       bio: props.route.params.bio,
       birthDay: 0,
       birthMonth: 0,
       birthYear: 0,
-      finishedLoading: false,
     };
 
     this.fetchUserInfo = this.fetchUserInfo.bind(this)
@@ -47,7 +45,7 @@ class UserPage extends React.Component {
   }
 
     componentDidMount(){
-      console.log("User page mounted");
+      //this.fetchUserInfo()
       this.fetchUserInfo().then(response => {
           //console.log("Success");
       }).catch(error => {
@@ -57,15 +55,9 @@ class UserPage extends React.Component {
 
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
-      if (this.props.userid !== prevProps.userid) {
-        this.setState({
-          myUserid: this.props.myUserid,
-          userid: this.props.userid,
-          username: this.props.username,
-          finishedLoading: false,
-        })
+      if (this.state.userid !== prevProps.userid) {
         this.fetchUserInfo().then(response => {
-          console.log("User page updated");
+            //console.log("Success");
         }).catch(error => {
             console.log(error)
         });
@@ -104,22 +96,21 @@ class UserPage extends React.Component {
             birthDay: mybirthday,
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
-            finishedLoading: true,
         })
     }
 
     handleViewPost = () => {
         if (Platform.OS === 'web') {
-            this.state.navigation.navigate('DetailedPostViewWeb', {
-                username: this.state.username,
-                userid: this.state.userid,
-                navigation: this.state.navigation
+            this.props.navigation.navigate('DetailedPostViewWeb', {
+              myUserid: this.state.myUserid,
+              username: this.state.username,
+              userid: this.state.userid
             })
         } else {
-            this.state.navigation.navigate('DetailedPostView', {
-                username: this.state.username,
-                userid: this.state.userid,
-                navigation: this.state.navigation
+            this.props.navigation.navigate('DetailedPostView', {
+              myUserid: this.state.myUserid,
+              username: this.state.username,
+              userid: this.state.userid
             })
         }
     }
@@ -130,12 +121,13 @@ class UserPage extends React.Component {
    */
   render() {
       return (
-      <SafeAreaView style={KIC_Style.outContainer}>
-        <FeedHeader navigation={this.state.navigation} />
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={KIC_Style.outContainer}>
+          <FeedHeader navigation={this.props.navigation}/>
+        <SafeAreaView style={KIC_Style.innerContainer}><ScrollView>
+
             {/* Display profile header with state information */}
             <ProfileHeader
-                navigation = {this.state.navigation}
+                navigation = {this.props.navigation}
                 myUserid = {this.state.myUserid}
                 username = {this.state.username}
                 userid = {this.state.userid}
@@ -146,27 +138,26 @@ class UserPage extends React.Component {
                 />
 
             {/* Show posts */}
-            {(this.state.finishedLoading) ? <PostsGrid
-                myUserid = {this.state.myUserid}
-                navigation = {this.state.navigation}
+            <PostsGrid
+                navigation = {this.props.navigation}
                 username = {this.state.username}
                 userid = {this.state.userid}
-                /> : <View></View>}
+                />
 
             {/* NAVIGATION */}
             <TouchableOpacity
                 style={KIC_Style.button}
-                onPress={() => this.state.navigation.navigate('MentalHealthLog')}>
+                onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
                 <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button}
-                onPress={() => this.state.navigation.navigate('Feed')}>
+                onPress={() => this.props.navigation.navigate('Feed')}>
                 <Text style={KIC_Style.button_font}>User Feed</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
-          </SafeAreaView>
-      </SafeAreaView>
+        </ScrollView></SafeAreaView>        </SafeAreaView>
+
       );
   }
 }
@@ -176,22 +167,8 @@ class UserPage extends React.Component {
  */
 const styles = StyleSheet.create({
   container: {
-    ...Platform.select({
-      ios: {
-        top:30,
-        marginBottom:30,
-      },
-      android: {
-        top:30,
-        marginBottom:30,
-      },
-      default: {
-        top:60,
-        marginBottom: 60,
-      }
-    }),
     backgroundColor: '#fff',
-    alignItems: 'stretch',
+    alignItems: 'center',
     justifyContent: 'flex-start',
     flexDirection: 'column',
     flex: 1,
