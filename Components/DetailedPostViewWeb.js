@@ -127,12 +127,13 @@ class DetailedPostViewWeb extends React.Component {
         //console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
         map.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
 
-        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser});
+        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser(res)});
     }
 
     redirectUser(res) {
-        alert("Post deleted!");
-        this.props.navigation.navigate('Profile');
+        console.log("Deleted post");
+        //alert("Post deleted!");
+        this.props.navigation.goBack();
     }
 
    setCommentText = (text) => {
@@ -238,7 +239,7 @@ class DetailedPostViewWeb extends React.Component {
 
                     {/* Only show display button if this is active user's own post */}
                     {(this.state.isMyPost) ? <TouchableOpacity
-                        onPress = {this.handleDelete}>
+                        onPress = {this.handleDelete.bind(this)}>
                             <Text style = {{ textAlign: 'right', fontSize: 10, fontStyle: 'italic', color: '#707070', }} >Delete post</Text>
                     </TouchableOpacity> : <View></View>}
 

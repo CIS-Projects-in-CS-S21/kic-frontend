@@ -45,11 +45,21 @@ class PersonalPage extends React.Component {
 
   componentDidMount() {
     //this.fetchUserInfo()
-    this.fetchUserInfo().then(response => {
-      console.log("Success");
-    }).catch(error => {
-      console.log(error)
-    });
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.setState({
+        finishedLoading : false
+      });
+      this.fetchUserInfo().then(response => {
+        console.log("Success");
+      }).catch(error => {
+        console.log(error)
+      });
+    }) 
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+
   }
 
     componentDidUpdate(prevProps) {

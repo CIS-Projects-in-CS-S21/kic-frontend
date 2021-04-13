@@ -33,16 +33,26 @@ class UserFeed extends React.Component {
       myUser: null,
       myUserid: '',
       authString: '',
-      feedFiles: []
+      feedFiles: [],
+      finishedLoading: false,
     };
   }
 
   async componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.setState({
+        finishedLoading: false,
+      })
       this.fetchUserInfo().then(response => {
         console.log("Mounted userfeed success");
       }).catch(error => {
         console.log(error)
       });
+    })
+  }
+
+  componentWillUnmount(){
+    this._unsubscribe();
   }
 
 
@@ -103,7 +113,7 @@ class UserFeed extends React.Component {
       let combinedfiles = files.concat(file);
       
       this.setState({
-        feedFiles : combinedfiles
+        feedFiles : combinedfiles,
       })
 
     }.bind(this));
@@ -115,8 +125,10 @@ class UserFeed extends React.Component {
 
     //When stream is over
     stream.on('end', function (end) {
-
-    });
+      this.setState({
+        finishedLoading: true,
+      })
+    }.bind(this));
   }
 
 
@@ -130,7 +142,7 @@ class UserFeed extends React.Component {
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
-          <ScrollView>
+          { (this.state.finishedLoading) ? <ScrollView>
             {/* FlatList that renders a UserBlurb per user in the friend list */}
             <FlatList
               style={styles.listcontainer}
@@ -145,7 +157,7 @@ class UserFeed extends React.Component {
             />
             <Text>End of feed!</Text>
             <StatusBar style="auto" />
-          </ScrollView>
+          </ScrollView> : <View></View>}
         </SafeAreaView>
       </SafeAreaView>
     );
