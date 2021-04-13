@@ -9,8 +9,10 @@ export class UploadFileRequest extends jspb.Message {
   hasFileinfo(): boolean;
   clearFileinfo(): UploadFileRequest;
 
-  getFileuri(): string;
-  setFileuri(value: string): UploadFileRequest;
+  getFile(): Uint8Array | string;
+  getFile_asU8(): Uint8Array;
+  getFile_asB64(): string;
+  setFile(value: Uint8Array | string): UploadFileRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UploadFileRequest.AsObject;
@@ -23,7 +25,7 @@ export class UploadFileRequest extends jspb.Message {
 export namespace UploadFileRequest {
   export type AsObject = {
     fileinfo?: proto_common_pb.File.AsObject,
-    fileuri: string,
+    file: Uint8Array | string,
   }
 }
 
@@ -108,8 +110,10 @@ export namespace DownloadFileRequest {
 }
 
 export class DownloadFileResponse extends jspb.Message {
-  getChunk(): string;
-  setChunk(value: string): DownloadFileResponse;
+  getChunk(): Uint8Array | string;
+  getChunk_asU8(): Uint8Array;
+  getChunk_asB64(): string;
+  setChunk(value: Uint8Array | string): DownloadFileResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DownloadFileResponse.AsObject;
@@ -121,7 +125,7 @@ export class DownloadFileResponse extends jspb.Message {
 
 export namespace DownloadFileResponse {
   export type AsObject = {
-    chunk: string,
+    chunk: Uint8Array | string,
   }
 }
 

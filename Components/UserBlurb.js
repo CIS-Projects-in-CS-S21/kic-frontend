@@ -259,7 +259,6 @@ class UserBlurb extends React.Component {
 
     goToUserPage = () => {
         this.props.navigation.navigate('UserPage', {
-          navigation: this.props.navigation,
           myUserid: this.state.myUserid,
           userid: this.state.blurbUserid,
           username: this.state.username,

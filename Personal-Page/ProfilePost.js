@@ -100,9 +100,6 @@ class ProfilePost extends React.Component {
             <KIC_Image
               navigation = {this.props.navigation}
               authString = {this.props.authString}
-              myUserid = {this.props.myUserid}
-              userid = {this.state.posterid}
-              username = {this.state.posterusername}
               fileInfo = {this.props.file}
             />
         </View>
