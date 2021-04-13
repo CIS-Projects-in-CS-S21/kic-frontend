@@ -41,7 +41,6 @@ class Explore extends React.Component {
     };
 
     this.callGetAuthString = this.callGetAuthString.bind(this)
-    this.setSearchString = this.setSearchString(this)
     this.handleSearch = this.handleSearch(this)
 
   }
@@ -115,7 +114,7 @@ class Explore extends React.Component {
     }
 
     handleSearch() {
-        //do smth
+        console.log("Searching for " + this.state.searchString + "...");
     }
 
   render() {
