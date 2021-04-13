@@ -7,7 +7,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import UserFeedNav from './User-Feed/UserFeedNav';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import Explore from "./Explore-Page/Explore";
+import ExploreNav from "./Explore-Page/ExploreNav";
 import PersonalPageNav from "./Personal-Page/PersonalPageNav";
 import PostNav from "./Post/PostNav";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -48,7 +48,7 @@ function MyTabs() {
             <Tab.Screen name="Feed" component={UserFeedNav}/>
             <Tab.Screen name="Profile" component={PersonalPageNav} />
             <Tab.Screen name="Post" component={PostNav} />
-            <Tab.Screen name="Explore" component={Explore} />
+            <Tab.Screen name="Explore" component={ExploreNav} />
         </Tab.Navigator>
     );
 }
