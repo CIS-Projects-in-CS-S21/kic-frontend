@@ -123,7 +123,7 @@ export default function Post({ navigation }) {
                     />
                     <Text>
                         Sorry! No access to gallery or camera. This feature is only available on mobile!
-            </Text>
+                    </Text>
                     <TouchableOpacity
                         style={KIC_Style.button}
                         onPress={() => navigation.navigate('Profile')}>

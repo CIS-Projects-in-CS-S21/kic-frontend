@@ -12,7 +12,7 @@ import { Buffer } from "buffer";
 import { File, Date as CommonDate } from "../gen/proto/common_pb";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { Video, AVPlaybackStatus } from 'expo-av';
 
 /**
  * @class Contains function for rendering the Post Info page
@@ -23,7 +23,7 @@ export default function PostInfo(props) {
     let cm = new ClientManager();
     let client = cm.createMediaClient();
     const navigation = useNavigation();
-
+    const video = React.useRef(null);
     //to upload image, start chain of functions
     const uploadImage = async () => {
         return callGetAuthString();
@@ -107,7 +107,7 @@ export default function PostInfo(props) {
 
         //each image is associated with a userID, array of captions, triggers, comments, and tags, its uri, extension of the image, and the format of the image
         map.set("userID", userID.toString()) ;
-        map.set("filename", filename),
+        map.set("filename", filename);
         map.set("caption", caption);
         map.set("trigger", triggerString);
         map.set("comments", comments);
@@ -127,8 +127,8 @@ export default function PostInfo(props) {
 
         //convert uri to int 8 Array which is needed for setting File
         let uri2 = uri + "xx";
-       let your_bytes = Buffer.from(uri2, "base64");
-       req.setFileuri(uri);
+        let your_bytes = Buffer.from(uri2, "base64");
+        req.setFileuri(uri);
         req.setFileinfo(file);
 
         //console.log("URI FROM UPLOAD: " + uri);
@@ -169,13 +169,25 @@ export default function PostInfo(props) {
     const [triggerString, setTriggerString] = useState("")
     const [tagString, setTagString] = useState("")
 
-
     return (
         <SafeAreaView style={{
             flex: 1,
             backgroundColor: '#ffff'
            }}>
-            <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>
+             <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>
+             <Video
+                ref={video}
+                style={{
+                    alignSelf: 'center',
+                    width: 320,
+                    height: 200,
+                }}
+                source={{
+                    uri: props.route.params.image,
+                }}
+                useNativeControls = {true}
+                resizeMode="contain"
+            />
             <TextInput
                 style={KIC_Style.postInput}
                 textAlign = {'center'}
