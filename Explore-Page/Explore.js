@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import FeedHeader from '../Components/FeedHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, TextInput, View, ScrollView, Image, Button, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, View, ScrollView, Image, Button, TouchableOpacity } from 'react-native';
 import KIC_Style from '../Components/Style';
 import UserBlurb from "../Components/UserBlurb";
 import TokenManager from "../Managers/TokenManager";
@@ -15,6 +15,7 @@ import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { GetRecommendationsForUserRequest, } from '../gen/proto/friends_pb';
+import { UsersClient } from '../gen/proto/users_grpc_web_pb';
 
 
 /**
@@ -39,7 +40,9 @@ class Explore extends React.Component {
       birthYear: 0,
       searchString: '',
       finishedLoading: false,
+      authString : '',
       foundFriends: [],
+      foundSearch : '',
     };
 
     this.callGetAuthString = this.callGetAuthString.bind(this)
@@ -87,9 +90,9 @@ class Explore extends React.Component {
 
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetRecommendationsForUser(res, userID, authString)})
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetRecommendationsForUser(res, userID, authString, cm)})
     }
-    callGetRecommendationsForUser(res, userID, authString){
+    callGetRecommendationsForUser(res, userID, authString, cm){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
@@ -107,30 +110,56 @@ class Explore extends React.Component {
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
             userid: userID,
-            finishedLoading: true,
+            clientManager : cm
         })
 
-        let cm = new ClientManager(); 
         let client = cm.createFriendsClient();
 
         let req = new GetRecommendationsForUserRequest();
-        req.setUser(res);
+        req.setUser(res.getUser());
 
         return client.getRecommendationsForUser(req, {'Authorization': authString}).then(response => {this.storeRecommendationsForUser(response, res)})
     }
 
-    storeRecommendationsForUser(res, user) {
-        console.log(res); 
+    storeRecommendationsForUser(res) {
+        console.log("Found " + res.getRecommendationsList().length + " friends."); 
+        console.log(res.getRecommendationsList()); 
+        let rec = res.getRecommendationsList(); 
+
+        this.setState({
+            foundFriends : rec, 
+            finishedLoading : true
+        }); 
     }
 
     setSearchString = (text) => {
-      this.setState({ searchString: text })
+          this.setState({ searchString: text });
     }
 
-    handleSearch() {
+
+    async handleSearch() {
         console.log("Searching for " + this.state.searchString + "...");
+        
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new GetUserByUsernameRequest();
+        req.setUsername(this.state.searchString); 
+
+      return client.getUserByUsername(req, {'Authorization' : this.state.authString}).then(res => {this.showSearchResults(res)})
     }
 
+    showSearchResults(res) {
+        if(res.getSuccess() === true) {
+            console.log("Found user "+ res.getUser().userid +" from search string: " + this.state.searchString); 
+            let foundUser = res.getUser(); 
+            this.setState({
+                foundUser: foundUser
+            });
+        } else {
+            console.log("Couldn't find user from search string: " + this.state.searchString); 
+        }
+    }
   render() {
     /**
      * Renders Explore screen components.
@@ -141,6 +170,8 @@ class Explore extends React.Component {
             <FeedHeader navigation={this.props.navigation} />
             <SafeAreaView style={KIC_Style.innerContainer}>
                 <View style={{flexDirection: 'row', marginTop: 30, justifyContent: 'center' }}>
+                    {this.state.finishedLoading ? <View> 
+                        
                     <TextInput
                         style={KIC_Style.searchInput}
                         textAlign = {'center'}
@@ -149,14 +180,28 @@ class Explore extends React.Component {
                     />
                     <TouchableOpacity
                         style={{ backgroundColor: '#b3d2db', borderRadius: 10, height: 30, justifyContent: 'center' }}
-                        onPress = {this.handleSearch}>
+                        onPress = {() => this.handleSearch}>
                         <Ionicons name="search-circle-outline" color='#ffff' size={25} />
                     </TouchableOpacity>
-                </View>
+                </View>: <View></View>}
 
                 <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
 
                 {(this.state.finishedLoading) ? <ScrollView>
+                    
+                    <FlatList
+                        data = {this.state.foundFriends}
+                        renderItem = {({item}) => 
+                        <UserBlurb
+                        navigation = {this.props.navigation}
+                        authString = {this.state.authString}
+                        myUsername = {this.state.username}
+                        myUserid = {this.state.userid}
+                        userid = {this.state.userid}
+                        blurbUserid = {item.userid}
+                        />}
+                        keyExtractor = {friend => friend.userid}
+                    />
                     <UserBlurb
                         navigation = {this.props.navigation}
                         authString = {this.state.authString}
@@ -191,6 +236,7 @@ class Explore extends React.Component {
                     />
                     <StatusBar style="auto" />
                 </ScrollView> : <View></View>}
+                </View>
             </SafeAreaView>
         </SafeAreaView>
     );
