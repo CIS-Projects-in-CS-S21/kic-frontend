@@ -15,6 +15,7 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useRoute} from '@react-navigation/native';
+import ProfilePicture from "./ProfilePicture";
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -261,7 +262,7 @@ class UserBlurb extends React.Component {
         this.props.navigation.navigate('UserPage', {
           navigation: this.props.navigation,
           myUserid: this.state.myUserid,
-          userid: this.state.userid,
+          userid: this.state.blurbUserid,
           username: this.state.username,
           bio: this.state.bio,
         })
@@ -275,12 +276,13 @@ class UserBlurb extends React.Component {
       return (
         <View style={styles.container}>
               {/* User's icon */}
-              <UserBlurb
-                  navigation = {this.props.navigation}
-                  myUserid = {this.props.myUserid}
-                  userid = {this.state.blurbUserid}
-                  username = {this.state.blurb}
-              />
+              <TouchableOpacity
+                    onPress = {this.goToUserPage}>
+                    <ProfilePicture
+                        userid = {this.state.blurbUserid}
+                        authString = {this.props.authString}
+                    />
+              </TouchableOpacity>
 
               {/* User's blurb */}
               <View style ={styles.userInfo}>
