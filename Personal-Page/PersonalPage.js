@@ -30,6 +30,7 @@ class PersonalPage extends React.Component {
 
     // Define the initial state:
     this.state = {
+      authString: '',
       userid: "0",
       username: "default",
       bio: "bio",
@@ -81,6 +82,9 @@ class PersonalPage extends React.Component {
         return um.getAuthString().then(authString => {this.callGetUserID(um, authString)});
     }
     callGetUserID(um, authString){
+        this.setState({
+            authString: authString,
+        })
         return um.getMyUserID().then(userID => {this.callGetUserByUserID(authString, userID)});
     }
     callGetUserByUserID(authString, userID){
@@ -115,20 +119,6 @@ class PersonalPage extends React.Component {
     }
 
   /**
-   * Gets user's posts. Returns an array of the user's posts.
-   */
-  fetchPosts = () => {
-      // Request posts for user
-  }
-
-  /**
-   * Gets a post's corresponding image to display in the grid.
-   */
-  fetchPostImage = () => {
-      // Request the image from backend
-  }
-
-  /**
    * Renders personal page components.
    * @returns {PersonalPage}
    */
@@ -138,7 +128,8 @@ class PersonalPage extends React.Component {
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
             {/* Display profile header with state information */}
-            <ProfileHeader
+            {(this.state.finishedLoading) ? <ProfileHeader
+                authString = {this.state.authString}
                 navigation = {this.props.navigation}
                 myUserid = {this.state.userid}
                 username = {this.state.username}
@@ -147,7 +138,7 @@ class PersonalPage extends React.Component {
                 birthDay = {this.state.birthDay}
                 birthMonth = {this.state.birthMonth}
                 birthYear = {this.state.birthYear}
-                />
+                /> : <View></View>}
 
             {/* Show posts */}
             {(this.state.finishedLoading) ? <PostsGrid

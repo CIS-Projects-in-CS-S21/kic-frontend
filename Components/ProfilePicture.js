@@ -57,7 +57,6 @@ class ProfilePicture extends React.Component {
         // Search for file by metadata, using userid and isProfilePicture metadata
         let req = new GetFilesByMetadataRequest();
         let map = req.getDesiredmetadataMap();
-        console.log("Getting pfp for user #" + this.props.userid);
         map.set("userID", this.props.userid.toString());
         map.set("isProfilePicture", "true");
 
@@ -65,13 +64,9 @@ class ProfilePicture extends React.Component {
     }
 
     downloadImage(client, res) {
-        console.log("HHHHHHHHHH");
         let imagefile = res.getFileinfosList();
-        console.log("Files found: " + imagefile);
-
         // If a file was found
         if (imagefile.length > 0){
-            console.log("Found pfp for user id " + this.props.userid);
             // Download the file we found
             let req = new DownloadFileRequest();
             req.setFileinfo(imagefile[0]);

@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import {useRoute} from '@react-navigation/native';
+import ProfilePicture from "./ProfilePicture";
 
 /**
 * @class Contains function for rendering the profile header.
@@ -58,9 +59,10 @@ class ProfileHeader extends React.Component {
       return (
         <View style={styles.profileHeaderContainer}>
               {/* User's icon */}
-              <Image
-                style={styles.icon}
-                source = {require('../assets/default/default_icon_2.png')}
+              <ProfilePicture
+                  style = {styles.icon}
+                  userid = {this.props.userid}
+                  authString = {this.props.authString}
               />
 
               {/* Container for user's info */}

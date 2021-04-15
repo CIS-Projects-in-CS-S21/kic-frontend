@@ -31,6 +31,7 @@ class UserPage extends React.Component {
     // Define the initial state: myUserid is the ID of the current active user and userid is the ID of
     // the user whose page is currently on display
     this.state = {
+      authString: '',
       myUserid: props.route.params.myUserid,
       navigation: props.route.params.navigation,
       userid: props.route.params.userid,
@@ -87,6 +88,10 @@ class UserPage extends React.Component {
         return um.getAuthString().then(authString => {this.callGetUserByUserID(authString)});
     }
     callGetUserByUserID(authString){
+        this.setState({
+            authString: authString,
+        })
+
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
@@ -126,6 +131,7 @@ class UserPage extends React.Component {
         <SafeAreaView style={styles.container}>
             {/* Display profile header with state information */}
             {(this.state.finishedLoading) ? <ProfileHeader
+                authString = {this.state.authString}
                 navigation = {this.state.navigation}
                 myUserid = {this.state.myUserid}
                 username = {this.state.username}
