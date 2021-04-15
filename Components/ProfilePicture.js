@@ -58,20 +58,23 @@ class ProfilePicture extends React.Component {
         let req = new GetFilesByMetadataRequest();
         let map = req.getDesiredmetadataMap();
         console.log("Getting pfp for user #" + this.props.userid);
-        map.set("userID", this.props.userid);
+        map.set("userID", this.props.userid.toString());
         map.set("isProfilePicture", "true");
 
         return client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {this.downloadImage(client, res)})
     }
 
     downloadImage(client, res) {
+        console.log("HHHHHHHHHH");
         let imagefile = res.getFileinfosList();
+        console.log("Files found: " + imagefile);
 
         // If a file was found
         if (imagefile.length > 0){
+            console.log("Found pfp for user id " + this.props.userid);
             // Download the file we found
             let req = new DownloadFileRequest();
-            req.setFileinfo(imagefile);
+            req.setFileinfo(imagefile[0]);
 
             let byte64 = '';
 
@@ -100,7 +103,6 @@ class ProfilePicture extends React.Component {
                 //console.log("IMAGESRC AFTER STREAM: " + this.state.imageSrc.toString('ascii'))
 
                 let src1 = this.state.imageSrc;
-                let ext = map.get("ext");
                 let finalsrc = '';
 
                 // Rebuilds the header with special characters for images taken from web app ("data:image/png;base64" format)
@@ -115,7 +117,6 @@ class ProfilePicture extends React.Component {
                 this.setState({
                     imageSrc: finalsrc,
                     iconFetched: true,
-                    metadata: map,
                 })
                 //console.log("FIXED SRC: " + finalsrc);
             }.bind(this)); //binds stream.on function so we can access state
