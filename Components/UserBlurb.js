@@ -266,6 +266,7 @@ class UserBlurb extends React.Component {
           username: this.state.username,
           bio: this.state.bio,
         })
+        console.log("Blurb belongs to " + this.state.username);
     }
 
     /**

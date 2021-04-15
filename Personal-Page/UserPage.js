@@ -46,30 +46,37 @@ class UserPage extends React.Component {
 
   }
 
-    componentDidMount(){
-      console.log("User page mounted");
-      this.fetchUserInfo().then(response => {
-          //console.log("Success");
-      }).catch(error => {
-          console.log(error)
+  componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.setState({
+        finishedLoading : false
       });
+      this.fetchUserInfo().then(response => {
+        console.log("User page mount success");
+      }).catch(error => {
+        console.log(error)
+      });
+    })
+  }
+
+    componentWillUnmount() {
+        this._unsubscribe();
     }
 
     componentDidUpdate(prevProps) {
-      // Typical usage (don't forget to compare props):
-      if (this.props.userid !== prevProps.userid) {
-        this.setState({
-          myUserid: this.props.myUserid,
-          userid: this.props.userid,
-          username: this.props.username,
-          finishedLoading: false,
-        })
-        this.fetchUserInfo().then(response => {
-          console.log("User page updated");
-        }).catch(error => {
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+          this.setState({
+            myUserid: this.props.route.params.myUserid,
+            userid: this.props.route.params.userid,
+            username: this.props.route.params.username,
+            finishedLoading: false,
+          });
+          this.fetchUserInfo().then(response => {
+            console.log("User page updated");
+          }).catch(error => {
             console.log(error)
-        });
-      }
+          });
+        })
     }
 
     fetchUserInfo() {
@@ -87,7 +94,7 @@ class UserPage extends React.Component {
         req.setUserid(this.state.userid);
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res)})
     }
-    setUserInfo(res, userID){
+    setUserInfo(res){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
@@ -108,22 +115,6 @@ class UserPage extends React.Component {
         })
     }
 
-    handleViewPost = () => {
-        if (Platform.OS === 'web') {
-            this.state.navigation.navigate('DetailedPostViewWeb', {
-                username: this.state.username,
-                userid: this.state.userid,
-                navigation: this.state.navigation
-            })
-        } else {
-            this.state.navigation.navigate('DetailedPostView', {
-                username: this.state.username,
-                userid: this.state.userid,
-                navigation: this.state.navigation
-            })
-        }
-    }
-
   /**
    * Renders personal page components.
    * @returns {PersonalPage}
@@ -134,7 +125,7 @@ class UserPage extends React.Component {
         <FeedHeader navigation={this.state.navigation} />
         <SafeAreaView style={styles.container}>
             {/* Display profile header with state information */}
-            <ProfileHeader
+            {(this.state.finishedLoading) ? <ProfileHeader
                 navigation = {this.state.navigation}
                 myUserid = {this.state.myUserid}
                 username = {this.state.username}
@@ -143,27 +134,15 @@ class UserPage extends React.Component {
                 birthDay = {this.state.birthDay}
                 birthMonth = {this.state.birthMonth}
                 birthYear = {this.state.birthYear}
-                />
+                /> : <View></View>}
 
             {/* Show posts */}
             {(this.state.finishedLoading) ? <PostsGrid
                 myUserid = {this.state.myUserid}
-                navigation = {this.state.navigation}
+                navigation = {this.props.navigation}
                 username = {this.state.username}
                 userid = {this.state.userid}
                 /> : <View></View>}
-
-            {/* NAVIGATION */}
-            <TouchableOpacity
-                style={KIC_Style.button}
-                onPress={() => this.state.navigation.navigate('MentalHealthLog')}>
-                <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={KIC_Style.button}
-                onPress={() => this.state.navigation.navigate('Feed')}>
-                <Text style={KIC_Style.button_font}>User Feed</Text>
-            </TouchableOpacity>
             <StatusBar style="auto" />
           </SafeAreaView>
       </SafeAreaView>

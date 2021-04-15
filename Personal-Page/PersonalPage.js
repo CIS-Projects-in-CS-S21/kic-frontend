@@ -54,7 +54,7 @@ class PersonalPage extends React.Component {
       }).catch(error => {
         console.log(error)
       });
-    }) 
+    })
   }
 
   componentWillUnmount() {
@@ -113,22 +113,6 @@ class PersonalPage extends React.Component {
             finishedLoading: true,
         })
     }
-
-  handleViewPost = () => {
-    if (Platform.OS === 'web') {
-      this.props.navigation.navigate('DetailedPostViewWeb', {
-        username: this.state.username,
-        userid: this.state.userid,
-        navigation: this.props.navigation
-      })
-    } else {
-      this.props.navigation.navigate('DetailedPostView', {
-        username: this.state.username,
-        userid: this.state.userid,
-        navigation: this.props.navigation
-      })
-    }
-  }
 
   /**
    * Gets user's posts. Returns an array of the user's posts.
