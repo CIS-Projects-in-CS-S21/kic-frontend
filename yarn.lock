@@ -3993,6 +3993,14 @@ expo-error-recovery@~1.4.0:
   dependencies:
     fbjs "1.0.0"
 
+expo-file-system@^11.0.2:
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-11.0.2.tgz#c3f9b9c6ba25456a0d32c7a9bb38e55310d471bd"
+  integrity sha512-nodNvUVa+US4N4xnj5BFw8W9ZF/qCHJVC2t45cHWrBiwkVVxz45wjE7uSHUmkMWyWT7a/7AJuL3XJfYp7h90IQ==
+  dependencies:
+    "@expo/config-plugins" "^1.0.18"
+    uuid "^3.4.0"
+
 expo-file-system@~9.3.0:
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-9.3.0.tgz"

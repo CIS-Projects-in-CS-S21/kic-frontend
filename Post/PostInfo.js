@@ -13,6 +13,7 @@ import { File, Date as CommonDate } from "../gen/proto/common_pb";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Video, AVPlaybackStatus } from 'expo-av';
+import * as FileSystem from "expo-file-system";
 
 /**
  * @class Contains function for rendering the Post Info page
@@ -61,7 +62,7 @@ export default function PostInfo(props) {
     //then, make request to upload file with uri
     const makeUploadFileRequest = async (userID, authString) => {
        //obtain uri and base64 from Post.js
-        const uri = props.route.params.image;
+        let uri = props.route.params.image;
         const base64 = props.route.params.base64;
 
         //need to get extension (jpeg, png, etc) and format [if on web] (image or video) for metadata for file request
@@ -82,7 +83,10 @@ export default function PostInfo(props) {
             const parsedURI = uri.split(/[.]/);
             extension = parsedURI[parsedURI.length-1];
             console.log("mobile ext:" + extension);
-
+            if (extension == "mp4" || extension == "mov" || extension == "wmv") {
+                uri = _videoTo64URI(uri,extension);
+                console.log("video extension detected");
+            }
         }
         //start new file request
         console.log("Started Upload File Request");
@@ -163,6 +167,13 @@ export default function PostInfo(props) {
         return v.toString(16);
       });
     }
+
+    const _videoTo64URI = async (videoURI, extension) => {
+        const options = { encoding: FileSystem.EncodingType.Base64 };
+        const data = await FileSystem.readAsStringAsync(videoURI, options);
+        let vids = "data:video/" +  extension + ";base64,"+ data;
+        return vids;
+    };
 
     //declare constants for caption, triggers, and tags
     const [caption, setCaption] = useState("")
