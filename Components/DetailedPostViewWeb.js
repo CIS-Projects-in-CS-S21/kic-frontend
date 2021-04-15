@@ -229,7 +229,10 @@ class DetailedPostViewWeb extends React.Component {
                 <View style={styles.detailsAndComments}>
                     {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
                     <PostDetails
-                        userID = {this.state.userid}
+                        myUserid = {this.state.myUserid}
+                        navigation = {this.state.navigation}
+                        authString = {this.state.authString}
+                        userid = {this.state.userid}
                         username = {this.state.username}
                         yearPosted = {this.state.yearPosted}
                         monthPosted = {this.state.monthPosted}

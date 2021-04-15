@@ -132,13 +132,13 @@ class ProfilePicture extends React.Component {
                {(this.state.iconFetched) ?
                <View>
                    <Image
-                       style={styles.icon}
+                       style={this.props.style}
                        source={this.state.imageSrc}
                    />
                </View> :
                <View>
                    <Image
-                      style={styles.icon}
+                       style={this.props.style}
                       source={require('../assets/default/default_icon_2.png')}
                    />
                </View>}

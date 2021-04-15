@@ -280,6 +280,7 @@ class UserBlurb extends React.Component {
               <TouchableOpacity
                     onPress = {this.goToUserPage}>
                     <ProfilePicture
+                        style = {styles.icon}
                         userid = {this.state.blurbUserid}
                         authString = {this.props.authString}
                     />
