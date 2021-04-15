@@ -35,7 +35,7 @@ class UserBlurb extends React.Component {
             // myUserid is the id of the current active user
             myUserid: props.myUserid,
 
-            // userid is the id of the user who owns this friendlist (if applicable)
+            // userid is the id of the user who owns the page that this blurb is being displayed on (if applicable)
             userid: props.userid,
 
             // userid is the id of the user featured on this blurb
@@ -261,7 +261,7 @@ class UserBlurb extends React.Component {
         this.props.navigation.navigate('UserPage', {
           navigation: this.props.navigation,
           myUserid: this.state.myUserid,
-          userid: this.state.blurbUserid,
+          userid: this.state.userid,
           username: this.state.username,
           bio: this.state.bio,
         })
@@ -275,13 +275,12 @@ class UserBlurb extends React.Component {
       return (
         <View style={styles.container}>
               {/* User's icon */}
-              <TouchableOpacity
-                    onPress = {this.goToUserPage}>
-                    <Image
-                        style={styles.icon}
-                        source = {require('../assets/default/default_icon_2.png')}
-                    />
-              </TouchableOpacity>
+              <UserBlurb
+                  navigation = {this.props.navigation}
+                  myUserid = {this.props.myUserid}
+                  userid = {this.state.blurbUserid}
+                  username = {this.state.blurb}
+              />
 
               {/* User's blurb */}
               <View style ={styles.userInfo}>
