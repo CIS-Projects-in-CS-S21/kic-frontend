@@ -36,29 +36,29 @@ class PostsGrid extends React.Component {
     }
 
     componentDidMount(){
-      this.callGetAuthString().then(response => {
-          console.log("Mounted posts for user id " + this.state.userid + " successfully");
-      }).catch(error => {
-          console.log(error)
-      });
+        this.callGetAuthString().then(response => {
+            console.log("Mounted posts for user id " + this.state.userid + " successfully");
+        }).catch(error => {
+            console.log(error)
+        });
     }
 
     componentDidUpdate(prevProps) {
-      // Typical usage (don't forget to compare props):
-      if (this.props.userid !== prevProps.userid) {
-
-          this.setState({
-              myUserid: this.props.myUserid,
-              userid: this.props.userid,
-              username: this.props.username,
-              finishedFetching: false,
-          })
-          this.fetchFriends().then(response => {
-              console.log("Updated with posts for user id " + this.state.userid + " successfully");
-          }).catch(error => {
-              console.log("Error fetching posts: " + error)
-          });
-      }
+        if (this.props.userid !== prevProps.userid) {
+            console.log("Updated postsgrid")
+            this.setState({
+                myUserid: this.props.myUserid,
+                userid: this.props.userid,
+                username: this.props.username,
+                myFiles: [],
+                finishedFetching: false,
+            })
+            this.callGetAuthString().then(response => {
+                console.log("Updated with posts for user id " + this.state.userid + " successfully");
+            }).catch(error => {
+                console.log("Error fetching posts: " + error)
+            });
+        }
     }
 
     callGetAuthString(){
@@ -89,7 +89,7 @@ class PostsGrid extends React.Component {
         // Create a new request that will search for files with metadata containing user's userid
         let req = new GetFilesByMetadataRequest();
         let desiredMap = req.getDesiredmetadataMap();
-        desiredMap.set("userID", this.state.userid);
+        desiredMap.set("userID", this.state.userid.toString());
         console.log("REQUESTING FILES FOR " + this.state.userid);
 
         let client = cm.createMediaClient();
@@ -109,10 +109,6 @@ class PostsGrid extends React.Component {
 
         console.log("FILES FOR " + this.state.userid + ": " + myfiles);
         console.log("FILES FOR " + this.state.userid + ": " + this.state.myFiles);
-
-        //console.log("Files for the active user id " + this.state.myUserid + ": " + this.state.myFiles);
-        //console.log("All feed files: " + this.state.feedFiles);
-        //console.log("First filename: " + this.state.feedFiles[0].getFilename());
     }
 
     /**
