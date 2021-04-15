@@ -89,9 +89,10 @@ export default function Post({ navigation }) {
     //pick image from image library and set image and base64
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,//allows access to images and videos
+            mediaTypes: ImagePicker.MediaTypeOptions.All,//allows access to images and videos
             allowsEditing: true,
             aspect: [1, 1],
+            videoMaxDuration: 3,
             quality: 1,
             base64: true
         });
