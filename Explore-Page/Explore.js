@@ -14,6 +14,7 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { GetRecommendationsForUserRequest, } from '../gen/proto/friends_pb';
 
 
 /**
@@ -38,6 +39,7 @@ class Explore extends React.Component {
       birthYear: 0,
       searchString: '',
       finishedLoading: false,
+      foundFriends: [],
     };
 
     this.callGetAuthString = this.callGetAuthString.bind(this)
@@ -85,9 +87,9 @@ class Explore extends React.Component {
 
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res, userID)})
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetRecommendationsForUser(res, userID, authString)})
     }
-    setUserInfo(res, userID){
+    callGetRecommendationsForUser(res, userID, authString){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
@@ -107,6 +109,18 @@ class Explore extends React.Component {
             userid: userID,
             finishedLoading: true,
         })
+
+        let cm = new ClientManager(); 
+        let client = cm.createFriendsClient();
+
+        let req = new GetRecommendationsForUserRequest();
+        req.setUser(res);
+
+        return client.getRecommendationsForUser(req, {'Authorization': authString}).then(response => {this.storeRecommendationsForUser(response, res)})
+    }
+
+    storeRecommendationsForUser(res, user) {
+        console.log(res); 
     }
 
     setSearchString = (text) => {
