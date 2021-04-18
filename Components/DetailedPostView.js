@@ -300,8 +300,9 @@ const styles = StyleSheet.create({
     }),
   },
   postImage: {
-    width: Dimensions.get('window').width,
-    height: (Dimensions.get('window').width - 70),
+    alignSelf: 'center',
+    width: Dimensions.get('window').width / 1.15,
+    height: Dimensions.get('window').width / 1.15,
   }
 });
 
