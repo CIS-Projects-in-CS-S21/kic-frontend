@@ -21,7 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import ClientManager from "../Managers/ClientManager";
 import {GetHealthDataForUserRequest} from "../gen/proto/health_pb";
 import UserManager from "../Managers/UserManager";
-import UserBlurb from "../Components/UserBlurb";
+import HealthLogBlurb from "../Components/HealthLogBlurb";
 
 
 
@@ -40,6 +40,10 @@ export default function MoodHistory() {
     const [journalString, setString] = React.useState("");
     const navigation = useNavigation();
     const [healthData, setHealthData]= React.useState([]);
+    const [authString, setAuthString] = React.useState("");
+    const [userID, setUserID] = React.useState(null);
+
+    let um = new UserManager();
 
     /**
      * Runs when component first loads
@@ -52,7 +56,7 @@ export default function MoodHistory() {
         }).catch(error => {
             console.log("Error fetching logs: " + error)
         });
-    },[])
+    },[healthData])
 
 
     /**
@@ -65,8 +69,7 @@ export default function MoodHistory() {
      */
     const fetchLogs = () => {
         // Create a new UserManager, which will provide the authString
-        let um = new UserManager();
-        return um.getAuthString().then((um,authString) => {callGetUserID(um, authString)});
+        return um.getAuthString().then((um,authString) => {callGetUserID(authString)});
     }
 
 
@@ -75,10 +78,10 @@ export default function MoodHistory() {
      *
      * @function callGetUserByUserID
      * @param {String} authString the auth string to be used as part of the authorization header for requests
-     * @param {UserManager} user manager for getting User ID
      * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
      */
-    const callGetUserID= (um, authString) => {
+    const callGetUserID= (authString) => {
+        setAuthString(authString);
         return um.getMyUserID().then(userID  => callGetHealthForUser(userID, authString));
     }
 
@@ -92,6 +95,7 @@ export default function MoodHistory() {
      * @returns {GetHealthDataForUserResponse} res then calls the next function, parseHealthData
      */
     const callGetHealthForUser = (userID, authString) => {
+        setUserID(userID);
         let cm = new ClientManager();
         let client = cm.createHealthClient();
         //create health client
@@ -112,9 +116,10 @@ export default function MoodHistory() {
      * @param {GetHealthDataForUserResponse} res Returned in response to GetHealthDataForUserRequest
      */
     const updateState= (authString, res) => {
-        console.log("User's health data: " + res.getHealthdataList());
+        console.log("res" + res.getHealthdataList());
+        setHealthData(res.getHealthdataList());
         // Save health data list to state
-        setHealthData(res.getHealthdataList);
+
 
     }
 
@@ -129,40 +134,49 @@ export default function MoodHistory() {
                         source={require('../assets/kic.png')}
                     />
                     <Text style={KIC_Style.title}> Mood History Tracker </Text>
-
-                    <List.AccordionGroup>
-                        <List.Accordion
-                            id="1"
-                            style={style.accordion}
-                            descriptionNumberOfLines={10}
-                            title="January 1st, 2021"
-                            left={props => <List.Icon {...props} color='#b3d2db' icon="calendar"/>}>
-                            <List.Item title="Mood: -5"
-                                       onPress={() => {
-                                           setString("I feel very down today.")
-                                           setModalVisible(true)
-                                       }}
-                            />
-                        </List.Accordion>
-                        <List.Accordion
-                            id="2"
-                            style={style.accordion}
-                            descriptionNumberOfLines={10}
-                            title="January 5th, 2021"
-                            left={props => <List.Icon {...props} color='#b3d2db' icon="calendar"/>}
-                            expanded={expanded}
-                            // onPress={
-                            //     handlePress()
-                            // }
-                        >
-                            <List.Item title="Mood: 2"
-                                       onPress={() => {
-                                           setString("I feel a little anxious, but I'm happy.")
-                                           setModalVisible(true)
-                                       }}
-                            />
-                        </List.Accordion>
-                    </List.AccordionGroup>
+                    {/*FlatList that renders a mental health entry log per entry in health data list*/}
+                    <FlatList
+                        data={healthData}
+                        renderItem={({item}) => <HealthLogBlurb
+                            navigation = {navigation}
+                            authString = {authString}
+                            myUserid = {userID}
+                            mentalHealthLog = {item}
+                        />}
+                    />
+                    {/*<List.AccordionGroup>*/}
+                    {/*    <List.Accordion*/}
+                    {/*        id="1"*/}
+                    {/*        style={style.accordion}*/}
+                    {/*        descriptionNumberOfLines={10}*/}
+                    {/*        title="January 1st, 2021"*/}
+                    {/*        left={props => <List.Icon {...props} color='#b3d2db' icon="calendar"/>}>*/}
+                    {/*        <List.Item title="Mood: -5"*/}
+                    {/*                   onPress={() => {*/}
+                    {/*                       setString("I feel very down today.")*/}
+                    {/*                       setModalVisible(true)*/}
+                    {/*                   }}*/}
+                    {/*        />*/}
+                    {/*    </List.Accordion>*/}
+                    {/*    <List.Accordion*/}
+                    {/*        id="2"*/}
+                    {/*        style={style.accordion}*/}
+                    {/*        descriptionNumberOfLines={10}*/}
+                    {/*        title="January 5th, 2021"*/}
+                    {/*        left={props => <List.Icon {...props} color='#b3d2db' icon="calendar"/>}*/}
+                    {/*        expanded={expanded}*/}
+                    {/*        // onPress={*/}
+                    {/*        //     handlePress()*/}
+                    {/*        // }*/}
+                    {/*    >*/}
+                    {/*        <List.Item title="Mood: 2"*/}
+                    {/*                   onPress={() => {*/}
+                    {/*                       setString("I feel a little anxious, but I'm happy.")*/}
+                    {/*                       setModalVisible(true)*/}
+                    {/*                   }}*/}
+                    {/*        />*/}
+                    {/*    </List.Accordion>*/}
+                    {/*</List.AccordionGroup>*/}
                     <Modal
                         animationType="slide"
                         transparent={true}
