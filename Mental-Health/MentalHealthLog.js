@@ -11,10 +11,15 @@ import KIC_Style from "../Components/Style";
 import { useNavigation } from "@react-navigation/native";
 import { DateTimePickerModal } from "react-native-paper-datetimepicker";
 import NumberSlider from 'react-native-number-slider'
+import { Date as CommonDate } from "../gen/proto/common_pb";
 import 'intl';
 import 'intl/locale-data/jsonp/en';
 import ClientManager from "../Managers/ClientManager";
-import UserManager from "../Managers/UserManager"; // or any other locale you need
+import UserManager from "../Managers/UserManager";
+import {Date as CommonDate, File} from "../gen/proto/common_pb";
+import {Buffer} from "buffer";
+import {AddHealthDataForUserRequest, MentalHealthLog as HealthLog} from "../gen/proto/health_pb";
+import * as proto_common_pb from "../gen/proto/common_pb"; // or any other locale you need
 
 
 
@@ -65,11 +70,43 @@ export default function MentalHealthLog({ navigation }) {
         um.getMyUserID().then(userID  => makeAddEntryRequest(userID, authString));
     }
 
-    //then, make request to upload file with uri
+    //then, make request to add entry based on entered data
     const makeAddEntryRequest = async (userID, authString) => {
+        let req = new AddHealthDataForUserRequest();
+        console.log("Auth: " + authString);
 
-        alert("Entry stored!")
+        //the request requires the user ID and the mental health log entry
+
+        req.setUserid(userID);
+
+        //set health log entry with score, logdata aka journal name
+        let logEntry = new HealthLog();
+        logEntry.setScore(value); //from NumberSlider
+        logEntry.setJournalname(entry); //from journal entry text input box
+        logEntry.setUserid(userID);
+
+        // Fetch the date the user would like for this entry from the DateTimePickerModal and set as logDate
+        let logDate = new CommonDate();
+        logDate.setDay(String(date.getDate()).padStart(2, '0'));
+        logDate.setMonth(String(date.getMonth() + 1).padStart(2, '0'));
+        logDate.setYear(String(date.getFullYear()).padStart(2, '0'));
+
+        logEntry.setLogdate();
+        //set new entry with log entry
+        req.setNewentry(logEntry);
+
+        return client.addHealthDataForUser(req,{'Authorization': authString}).then(
+            res => {
+                console.log("SUCCESS" + res.getSuccess());
+                console.log(res);
+                alert("Entry stored!")
+            })
+            .catch(error =>{
+                console.log("There is an error :(");
+                console.log(error);
+            });
     }
+
 
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
