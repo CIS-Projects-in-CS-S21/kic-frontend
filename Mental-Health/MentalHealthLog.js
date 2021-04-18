@@ -16,10 +16,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import ClientManager from "../Managers/ClientManager";
 import UserManager from "../Managers/UserManager";
-import {Date as CommonDate, File} from "../gen/proto/common_pb";
-import {Buffer} from "buffer";
 import {AddHealthDataForUserRequest, MentalHealthLog as HealthLog} from "../gen/proto/health_pb";
-import * as proto_common_pb from "../gen/proto/common_pb"; // or any other locale you need
 
 
 
@@ -47,7 +44,11 @@ export default function MentalHealthLog({ navigation }) {
         setValue(value)
     }
 
-    const date = new Date();
+    const [date, setDate] = useState(new Date());
+    const onDateChange = (date) => {
+        setDate(date)
+    }
+
 
     {/* Create UsersClientManager & create a UsersClient */}
     let cm = new ClientManager();
@@ -91,10 +92,15 @@ export default function MentalHealthLog({ navigation }) {
         logDate.setMonth(String(date.getMonth() + 1).padStart(2, '0'));
         logDate.setYear(String(date.getFullYear()).padStart(2, '0'));
 
-        logEntry.setLogdate();
+
+        logEntry.setLogdate(logDate);
         //set new entry with log entry
+
+        console.log("log date" + logDate);
+
         req.setNewentry(logEntry);
 
+        console.log(req.getNewentry());
         return client.addHealthDataForUser(req,{'Authorization': authString}).then(
             res => {
                 console.log("SUCCESS" + res.getSuccess());
@@ -149,6 +155,7 @@ export default function MentalHealthLog({ navigation }) {
                     onDismiss={onDismiss}
                     date={date}
                     onConfirm={onChange}
+                    onChange = {onDateChange}
                     label="Pick A Date"
                 />
                 {/* <TextInput value={date.toLocaleString()} /> */}
