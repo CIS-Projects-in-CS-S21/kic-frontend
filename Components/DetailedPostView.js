@@ -19,6 +19,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
  * @class Contains function for rendering the detailed post view.
  */
 class DetailedPostView extends React.Component {
+
   /*
    * Class constructor
    */
@@ -63,7 +64,7 @@ class DetailedPostView extends React.Component {
     }
 
     async componentDidMount() {
-        await this.initPostView();
+      await this.initPostView();
     }
 
     initPostView() {
@@ -116,7 +117,6 @@ class DetailedPostView extends React.Component {
         this.setState({
             myUsername: myusername,
         })
-        console.log("active user's username is: " + this.state.myUsername);
     }
 
     handleDelete() {
@@ -124,15 +124,16 @@ class DetailedPostView extends React.Component {
         let client = cm.createMediaClient();
         let req = new DeleteFilesWithMetaDataRequest();
         let map = req.getMetadataMap();
-        console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
+        //console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
         map.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
 
-        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser});
+        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser(res)});
     }
 
     redirectUser(res) {
-        alert("Post deleted!");
-        this.props.navigation.navigate('Profile');
+        console.log("Deleted post");
+        //alert("Post deleted!");
+        this.props.navigation.goBack();
     }
 
    setCommentText = (text) => {
