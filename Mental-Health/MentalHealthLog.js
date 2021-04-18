@@ -12,7 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 import { DateTimePickerModal } from "react-native-paper-datetimepicker";
 import NumberSlider from 'react-native-number-slider'
 import 'intl';
-import 'intl/locale-data/jsonp/en'; // or any other locale you need
+import 'intl/locale-data/jsonp/en';
+import ClientManager from "../Managers/ClientManager";
+import UserManager from "../Managers/UserManager"; // or any other locale you need
 
 
 
@@ -41,11 +43,39 @@ export default function MentalHealthLog({ navigation }) {
     }
 
     const date = new Date();
+
+    {/* Create UsersClientManager & create a UsersClient */}
+    let cm = new ClientManager();
+    let client = cm.createHealthClient();
+
+    //to store mental health entry, start chain of functions
+    const storeHealthEntry = async () => {
+        return callGetAuthString();
+    }
+
+    //first, do this to get authorization string
+    const callGetAuthString = async () => {
+        let um = new UserManager();
+        console.log("Obtained authorization string");
+        return um.getAuthString().then(authString  => {getUserID(authString, um)});
+    }
+
+    //then, get user ID
+    const getUserID = async(authString, um) => {
+        um.getMyUserID().then(userID  => makeAddEntryRequest(userID, authString));
+    }
+
+    //then, make request to upload file with uri
+    const makeAddEntryRequest = async (userID, authString) => {
+
+        alert("Entry stored!")
+    }
+
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation} />
             <SafeAreaView style={[KIC_Style.innerContainer, {marginTop:30}]}>
-               <ScrollView>
+               <ScrollView style = {{justifyContent: 'center', alignSelf: 'center'}}>
                 <Image
                     style={{ width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center' }}
                     source={require('../assets/kic.png')}
@@ -95,7 +125,7 @@ export default function MentalHealthLog({ navigation }) {
                 <TouchableOpacity
                     style={KIC_Style.button}
                     onPress={() =>
-                        alert("Entry stored!")
+                        storeHealthEntry()
                     }>
                     <Text style={KIC_Style.button_font}> Store Entry </Text>
                 </TouchableOpacity>
