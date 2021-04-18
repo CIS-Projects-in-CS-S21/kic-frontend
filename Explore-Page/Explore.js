@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import FeedHeader from '../Components/FeedHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, TextInput, View, ScrollView, Image, Button, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, Text, TextInput, View, ScrollView, Image, Button, TouchableOpacity } from 'react-native';
 import KIC_Style from '../Components/Style';
 import UserBlurb from "../Components/UserBlurb";
 import TokenManager from "../Managers/TokenManager";
@@ -142,7 +142,7 @@ class Explore extends React.Component {
 
                 <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
 
-                {(this.state.finishedLoading) ? <ScrollView>
+                {(this.state.finishedLoading) ? <ScrollView style={styles.blurb}>
                     <UserBlurb
                         navigation = {this.props.navigation}
                         authString = {this.state.authString}
@@ -201,6 +201,9 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         paddingBottom: 5,
         textAlign: 'center',
+    },
+    blurb: {
+        width: Dimensions.get('window').width - 30,
     }
 });
 
