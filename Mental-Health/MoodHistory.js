@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Modal } from 'react-native';
 import KIC_Style from "../Components/Style";
 import FeedHeader from '../Components/FeedHeader';
+import { Date as CommonDate } from "../gen/proto/common_pb";
 import { List } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import ClientManager from "../Managers/ClientManager";
@@ -51,12 +52,13 @@ export default function MoodHistory() {
      * @function useEffect
      */
     useEffect(() => {
+        console.log("Health data:" + healthData);
         fetchLogs().then(response => {
             console.log("Fetched logs successfully");
         }).catch(error => {
             console.log("Error fetching logs: " + error)
         });
-    },[healthData])
+    },[])
 
 
     /**
@@ -78,7 +80,7 @@ export default function MoodHistory() {
      *
      * @function callGetUserByUserID
      * @param {String} authString the auth string to be used as part of the authorization header for requests
-     * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
+     * @returns {GetUserByIDResponse} res then calls the next function, callGetHealthForUser
      */
     const callGetUserID= (authString) => {
         setAuthString(authString);
@@ -141,8 +143,16 @@ export default function MoodHistory() {
                             navigation = {navigation}
                             authString = {authString}
                             myUserid = {userID}
-                            mentalHealthLog = {item}
+                            logDate = {String(item.getLogdate())}
+                            score = {item.getScore()}
+                            entry = {item.getJournalname()}
+
                         />}
+                        keyExtractor={item=> String(item.getLogdate())}
+                        onPress={() => {
+                            setString(item.getJournalname())
+                            setModalVisible(true)
+                        }}
                     />
                     {/*<List.AccordionGroup>*/}
                     {/*    <List.Accordion*/}

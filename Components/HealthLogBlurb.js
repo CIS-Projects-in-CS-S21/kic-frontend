@@ -19,6 +19,7 @@ import FeedHeader from '../Components/FeedHeader';
 import { List } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import ClientManager from "../Managers/ClientManager";
+import { Date as CommonDate } from "../gen/proto/common_pb";
 import {
     DeleteHealthDataForUserRequest,
     GetHealthDataByDateRequest,
@@ -26,12 +27,6 @@ import {
     UpdateHealthDataForDateRequest
 } from "../gen/proto/health_pb";
 import UserManager from "../Managers/UserManager";
-import {GetUserByIDRequest} from "../gen/proto/users_pb";
-import {
-    AddAwaitingFriendRequest,
-    DeleteConnectionBetweenUsersRequest,
-    GetConnectionBetweenUsersRequest
-} from "../gen/proto/friends_pb";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 
@@ -54,10 +49,9 @@ class HealthLogBlurb extends React.Component {
 
             // myUserid is the id of the current active user
             myUserid: props.myUserid,
-            mentalHealthLog: props.mentalHealthLog,
-            logDate: null,
-            entry: "",
-            score: 0,
+            logDate: props.logDate,
+            entry: props.entry,
+            score: props.score,
             wasRemoved: false,
         };
 
@@ -75,6 +69,7 @@ class HealthLogBlurb extends React.Component {
 
     initLog() {
         // Populate blurb with given user info
+        console.log("Date: "+this.props.logDate)
         console.log("init log");
         this.callGetHealthByDate().then(response => {
             console.log("Fetched info for mental health log for date " + this.state.logDate + " successfully");
@@ -96,14 +91,10 @@ class HealthLogBlurb extends React.Component {
         let client = cm.createHealthClient();
         let req = new GetHealthDataByDateRequest();
 
-        // let date = this.props.mentalHealthLog.getLogdate();
-        // let score = this.props.mentalHealthLog.getScore();
-        // let entry = this.props.mentalHealthLog.getJournalname();
-
 
         console.log("Started making healthdatabydate request");
-        req.setUserid(this.props.myUserid);
-        req.setLogdate(this.props.logDate);
+        req.setUserid(this.state.myUserid);
+        req.setLogdate(new CommonDate(this.props.logDate));
         return client.getHealthDataByDate(req, {'Authorization': this.state.authString}).then(res => {this.setLogInfo(res)})
     }
 
@@ -117,24 +108,20 @@ class HealthLogBlurb extends React.Component {
         {/* Store user information */}
 
         let logList = res.getHealthdataList();
-        let myLogDate = logList[0].getLogdate();
-        let myScore = logList[0].getScore();
-        let myEntry = logList[0].getJournalname();
-        let myID = logList[0].getUserid();
+        let currentLog = logList[0];
+        console.log("Current log:" + logList.toString());
+        let myScore = currentLog.getScore();
+        let myEntry = currentLog.getJournalname();
 
         this.setState({
             logDate: myLogDate,
             score: myScore,
             entry: myEntry,
-            myUserid: myID,
         })
 
         console.log("Health Log is for  " + this.state.logDate)
 
 
-
-        return client.getConnectionBetweenUsers(req, {'Authorization': this.state.authString}).then(res => { this.handleAreFriends(); })
-            .catch(error => { this.handleAreNotFriends() });
     }
 
     /**
@@ -170,6 +157,8 @@ class HealthLogBlurb extends React.Component {
         return client.deleteHealthDataForUser(req, {'Authorization': this.props.authString}).then(res => {
             console.log(res)
             this.handleRemovedEntry();
+        }).catch(error => {
+            console.log("Error deleting mental health log for date" + this.state.logDate + ": " + error);
         });
     }
 
@@ -188,10 +177,10 @@ class HealthLogBlurb extends React.Component {
                     {/* Log's display date and score */}
                     <View style ={styles.userID}>
                         {/* Display name */}
-                        <Text style ={styles.textUsername}>{this.state.logDate}</Text>
+                        <Text style ={styles.textUsername}> {this.state.logDate}</Text>
                     </View>
                     {/* Score */}
-                    <Text style ={styles.textBio}>{this.state.score}</Text>
+                    <Text style ={styles.textBio}> Score: {this.state.score}</Text>
                 </View>
 
                 {/* Display delete entry button */}
