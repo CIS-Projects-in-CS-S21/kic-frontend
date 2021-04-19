@@ -139,54 +139,23 @@ export default function MoodHistory() {
                     {/*FlatList that renders a mental health entry log per entry in health data list*/}
                     <FlatList
                         data={healthData}
-                        renderItem={({item}) => <HealthLogBlurb
-                            navigation = {navigation}
-                            authString = {authString}
-                            myUserid = {userID}
-                            logDate = {String(item.getLogdate())}
-                            score = {item.getScore()}
-                            entry = {item.getJournalname()}
+                        renderItem={({item}) =>
+                            <HealthLogBlurb
+                                onPress={() => {
+                                    setString(item.getJournalname())
+                                    setModalVisible(true)
+                                }}
+                                navigation = {navigation}
+                                authString = {authString}
+                                myUserid = {userID}
+                                logDate = {String(item.getLogdate())}
+                                score = {item.getScore()}
+                                entry = {item.getJournalname()}
 
-                        />}
-                        keyExtractor={item=> String(item.getLogdate())}
-                        onPress={() => {
-                            setString(item.getJournalname())
-                            setModalVisible(true)
-                        }}
+                             />}
+                            keyExtractor={item=> String(item.getLogdate())}
+
                     />
-                    {/*<List.AccordionGroup>*/}
-                    {/*    <List.Accordion*/}
-                    {/*        id="1"*/}
-                    {/*        style={style.accordion}*/}
-                    {/*        descriptionNumberOfLines={10}*/}
-                    {/*        title="January 1st, 2021"*/}
-                    {/*        left={props => <List.Icon {...props} color='#b3d2db' icon="calendar"/>}>*/}
-                    {/*        <List.Item title="Mood: -5"*/}
-                    {/*                   onPress={() => {*/}
-                    {/*                       setString("I feel very down today.")*/}
-                    {/*                       setModalVisible(true)*/}
-                    {/*                   }}*/}
-                    {/*        />*/}
-                    {/*    </List.Accordion>*/}
-                    {/*    <List.Accordion*/}
-                    {/*        id="2"*/}
-                    {/*        style={style.accordion}*/}
-                    {/*        descriptionNumberOfLines={10}*/}
-                    {/*        title="January 5th, 2021"*/}
-                    {/*        left={props => <List.Icon {...props} color='#b3d2db' icon="calendar"/>}*/}
-                    {/*        expanded={expanded}*/}
-                    {/*        // onPress={*/}
-                    {/*        //     handlePress()*/}
-                    {/*        // }*/}
-                    {/*    >*/}
-                    {/*        <List.Item title="Mood: 2"*/}
-                    {/*                   onPress={() => {*/}
-                    {/*                       setString("I feel a little anxious, but I'm happy.")*/}
-                    {/*                       setModalVisible(true)*/}
-                    {/*                   }}*/}
-                    {/*        />*/}
-                    {/*    </List.Accordion>*/}
-                    {/*</List.AccordionGroup>*/}
                     <Modal
                         animationType="slide"
                         transparent={true}
