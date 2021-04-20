@@ -42,7 +42,9 @@ class Explore extends React.Component {
       finishedLoading: false,
       authString : '',
       foundFriends: [],
-      foundSearch : '',
+      foundSearch : [],
+      showSearch : false,
+      showSuggestions : true
     };
 
     this.callGetAuthString = this.callGetAuthString.bind(this)
@@ -138,6 +140,9 @@ class Explore extends React.Component {
 
     handleSearch() {
         console.log("Searching for " + this.state.searchString + "...");
+        this.setState({
+            showSearch : false,
+        })
         
         let cm = new ClientManager();
         let client = cm.createUsersClient();
@@ -150,15 +155,20 @@ class Explore extends React.Component {
 
     showSearchResults(res) {
         if(res.getSuccess() === true && res.hasUser() === true) {
-            let foundUser = res.getUser(); 
-            console.log("Found user "+ foundUser.toString() +" from search string: " + this.state.searchString); 
+            let foundUser = res.getUser().getUserid();
+            console.log("Found user with user id: " +foundUser); 
             this.setState({
-                foundUser: foundUser
+                foundUser: foundUser,
+                showSearch : true,
+                showSuggestions : false
             });
         } else {
             console.log("Couldn't find user from search string: " + this.state.searchString); 
         }
     }
+
+
+
   render() {
     /**
      * Renders Explore screen components.
@@ -183,8 +193,20 @@ class Explore extends React.Component {
                 </View>
 
                 <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
-
-                {(this.state.finishedLoading) ? <ScrollView>
+                
+                {(this.state.finishedLoading)  ? <ScrollView>
+                    {(this.state.showSearch) ? <View>
+                    <Text>Found user from search @{this.state.searchString} </Text>
+                    <UserBlurb
+                        navigation = {this.props.navigation}
+                        authString = {this.state.authString}
+                        myUsername = {this.state.username}
+                        myUserid = {this.state.userid}
+                        userid = {this.state.userid} // This page belongs to the active user
+                        blurbUserid = {this.state.foundUser}
+                    />
+                </View> : <View></View>}
+                    {this.state.showSuggestions ? <View>
                     <FlatList
                         data = {this.state.foundFriends}
                         renderItem = {({item}) => 
@@ -194,10 +216,10 @@ class Explore extends React.Component {
                         myUsername = {this.state.username}
                         myUserid = {this.state.userid}
                         userid = {this.state.userid}
-                        blurbUserid = {item.userid}
+                        blurbUserid = {item.getUserid()}
                         />}
                         keyExtractor = {friend => friend.userid}
-                    />
+                    /> </View> : <View></View>}
                     <UserBlurb
                         navigation = {this.props.navigation}
                         authString = {this.state.authString}
