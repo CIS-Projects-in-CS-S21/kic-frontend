@@ -118,6 +118,7 @@ class Explore extends React.Component {
 
         let req = new GetRecommendationsForUserRequest();
         req.setUser(res.getUser());
+        req.setNumberrecommendations(10); 
 
         return client.getRecommendationsForUser(req, {'Authorization': authString}).then(response => {this.storeRecommendationsForUser(response, res)})
     }
@@ -135,6 +136,12 @@ class Explore extends React.Component {
 
     setSearchString = (text) => {
         this.setState({ searchString: text });
+        if(text === '') {
+            this.setState({
+                showSearch : false,
+                showSuggestions : true
+            })
+        }
     }
 
 
@@ -196,7 +203,6 @@ class Explore extends React.Component {
                 
                 {(this.state.finishedLoading)  ? <ScrollView>
                     {(this.state.showSearch) ? <View>
-                    <Text>Found user from search @{this.state.searchString} </Text>
                     <UserBlurb
                         navigation = {this.props.navigation}
                         authString = {this.state.authString}
@@ -219,39 +225,8 @@ class Explore extends React.Component {
                         blurbUserid = {item.getUserid()}
                         />}
                         keyExtractor = {friend => friend.userid}
-                    /> </View> : <View></View>}
-                    <UserBlurb
-                        navigation = {this.props.navigation}
-                        authString = {this.state.authString}
-                        myUsername = {this.state.username}
-                        myUserid = {this.state.userid}
-                        userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {130}
                     />
-                    <UserBlurb
-                        navigation = {this.props.navigation}
-                        authString = {this.state.authString}
-                        myUsername = {this.state.username}
-                        myUserid = {this.state.userid}
-                        userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {131}
-                    />
-                    <UserBlurb
-                        navigation = {this.props.navigation}
-                        authString = {this.state.authString}
-                        myUsername = {this.state.username}
-                        myUserid = {this.state.userid}
-                        userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {134}
-                    />
-                    <UserBlurb
-                        navigation = {this.props.navigation}
-                        authString = {this.state.authString}
-                        myUsername = {this.state.username}
-                        myUserid = {this.state.userid}
-                        userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {135}
-                    />
+                     </View> : <View></View>}
                     <StatusBar style="auto" />
                 </ScrollView> : <View></View>}
             </SafeAreaView>
