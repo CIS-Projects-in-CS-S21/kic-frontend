@@ -201,7 +201,7 @@ class Explore extends React.Component {
 
                 <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
                 
-                {(this.state.finishedLoading)  ? <ScrollView>
+                {(this.state.finishedLoading)  ? <ScrollView style = {styles.blurb}>
                     {(this.state.showSearch) ? <View>
                     <UserBlurb
                         navigation = {this.props.navigation}
@@ -253,6 +253,9 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         paddingBottom: 5,
         textAlign: 'center',
+    },
+    blurb: { 
+        width : '85%'
     }
 });
 
