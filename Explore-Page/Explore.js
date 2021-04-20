@@ -2,7 +2,7 @@
  * @fileoverview Explore page - allows users to discover friends and search for users.
  */
 
-import { StatusBar } from 'expo-status-bar';
+import { setStatusBarNetworkActivityIndicatorVisible, StatusBar } from 'expo-status-bar';
 import React from 'react';
 import FeedHeader from '../Components/FeedHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -46,7 +46,6 @@ class Explore extends React.Component {
     };
 
     this.callGetAuthString = this.callGetAuthString.bind(this)
-    this.handleSearch = this.handleSearch(this)
 
   }
 
@@ -133,11 +132,11 @@ class Explore extends React.Component {
     }
 
     setSearchString = (text) => {
-          this.setState({ searchString: text });
+        this.setState({ searchString: text });
     }
 
 
-    async handleSearch() {
+    handleSearch() {
         console.log("Searching for " + this.state.searchString + "...");
         
         let cm = new ClientManager();
@@ -145,14 +144,14 @@ class Explore extends React.Component {
 
         let req = new GetUserByUsernameRequest();
         req.setUsername(this.state.searchString); 
-
-      return client.getUserByUsername(req, {'Authorization' : this.state.authString}).then(res => {this.showSearchResults(res)})
+        
+        return client.getUserByUsername(req, {'Authorization' : this.state.authString}).then(res => {this.showSearchResults(res)})
     }
 
     showSearchResults(res) {
-        if(res.getSuccess() === true) {
-            console.log("Found user "+ res.getUser().userid +" from search string: " + this.state.searchString); 
+        if(res.getSuccess() === true && res.hasUser() === true) {
             let foundUser = res.getUser(); 
+            console.log("Found user "+ foundUser.toString() +" from search string: " + this.state.searchString); 
             this.setState({
                 foundUser: foundUser
             });
@@ -170,8 +169,6 @@ class Explore extends React.Component {
             <FeedHeader navigation={this.props.navigation} />
             <SafeAreaView style={KIC_Style.innerContainer}>
                 <View style={{flexDirection: 'row', marginTop: 30, justifyContent: 'center' }}>
-                    {this.state.finishedLoading ? <View> 
-                        
                     <TextInput
                         style={KIC_Style.searchInput}
                         textAlign = {'center'}
@@ -180,15 +177,14 @@ class Explore extends React.Component {
                     />
                     <TouchableOpacity
                         style={{ backgroundColor: '#b3d2db', borderRadius: 10, height: 30, justifyContent: 'center' }}
-                        onPress = {() => this.handleSearch}>
+                        onPress = {() => this.handleSearch()}>
                         <Ionicons name="search-circle-outline" color='#ffff' size={25} />
                     </TouchableOpacity>
-                </View>: <View></View>}
+                </View>
 
                 <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
 
                 {(this.state.finishedLoading) ? <ScrollView>
-                    
                     <FlatList
                         data = {this.state.foundFriends}
                         renderItem = {({item}) => 
@@ -236,7 +232,6 @@ class Explore extends React.Component {
                     />
                     <StatusBar style="auto" />
                 </ScrollView> : <View></View>}
-                </View>
             </SafeAreaView>
         </SafeAreaView>
     );
