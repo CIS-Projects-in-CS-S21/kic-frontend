@@ -17,7 +17,6 @@ import { Modal } from 'react-native';
 import KIC_Style from "../Components/Style";
 import FeedHeader from '../Components/FeedHeader';
 import { Date as CommonDate } from "../gen/proto/common_pb";
-import { List } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import ClientManager from "../Managers/ClientManager";
 import {GetHealthDataForUserRequest} from "../gen/proto/health_pb";
@@ -37,7 +36,6 @@ export default function MoodHistory() {
 
     const [expanded, setExpanded] = React.useState(true);
     const [modalVisible, setModalVisible] = React.useState(false);
-    const handlePress = () => setExpanded(!expanded);
     const [journalString, setString] = React.useState("");
     const navigation = useNavigation();
     const [healthData, setHealthData]= React.useState([]);
@@ -139,12 +137,8 @@ export default function MoodHistory() {
                     {/*FlatList that renders a mental health entry log per entry in health data list*/}
                     <FlatList
                         data={healthData}
-                        renderItem={({item}) =>
+                        renderItem={({item}) => (
                             <HealthLogBlurb
-                                onPress={() => {
-                                    setString(item.getJournalname())
-                                    setModalVisible(true)
-                                }}
                                 navigation = {navigation}
                                 authString = {authString}
                                 myUserid = {userID}
@@ -152,29 +146,13 @@ export default function MoodHistory() {
                                 score = {item.getScore()}
                                 entry = {item.getJournalname()}
 
-                             />}
+                             />
+
+                        )}
                             keyExtractor={item=> String(item.getLogdate())}
 
                     />
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        onRequestClose={() => setModalVisible(false) }
-                        visible={modalVisible}
-                    >
 
-                        <View style={style.centeredView}>
-                            <View style={style.modalView}>
-                                <Text style={style.modalText}>{journalString}</Text>
-                                <TouchableOpacity
-                                    style={[style.button, style.buttonClose]}
-                                    onPress={() =>
-                                        setModalVisible(!modalVisible)}>
-                                    <Text style={KIC_Style.button_font}>Close</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </Modal>
 
                     <TouchableOpacity
                         style={KIC_Style.button}

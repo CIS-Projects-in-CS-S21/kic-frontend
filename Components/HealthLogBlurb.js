@@ -53,6 +53,7 @@ class HealthLogBlurb extends React.Component {
             entry: props.entry,
             score: props.score,
             wasRemoved: false,
+            modalVisible: false,
         };
 
         this.initLog = this.initLog.bind(this)
@@ -68,61 +69,11 @@ class HealthLogBlurb extends React.Component {
     }
 
     initLog() {
-        // Populate blurb with given user info
         console.log("Date: "+this.props.logDate)
         console.log("init log");
-        // this.callGetHealthByDate().then(response => {
-        //     console.log("Fetched info for mental health log for date " + this.state.logDate + " successfully");
-        // }).catch(error => {
-        //     console.log("Error mounting mental health log for date" + this.state.logDate + ": " + error);
-        // });
 
     }
 
-    // /**
-    //  * Handles making the GetHealthDataForUserRequest request
-    //  *
-    //  * @function callGetHealthByDate
-    //  * @param {String} authString the auth string to be used as part of the authorization header for requests
-    //  * @returns {GetHealthDataByDateResponse} res then calls the next function, callGetFriendsForUser
-    //  */
-    // callGetHealthByDate(){
-    //     let cm = new ClientManager();
-    //     let client = cm.createHealthClient();
-    //     let req = new GetHealthDataByDateRequest();
-    //
-    //
-    //     console.log("Started making healthdatabydate request");
-    //     req.setUserid(this.state.myUserid);
-    //     req.setLogdate(new CommonDate(this.props.logDate));
-    //     return client.getHealthDataByDate(req, {'Authorization': this.state.authString}).then(res => {this.setLogInfo(res)})
-    // }
-    //
-    // /**
-    //  * Parses user information from a GetHealthDataByDateRequest, checks if there is health data for a log date, and updates the state
-    //  *
-    //  * @function setLogInfo
-    //  * @param {GetHealthDataByDateResponse} res The response object from a GetHealthDataByDateRequest
-    //  */
-    // setLogInfo(res){
-    //     {/* Store user information */}
-    //
-    //     let logList = res.getHealthdataList();
-    //     let currentLog = logList[0];
-    //     console.log("Current log:" + logList.toString());
-    //     let myScore = currentLog.getScore();
-    //     let myEntry = currentLog.getJournalname();
-    //
-    //     this.setState({
-    //         logDate: myLogDate,
-    //         score: myScore,
-    //         entry: myEntry,
-    //     })
-    //
-    //     console.log("Health Log is for  " + this.state.logDate)
-    //
-    //
-    // }
 
     /**
      * Sets state.wasRemoved to true if the log for that date was just deleted
@@ -156,6 +107,7 @@ class HealthLogBlurb extends React.Component {
 
         return client.deleteHealthDataForUser(req, {'Authorization': this.props.authString}).then(res => {
             console.log("Delete health data response" + res)
+            alert("Entry removed!")
             this.handleRemovedEntry();
         }).catch(error => {
             console.log("Error deleting mental health log for date" + this.state.logDate + ": " + error);
@@ -177,11 +129,19 @@ class HealthLogBlurb extends React.Component {
                     {/* Log's display date and score */}
                     <View style ={styles.userID}>
                         {/* Display name */}
-                        <Text style ={styles.textUsername}> {this.state.logDate}</Text>
+                        <Text style ={styles.textUsername}
+                              onPress={() => {
+                                  this.setState({
+                                      modalVisible:true,
+                                  })
+                              }}
+                        > {this.state.logDate}
+                        </Text>
                     </View>
                     {/* Score */}
                     <Text style ={styles.textBio}> Score: {this.state.score}</Text>
-                    <Text style ={styles.textBio}> Entry: {this.state.entry}</Text>
+
+
                 </View>
 
                 {/* Display delete entry button */}
@@ -193,6 +153,30 @@ class HealthLogBlurb extends React.Component {
                         </TouchableOpacity>
                     </View>
                 <StatusBar style="auto" />
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    onRequestClose={() =>
+                        this.setState({
+                            modalVisible:false,
+                        }) }
+                    visible={this.state.modalVisible}
+                >
+
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalText}>{this.state.entry}</Text>
+                            <TouchableOpacity
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() =>
+                                    this.setState(prevState => ({
+                                        modalVisible: !prevState.modalVisible
+                                    }))}>
+                                <Text style={KIC_Style.button_font}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         );
     }
@@ -244,8 +228,36 @@ const styles = StyleSheet.create({
         marginRight: 5,
         fontWeight: "bold",
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    buttonClose: {
+        backgroundColor: "#7ab7dd"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    },
     textBio: {
         fontSize: 13,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 10,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     },
     disabledButton: {
         width: "80%",
@@ -256,6 +268,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#565657",
         marginTop: 7,
         padding: 10,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        alignItems: 'center',
+        elevation: 2
     },
 });
 
