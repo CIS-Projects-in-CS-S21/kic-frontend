@@ -19,8 +19,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
  * @class Contains function for rendering the detailed post view.
  */
 class DetailedPostView extends React.Component {
+
   /*
    * Class constructor
+    * @param {String} authString The authstring for making requests
+    * @param {useNavigation} navigation The navigation prop used to navigate between pages
+    * @param {String} myUserid The id of the current active user
+    * @param {String} userid The id of this file's poster
+    * @param {String} username The username of this file's poster
+    * @param {File} fileinfo The File object to be displayed in this postview
+    * @param {Array} comments The array of comments to be displayed in this postview
+    * @param {String} imageSrc The uri of the image to be displayed in this postview
    */
     constructor(props) {
         super();
@@ -62,10 +71,20 @@ class DetailedPostView extends React.Component {
         this.handleAddComment = this.handleAddComment.bind(this)
     }
 
+    /**
+    * Runs when component first loads
+    *
+    * @function componentDidMount()
+    */
     async componentDidMount() {
-        await this.initPostView();
+      await this.initPostView();
     }
 
+    /**
+    * Handles initiating the post view
+    * @function initPostView
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
     initPostView() {
         console.log("Web");
         console.log("My id: " + this.state.myUserid + " // poster id: " + this.state.userid);
@@ -111,35 +130,57 @@ class DetailedPostView extends React.Component {
         return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.setMyUsername(res)})
     }
 
+    /**
+    * Handles updating the myUsername state variable
+    * @function handleDelete
+    * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
     setMyUsername(res){
         let myusername = res.getUser().getUsername();
         this.setState({
             myUsername: myusername,
         })
-        console.log("active user's username is: " + this.state.myUsername);
     }
 
+    /**
+    * Handles deleting a post via a DeleteFilesWithMetaDataRequest
+    * @function handleDelete
+    * @returns {DeleteFilesWithMetaDataResponse} res The response object to a DeleteFilesWithMetaDataRequest
+    */
     handleDelete() {
         let cm = new ClientManager();
         let client = cm.createMediaClient();
         let req = new DeleteFilesWithMetaDataRequest();
         let map = req.getMetadataMap();
-        console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
+        //console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
         map.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
 
-        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser});
+        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser(res)});
     }
 
+    /**
+    * Handles redirecting user after a post is deleted
+    * @function redirectUser
+    * @params {DeleteFilesWithMetaDataResponse} res The response object to a DeleteFilesWithMetaDataRequest
+    */
     redirectUser(res) {
-        alert("Post deleted!");
-        this.props.navigation.navigate('Profile');
+        console.log("Deleted post");
+        this.props.navigation.goBack();
     }
 
+    /**
+    * Handles updating the comment state variable
+    * @function setCommentText
+    */
    setCommentText = (text) => {
       this.setState({ commentText: text })
-      //console.log("Comment: " + this.state.commentText);
    }
 
+    /**
+    * An async function that handles adding a comment to a file
+    * @function handleAddComment
+    * @returns {UpdateFilesWithMetadataResponse} res The response object to an UpdateFilesWithMetadataRequest
+    */
     async handleAddComment() {
         await this.randomizeCommentID();
 
@@ -200,6 +241,11 @@ class DetailedPostView extends React.Component {
         return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)}).catch(error => console.log("Saving comment failed: " + error));
     }
 
+    /**
+    * An async function that randomizes a string ID for the comment ID
+    * @function randomizeCommentID
+    * @returns {String} vtoString(16) The comment ID
+    */
     async randomizeCommentID() {
       let string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -227,7 +273,10 @@ class DetailedPostView extends React.Component {
 
                 {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
                 <PostDetails
-                    userID = {this.state.userID}
+                    myUserid = {this.state.myUserid}
+                    navigation = {this.state.navigation}
+                    authString = {this.state.authString}
+                    userid = {this.state.userid}
                     username = {this.state.username}
                     yearPosted = {this.state.yearPosted}
                     monthPosted = {this.state.monthPosted}
@@ -269,7 +318,7 @@ class DetailedPostView extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for an individual DetailedPostView's components.
+ * @constant styles creates stylesheet for a DetailedPostView
  */
 const styles = StyleSheet.create({
   container: {
@@ -296,8 +345,9 @@ const styles = StyleSheet.create({
     }),
   },
   postImage: {
-    width: Dimensions.get('window').width,
-    height: (Dimensions.get('window').width - 70),
+    alignSelf: 'center',
+    width: Dimensions.get('window').width / 1.15,
+    height: Dimensions.get('window').width / 1.15,
   }
 });
 

@@ -15,15 +15,19 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useRoute} from '@react-navigation/native';
+import ProfilePicture from "./ProfilePicture";
 
 /**
- * @class Contains function for rendering the detailed post view.
- * TO USE THIS COMPONENT, YOU NEED TO PASS IN AN AUTHSTRING AND A USERID FOR THE USER BEING DISPLAYED.
+ * @class Contains function for rendering a user blurb
  */
 class UserBlurb extends React.Component {
 
   /*
    * Class constructor
+    * @param {String} authString The authstring for making requests
+    * @param {String} myUserid The id of the current active user
+    * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+    * @param {String} blurbUserid The id of the user featured on this blurb
    */
     constructor(props) {
         super();
@@ -35,7 +39,7 @@ class UserBlurb extends React.Component {
             // myUserid is the id of the current active user
             myUserid: props.myUserid,
 
-            // userid is the id of the user who owns this friendlist (if applicable)
+            // userid is the id of the user who owns the page that this blurb is being displayed on (if applicable)
             userid: props.userid,
 
             // userid is the id of the user featured on this blurb
@@ -63,6 +67,11 @@ class UserBlurb extends React.Component {
       this.initBlurb();
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    *
+    * @function componentDidUpdate()
+    */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.blurbUserid !== prevProps.blurbUserid) {
@@ -81,6 +90,11 @@ class UserBlurb extends React.Component {
       }
     }
 
+    /**
+    * Initializes this blurb by calling callGetUserByUserID()
+    *
+    * @function initBlurb
+    */
     initBlurb() {
         // Populate blurb with given user info
         this.callGetUserByUserID().then(response => {
@@ -96,7 +110,7 @@ class UserBlurb extends React.Component {
     *
     * @function callGetUserByUserID
     * @param {String} authString the auth string to be used as part of the authorization header for requests
-    * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
+    * @returns {GetUserByIDResponse} res The response object from a GetUserByIDRequest
     */
     callGetUserByUserID(){
         let cm = new ClientManager();
@@ -108,10 +122,11 @@ class UserBlurb extends React.Component {
     }
 
     /**
-    * Parses user information from a GetUserByIDRequest, checks if this active user's blurb, and updates the state
-    *
-    * @function callGetUserByUserID
+    * Parses user information from a GetUserByIDResponse, updates the state, then checks for a connection
+    * between this user and the active user via the GetConnectionBetweenUsersRequest
+    * @function setUserInfo
     * @param {GetUserByIDResponse} res The response object from a GetUserByIDRequest
+    * @returns {GetConnectionBetweenUsersResponse} res The response object from a GetConnectionBetweenUsersRequest
     */
     setUserInfo(res){
         {/* Store user information */}
@@ -257,6 +272,11 @@ class UserBlurb extends React.Component {
         return client.deleteConnectionBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { this.allowFriendReqs(); });
     }
 
+    /**
+    * Handles navigating to the user's page, given a userid
+    *
+    * @function goToUserPage
+    */
     goToUserPage = () => {
         this.props.navigation.navigate('UserPage', {
           navigation: this.props.navigation,
@@ -265,6 +285,7 @@ class UserBlurb extends React.Component {
           username: this.state.username,
           bio: this.state.bio,
         })
+        console.log("Blurb belongs to " + this.state.username);
     }
 
     /**
@@ -277,9 +298,10 @@ class UserBlurb extends React.Component {
               {/* User's icon */}
               <TouchableOpacity
                     onPress = {this.goToUserPage}>
-                    <Image
-                        style={styles.icon}
-                        source = {require('../assets/default/default_icon_2.png')}
+                    <ProfilePicture
+                        style = {styles.icon}
+                        userid = {this.state.blurbUserid}
+                        authString = {this.props.authString}
                     />
               </TouchableOpacity>
 
@@ -319,7 +341,7 @@ class UserBlurb extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for an individual UserBlurb's components.
+ * @constant styles creates stylesheet for a UserBlurb.
  */
 const styles = StyleSheet.create({
     container: {
