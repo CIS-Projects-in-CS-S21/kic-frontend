@@ -6,7 +6,8 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
-import { UsersClient } from "../gen/proto/UsersServiceClientPb";
+import { CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
+import { UsersClient, FriendsClient } from "../gen/proto/UsersServiceClientPb";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TokenManager from "../Managers/TokenManager";
 import ClientManager from '../Managers/ClientManager';
@@ -79,45 +80,54 @@ export default function signUp() {
         req.setDesiredusername(username);
         req.setDesiredpassword(password1);
 
-        return client.addUser(req, {}).then(res => {callGetJWTToken(client)});
+        return client.addUser(req, {}).then(res => {callGetJWTToken(cm, client)});
     }
-    const callGetJWTToken = (client) => {
+    const callGetJWTToken = (cm, client) => {
         let req = new GetJWTTokenRequest();
         req.setUsername(username);
         req.setPassword(password1);
 
-        return client.getJWTToken(req, {}).then(res => {callStoreToken(client, res)});
+        return client.getJWTToken(req, {}).then(res => {callStoreToken(cm, client, res)});
     }
-    const callStoreToken = (client, res) => {
+    const callStoreToken = (cm, client, res) => {
         let tm = new TokenManager();
-        return tm.storeToken(res.getToken()).then(res => {callGetAuthString(client)});
+        return tm.storeToken(res.getToken()).then(res => {callGetAuthString(cm, client)});
     }
-    const callGetAuthString = (client) => {
+    const callGetAuthString = (cm, client) => {
         console.log("callgetauthstr");
         let um = new UserManager();
-        return um.getAuthString().then(authString => {callGetUserID(client, um, authString)});
+        return um.getAuthString().then(authString => {callGetUserID(cm, client, um, authString)});
     }
-    const callGetUserID = (client, um, authString) => {
+    const callGetUserID = (cm, client, um, authString) => {
         console.log("callgetuserid");
-        return um.getMyUserID().then(userID => {callGetUserByUserID(client, authString, userID)});
+        return um.getMyUserID().then(userID => {callGetUserByUserID(cm, client, authString, userID)});
     }
-    const callGetUserByUserID = (client, authString, userID) => {
+    const callGetUserByUserID = (cm, client, authString, userID) => {
         console.log("callgetuserbyuserid");
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
 
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {callUpdateUserInfo(client, authString, userID)});
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {callUpdateUserInfo(cm, client, authString, userID)});
     }
-    const callUpdateUserInfo = (client, authString, userID) => {
+    const callUpdateUserInfo = (cm, client, authString, userID) => {
         console.log("callupdateuserinfo");
         let req = new UpdateUserInfoRequest();
         req.setUserid(userID);
         req.setBio(bio);
 
-        return client.updateUserInfo(req, {'Authorization': authString}).then(res => { finishSignUp(res) });
+        return client.updateUserInfo(req, {'Authorization': authString}).then(res => { addDefaultFriend(cm, authString, res, userID) });
     }
+    const addDefaultFriend = (cm, authString, res, userID) => {
+        let req = new CreateConnectionForUsersRequest();
+        req.setFirstuserid(userID);
+        req.setSeconduserid('153');
+
+        let client = cm.createFriendsClient();
+
+        return client.createConnectionForUsers(req, {'Authorization': authString}).then(res => { finishSignUp(res) });
+    }
+
     const finishSignUp = (res) => {
-        console.log("User: " + res.getUpdateduser());
         navigation.navigate('LogIn');
     }
 
