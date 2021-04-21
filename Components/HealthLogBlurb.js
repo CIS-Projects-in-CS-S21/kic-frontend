@@ -15,18 +15,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Modal } from 'react-native';
 import KIC_Style from "../Components/Style";
-import FeedHeader from '../Components/FeedHeader';
-import { List } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import ClientManager from "../Managers/ClientManager";
-import { Date as CommonDate } from "../gen/proto/common_pb";
-import {
-    DeleteHealthDataForUserRequest,
-    GetHealthDataByDateRequest,
-    GetHealthDataForUserRequest, MentalHealthLog as HealthLog,
-    UpdateHealthDataForDateRequest
-} from "../gen/proto/health_pb";
-import UserManager from "../Managers/UserManager";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 
@@ -52,7 +40,6 @@ class HealthLogBlurb extends React.Component {
             logDate: props.logDate,
             entry: props.entry,
             score: props.score,
-            wasRemoved: false,
             modalVisible: false,
         };
 
@@ -75,44 +62,7 @@ class HealthLogBlurb extends React.Component {
     }
 
 
-    /**
-     * Sets state.wasRemoved to true if the log for that date was just deleted
-     *
-     * @function handleRemovedEntry
-     */
-    handleRemovedEntry(){
-        this.setState({
-            wasRemoved: true,
-        })
-    }
 
-
-    /**
-     * Handles removing a log from user's Mood History
-     *
-     * @function handleRemoveEntry
-     */
-    handleRemoveEntry = () => {
-
-        let cm = new ClientManager();
-        let client = cm.createHealthClient();
-
-        //only delete one entry, from date specified
-        let req = new DeleteHealthDataForUserRequest();
-        req.setUserid(this.state.myUserid);
-        req.setAll(false);
-        req.setDatetoremove(new CommonDate(this.state.logDate));
-
-
-
-        return client.deleteHealthDataForUser(req, {'Authorization': this.props.authString}).then(res => {
-            console.log("Delete health data response" + res)
-            alert("Entry removed!")
-            this.handleRemovedEntry();
-        }).catch(error => {
-            console.log("Error deleting mental health log for date" + this.state.logDate + ": " + error);
-        });
-    }
 
     /**
      * Renders the Mental Health Log Entry
@@ -143,15 +93,6 @@ class HealthLogBlurb extends React.Component {
 
 
                 </View>
-
-                {/* Display delete entry button */}
-                   <View>
-                        <TouchableOpacity
-                            style={styles.choiceButton}
-                            onPress = {this.handleRemoveEntry}>
-                            <Ionicons name="trash-outline" color='#ffff' size={25} />
-                        </TouchableOpacity>
-                    </View>
                 <StatusBar style="auto" />
                 <Modal
                     animationType="slide"

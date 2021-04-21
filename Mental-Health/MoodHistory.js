@@ -123,7 +123,6 @@ export default function MoodHistory() {
 
     }
 
-
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation}/>
