@@ -4,7 +4,7 @@ import KIC_Style from "../Components/Style";
 import ClientManager from "../Managers/ClientManager";
 import {DownloadFileRequest} from "../gen/proto/media_pb";
 import {Buffer} from "buffer";
-import {bytesToBase64} from "../util/BytesDecoder"
+import * as FileSystem from 'expo-file-system';
 
 
 // { image, base64 }
@@ -37,6 +37,34 @@ class KIC_Image extends React.Component {
         };
 
         this.fetchImage = this.fetchImage.bind(this)
+    }
+
+
+    async uploadBase64 (base64String) {
+        this.setState({ uploading: true });
+    
+        //Without this the FilySystem crashes with 'bad base-64'
+        const base64Data = base64String.replace("data:image/png;base64,","");
+
+        let uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+        
+        try {
+          //This creates a temp uri file so there's no neeed to download an image_source to get a URI Path
+            const uri = FileSystem.cacheDirectory + uniqueId + '.png';
+            this.state.imageCounter++;
+            await FileSystem.writeAsStringAsync(
+                uri,
+                base64Data,
+                {
+                    'encoding': FileSystem.EncodingType.Base64
+                }
+            );
+            return uri;
+        } catch (e) {
+            this.setState({ uploading: false });
+            console.log('*Error*')
+            console.log(e)
+      }
     }
 
     componentDidMount(){
@@ -106,12 +134,23 @@ class KIC_Image extends React.Component {
                 console.log("This image was taken from mobile");
                 finalsrc = byte64;
             }
+
+            // Saving image
+            let locationUri = '';
+
+            this.uploadBase64(src1).then( (uri) => {locationUri = uri;}).then(() => {
+                this.setState({
+                    imageSrc: locationUri,
+                    imagefixed: true,
+                    metadata: map
+                });
+            }).then(() => {console.log("imageSrc = " + this.state.imageSrc)});
+            // --------
+            
+            //console.log("finalsrc = " + finalsrc)
             // Save the fixed uri to state
-            this.setState({
-                imageSrc: finalsrc,
-                imagefixed: true,
-                metadata: map,
-            })
+            
+            //console.log("locationUri = " + locationUri);
             //console.log("FIXED SRC: " + finalsrc);
         }.bind(this)); //binds stream.on function so we can access state
 
@@ -150,7 +189,7 @@ class KIC_Image extends React.Component {
                         onPress={this.handleViewPost}>
                        <Image
                            style={{width: 180, height: 180, alignSelf: 'center'}}
-                           source={this.state.imageSrc}>
+                           source={{uri: this.state.imageSrc}}>
                        </Image>
                    </TouchableOpacity>
                </View> : <View></View>}
