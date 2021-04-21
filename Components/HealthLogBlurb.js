@@ -12,10 +12,13 @@ import {
     ScrollView,
     View, FlatList,
 } from 'react-native';
+import { Date as CommonDate } from "../gen/proto/common_pb";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Modal } from 'react-native';
 import KIC_Style from "../Components/Style";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import {DeleteHealthDataForUserRequest} from "../gen/proto/health_pb";
+import ClientManager from "../Managers/ClientManager";
 
 
 
@@ -41,10 +44,11 @@ class HealthLogBlurb extends React.Component {
             entry: props.entry,
             score: props.score,
             modalVisible: false,
+            dateString: "",
         };
-
         this.initLog = this.initLog.bind(this)
     }
+
 
     /**
      * Runs when component first loads
@@ -58,9 +62,68 @@ class HealthLogBlurb extends React.Component {
     initLog() {
         console.log("Date: "+this.props.logDate)
         console.log("init log");
+        let stringDate = this.state.logDate;
+        let dateParsed = stringDate.split(/[',']/);
+        let date = new CommonDate();
+        let year = dateParsed[0];
+        let month = dateParsed[1];
+        let day = dateParsed[2];
+        date.setYear(year);
+        date.setMonth(month);
+        date.setDay(day);
+        let dateView = month + "/" + day + "/" +  year;
+        this.setState({
+            dateString: dateView
+        })
 
     }
 
+    /**
+     * Sets state.wasRemoved to true if the log for that date was just deleted
+     *
+     * @function handleRemovedEntry
+     */
+    handleRemovedEntry(){
+        this.setState({
+            wasRemoved: true,
+        })
+    }
+    /**
+     * Handles removing a log from user's Mood History
+     *
+     * @function handleRemoveEntry
+     */
+    handleRemoveEntry = () => {
+        let cm = new ClientManager();
+        let client = cm.createHealthClient();
+        //only delete one entry, from date specified
+        let req = new DeleteHealthDataForUserRequest();
+        req.setUserid(this.state.myUserid);
+        req.setAll(false);
+        let stringDate = this.state.logDate;
+        let dateParsed = stringDate.split(/[',']/);
+        let date = new CommonDate();
+        let year = dateParsed[0];
+        let month = dateParsed[1];
+        let day = dateParsed[2];
+        date.setYear(year);
+        date.setMonth(month);
+        date.setDay(day);
+        req.setDatetoremove(date);
+        let dateView = month + "/" + day + "/" +  year;
+        this.setState({
+            dateString: dateView
+        })
+        console.log("Sent request to delete health data");
+        return client.deleteHealthDataForUser(req, {'Authorization': this.props.authString}).then(res => {
+            console.log("Delete health data response" + res)
+            console.log("Entries deleted:" + res.getEntriesdeleted())
+            alert("Entry removed!")
+            this.handleRemovedEntry();
+        }).catch(error => {
+            console.log("Error deleting mental health log for date" + this.state.logDate + ": " + error);
+        });
+    }
 
 
 
@@ -69,57 +132,69 @@ class HealthLogBlurb extends React.Component {
      * @returns a {HealthLogBlurb}
      */
     render() {
-        return (
-            <View style={styles.container}>
-                {/* File icon */}
-                <Ionicons name="calendar-outline" color='#ffff' size={25} />
+        if (this.state.wasRemoved){
+            return null;
+        } else {
+            return (
+                 <View style={styles.container}>
+                    {/* File icon */}
+                    <Ionicons name="calendar-outline" color='#ffff' size={25} />
 
-                {/* Log Entry */}
-                <View style ={styles.userInfo}>
-                    {/* Log's display date and score */}
-                    <View style ={styles.userID}>
-                        {/* Display name */}
-                        <Text style ={styles.textUsername}
-                              onPress={() => {
-                                  this.setState({
-                                      modalVisible:true,
-                                  })
-                              }}
-                        > {this.state.logDate}
-                        </Text>
-                    </View>
-                    {/* Score */}
-                    <Text style ={styles.textBio}> Score: {this.state.score}</Text>
-
-
-                </View>
-                <StatusBar style="auto" />
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    onRequestClose={() =>
-                        this.setState({
-                            modalVisible:false,
-                        }) }
-                    visible={this.state.modalVisible}
-                >
-
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.modalText}>{this.state.entry}</Text>
-                            <TouchableOpacity
-                                style={[styles.button, styles.buttonClose]}
-                                onPress={() =>
-                                    this.setState(prevState => ({
-                                        modalVisible: !prevState.modalVisible
-                                    }))}>
-                                <Text style={KIC_Style.button_font}>Close</Text>
-                            </TouchableOpacity>
+                    {/* Log Entry */}
+                    <View style ={styles.userInfo}>
+                        {/* Log's display date and score */}
+                        <View style ={styles.userID}>
+                            {/* Display name */}
+                            <Text style ={styles.textUsername}
+                                  onPress={() => {
+                                      this.setState({
+                                          modalVisible:true,
+                                      })
+                                  }}
+                            > {this.state.dateString}
+                            </Text>
                         </View>
+                        {/* Score */}
+                        <Text style ={styles.textBio}> Score: {this.state.score}</Text>
+
+
                     </View>
-                </Modal>
-            </View>
-        );
+                    {/* Display delete entry button */}
+                    <View>
+                        <TouchableOpacity
+                            style={styles.choiceButton}
+                            onPress = {this.handleRemoveEntry}>
+                            <Ionicons name="trash-outline" color='#ffff' size={25} />
+                        </TouchableOpacity>
+                    </View>
+                    <StatusBar style="auto" />
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        onRequestClose={() =>
+                            this.setState({
+                                modalVisible:false,
+                            }) }
+                        visible={this.state.modalVisible}
+                    >
+
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalText}>{this.state.entry}</Text>
+                                <TouchableOpacity
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() =>
+                                        this.setState(prevState => ({
+                                            modalVisible: !prevState.modalVisible
+                                        }))}>
+                                    <Text style={KIC_Style.button_font}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+            );
+        }
     }
 }
 
