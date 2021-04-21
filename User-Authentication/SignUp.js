@@ -55,6 +55,11 @@ export default function signUp() {
         }
     };
 
+    /**
+    * Handles initiating the Promise chain of signup methods
+    * @function makeRequest
+    * @returns {Promise} res The Promise object returned by a callAddUser() call
+    */
     const makeRequest = async () => {
       callAddUser().then(response => {
         console.log("Successfully added user");
@@ -65,6 +70,12 @@ export default function signUp() {
         }
       });
     }
+
+    /**
+    * Handles making the AddUser request
+    * @function callAddUser
+    * @returns {AddUserResponse} res The response object to a AddUserRequest
+    */
     const callAddUser = () => {
         let cm = new ClientManager();
         let client = cm.createUsersClient();
@@ -82,6 +93,12 @@ export default function signUp() {
 
         return client.addUser(req, {}).then(res => {callGetJWTToken(cm, client)});
     }
+
+    /**
+    * Handles making a getJWTToken request
+    * @function callGetJWTToken
+    * @returns {GetJWTTokenResponse} res The response object to a GetJWTTokenRequest
+    */
     const callGetJWTToken = (cm, client) => {
         let req = new GetJWTTokenRequest();
         req.setUsername(username);
@@ -89,26 +106,70 @@ export default function signUp() {
 
         return client.getJWTToken(req, {}).then(res => {callStoreToken(cm, client, res)});
     }
+
+    /**
+    * Handles storing the retrieved token to TokenManager
+    * @function callStoreToken
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @params {GetJWTTokenResponse} res The response object returned by a GetJWTTokenRequest
+    * @returns {Promise} res The Promise object returned by a storeToken() call
+    */
     const callStoreToken = (cm, client, res) => {
         let tm = new TokenManager();
         return tm.storeToken(res.getToken()).then(res => {callGetAuthString(cm, client)});
     }
+
+    /**
+    * Handles fetching the authString from a UserManager
+    * @function callGetAuthString
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @returns {String} authString The authorization string to be used in future requests
+    */
     const callGetAuthString = (cm, client) => {
-        console.log("callgetauthstr");
         let um = new UserManager();
         return um.getAuthString().then(authString => {callGetUserID(cm, client, um, authString)});
     }
+
+    /**
+    * Handles fetching the active user's userID
+    * @function callGetUserID
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UserManager} um The UserManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @params {String} authString The authorization string to be used in future requests
+    * @returns {String} userID The active user's userID
+    */
     const callGetUserID = (cm, client, um, authString) => {
-        console.log("callgetuserid");
         return um.getMyUserID().then(userID => {callGetUserByUserID(cm, client, authString, userID)});
     }
+
+    /**
+    * Handles fetching the active user's userID via a GetUserByIDRequest
+    * @function callGetUserID
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @params {String} authString The authorization string to be used in future requests
+    * @params {String} userID The active user's userID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
     const callGetUserByUserID = (cm, client, authString, userID) => {
-        console.log("callgetuserbyuserid");
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
 
         return client.getUserByID(req, {'Authorization': authString}).then(res => {callUpdateUserInfo(cm, client, authString, userID)});
     }
+
+    /**
+    * Handles updating the active user's info via a UpdateUserInfoRequest
+    * @function callGetUserID
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @params {String} authString The authorization string to be used in future requests
+    * @params {String} userID The active user's userID
+    * @returns {UpdateUserInfoResponse} res The response object to a UpdateUserInfoRequest
+    */
     const callUpdateUserInfo = (cm, client, authString, userID) => {
         console.log("callupdateuserinfo");
         let req = new UpdateUserInfoRequest();
@@ -117,6 +178,16 @@ export default function signUp() {
 
         return client.updateUserInfo(req, {'Authorization': authString}).then(res => { addDefaultFriend(cm, authString, res, userID) });
     }
+
+    /**
+    * Handles giving the user a default friend via a CreateConnectionForUsersRequest
+    * @function callGetUserID
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {String} authString The authorization string to be used in future requests
+    * @params {UpdateUserInfoResponse} res The response object to a UpdateUserInfoRequest
+    * @params {String} userID The active user's userID
+    * @returns {CreateConnectionForUsersResponse} res The response object to a CreateConnectionForUsersRequest
+    */
     const addDefaultFriend = (cm, authString, res, userID) => {
         let req = new CreateConnectionForUsersRequest();
         req.setFirstuserid(userID);
@@ -127,6 +198,11 @@ export default function signUp() {
         return client.createConnectionForUsers(req, {'Authorization': authString}).then(res => { finishSignUp(res) });
     }
 
+    /**
+    * The final method in the signup process that redirects user to the login page
+    * @function finishSignUp
+    * @params {CreateConnectionForUsersResponse} res The response object to a CreateConnectionForUsersRequest
+    */
     const finishSignUp = (res) => {
         navigation.navigate('LogIn');
     }
