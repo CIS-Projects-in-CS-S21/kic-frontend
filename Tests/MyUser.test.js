@@ -4,12 +4,135 @@
 
 import MyUser from "../Components/MyUser";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
-import { GetUserByUsernameRequest } from '../gen/proto/users_pb';
-import { GetJWTTokenRequest } from '../gen/proto/users_pb';
+import { GetJWTTokenRequest, AddUserRequest, GetUserByUsernameRequest } from '../gen/proto/users_pb';
 import TokenManager from "../Managers/TokenManager";
 
 const un = "test14";
 const pw = "test14";
+const email = "email@gmail.com";
+const url = "https://api.keeping-it-casual.com";
+
+/**
+* @function shouldAuthenticateValidUser
+* @return success if getJWTToken() returns a token given a valid user
+*/
+test('shouldAuthenticateValidUser', () => {
+
+    // Log into mock account
+    const client = new UsersClient(url);
+    let req = new GetJWTTokenRequest();
+    req.setUsername(un);
+    req.setPassword(pw);
+
+    // Try to log in with request
+    client.getJWTToken(req, {}).then(res => {
+        expect(res.array.length.not.toBe(0));
+    }).catch(e => {
+          console.log(e);
+    });
+});
+
+/**
+* @function shouldAuthenticateValidUser
+* @return success if getJWTToken() does not return a token given an invalid username
+*/
+test('shouldNotAuthenticateInvalidUsername', () => {
+
+    // Log into mock account
+    const client = new UsersClient(url);
+    let req = new GetJWTTokenRequest();
+    req.setUsername("aszliahsaccountthatdoesntexist666");
+    req.setPassword(pw);
+
+    // Try to log in with request
+    client.getJWTToken(req, {}).then(res => {
+        expect(res.array.length.toBe(0));
+    }).catch(e => {
+          console.log(e);
+    });
+});
+
+/**
+* @function shouldNotAuthenticateInvalidPassword
+* @return success if getJWTToken() does not return a token given an invalid password
+*/
+test('shouldNotAuthenticateInvalidPassword', () => {
+
+    // Log into mock account
+    const client = new UsersClient(url);
+    let req = new GetJWTTokenRequest();
+    req.setUsername(un);
+    req.setPassword("passwordtoaszliahsaccountthatdoesntexist666");
+
+    // Try to log in with request
+    client.getJWTToken(req, {}).then(res => {
+        expect(res.array.length.toBe(0));
+    }).catch(e => {
+          console.log(e);
+    });
+});
+
+/**
+* @function shouldCreateNewUser
+* @return success if addUser() successfully adds new user with a unique username
+*/
+test('shouldCreateNewUser', () => {
+
+    // Log into mock account
+    const client = new UsersClient(url);
+    let req = new AddUserRequest();
+    req.setDesiredusername("uniqueusername001");
+    req.setDesiredpassword(pw);
+    req.setEmail(email);
+
+    // Try to log in with request
+    client.addUser(req, {}).then(res => {
+        expect(res.getSuccess.toBe(true));
+    }).catch(e => {
+          console.log(e);
+    });
+});
+
+/**
+* @function shouldNotAllowSameUsername
+* @return success if addUser() fails to add new user with a duplicate username
+*/
+test('shouldNotAllowSameUsername', () => {
+
+    // Log into mock account
+    const client = new UsersClient(url);
+    let req = new AddUserRequest();
+    req.setDesiredusername(un);
+    req.setDesiredpassword(pw);
+
+    // Try to log in with request
+    client.addUser(req, {}).then(res => {
+        expect(res.getSuccess.toBe(false));
+    }).catch(e => {
+          console.log(e);
+    });
+});
+
+/**
+* @function shouldNotAllowSameEmail
+* @return success if addUser() fails to add new user with a duplicate email
+*/
+test('shouldNotAllowSameEmail', () => {
+
+    // Log into mock account
+    const client = new UsersClient(url);
+    let req = new AddUserRequest();
+    req.setDesiredusername("uniqueusername002");
+    req.setDesiredpassword(pw);
+    req.setEmail(email);
+
+    // Try to log in with request
+    client.addUser(req, {}).then(res => {
+        expect(res.getSuccess.toBe(false));
+    }).catch(e => {
+          console.log(e);
+    });
+});
 
 /**
 * @function getUsernameReturnsUsernameWithValidUser
@@ -18,7 +141,7 @@ const pw = "test14";
 test('getUsernameReturnsCorrectUsernameWithValidUser', () => {
 
     // Log into mock account
-    const client = new UsersClient("https://api.keeping-it-casual.com");
+    const client = new UsersClient(url);
     let req = new GetJWTTokenRequest();
     req.setUsername(un);
     req.setPassword(pw);
@@ -45,7 +168,7 @@ test('getUsernameReturnsCorrectUsernameWithValidUser', () => {
 test('getUsernameReturnsFalsyWithInvalidUser', () => {
 
     // Log into mock account
-    const client = new UsersClient("https://api.keeping-it-casual.com");
+    const client = new UsersClient(url);
     let req = new GetJWTTokenRequest();
     req.setUsername(un);
     req.setPassword(pw);
@@ -72,7 +195,7 @@ test('getUsernameReturnsFalsyWithInvalidUser', () => {
 test('getUsernameReturnsCorrectFirstNameWithValidUser', () => {
 
     // Log into mock account
-    const client = new UsersClient("https://api.keeping-it-casual.com");
+    const client = new UsersClient(url);
     let req = new GetJWTTokenRequest();
     req.setUsername(un);
     req.setPassword(pw);
@@ -90,98 +213,4 @@ test('getUsernameReturnsCorrectFirstNameWithValidUser', () => {
     }).catch(e => {
           console.log(e);
     });
-});
-
-/**
-* @function getUserFirstNameReturnsFalsyWithInvalidUser
-* @return success if getUserFirstName() returns falsy given an invalid User
-*/
-test('getUserFirstNameReturnsFalsyWithInvalidUser', () => {
-
-    // Log into mock account
-    const client = new UsersClient("https://api.keeping-it-casual.com");
-    let req = new GetJWTTokenRequest();
-    req.setUsername(un);
-    req.setPassword(pw);
-
-    // Try to log in with request
-    client.getJWTToken(req, {}).then(res => {
-        if (res.array.length > 0){
-            // Try to get User by username
-            let user = new MyUser(un);
-            expect(user.getUserFirstName()).toBeFalsy();
-        }
-        else{
-            console.log("No token received");
-        }
-    }).catch(e => {
-          console.log(e);
-    });
-});
-
-/**
-* @function getUserLastNameReturnsCorrectLastNameWithValidUser
-* @return success if getUserLastName() returns the correct username given a valid User
-*/
-test('getUserLastNameReturnsCorrectLastNameWithValidUser', () => {
-
-    // Log into mock account
-    const client = new UsersClient("https://api.keeping-it-casual.com");
-    let req = new GetJWTTokenRequest();
-    req.setUsername(un);
-    req.setPassword(pw);
-
-    // Try to log in with request
-    client.getJWTToken(req, {}).then(res => {
-        if (res.array.length > 0){
-            // Try to get User by username
-            let user = new MyUser(un);
-            expect(user.getUserLastName()).toMatch(un);
-        }
-        else{
-            console.log("No token received");
-        }
-    }).catch(e => {
-          console.log(e);
-    });
-});
-
-/**
-* @function getUserLastNameReturnsFalsyWithInvalidUser
-* @return success if getUserLastName() returns falsy given an invalid User
-*/
-test('getUserLastNameReturnsFalsyWithInvalidUser', () => {
-
-    // Log into mock account
-    const client = new UsersClient("https://api.keeping-it-casual.com");
-    let req = new GetJWTTokenRequest();
-    req.setUsername(un);
-    req.setPassword(pw);
-
-    // Try to log in with request
-    client.getJWTToken(req, {}).then(res => {
-        if (res.array.length > 0){
-            // Try to get User by username
-            let user = new MyUser(un);
-            expect(user.getUserLastName()).toBeFalsy();
-        }
-        else{
-            console.log("No token received");
-        }
-    }).catch(e => {
-          console.log(e);
-    });
-});
-
-test('Test Mock User', () => {
-
-    // Create mock user with username "TEST"
-    let page = new MyUser("TEST");
-    let spy = jest.spyOn(page, 'getUsername').mockImplementation(() => "Lorem");
-
-    // Expect getUserFirstName to return "Lorem"
-    expect(page.getUsername()).toMatch("Lorem");
-
-    // Restore spy
-    spy.mockRestore();
 });
