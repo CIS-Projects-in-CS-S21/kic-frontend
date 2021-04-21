@@ -8,17 +8,18 @@ import {GetFilesByMetadataRequest, DownloadFileRequest} from "../gen/proto/media
 
 
 /**
- * @class Contains function for a profile picture
- * pass in authString and fileInfo
+ * @class Contains function for fetching and rendering a user's profile picture
  */
 class ProfilePicture extends React.Component {
     /*
-      * Class constructor
-      */
+    * Class constructor
+    * @param {String} authString The authstring for making requests
+    * @param {String} userid The id of the user whose profile picture is to be fetched
+    */
     constructor(props) {
         super();
 
-        // Define the initial state; pro
+        // Define the initial state
         this.state = {
             // id of the user this icon belongs to
             userid: props.userid,
@@ -31,10 +32,20 @@ class ProfilePicture extends React.Component {
         this.fetchImage = this.fetchImage.bind(this)
     }
 
+    /**
+    * Runs when component first loads
+    *
+    * @function componentDidMount()
+    */
     componentDidMount(){
         this.fetchImage();
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    *
+    * @function componentDidUpdate()
+    */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userid !== prevProps.userid) {
@@ -50,6 +61,10 @@ class ProfilePicture extends React.Component {
       }
     }
 
+   /**
+   * Finds a user's a profile picture file by searching for files with the metadata containing the user's ID in the metadata map.
+   * @returns {GetFilesByMetadataResponse}
+   */
     fetchImage() {
         let cm = new ClientManager();
         let client = cm.createMediaClient();
@@ -62,6 +77,9 @@ class ProfilePicture extends React.Component {
         return client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {this.downloadImage(client, res)})
     }
 
+   /**
+   * Downloads profile image as a stream and saves to state.
+   */
     downloadImage(client, res) {
         let imagefile = res.getFileinfosList();
         // If a file was found
@@ -121,6 +139,10 @@ class ProfilePicture extends React.Component {
         }
     }
 
+    /**
+    * Renders the ProfilePicture component.
+    * @returns a {ProfilePicture}
+    */
     render() {
         return(
            <View>
@@ -142,6 +164,9 @@ class ProfilePicture extends React.Component {
     }
 }
 
+/**
+ * @constant styles creates stylesheet for a ProfilePicture.
+ */
 const styles = StyleSheet.create({
     icon: {
         width: 70,

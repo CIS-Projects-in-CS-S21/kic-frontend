@@ -13,12 +13,15 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 
 /**
-* @class Contains function for rendering the posts grid. Takes in a username and userid
+* @class Contains function for rendering the posts grid.
 */
 class PostsGrid extends React.Component {
-    /*
-    * Class constructor
-    */
+  /*
+   * Class constructor
+    * @param {String} authString The authstring for making requests
+    * @param {String} myUserid The id of the current active user
+    * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+   */
     constructor(props) {
         super();
 
@@ -35,6 +38,11 @@ class PostsGrid extends React.Component {
         this.callGetAuthString = this.callGetAuthString.bind(this);
     }
 
+    /**
+    * Runs when component first loads
+    *
+    * @function componentDidMount()
+    */
     componentDidMount(){
         this.callGetAuthString().then(response => {
             console.log("Mounted posts for user id " + this.state.userid + " successfully");
@@ -43,6 +51,11 @@ class PostsGrid extends React.Component {
         });
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    *
+    * @function componentDidUpdate()
+    */
     componentDidUpdate(prevProps) {
         if (this.props.userid !== prevProps.userid) {
             console.log("Updated postsgrid")
@@ -61,10 +74,25 @@ class PostsGrid extends React.Component {
         }
     }
 
+    /**
+    * Creates a UserManager to fetch the authString, then calls callGetUserByUserID
+    *
+    * @function callGetAuthString()
+    * @returns {String} authString The authorization string to be used for requests
+    */
     callGetAuthString(){
         let um = new UserManager();
         return um.getAuthString().then(authString => {this.callGetUserByUserID(um, authString)});
     }
+
+    /**
+    * Gets a user by their user ID via a GetUserByIDRequest
+    *
+    * @function callGetUserByUserID()
+    * @params {UserManager} um The UserManager to be reused
+    * @params {String} authString The authorization string to be used for requests
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
     callGetUserByUserID(um, authString){
         this.setState({
             authString: authString,
@@ -79,7 +107,13 @@ class PostsGrid extends React.Component {
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.getUser(cm, res)})
     }
 
-    // Sets the active userID to the state and then inits a GetFilesByMetadataRequest to retrieve user's own posts
+    /**
+    * Saves the user to state then fetches their files via GetFilesByMetadataRequest
+    *
+    * @function callGetUserByUserID()
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {GetFilesByMetadataResponse} res The response object to a GetFilesByMetadataRequest
+    */
     getUser(cm, res){
         let user = res.getUser();
         this.setState({
@@ -97,7 +131,13 @@ class PostsGrid extends React.Component {
         return client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {this.getMyFiles(cm, res)})
     }
 
-    // Retrieves the array of user's files from the response object and saves to state
+    /**
+    * Saves the user's files to state
+    *
+    * @function getMyFiles()
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {GetFilesByMetadataResponse} res The response object to a GetFilesByMetadataRequest
+    */
     getMyFiles(cm, res){
 
         let myfiles = res.getFileinfosList();
