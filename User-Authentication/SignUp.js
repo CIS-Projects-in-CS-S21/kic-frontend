@@ -147,7 +147,7 @@ export default function signUp() {
 
     /**
     * Handles fetching the active user's userID via a GetUserByIDRequest
-    * @function callGetUserID
+    * @function callGetUserByUserID
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {UsersClient} client The UsersClient to be reused
     * @params {String} authString The authorization string to be used in future requests
@@ -163,7 +163,7 @@ export default function signUp() {
 
     /**
     * Handles updating the active user's info via a UpdateUserInfoRequest
-    * @function callGetUserID
+    * @function callUpdateUserInfo
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {UsersClient} client The UsersClient to be reused
     * @params {String} authString The authorization string to be used in future requests
@@ -181,7 +181,7 @@ export default function signUp() {
 
     /**
     * Handles giving the user a default friend via a CreateConnectionForUsersRequest
-    * @function callGetUserID
+    * @function addDefaultFriend
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {String} authString The authorization string to be used in future requests
     * @params {UpdateUserInfoResponse} res The response object to a UpdateUserInfoRequest
