@@ -126,8 +126,7 @@ export default function MentalHealthLog({ navigation }) {
                 <Text style={KIC_Style.title}> Mental Health Tracker</Text>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <Text>
-                        Rate your mental health on a scale from -5 (extremely depressed) to 5 (extremely anxious).
-                        0 is neither anxious nor depressed.
+                        Rate your mental health on a scale from -5 (extremely poor) to 5 (extremely good).
       </Text>
                 </TouchableWithoutFeedback>
                 <NumberSlider
