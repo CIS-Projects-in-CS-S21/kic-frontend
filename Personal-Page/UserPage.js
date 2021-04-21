@@ -1,6 +1,5 @@
 /**
- * @fileoverview The screen for the user's personal page, containing links
- * to the Mental Health Log page and User Feed.
+ * @fileoverview The profile page for some "other" user (a user that is not the active user).
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -18,12 +17,17 @@ import UserManager from '../Managers/UserManager';
 import FeedHeader from '../Components/FeedHeader';
 
 /**
- * @class Contains function for rendering the personal page.
+ * @class Contains function for rendering the user page.
  */
 class UserPage extends React.Component {
 
   /*
    * Class constructor
+    * @param {String} myUserid The id of the current active user
+    * @param {useNavigation} navigation The navigation prop used to navigate between pages
+    * @param {String} userid The id of the user that this page belongs to
+    * @param {String} username The username of the user that this page belongs to
+    * @param {String} bio The bio of the user that this page belongs to
    */
   constructor(props) {
     super();
@@ -47,6 +51,11 @@ class UserPage extends React.Component {
 
   }
 
+    /**
+    * Runs when component first loads
+    *
+    * @function componentDidMount()
+    */
   componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.setState({
@@ -60,10 +69,20 @@ class UserPage extends React.Component {
     })
   }
 
+    /**
+    * Runs before the component is unmounted
+    *
+    * @function componentWillUnmount()
+    */
     componentWillUnmount() {
         this._unsubscribe();
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    *
+    * @function componentDidUpdate()
+    */
     componentDidUpdate(prevProps) {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
           this.setState({
@@ -80,13 +99,34 @@ class UserPage extends React.Component {
         })
     }
 
+    /**
+    * Calls callGetAuthString
+    *
+    * @function fetchUserInfo()
+    */
     fetchUserInfo() {
         return this.callGetAuthString();
     }
+
+    /**
+    * Creates a UserManager to fetch the authString, then calls callGetUserID
+    *
+    * @function callGetAuthString()
+    * @returns {String} authString The authorization string to be used for requests
+    */
     callGetAuthString(){
         let um = new UserManager();
         return um.getAuthString().then(authString => {this.callGetUserByUserID(authString)});
     }
+
+    /**
+    * Gets a user by their user ID via a GetUserByIDRequest
+    *
+    * @function callGetUserByUserID()
+    * @params {String} authString The authorization string to be used for requests
+    * @params {String} userID A string of the active user's ID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
     callGetUserByUserID(authString){
         this.setState({
             authString: authString,
@@ -99,6 +139,15 @@ class UserPage extends React.Component {
         req.setUserid(this.state.userid);
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res)})
     }
+
+    /**
+    * Parses a user's information from the user found in the GetUserByIDResponse
+    *
+    * @function callGetUserByUserID()
+    * @params {String} authString The authorization string to be used for requests
+    * @params {String} userID A string of the active user's ID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
     setUserInfo(res){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
@@ -121,8 +170,8 @@ class UserPage extends React.Component {
     }
 
   /**
-   * Renders personal page components.
-   * @returns {PersonalPage}
+   * Renders user page components.
+   * @returns {UserPage}
    */
   render() {
       return (
@@ -157,7 +206,7 @@ class UserPage extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for personal page components
+ * @constant styles creates stylesheet for user page components
  */
 const styles = StyleSheet.create({
   container: {
