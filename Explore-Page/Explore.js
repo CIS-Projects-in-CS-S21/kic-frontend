@@ -2,11 +2,11 @@
  * @fileoverview Explore page - allows users to discover friends and search for users.
  */
 
-import { StatusBar } from 'expo-status-bar';
+import { setStatusBarNetworkActivityIndicatorVisible, StatusBar } from 'expo-status-bar';
 import React from 'react';
 import FeedHeader from '../Components/FeedHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, TextInput, View, ScrollView, Image, Button, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, View, ScrollView, Image, Button, TouchableOpacity } from 'react-native';
 import KIC_Style from '../Components/Style';
 import UserBlurb from "../Components/UserBlurb";
 import TokenManager from "../Managers/TokenManager";
@@ -14,6 +14,8 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { GetRecommendationsForUserRequest, } from '../gen/proto/friends_pb';
+import { UsersClient } from '../gen/proto/users_grpc_web_pb';
 
 
 /**
@@ -38,10 +40,14 @@ class Explore extends React.Component {
       birthYear: 0,
       searchString: '',
       finishedLoading: false,
+      authString : '',
+      foundFriends: [],
+      foundSearch : [],
+      showSearch : false,
+      showSuggestions : true
     };
 
     this.callGetAuthString = this.callGetAuthString.bind(this)
-    this.handleSearch = this.handleSearch(this)
 
   }
 
@@ -85,9 +91,9 @@ class Explore extends React.Component {
 
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res, userID)})
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetRecommendationsForUser(res, userID, authString, cm)})
     }
-    setUserInfo(res, userID){
+    callGetRecommendationsForUser(res, userID, authString, cm){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
@@ -105,17 +111,70 @@ class Explore extends React.Component {
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
             userid: userID,
-            finishedLoading: true,
+            clientManager : cm
         })
+
+        let client = cm.createFriendsClient();
+
+        let req = new GetRecommendationsForUserRequest();
+        req.setUser(res.getUser());
+        req.setNumberrecommendations(10); 
+
+        return client.getRecommendationsForUser(req, {'Authorization': authString}).then(response => {this.storeRecommendationsForUser(response, res)})
+    }
+
+    storeRecommendationsForUser(res) {
+        console.log("Found " + res.getRecommendationsList().length + " friends."); 
+        console.log(res.getRecommendationsList()); 
+        let rec = res.getRecommendationsList(); 
+
+        this.setState({
+            foundFriends : rec, 
+            finishedLoading : true
+        }); 
     }
 
     setSearchString = (text) => {
-      this.setState({ searchString: text })
+        this.setState({ searchString: text });
+        if(text === '') {
+            this.setState({
+                showSearch : false,
+                showSuggestions : true
+            })
+        }
     }
+
 
     handleSearch() {
         console.log("Searching for " + this.state.searchString + "...");
+        this.setState({
+            showSearch : false,
+        })
+        
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new GetUserByUsernameRequest();
+        req.setUsername(this.state.searchString); 
+        
+        return client.getUserByUsername(req, {'Authorization' : this.state.authString}).then(res => {this.showSearchResults(res)})
     }
+
+    showSearchResults(res) {
+        if(res.getSuccess() === true && res.hasUser() === true) {
+            let foundUser = res.getUser().getUserid();
+            console.log("Found user with user id: " +foundUser); 
+            this.setState({
+                foundUser: foundUser,
+                showSearch : true,
+                showSuggestions : false
+            });
+        } else {
+            console.log("Couldn't find user from search string: " + this.state.searchString); 
+        }
+    }
+
+
 
   render() {
     /**
@@ -135,46 +194,39 @@ class Explore extends React.Component {
                     />
                     <TouchableOpacity
                         style={{ backgroundColor: '#b3d2db', borderRadius: 10, height: 30, justifyContent: 'center' }}
-                        onPress = {this.handleSearch}>
+                        onPress = {() => this.handleSearch()}>
                         <Ionicons name="search-circle-outline" color='#ffff' size={25} />
                     </TouchableOpacity>
                 </View>
 
                 <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
-
-                {(this.state.finishedLoading) ? <ScrollView>
+                
+                {(this.state.finishedLoading)  ? <ScrollView style = {styles.blurb}>
+                    {(this.state.showSearch) ? <View>
                     <UserBlurb
                         navigation = {this.props.navigation}
                         authString = {this.state.authString}
                         myUsername = {this.state.username}
                         myUserid = {this.state.userid}
                         userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {130}
+                        blurbUserid = {this.state.foundUser}
                     />
-                    <UserBlurb
+                </View> : <View></View>}
+                    {this.state.showSuggestions ? <View>
+                    <FlatList
+                        data = {this.state.foundFriends}
+                        renderItem = {({item}) => 
+                        <UserBlurb
                         navigation = {this.props.navigation}
                         authString = {this.state.authString}
                         myUsername = {this.state.username}
                         myUserid = {this.state.userid}
-                        userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {131}
+                        userid = {this.state.userid}
+                        blurbUserid = {item.getUserid()}
+                        />}
+                        keyExtractor = {friend => friend.userid}
                     />
-                    <UserBlurb
-                        navigation = {this.props.navigation}
-                        authString = {this.state.authString}
-                        myUsername = {this.state.username}
-                        myUserid = {this.state.userid}
-                        userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {134}
-                    />
-                    <UserBlurb
-                        navigation = {this.props.navigation}
-                        authString = {this.state.authString}
-                        myUsername = {this.state.username}
-                        myUserid = {this.state.userid}
-                        userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {135}
-                    />
+                     </View> : <View></View>}
                     <StatusBar style="auto" />
                 </ScrollView> : <View></View>}
             </SafeAreaView>
@@ -201,6 +253,9 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         paddingBottom: 5,
         textAlign: 'center',
+    },
+    blurb: { 
+        width : '85%'
     }
 });
 
