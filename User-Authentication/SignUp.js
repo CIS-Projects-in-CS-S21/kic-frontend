@@ -32,6 +32,9 @@ export default function signUp() {
     const [bio, setBio] = useState("");
     const [myUser, setMyUser] = useState("");
 
+    /**
+    * Handles submitting a signup form
+    */
     const handleSubmit = evt => {
         evt.preventDefault();
         if (password1 !== password2) {
@@ -57,7 +60,6 @@ export default function signUp() {
 
     /**
     * Handles initiating the Promise chain of signup methods
-    * @function makeRequest
     * @returns {Promise} res The Promise object returned by a callAddUser() call
     */
     const makeRequest = async () => {
@@ -73,7 +75,6 @@ export default function signUp() {
 
     /**
     * Handles making the AddUser request
-    * @function callAddUser
     * @returns {AddUserResponse} res The response object to a AddUserRequest
     */
     const callAddUser = () => {
@@ -96,7 +97,6 @@ export default function signUp() {
 
     /**
     * Handles making a getJWTToken request
-    * @function callGetJWTToken
     * @returns {GetJWTTokenResponse} res The response object to a GetJWTTokenRequest
     */
     const callGetJWTToken = (cm, client) => {
@@ -109,7 +109,6 @@ export default function signUp() {
 
     /**
     * Handles storing the retrieved token to TokenManager
-    * @function callStoreToken
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {UsersClient} client The UsersClient to be reused
     * @params {GetJWTTokenResponse} res The response object returned by a GetJWTTokenRequest
@@ -122,7 +121,6 @@ export default function signUp() {
 
     /**
     * Handles fetching the authString from a UserManager
-    * @function callGetAuthString
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {UsersClient} client The UsersClient to be reused
     * @returns {String} authString The authorization string to be used in future requests
@@ -134,7 +132,6 @@ export default function signUp() {
 
     /**
     * Handles fetching the active user's userID
-    * @function callGetUserID
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {UserManager} um The UserManager to be reused
     * @params {UsersClient} client The UsersClient to be reused
@@ -147,7 +144,6 @@ export default function signUp() {
 
     /**
     * Handles fetching the active user's userID via a GetUserByIDRequest
-    * @function callGetUserByUserID
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {UsersClient} client The UsersClient to be reused
     * @params {String} authString The authorization string to be used in future requests
@@ -163,7 +159,6 @@ export default function signUp() {
 
     /**
     * Handles updating the active user's info via a UpdateUserInfoRequest
-    * @function callUpdateUserInfo
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {UsersClient} client The UsersClient to be reused
     * @params {String} authString The authorization string to be used in future requests
@@ -181,7 +176,6 @@ export default function signUp() {
 
     /**
     * Handles giving the user a default friend via a CreateConnectionForUsersRequest
-    * @function addDefaultFriend
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {String} authString The authorization string to be used in future requests
     * @params {UpdateUserInfoResponse} res The response object to a UpdateUserInfoRequest
@@ -200,7 +194,6 @@ export default function signUp() {
 
     /**
     * The final method in the signup process that redirects user to the login page
-    * @function finishSignUp
     * @params {CreateConnectionForUsersResponse} res The response object to a CreateConnectionForUsersRequest
     */
     const finishSignUp = (res) => {
