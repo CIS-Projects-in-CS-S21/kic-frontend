@@ -41,7 +41,6 @@ class PostsGrid extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
         this.callGetAuthString().then(response => {
@@ -54,7 +53,6 @@ class PostsGrid extends React.Component {
     /**
     * Runs when the props change and updates the component accordingly.
     *
-    * @function componentDidUpdate()
     */
     componentDidUpdate(prevProps) {
         if (this.props.userid !== prevProps.userid) {
@@ -77,7 +75,6 @@ class PostsGrid extends React.Component {
     /**
     * Creates a UserManager to fetch the authString, then calls callGetUserByUserID
     *
-    * @function callGetAuthString()
     * @returns {String} authString The authorization string to be used for requests
     */
     callGetAuthString(){
@@ -88,7 +85,6 @@ class PostsGrid extends React.Component {
     /**
     * Gets a user by their user ID via a GetUserByIDRequest
     *
-    * @function callGetUserByUserID()
     * @params {UserManager} um The UserManager to be reused
     * @params {String} authString The authorization string to be used for requests
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
@@ -110,7 +106,6 @@ class PostsGrid extends React.Component {
     /**
     * Saves the user to state then fetches their files via GetFilesByMetadataRequest
     *
-    * @function callGetUserByUserID()
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {GetFilesByMetadataResponse} res The response object to a GetFilesByMetadataRequest
     */
@@ -134,7 +129,6 @@ class PostsGrid extends React.Component {
     /**
     * Saves the user's files to state
     *
-    * @function getMyFiles()
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {GetFilesByMetadataResponse} res The response object to a GetFilesByMetadataRequest
     */

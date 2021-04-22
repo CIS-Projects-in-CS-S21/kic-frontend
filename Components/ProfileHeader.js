@@ -29,6 +29,10 @@ class ProfileHeader extends React.Component {
         };
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    * @params {props} prevProps The previous state's props
+    */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userid !== prevProps.userid) {
@@ -41,6 +45,9 @@ class ProfileHeader extends React.Component {
       }
     }
 
+    /**
+    * Handles redirecting the user to the friends page of a certain user
+    */
     goToFriends = () => {
         //console.log("I am id " + this.props.myUserid + " and this page has user id " + this.props.userid + " and username is " + this.props.username);
         this.props.navigation.navigate('FriendsPage', {

@@ -26,13 +26,16 @@ class PostDetails extends React.Component {
         };
     }
 
+    /**
+    * Handles redirecting user to a UserPage for a certain user
+    */
     goToUserPage = () => {
         this.props.navigation.navigate('UserPage', {
           navigation: this.props.navigation,
           myUserid: this.props.myUserid,
           userid: this.props.userid,
         })
-        console.log("Blurb belongs to " + this.state.username);
+        //console.log("Blurb belongs to " + this.state.username);
     }
 
     /**

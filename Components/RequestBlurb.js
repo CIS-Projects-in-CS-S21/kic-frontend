@@ -43,7 +43,6 @@ class RequestBlurb extends React.Component {
    /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
         this.callGetUserByUserID().then(response => {
@@ -56,7 +55,6 @@ class RequestBlurb extends React.Component {
     /**
     * Handles making the GetUserByID request
     *
-    * @function callGetUserByUserID
     * @param {String} authString the auth string to be used as part of the authorization header for requests
     * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
     */
@@ -72,7 +70,6 @@ class RequestBlurb extends React.Component {
     /**
     * Parses user information from a GetUserByIDRequest and updates the state
     *
-    * @function callGetUserByUserID
     * @param {GetUserByIDResponse} res The response object from a GetUserByIDRequest
     */
     setUserInfo(res){
@@ -86,6 +83,10 @@ class RequestBlurb extends React.Component {
         })
     }
 
+    /**
+    * Handles accepting a friend request
+    * @returns {CreateConnectionForUsersResponse} res The response object to a CreateConnectionForUsersRequest
+    */
     handleAccept = () => {
         this.setState({
             canAdd: false,
@@ -101,6 +102,10 @@ class RequestBlurb extends React.Component {
         return client.createConnectionForUsers(req, {'Authorization': this.props.authString}).then(res => { console.log("Users " + this.state.userid + " (blurb) and " + this.props.myUserid + " (me) are now friends!")});
     }
 
+    /**
+    * Handles denying a friend request
+    * @returns {DeleteConnectionBetweenUsersResponse} res The response object to a DeleteConnectionBetweenUsersRequest
+    */
     handleDeny = () => {
         this.setState({
             canAdd: false,
@@ -121,8 +126,8 @@ class RequestBlurb extends React.Component {
     }
 
     /**
-    * Renders the UserBlurb components.
-    * @returns a {UserBlurb}
+    * Renders the RequestBlurb component.
+    * @returns a {RequestBlurb}
     */
     render() {
       return (
@@ -167,7 +172,7 @@ class RequestBlurb extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for an individual UserBlurb's components.
+ * @constant styles creates stylesheet for an individual RequestBlurb's components.
  */
 const styles = StyleSheet.create({
     container: {

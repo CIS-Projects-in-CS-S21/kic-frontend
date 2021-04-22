@@ -72,7 +72,7 @@ class PersonalPage extends React.Component {
 
     /**
     * Runs when the props change and updates the component accordingly.
-    *
+    * @params {props} prevProps The previous state's props
     */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):

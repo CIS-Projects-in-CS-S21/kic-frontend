@@ -14,18 +14,18 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 * @class Contains function for rendering the feed header.
 */
 class FeedHeader extends React.Component {
-    /**
-    * Renders personal page components.
-    * @returns {FeedHeader}
-    */
-
     
-
+    /**
+    * Logs user out of application by forgetting token
+    */
     logOut() {
         let tokenManager = new TokenManager();
         tokenManager.forgetToken();
     }
 
+    /**
+    * Handles redirecting user to the appropriate homepage for their current platform
+    */
     homeNavigation() {
         if(Platform.OS === 'web') {
             this.props.navigation.navigate('HomePageWeb');
@@ -34,15 +34,25 @@ class FeedHeader extends React.Component {
           }
     }
 
+    /**
+    * Handles logout button press
+    */
     logOutPress() {
         this.logOut();
         this.homeNavigation();
     }
 
+    /**
+    * Redirects user to previous screen
+    */
     backNavigation() {
         this.props.navigation.goBack(); 
     }
 
+    /**
+    * Renders FeedHeader
+    * @returns {FeedHeader}
+    */
     render() {
       return (
         <SafeAreaView style={styles.feedHeaderContainer}>

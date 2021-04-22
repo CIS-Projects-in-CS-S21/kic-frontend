@@ -35,7 +35,6 @@ class ProfilePicture extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
         this.fetchImage();
@@ -44,7 +43,6 @@ class ProfilePicture extends React.Component {
     /**
     * Runs when the props change and updates the component accordingly.
     *
-    * @function componentDidUpdate()
     */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
