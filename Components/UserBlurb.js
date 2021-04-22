@@ -22,7 +22,7 @@ import ProfilePicture from "./ProfilePicture";
  */
 class UserBlurb extends React.Component {
 
-  /*
+  /**
    * Class constructor
     * @param {String} authString The authstring for making requests
     * @param {String} myUserid The id of the current active user

@@ -19,9 +19,15 @@ import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../ge
 */
 class FriendsList extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} authString The authstring for making requests
+     * @param {String} myUserid The id of the current active user
+     * @param {String} userid The id of the user who is on the friendslist
+     * @param {String} username The name of the user who is on the friendslist
+     * @param {Array} friends The list of friends of the user
+     * @param {Number} renderer initially set to 0
+     */
     constructor(props) {
         super();
 
@@ -40,7 +46,8 @@ class FriendsList extends React.Component {
 
     /**
     * Runs when component first loads
-    *
+    * @exception error sets error if fetching friends does not work
+     * postcondition: fetchFriends()
     */
     componentDidMount(){
         this.fetchFriends().then(response => {
@@ -52,7 +59,8 @@ class FriendsList extends React.Component {
 
     /**
     * Runs when the props change and updates the component accordingly.
-    *
+    * postcondition: fetchFriends
+     * @exception error logs if fetching friends does not work
     */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
@@ -77,6 +85,8 @@ class FriendsList extends React.Component {
     *
     * @returns {String} authString The string necessary for the authorization to send requests,
     * then calls the next function, callGetUserByUserID
+     * postcondition: callGetUserByUserID
+     * precondition:componentDidUpdate
     */
     fetchFriends = () => {
         // Create a new UserManager, which will provide the authString
@@ -86,7 +96,8 @@ class FriendsList extends React.Component {
 
     /**
     * Handles making the GetUserByID request
-    *
+    * precondition: fetchFriends()
+     * postcondition: callGetFriendsForUser()
     * @param {String} authString the auth string to be used as part of the authorization header for requests
     * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
     */
@@ -105,7 +116,8 @@ class FriendsList extends React.Component {
 
     /**
     * Handles making the GetFriendsForUserRequest
-    *
+    * precondition: callGetUserByUserID
+     * postcondition: updateState
     * @param {ClientManager} cm The ClientManager to be reused
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetUserByIDResponse} res Returned in response to GetUserByIDRequest
@@ -129,7 +141,7 @@ class FriendsList extends React.Component {
 
     /**
     * Retrieves the friend list from the response object and saves it to the state
-    *
+    * precondition: callGetFriendsForUser
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */

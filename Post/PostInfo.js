@@ -38,6 +38,8 @@ export default function PostInfo(props) {
     /**
      * @constant callGetAuthString obtains authorization string
      * @return getUserID to obtain userID
+     * precondition: uploadImage
+     * postcondition: getUserID
      */
     const callGetAuthString = async () => {
         let um = new UserManager();
@@ -50,6 +52,8 @@ export default function PostInfo(props) {
      * @param  {String} authString authorization string
      * @param {UserManager} um User Manager
      * @return makeUploadFileRequest constant to upload file to database
+     * precondition: callGetAuthString
+     * postcondition: makeUploadFileRequest
      */
     const getUserID = async(authString, um) => {
         um.getMyUserID().then(userID  => makeUploadFileRequest(userID, authString));
@@ -84,6 +88,7 @@ export default function PostInfo(props) {
      *  @param {String} userID of user
      * @param  {String} authString authorization string
      * @return uploadFileResponse uploads file to database
+     * precondition: getUserID
      */
     const makeUploadFileRequest = async (userID, authString) => {
        //obtain uri and base64 from Post.js

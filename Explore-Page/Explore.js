@@ -24,9 +24,24 @@ import { UsersClient } from '../gen/proto/users_grpc_web_pb';
 class Explore extends React.Component {
 
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} username The username of the current active user
+     * @param {String} userid The userid of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     * @param {Number} birthDay day of birth of user
+     * @param {Number} birthMonth month of birth of user
+     * @param {Number} birthYear day of birth of user
+     * @param {boolean} finishedLoading default set to false, means that loading is not yet finished
+     * @param {boolean} showSearch default set to false, means that by default, search results are not shown
+     * @param {boolean} showSuggestions default set to true, means that by default, friend suggestions are shown
+     * @param {String} authString The authstring for making requests
+     * @param {String} searchString The string that the user searches
+     * @param {Array} foundFriends is an array of friends that are found from suggestions
+     * @param {Array} foundSearch is an array of users that are found from searching
+     * @param {String} status default set to empty string, indicates if friend status is accepted, pending, or denied
+     */
   constructor(props) {
     super();
 
@@ -52,6 +67,8 @@ class Explore extends React.Component {
   }
   /**
    * Runs when component first loads
+   * postcondition: fetchUserInfo()
+   * @exception error if fetchuserinfo is not able to perform its function
    */
   componentDidMount() {
     //this.fetchUserInfo()
@@ -64,6 +81,7 @@ class Explore extends React.Component {
     /**
      * Ensure that the props were updated.
      * @param {props} prevProps The previous states props
+     * @exception error logs error from fetchUserInfo()
      */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
@@ -87,6 +105,8 @@ class Explore extends React.Component {
     /**
      * Function to get authorization string
      * @returns {String} authString The authorization string to be used for requests
+     * preconditon: fetchUserInfo()
+     * postcondition: callGetUserID()
      */
     callGetAuthString(){
         let um = new UserManager();
@@ -98,6 +118,8 @@ class Explore extends React.Component {
      * @param {UserManager} um The UserManager to be reused 
      * @param {String} authString The authorization string to be used for requests
      * @returns {String} userID A string of the active user's ID
+     * precondition: callGetAuthString()
+     * postcondition: callGetUserByUserID()
      */
     callGetUserID(um, authString){
         this.setState({
@@ -111,6 +133,8 @@ class Explore extends React.Component {
      * @param {String} authString The authorization string to be used for requests
      * @param {String} userID A string of the active user's ID
      * @returns {User} res Object representing user
+     * precondition: callGetUserID()
+     * postcondition: callGetRecommendationsForUser()
      */
     callGetUserByUserID(authString, userID){
 
@@ -129,6 +153,8 @@ class Explore extends React.Component {
      * @param {String} authString The authorization string to be used for requests
      * @param {ClientManager} cm The ClientManager to be reused
      * @returns {Array} res An array of Users that are recommended for a user.
+     * precondition: callGetUserByUserID()
+     * postcondition: showRecommendationsForUser()
      */
     callGetRecommendationsForUser(res, userID, authString, cm){
         {/* Store user information */}
@@ -163,7 +189,8 @@ class Explore extends React.Component {
     /**
      * A function that stores the array of recommendations to be rendered by the
      * component.
-     * @param {Array} res An array of Users that are recommended for a user. 
+     * @param {Array} res An array of Users that are recommended for a user.
+     * precondition: callGetRecommendationsForUser()
      */
 
     storeRecommendationsForUser(res) {
@@ -194,6 +221,7 @@ class Explore extends React.Component {
     /**
      * A function handling the search for a user.
      * @returns {User} res The user found from username search
+     * postcondition: showsSearchResults
      */
     handleSearch() {
         console.log("Searching for " + this.state.searchString + "...");
@@ -213,6 +241,7 @@ class Explore extends React.Component {
     /**
      * A function showing the result of a search.
      * @param {User} res The user found from username search
+     * preconditions: handleSearch()
      */
     showSearchResults(res) {
         if(res.getSuccess() === true && res.hasUser() === true) {

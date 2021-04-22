@@ -22,9 +22,17 @@ import UserManager from '../Managers/UserManager';
  */
 class PersonalPage extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} authString The authstring for making requests
+     * @param {String} username The username of the current active user
+     * @param {String} userid The userid of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on     * @param {Number} birthDay day of birth of user
+     * @param {Number} birthMonth month of birth of user
+     * @param {Number} birthYear day of birth of user
+     * @param {boolean} finishedLoading default set to false to loading is not finished
+     */
   constructor(props) {
     super();
 
@@ -46,7 +54,8 @@ class PersonalPage extends React.Component {
 
     /**
     * Runs when component first loads
-    *
+    * postcondition: fetchUserInfo
+     * @exception error if user info is not able ot be fetched
     */
   componentDidMount() {
     //this.fetchUserInfo()
@@ -73,6 +82,8 @@ class PersonalPage extends React.Component {
     /**
     * Runs when the props change and updates the component accordingly.
     * @params {props} prevProps The previous state's props
+     * postcondition: fetchUserInfo
+     * @exception error if user info is not able ot be fetched
     */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
@@ -87,7 +98,7 @@ class PersonalPage extends React.Component {
 
     /**
     * Calls callGetAuthString
-    *
+    * postcondition: callGetAuthString()
     */
     fetchUserInfo() {
         return this.callGetAuthString();
@@ -95,7 +106,8 @@ class PersonalPage extends React.Component {
 
     /**
     * Creates a UserManager to fetch the authString, then calls callGetUserID
-    *
+    * precondition: fetchUserInfo()
+     * postcondition: callGetUserID()
     * @returns {String} authString The authorization string to be used for requests
     */
     callGetAuthString(){
@@ -105,7 +117,8 @@ class PersonalPage extends React.Component {
 
     /**
     * Saves authString to state then calls getUserByID
-    *
+    * precondition: callGetAuthString()
+     * postcondition: callGetUserByUserID()
     * @params {UserManager} um The UserManager to be reused
     * @params {String} authString The authorization string to be used for requests
     * @returns {String} userID A string of the active user's ID
@@ -119,8 +132,9 @@ class PersonalPage extends React.Component {
 
     /**
     * Gets a user by their user ID via a GetUserByIDRequest
-    *
-    * @params {String} authString The authorization string to be used for requests
+    * precondition: callGetUserID()
+     * postcondition: setUserInfo()
+    * @params {String} authString )The authorization string to be used for requests
     * @params {String} userID A string of the active user's ID
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
     */
@@ -136,7 +150,7 @@ class PersonalPage extends React.Component {
 
     /**
     * Parses a user's information from the user found in the GetUserByIDResponse
-    *
+    * precondition: callGetUserByUserID
     * @params {String} authString The authorization string to be used for requests
     * @params {String} userID A string of the active user's ID
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest

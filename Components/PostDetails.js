@@ -12,9 +12,13 @@ import ProfilePicture from "./ProfilePicture";
 * @class Contains function for rendering a PostDetails component.
 */
 class PostDetails extends React.Component {
-    /*
-    * Class constructor
-    */
+    /** Class constructor
+     *  @param {String} caption The caption of the post
+     *  @param {Number} month Month of post
+     *  @param {Number} year year of post
+     *  @param {Number} day day of post
+     *
+     */
     constructor(props) {
         super();
 

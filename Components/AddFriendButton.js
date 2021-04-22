@@ -17,6 +17,9 @@ class AddFriendButton extends React.Component {
 
     /**
     * Handles sending a friend request from the active user to the target user
+     * precondition: none
+     * post condition: allowFriendRequest
+     * @exception error catches error when friend request is not allowed
     *
     */
     handleSendRequest() {

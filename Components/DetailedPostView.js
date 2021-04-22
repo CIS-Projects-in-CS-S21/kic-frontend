@@ -75,6 +75,7 @@ class DetailedPostView extends React.Component {
     * Runs when component first loads
     *
     * @function componentDidMount()
+     * pre condition: waits on init Post View
     */
     async componentDidMount() {
       await this.initPostView();
@@ -146,6 +147,7 @@ class DetailedPostView extends React.Component {
     * Handles deleting a post via a DeleteFilesWithMetaDataRequest
     * @function handleDelete
     * @returns {DeleteFilesWithMetaDataResponse} res The response object to a DeleteFilesWithMetaDataRequest
+     * post condition: redirectUser redirect user when files are deleted
     */
     handleDelete() {
         let cm = new ClientManager();
@@ -180,6 +182,8 @@ class DetailedPostView extends React.Component {
     * An async function that handles adding a comment to a file
     * @function handleAddComment
     * @returns {UpdateFilesWithMetadataResponse} res The response object to an UpdateFilesWithMetadataRequest
+     * precondition await for randomizeCommentID function that provides a random comment ID
+     * @exception error if there is an error with updating files with metadata
     */
     async handleAddComment() {
         await this.randomizeCommentID();

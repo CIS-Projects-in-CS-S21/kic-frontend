@@ -10,6 +10,7 @@ export default class TokenManager {
     *
     * @async
     * @param {Object} token - The token to store.
+     * @exception error catches error if item is not able to be set
     */
     storeToken = async (token) => {
         try {
@@ -61,6 +62,7 @@ export default class TokenManager {
     * Check if the current session is authenticated by attempting to retrieve the token.
     *
     * @return {boolean} A boolean signifying if the session is authenticated or not.
+     * @exception error is caught if authentication is not able to occur
     */
     isAuthenticated = async() => {
         try {

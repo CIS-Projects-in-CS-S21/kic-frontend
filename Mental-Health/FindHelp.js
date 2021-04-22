@@ -17,9 +17,19 @@ import MapView from "./MapView";
  */
 class FindHelp extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} username The username of the current active user
+     * @param {String} userid The userid of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     * @param {Number} birthDay day of birth of user
+     * @param {Number} birthMonth month of birth of user
+     * @param {Number} birthYear day of birth of user
+     * @param {boolean} finishedLoading default set to false, means that loading is not yet finished
+     * @param {String} searchString The string that the user searches
+     * @param {String} urlWeb url of website is stored here as necessary, default set to empty string
+     */
     constructor(props) {
         super();
 

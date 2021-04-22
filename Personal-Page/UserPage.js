@@ -21,13 +21,18 @@ import FeedHeader from '../Components/FeedHeader';
  */
 class UserPage extends React.Component {
 
-  /*
+  /**
    * Class constructor
     * @param {String} myUserid The id of the current active user
     * @param {useNavigation} navigation The navigation prop used to navigate between pages
     * @param {String} userid The id of the user that this page belongs to
     * @param {String} username The username of the user that this page belongs to
     * @param {String} bio The bio of the user that this page belongs to
+   *  @param {Number} birthDay day of birth of user
+   * @param {Number} birthMonth month of birth of user
+   * @param {Number} birthYear day of birth of user
+   * @param {useNavigation} navigation The navigation prop used to navigate between pages
+   * @param {boolean} finishedLoading default set to false and is set to true when loading is finished
    */
   constructor(props) {
     super();
@@ -53,7 +58,8 @@ class UserPage extends React.Component {
 
     /**
     * Runs when component first loads
-    *
+    * postcondition: fetchUserInfo()
+     * @exception error caught if fetching info does not work
     */
   componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
@@ -79,7 +85,9 @@ class UserPage extends React.Component {
     /**
     * Runs when the props change and updates the component accordingly.
     * @params {props} prevProps The previous state's props
-    */
+     * postcondition: fetchUserInfo()
+     * @exception error caught if fetching info does not work
+     */
     componentDidUpdate(prevProps) {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
           this.setState({
@@ -98,7 +106,7 @@ class UserPage extends React.Component {
 
     /**
     * Calls callGetAuthString
-    *
+    * postcondition: callGetAuthString()
     */
     fetchUserInfo() {
         return this.callGetAuthString();
@@ -106,7 +114,8 @@ class UserPage extends React.Component {
 
     /**
     * Creates a UserManager to fetch the authString, then calls callGetUserID
-    *
+    * precondition: fetchUserInfo()
+     * postconditon: callGetUserByUserID()
     * @returns {String} authString The authorization string to be used for requests
     */
     callGetAuthString(){
@@ -120,6 +129,8 @@ class UserPage extends React.Component {
     * @params {String} authString The authorization string to be used for requests
     * @params {String} userID A string of the active user's ID
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: callGetAuthString()
+     * postcondition: setUserInfo()
     */
     callGetUserByUserID(authString){
         this.setState({

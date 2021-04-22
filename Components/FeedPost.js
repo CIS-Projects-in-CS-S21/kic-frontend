@@ -61,6 +61,7 @@ class FeedPost extends React.Component {
     /**
     * Parses the File to be displayed by this component
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * post condition: updateState of reponse
     */
   parseFileinfo(){
       //console.log("My name is " + this.state.file)
@@ -86,6 +87,7 @@ class FeedPost extends React.Component {
     /**
     * Updates the state with the parsed information
     * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: parseFileInfo
     */
   updateState(res){
       console.log("1");

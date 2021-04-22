@@ -23,8 +23,17 @@ import FeedHeader from '../Components/FeedHeader';
  */
 class FriendsPage extends React.Component {
 
-    /*
+    /**
      * Class constructor
+     * @param {String} username The username of the current active user
+     * @param {String} userid The userid of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     * @param {Number} yearPosted year of user post
+     * @param {Number} monthPosted month of post of user
+     * @param {Number} dayPosted day of post of user
+     * @param {boolean} showFriends default set to true so friends are shown
+     * @param {boolean} isMyPage default set to true, so user is on user's page
      */
     constructor(props) {
         super();

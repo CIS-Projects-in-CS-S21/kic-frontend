@@ -19,9 +19,13 @@ import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../ge
 */
 class RequestsList extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} authString The authstring for making requests
+     * @param {String} userid The id of the current active user
+     * @param {String} username The username of the poster
+     * @param {Array} requests the array of friend requests for user
+     */
     constructor(props) {
         super();
 
@@ -39,6 +43,8 @@ class RequestsList extends React.Component {
 
     /**
     * Runs when component first loads
+     * postcondition: fetchRequests()
+     * @exception error catches if fetchRequest() does not work
     *
     */
     componentDidMount(){
@@ -55,6 +61,7 @@ class RequestsList extends React.Component {
     *
     * @returns {String} authString The string necessary for the authorization to send requests,
     * then calls the next function, callGetUserByUserID
+     * postcondition: callGetUserByUserID()
     */
     fetchRequests = () => {
         // Create a new UserManager, which will provide the authString
@@ -64,7 +71,8 @@ class RequestsList extends React.Component {
 
     /**
     * Handles making the GetUserByID request
-    *
+    * precondition: fetchRequests()
+     * postcondition:callGetAwaitingFriendsForUser
     * @param {String} authString the auth string to be used as part of the authorization header for requests
     * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
     */
@@ -83,7 +91,8 @@ class RequestsList extends React.Component {
 
     /**
     * Handles making the callGetAwaitingFriendsForUser
-    *
+    * precondition: callGetUserByUserID()
+     * postcondition updateState()
     * @param {ClientManager} cm The ClientManager to be reused
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetUserByIDResponse} res Returned in response to GetUserByIDRequest

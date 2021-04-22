@@ -15,9 +15,17 @@ import ClientManager from "../Managers/ClientManager";
  */
 class ProfilePost extends React.Component {
 
-    /*
-      * Class constructor
-      */
+    /**
+     * Class constructor
+     * @param {String} authString The authstring for making requests
+     * @param {String} myUserid The id of the current active user
+     * @param {String} posterID The id of poster
+     * @param {String} posterusername The username of the poster
+     * @param {String} userid The id of the user who is on the friendslist
+     * @param {File} file The name of the file to be displayed
+     * @param {String} caption caption associated with image
+     * @param {String} filename name of image file
+     */
     constructor(props) {
         super();
 
@@ -49,7 +57,8 @@ class ProfilePost extends React.Component {
 
     /**
     * Runs when component first loads
-    *
+    * postcondition: parseFileInfo()
+     * @exception error caught if parseFileInfo does not work correctly
     */
     componentDidMount(){
       this.parseFileinfo().then(response => {
@@ -62,6 +71,8 @@ class ProfilePost extends React.Component {
     /**
     * Parses the File to be displayed by this component
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: componentDidMount()
+     * postcondition: updateState()
     */
     parseFileinfo(){
         let map = this.state.file.getMetadataMap();
@@ -86,6 +97,7 @@ class ProfilePost extends React.Component {
     /**
     * Updates the state with the parsed information
     * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: parseFileInfo()
     */
     updateState(res){
         let poster = res.getUser();

@@ -83,7 +83,7 @@ export default function MoodHistory() {
 
     /**
      * Handles making the GetUserByID request
-     *
+     * precondition: fetchLogs()
      * @param {String} authString the auth string to be used as part of the authorization header for requests
      * @returns {GetUserByIDResponse} res then calls the next function, callGetHealthForUser
      */
@@ -95,7 +95,8 @@ export default function MoodHistory() {
 
     /**
      * Handles making the GetHealthDataForUserRequest
-     *
+     * precondition: callGetUserID
+     * postcondition: updateState
      * @param {Number} userID value
      * @param {String} authString The auth string to be used as part of the authorization header for requests
      * @returns {GetHealthDataForUserResponse} res then calls the next function, parseHealthData
@@ -116,7 +117,7 @@ export default function MoodHistory() {
 
     /**
      * Retrieves the health data list from the response object and saves it to the state
-     *
+     * precondition: callGetHealthForUser
      * @param {String} authString The auth string to be used as part of the authorization header for requests
      * @param {GetHealthDataForUserResponse} res Returned in response to GetHealthDataForUserRequest
      */

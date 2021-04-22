@@ -19,9 +19,18 @@ import UserManager from '../Managers/UserManager';
  */
 class RequestBlurb extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} myUserid The id of the current active user
+     * @param {String} username The username of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     * @param {Number} birthDay day of birth of user
+     * @param {Number} birthMonth month of birth of user
+     * @param {Number} birthYear day of birth of user
+     * @param {boolean} canAdd default set to true, means that user can request friend
+     * @param {String} status default set to empty string, indicates if friend status is accepted, pending, or denied
+     */
     constructor(props) {
         super();
 
