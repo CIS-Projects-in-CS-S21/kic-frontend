@@ -19,7 +19,7 @@ import FeedHeader from '../Components/FeedHeader';
 
 
 /**
- * @class Contains function for rendering the friends page.
+ * @class Contains functions for rendering the friends page.
  */
 class FriendsPage extends React.Component {
 
@@ -49,12 +49,15 @@ class FriendsPage extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
       this.compareIDs();
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    *
+    */
     componentDidUpdate(prevProps) {
       if (this.props.userid !== prevProps.userid) {
         this.setState({
@@ -67,6 +70,10 @@ class FriendsPage extends React.Component {
       }
     }
 
+    /**
+    * Compares the user IDs of the active user and the user to whom this friends page belongs
+    *
+    */
     compareIDs(){
         console.log("My id is " + this.state.myUserid + " and this friendlist belongs to userid " + this.state.userid)
         // Check if this is our own page
@@ -134,7 +141,7 @@ class FriendsPage extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for an individual DetailedPostView's components.
+ * @constant styles creates stylesheet for a FriendsPage
  */
 const styles = StyleSheet.create({
     container: {

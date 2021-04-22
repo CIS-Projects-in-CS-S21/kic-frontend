@@ -15,7 +15,7 @@ import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../ge
 
 
 /**
-* @class Contains function for rendering the comment section.
+* @class Contains functions for rendering a friends list
 */
 class FriendsList extends React.Component {
 
@@ -41,7 +41,6 @@ class FriendsList extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
         this.fetchFriends().then(response => {
@@ -51,6 +50,10 @@ class FriendsList extends React.Component {
         });
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    *
+    */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userid !== prevProps.userid) {
@@ -72,7 +75,6 @@ class FriendsList extends React.Component {
     * The start of the process to fetch friends;
     * Handles creating a UserManager to fetch the authstring
     *
-    * @function fetchFriends
     * @returns {String} authString The string necessary for the authorization to send requests,
     * then calls the next function, callGetUserByUserID
     */
@@ -85,7 +87,6 @@ class FriendsList extends React.Component {
     /**
     * Handles making the GetUserByID request
     *
-    * @function callGetUserByUserID
     * @param {String} authString the auth string to be used as part of the authorization header for requests
     * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
     */
@@ -105,7 +106,6 @@ class FriendsList extends React.Component {
     /**
     * Handles making the GetFriendsForUserRequest
     *
-    * @function callGetFriendsForUser
     * @param {ClientManager} cm The ClientManager to be reused
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetUserByIDResponse} res Returned in response to GetUserByIDRequest
@@ -130,7 +130,6 @@ class FriendsList extends React.Component {
     /**
     * Retrieves the friend list from the response object and saves it to the state
     *
-    * @function updateState
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */

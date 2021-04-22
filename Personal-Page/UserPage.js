@@ -54,7 +54,6 @@ class UserPage extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
   componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
@@ -72,7 +71,6 @@ class UserPage extends React.Component {
     /**
     * Runs before the component is unmounted
     *
-    * @function componentWillUnmount()
     */
     componentWillUnmount() {
         this._unsubscribe();
@@ -80,8 +78,7 @@ class UserPage extends React.Component {
 
     /**
     * Runs when the props change and updates the component accordingly.
-    *
-    * @function componentDidUpdate()
+    * @params {props} prevProps The previous state's props
     */
     componentDidUpdate(prevProps) {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
@@ -102,7 +99,6 @@ class UserPage extends React.Component {
     /**
     * Calls callGetAuthString
     *
-    * @function fetchUserInfo()
     */
     fetchUserInfo() {
         return this.callGetAuthString();
@@ -111,7 +107,6 @@ class UserPage extends React.Component {
     /**
     * Creates a UserManager to fetch the authString, then calls callGetUserID
     *
-    * @function callGetAuthString()
     * @returns {String} authString The authorization string to be used for requests
     */
     callGetAuthString(){
@@ -122,7 +117,6 @@ class UserPage extends React.Component {
     /**
     * Gets a user by their user ID via a GetUserByIDRequest
     *
-    * @function callGetUserByUserID()
     * @params {String} authString The authorization string to be used for requests
     * @params {String} userID A string of the active user's ID
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
@@ -143,7 +137,6 @@ class UserPage extends React.Component {
     /**
     * Parses a user's information from the user found in the GetUserByIDResponse
     *
-    * @function callGetUserByUserID()
     * @params {String} authString The authorization string to be used for requests
     * @params {String} userID A string of the active user's ID
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
@@ -171,7 +164,6 @@ class UserPage extends React.Component {
 
   /**
    * Renders user page components.
-   * @returns {UserPage}
    */
   render() {
       return (

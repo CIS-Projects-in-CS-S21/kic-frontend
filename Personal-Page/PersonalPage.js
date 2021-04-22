@@ -18,7 +18,7 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 
 /**
- * @class Contains function for rendering the personal page.
+ * @class Contains functions for rendering the personal page.
  */
 class PersonalPage extends React.Component {
 
@@ -47,7 +47,6 @@ class PersonalPage extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
   componentDidMount() {
     //this.fetchUserInfo()
@@ -65,8 +64,6 @@ class PersonalPage extends React.Component {
 
     /**
     * Runs before the component is unmounted
-    *
-    * @function componentWillUnmount()
     */
   componentWillUnmount() {
     this._unsubscribe();
@@ -76,7 +73,6 @@ class PersonalPage extends React.Component {
     /**
     * Runs when the props change and updates the component accordingly.
     *
-    * @function componentDidUpdate()
     */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
@@ -92,7 +88,6 @@ class PersonalPage extends React.Component {
     /**
     * Calls callGetAuthString
     *
-    * @function fetchUserInfo()
     */
     fetchUserInfo() {
         return this.callGetAuthString();
@@ -101,7 +96,6 @@ class PersonalPage extends React.Component {
     /**
     * Creates a UserManager to fetch the authString, then calls callGetUserID
     *
-    * @function callGetAuthString()
     * @returns {String} authString The authorization string to be used for requests
     */
     callGetAuthString(){
@@ -112,7 +106,6 @@ class PersonalPage extends React.Component {
     /**
     * Saves authString to state then calls getUserByID
     *
-    * @function callGetUserID()
     * @params {UserManager} um The UserManager to be reused
     * @params {String} authString The authorization string to be used for requests
     * @returns {String} userID A string of the active user's ID
@@ -127,7 +120,6 @@ class PersonalPage extends React.Component {
     /**
     * Gets a user by their user ID via a GetUserByIDRequest
     *
-    * @function callGetUserByUserID()
     * @params {String} authString The authorization string to be used for requests
     * @params {String} userID A string of the active user's ID
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
@@ -145,7 +137,6 @@ class PersonalPage extends React.Component {
     /**
     * Parses a user's information from the user found in the GetUserByIDResponse
     *
-    * @function callGetUserByUserID()
     * @params {String} authString The authorization string to be used for requests
     * @params {String} userID A string of the active user's ID
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest

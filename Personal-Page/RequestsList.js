@@ -40,7 +40,6 @@ class RequestsList extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
       this.fetchRequests().then(response => {
@@ -54,7 +53,6 @@ class RequestsList extends React.Component {
     * The start of the process to fetch friends;
     * Handles creating a UserManager to fetch the authstring
     *
-    * @function fetchRequests
     * @returns {String} authString The string necessary for the authorization to send requests,
     * then calls the next function, callGetUserByUserID
     */
@@ -67,7 +65,6 @@ class RequestsList extends React.Component {
     /**
     * Handles making the GetUserByID request
     *
-    * @function callGetUserByUserID
     * @param {String} authString the auth string to be used as part of the authorization header for requests
     * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
     */
@@ -87,7 +84,6 @@ class RequestsList extends React.Component {
     /**
     * Handles making the callGetAwaitingFriendsForUser
     *
-    * @function callGetAwaitingFriendsForUser
     * @param {ClientManager} cm The ClientManager to be reused
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetUserByIDResponse} res Returned in response to GetUserByIDRequest
@@ -112,7 +108,6 @@ class RequestsList extends React.Component {
     /**
     * Retrieves the friend list from the response object and saves it to the state
     *
-    * @function updateState
     * @param {String} authString The auth string to be used as part of the authorization header for requests
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */
