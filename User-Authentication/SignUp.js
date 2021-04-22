@@ -17,14 +17,12 @@ import KIC_Style from "../Components/Style";
 import { Text, TouchableOpacity, Image, View, TextInput } from "react-native";
 
 /**
- * Contains function for rendering the signup page
+ * @class Contains function for rendering the signup page
  */
-export default function signUp() {
 
-    //Navigation constant
+export default function signUp() {
     const navigation = useNavigation();
 
-    //Store user inputs
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [username, setUserName] = useState("");
@@ -202,9 +200,6 @@ export default function signUp() {
         navigation.navigate('LogIn');
     }
 
-    /**
-     * Sign up page components
-     */
     return (
         <SafeAreaView style={KIC_Style.container}>
             <Text style={KIC_Style.title}>Keeping It Casual: Sign Up Page</Text>
@@ -267,4 +262,3 @@ export default function signUp() {
         </SafeAreaView>
     );
 }
-
