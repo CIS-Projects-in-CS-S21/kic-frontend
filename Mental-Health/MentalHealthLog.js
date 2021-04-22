@@ -77,6 +77,7 @@ export default function MentalHealthLog({ navigation }) {
     /**
      * @constant storeHealthEntry starts chain of functions to store health entry
      * @return callGetAuthString constant to obtain auth string
+     * post condition: callGetAuthString
      */
     const storeHealthEntry = async () => {
         return callGetAuthString();
@@ -85,6 +86,8 @@ export default function MentalHealthLog({ navigation }) {
     /**
      * @constant callGetAuthString get auth string
      * @return getUserID constant to obtain user ID
+     * precondition: storeHealthEntry
+     * postcondition: callGetAuthString
      */
     //first, do this to get authorization string
     const callGetAuthString = async () => {
@@ -98,6 +101,8 @@ export default function MentalHealthLog({ navigation }) {
      * @param {String} authString takes in authorization string
      * @param {UserManager} um takes in user manager
      * @return makeAddEntryRequest to make request to add entry based on entered data
+     * precondition: callGetAuthString
+     * postcondition: makeAddEntryRequest
      */
     const getUserID = async(authString, um) => {
         um.getMyUserID().then(userID  => makeAddEntryRequest(userID, authString));
@@ -108,6 +113,9 @@ export default function MentalHealthLog({ navigation }) {
      * @param {String} userID user ID for this user
      * @param {String} authString authorization string
      * @return addHealthDataForUserResponse response for addHealthDataForUser request
+     * precondition: getUserID()
+     * postcondition: addHealthDataForUser
+     * @exception error log if health data is not able to be added
      */
     const makeAddEntryRequest = async (userID, authString) => {
         let req = new AddHealthDataForUserRequest();

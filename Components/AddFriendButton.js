@@ -1,5 +1,5 @@
 /**
-* @fileoverview A Comment Section of fixed height and scrollbar populated by Comments.
+* @fileoverview An AddFriendButton that sends a friend request to a user
 */
 
 import { StatusBar } from 'expo-status-bar';
@@ -11,14 +11,16 @@ import { AddAwaitingFriendRequest } from '../gen/proto/friends_pb';
 import ClientManager from "../Managers/ClientManager";
 
 /**
-* @class Contains function for rendering the comment section.
+* @class Contains function for rendering an add friend button
 */
 class AddFriendButton extends React.Component {
 
     /**
     * Handles sending a friend request from the active user to the target user
+     * precondition: none
+     * post condition: allowFriendRequest
+     * @exception error catches error when friend request is not allowed
     *
-    * @function handleSendRequest
     */
     handleSendRequest() {
         let cm = new ClientManager();
@@ -37,8 +39,8 @@ class AddFriendButton extends React.Component {
     }
 
     /**
-    * Renders comments section.
-    * @returns {CommentSection}
+    * Renders AddFriendButton.
+    * @returns {AddFriendButton}
     */
     render() {
       return (

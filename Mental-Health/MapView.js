@@ -6,11 +6,17 @@
 import React from 'react';
 import { WebView } from 'react-native-webview';
 
+/**
+ * @class Contains function for rendering MapView screen.
+ */
 class MapView extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} url The url of google maps website
+     * @param {String} zipcode The zipcode that user inputted to search for mental health professionals
+     *
+     */
     constructor(props) {
         super();
 

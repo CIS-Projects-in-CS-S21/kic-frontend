@@ -97,7 +97,9 @@ class HealthLogBlurb extends React.Component {
     }
     /**
      * Handles removing a log from user's Mood History
-     *
+     * precondition: none
+     * post condition: handleRemovedEntry
+     * @exception error catches error if mental health entry is not able to be deleted
      * @returns deleteHealthDataForUserResponse Returns response when deleting health data
      */
     handleRemoveEntry = () => {

@@ -75,6 +75,7 @@ class DetailedPostViewWeb extends React.Component {
     * Runs when component first loads
     *
     * @function componentDidMount()
+     * precondition: initPostView waits for init post view to start
     */
     async componentDidMount() {
       await this.initPostView();
@@ -84,6 +85,7 @@ class DetailedPostViewWeb extends React.Component {
     * Handles initiating the post view
     * @function initPostView
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * post condition: getUserByUserID
     */
     initPostView() {
         console.log("Web");
@@ -146,6 +148,7 @@ class DetailedPostViewWeb extends React.Component {
     * Handles deleting a post via a DeleteFilesWithMetaDataRequest
     * @function handleDelete
     * @returns {DeleteFilesWithMetaDataResponse} res The response object to a DeleteFilesWithMetaDataRequest
+     * post condition: deleteFilesWithMetadata deletes files as necessary
     */
     handleDelete() {
         let cm = new ClientManager();
@@ -182,6 +185,8 @@ class DetailedPostViewWeb extends React.Component {
     * An async function that handles adding a comment to a file
     * @function handleAddComment
     * @returns {UpdateFilesWithMetadataResponse} res The response object to an UpdateFilesWithMetadataRequest
+     * precondition: randomizesCommentID provides a random comment ID
+     * postCondition: updatesFilesWithMetaData of additional comment
     */
     async handleAddComment() {
         await this.randomizeCommentID();

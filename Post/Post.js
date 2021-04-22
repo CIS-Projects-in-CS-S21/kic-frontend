@@ -56,9 +56,10 @@ export default function Post({ navigation }) {
         Permissions.CAMERA,
     );
 
+
     /**
-     *  if we are on web, use permissions to get camera permissions. otherwise, use requestPermissionsAsync() function
-     */
+    * If we are on web, use permissions to get camera permissions. Otherwise, use requestPermissionsAsync() function
+    */
     useEffect(() => {
         (async () => {
            if (Platform.OS !== 'web') {
@@ -160,6 +161,10 @@ export default function Post({ navigation }) {
         )
     };
 
+   /**
+    * Renders Post components.
+    * @returns {Post}
+    */
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation} />

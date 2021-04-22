@@ -22,7 +22,7 @@ import ProfilePicture from "./ProfilePicture";
  */
 class UserBlurb extends React.Component {
 
-  /*
+  /**
    * Class constructor
     * @param {String} authString The authstring for making requests
     * @param {String} myUserid The id of the current active user
@@ -61,7 +61,6 @@ class UserBlurb extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
       this.initBlurb();
@@ -70,7 +69,6 @@ class UserBlurb extends React.Component {
     /**
     * Runs when the props change and updates the component accordingly.
     *
-    * @function componentDidUpdate()
     */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
@@ -93,7 +91,6 @@ class UserBlurb extends React.Component {
     /**
     * Initializes this blurb by calling callGetUserByUserID()
     *
-    * @function initBlurb
     */
     initBlurb() {
         // Populate blurb with given user info
@@ -108,7 +105,6 @@ class UserBlurb extends React.Component {
     /**
     * Handles making the GetUserByID request
     *
-    * @function callGetUserByUserID
     * @param {String} authString the auth string to be used as part of the authorization header for requests
     * @returns {GetUserByIDResponse} res The response object from a GetUserByIDRequest
     */
@@ -124,7 +120,6 @@ class UserBlurb extends React.Component {
     /**
     * Parses user information from a GetUserByIDResponse, updates the state, then checks for a connection
     * between this user and the active user via the GetConnectionBetweenUsersRequest
-    * @function setUserInfo
     * @param {GetUserByIDResponse} res The response object from a GetUserByIDRequest
     * @returns {GetConnectionBetweenUsersResponse} res The response object from a GetConnectionBetweenUsersRequest
     */
@@ -174,7 +169,6 @@ class UserBlurb extends React.Component {
     /**
     * Sets state.wasRemoved to true if the user was just unfriended.
     *
-    * @function handleRemovedFriend
     */
     handleRemovedFriend(){
         this.setState({
@@ -186,7 +180,6 @@ class UserBlurb extends React.Component {
     /**
     * Sets state.isFriendable to true. Signifies that this user can be sent a friend req.
     *
-    * @function handleAreFriends
     */
     handleAreFriends(){
         this.setState({
@@ -198,7 +191,6 @@ class UserBlurb extends React.Component {
     /**
     * Sets state.isFriendable to true. Signifies that this user can't be sent a friend req.
     *
-    * @function disallowFriendReqs
     */
     handleAreNotFriends(){
         // console.log("Users with IDs " +  this.props.myUserid + " and " + this.state.userid + " are not friends.");
@@ -211,7 +203,6 @@ class UserBlurb extends React.Component {
     /**
     * Sets state.isFriendable to false and state.areFriends to false. Signifies that this user can't be sent another friend req, but they aren't friends yet either.
     *
-    * @function handleRequestSent
     */
     handleRequestSent(){
         // console.log("Request from " +  this.props.myUserid + " was sent to " + this.state.userid + ".");
@@ -224,7 +215,6 @@ class UserBlurb extends React.Component {
     /**
     * Sets state.isFriendable to true and state.areFriends to false. Signifies that this user can still be sent a friend req, but they aren't friends yet.
     *
-    * @function handleRequestFailedToSend
     */
     handleRequestFailedToSend(){
         // console.log("Request from " +  this.props.myUserid + " failed to send to " + this.state.userid + ".");
@@ -237,7 +227,6 @@ class UserBlurb extends React.Component {
     /**
     * Handles sending a friend request from the active user to the target user
     *
-    * @function handleSendRequest
     */
     handleSendRequest = () => {
         let cm = new ClientManager();
@@ -260,7 +249,6 @@ class UserBlurb extends React.Component {
     /**
     * Handles removing a friend from user's friendlist
     *
-    * @function handleRemoveFriend
     */
     handleRemoveFriend = () => {
         let req = new DeleteConnectionBetweenUsersRequest();
@@ -275,7 +263,6 @@ class UserBlurb extends React.Component {
     /**
     * Handles navigating to the user's page, given a userid
     *
-    * @function goToUserPage
     */
     goToUserPage = () => {
         this.props.navigation.navigate('UserPage', {

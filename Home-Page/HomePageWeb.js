@@ -14,10 +14,9 @@
 
  class HomePageWeb extends React.Component {
    /**
-    * Renders Home screen components.
-    * @returns {Component}
+    * Renders HomePageMobile components.
+    * @returns {HomePageWeb}
     */
-
     render() {
         return (
             <SafeAreaView style={KIC_Style.container}>
@@ -44,7 +43,7 @@
 
  
  /**
-  * @constant styles creates stylesheet for FindHelp screen components
+  * @constant styles creates stylesheet for HomePageWeb screen components
   */
  const styles = StyleSheet.create({
   buttonCircle: {

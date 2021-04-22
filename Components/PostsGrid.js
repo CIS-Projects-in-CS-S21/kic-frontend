@@ -16,10 +16,14 @@ import UserManager from '../Managers/UserManager';
 * @class Contains function for rendering the posts grid.
 */
 class PostsGrid extends React.Component {
-  /*
-   * Class constructor
+  /**
+    * Class constructor
     * @param {String} authString The authstring for making requests
     * @param {String} myUserid The id of the current active user
+    * @param {String} username The username of the current active user
+    * @param {User} user The user whose post grid is shown
+    * @param {Array} myFiles The set of images to be shown on grid
+    * @param {boolean} finishedFetched is default false, and is set to true when fetching images is finished
     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
    */
     constructor(props) {
@@ -40,8 +44,8 @@ class PostsGrid extends React.Component {
 
     /**
     * Runs when component first loads
-    *
-    * @function componentDidMount()
+    * postcondition: callsGetAuthString to obtain authstring
+     * @exception error catches error if auth string is not able ot be obtained
     */
     componentDidMount(){
         this.callGetAuthString().then(response => {
@@ -53,8 +57,8 @@ class PostsGrid extends React.Component {
 
     /**
     * Runs when the props change and updates the component accordingly.
-    *
-    * @function componentDidUpdate()
+    * postcondition: callsGetAuthString to obtain authstring
+     * @exception error catches error if auth string is not able ot be obtained
     */
     componentDidUpdate(prevProps) {
         if (this.props.userid !== prevProps.userid) {
@@ -76,8 +80,8 @@ class PostsGrid extends React.Component {
 
     /**
     * Creates a UserManager to fetch the authString, then calls callGetUserByUserID
-    *
-    * @function callGetAuthString()
+    * precondition: componentDidUpdate
+     * postcondition: callGetUserByUerID
     * @returns {String} authString The authorization string to be used for requests
     */
     callGetAuthString(){
@@ -87,8 +91,8 @@ class PostsGrid extends React.Component {
 
     /**
     * Gets a user by their user ID via a GetUserByIDRequest
-    *
-    * @function callGetUserByUserID()
+    * precondition: callGetAuthString()
+     * postcondition: getUser()
     * @params {UserManager} um The UserManager to be reused
     * @params {String} authString The authorization string to be used for requests
     * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
@@ -109,8 +113,8 @@ class PostsGrid extends React.Component {
 
     /**
     * Saves the user to state then fetches their files via GetFilesByMetadataRequest
-    *
-    * @function callGetUserByUserID()
+    * precondition: callGetUserByUserID
+     * postcondition: getMyFiles
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {GetFilesByMetadataResponse} res The response object to a GetFilesByMetadataRequest
     */
@@ -133,8 +137,7 @@ class PostsGrid extends React.Component {
 
     /**
     * Saves the user's files to state
-    *
-    * @function getMyFiles()
+    * precondition: getMyFiles
     * @params {ClientManager} cm The ClientManager to be reused
     * @params {GetFilesByMetadataResponse} res The response object to a GetFilesByMetadataRequest
     */

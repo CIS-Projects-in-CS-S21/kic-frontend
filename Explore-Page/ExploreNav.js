@@ -14,6 +14,9 @@ import DetailedPostView from "../Components/DetailedPostView";
 import DetailedPostViewWeb from "../Components/DetailedPostViewWeb";
 import Explore from "./Explore";
 
+/**
+ * Constant for navigation
+ */
 const Stack = createStackNavigator();
 
 /**

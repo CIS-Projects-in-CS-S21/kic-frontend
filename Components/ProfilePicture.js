@@ -1,3 +1,6 @@
+/**
+ * @fileoverview The profile picture component fetches and renders a user's profile picture
+ */
 import React, { useState } from 'react'
 import {StyleSheet, Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
 import KIC_Style from "../Components/Style";
@@ -11,10 +14,12 @@ import {GetFilesByMetadataRequest, DownloadFileRequest} from "../gen/proto/media
  * @class Contains function for fetching and rendering a user's profile picture
  */
 class ProfilePicture extends React.Component {
-    /*
+    /**
     * Class constructor
     * @param {String} authString The authstring for making requests
     * @param {String} userid The id of the user whose profile picture is to be fetched
+     * @param {String} imageSrc defaults to null and will be image uri of profile picture
+     * @param {boolean} iconFetched default is set to false and is set to true when profile picture is fetched correctly
     */
     constructor(props) {
         super();
@@ -34,8 +39,7 @@ class ProfilePicture extends React.Component {
 
     /**
     * Runs when component first loads
-    *
-    * @function componentDidMount()
+    * postcondition: fetchImage()
     */
     componentDidMount(){
         this.fetchImage();
@@ -43,8 +47,7 @@ class ProfilePicture extends React.Component {
 
     /**
     * Runs when the props change and updates the component accordingly.
-    *
-    * @function componentDidUpdate()
+    * postcondition: fetchImage()
     */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
@@ -64,6 +67,7 @@ class ProfilePicture extends React.Component {
    /**
    * Finds a user's a profile picture file by searching for files with the metadata containing the user's ID in the metadata map.
    * @returns {GetFilesByMetadataResponse}
+    * post condition: downloadImage
    */
     fetchImage() {
         let cm = new ClientManager();
@@ -79,6 +83,10 @@ class ProfilePicture extends React.Component {
 
    /**
    * Downloads profile image as a stream and saves to state.
+    * @param client of user
+    * @param res downloadImageResponse
+    * pre condition:fetchImage
+    * post condition:setState
    */
     downloadImage(client, res) {
         let imagefile = res.getFileinfosList();

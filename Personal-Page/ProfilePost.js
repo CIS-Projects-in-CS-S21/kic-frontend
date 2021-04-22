@@ -11,14 +11,21 @@ import { GetUserByIDRequest } from '../gen/proto/users_pb';
 import ClientManager from "../Managers/ClientManager";
 
 /**
- * @class Contains a FeedPost component, which consists of a KIC_Image, username of the poster, and image caption
- * pass in myUserid, userid, and authstring
+ * @class Contains a ProfilePost component
  */
 class ProfilePost extends React.Component {
 
-    /*
-      * Class constructor
-      */
+    /**
+     * Class constructor
+     * @param {String} authString The authstring for making requests
+     * @param {String} myUserid The id of the current active user
+     * @param {String} posterID The id of poster
+     * @param {String} posterusername The username of the poster
+     * @param {String} userid The id of the user who is on the friendslist
+     * @param {File} file The name of the file to be displayed
+     * @param {String} caption caption associated with image
+     * @param {String} filename name of image file
+     */
     constructor(props) {
         super();
 
@@ -48,7 +55,11 @@ class ProfilePost extends React.Component {
         this.parseFileinfo = this.parseFileinfo.bind(this)
     }
 
-
+    /**
+    * Runs when component first loads
+    * postcondition: parseFileInfo()
+     * @exception error caught if parseFileInfo does not work correctly
+    */
     componentDidMount(){
       this.parseFileinfo().then(response => {
           console.log("Success");
@@ -57,8 +68,13 @@ class ProfilePost extends React.Component {
       });
     }
 
+    /**
+    * Parses the File to be displayed by this component
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: componentDidMount()
+     * postcondition: updateState()
+    */
     parseFileinfo(){
-        console.log("My naem is " + this.state.file)
         let map = this.state.file.getMetadataMap();
         let posterid = map.get("userID");
         let caption = map.get("caption");
@@ -78,12 +94,14 @@ class ProfilePost extends React.Component {
         return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.updateState(res)});
     }
 
+    /**
+    * Updates the state with the parsed information
+    * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: parseFileInfo()
+    */
     updateState(res){
-        console.log("1");
         let poster = res.getUser();
         let posterusername = poster.getUsername();
-
-        console.log("Username: " + posterusername + " and user: " + poster);
 
         this.setState({
             posterusername: posterusername,
@@ -91,8 +109,8 @@ class ProfilePost extends React.Component {
     }
 
     /**
-    * Renders a user's post
-    * @returns {FeedPost}
+    * Renders a profile post
+    * @returns {ProfilePost}
     */
     render() {
       return (

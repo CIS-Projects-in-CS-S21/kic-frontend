@@ -12,9 +12,13 @@ import ProfilePicture from "./ProfilePicture";
 * @class Contains function for rendering a PostDetails component.
 */
 class PostDetails extends React.Component {
-    /*
-    * Class constructor
-    */
+    /** Class constructor
+     *  @param {String} caption The caption of the post
+     *  @param {Number} month Month of post
+     *  @param {Number} year year of post
+     *  @param {Number} day day of post
+     *
+     */
     constructor(props) {
         super();
 
@@ -26,13 +30,16 @@ class PostDetails extends React.Component {
         };
     }
 
+    /**
+    * Handles redirecting user to a UserPage for a certain user
+    */
     goToUserPage = () => {
         this.props.navigation.navigate('UserPage', {
           navigation: this.props.navigation,
           myUserid: this.props.myUserid,
           userid: this.props.userid,
         })
-        console.log("Blurb belongs to " + this.state.username);
+        //console.log("Blurb belongs to " + this.state.username);
     }
 
     /**

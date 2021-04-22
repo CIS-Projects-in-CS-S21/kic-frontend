@@ -19,9 +19,18 @@ import UserManager from '../Managers/UserManager';
  */
 class RequestBlurb extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} myUserid The id of the current active user
+     * @param {String} username The username of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     * @param {Number} birthDay day of birth of user
+     * @param {Number} birthMonth month of birth of user
+     * @param {Number} birthYear day of birth of user
+     * @param {boolean} canAdd default set to true, means that user can request friend
+     * @param {String} status default set to empty string, indicates if friend status is accepted, pending, or denied
+     */
     constructor(props) {
         super();
 
@@ -43,7 +52,6 @@ class RequestBlurb extends React.Component {
    /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
         this.callGetUserByUserID().then(response => {
@@ -56,7 +64,6 @@ class RequestBlurb extends React.Component {
     /**
     * Handles making the GetUserByID request
     *
-    * @function callGetUserByUserID
     * @param {String} authString the auth string to be used as part of the authorization header for requests
     * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
     */
@@ -72,7 +79,6 @@ class RequestBlurb extends React.Component {
     /**
     * Parses user information from a GetUserByIDRequest and updates the state
     *
-    * @function callGetUserByUserID
     * @param {GetUserByIDResponse} res The response object from a GetUserByIDRequest
     */
     setUserInfo(res){
@@ -86,6 +92,10 @@ class RequestBlurb extends React.Component {
         })
     }
 
+    /**
+    * Handles accepting a friend request
+    * @returns {CreateConnectionForUsersResponse} res The response object to a CreateConnectionForUsersRequest
+    */
     handleAccept = () => {
         this.setState({
             canAdd: false,
@@ -101,6 +111,10 @@ class RequestBlurb extends React.Component {
         return client.createConnectionForUsers(req, {'Authorization': this.props.authString}).then(res => { console.log("Users " + this.state.userid + " (blurb) and " + this.props.myUserid + " (me) are now friends!")});
     }
 
+    /**
+    * Handles denying a friend request
+    * @returns {DeleteConnectionBetweenUsersResponse} res The response object to a DeleteConnectionBetweenUsersRequest
+    */
     handleDeny = () => {
         this.setState({
             canAdd: false,
@@ -121,8 +135,8 @@ class RequestBlurb extends React.Component {
     }
 
     /**
-    * Renders the UserBlurb components.
-    * @returns a {UserBlurb}
+    * Renders the RequestBlurb component.
+    * @returns a {RequestBlurb}
     */
     render() {
       return (
@@ -167,7 +181,7 @@ class RequestBlurb extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for an individual UserBlurb's components.
+ * @constant styles creates stylesheet for an individual RequestBlurb's components.
  */
 const styles = StyleSheet.create({
     container: {
