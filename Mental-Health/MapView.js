@@ -8,10 +8,9 @@ import { WebView } from 'react-native-webview';
 
 class MapView extends React.Component {
 
-    /**
-    * Renders MapView screen components.
-    * @returns {Component}
-    */
+  /*
+   * Class constructor
+   */
     constructor(props) {
         super();
 
@@ -25,7 +24,6 @@ class MapView extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
       let url = 'https://www.google.com/maps/search/mental+health+professionals+near+' + this.state.zipcode + '/@39.979961,-75.2054723,13z/data=!3m1!4b1';
@@ -34,6 +32,11 @@ class MapView extends React.Component {
       })
     }
 
+    /**
+    * Renders a WebView.
+    * @returns {WebView}
+    *
+    */
     render() {
         return (
             <WebView source={{ uri: this.state.url}} />

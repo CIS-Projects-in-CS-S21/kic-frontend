@@ -16,10 +16,10 @@ import MapView from "./MapView";
  * @class Contains function for rendering FindHelp screen.
  */
 class FindHelp extends React.Component {
-    /**
-    * Renders FindHelp screen components.
-    * @returns {Component}
-    */
+
+  /*
+   * Class constructor
+   */
     constructor(props) {
         super();
 
@@ -31,17 +31,28 @@ class FindHelp extends React.Component {
         };
     }
 
-
+    /**
+    * Updates the searchString state variable
+    * @params {String} text The new searchString
+    */
     setSearchString = (text) => {
         this.setState({ searchString: text })
         let url = 'https://www.google.com/maps/search/mental+health+professionals+near+' + text + '/@39.979961,-75.2054723,13z/data=!3m1!4b1';
         this.setState({ urlWeb: url })
     }
 
+    /**
+    * Handles Linking a given url
+    * @params {String} url The url to Link to
+    */
     openURL(url) {
         Linking.openURL(url);
     }
 
+    /**
+    * Renders FindHelp screen components.
+    * @returns {FindHelp}
+    */
     render() {
         return (
           <SafeAreaView style={KIC_Style.outContainer}>
