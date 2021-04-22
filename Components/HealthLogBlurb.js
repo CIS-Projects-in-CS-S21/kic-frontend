@@ -1,5 +1,5 @@
 /**
- * @fileoverview HealthLogBlurb page - blurb with previous mental health log entry
+ * @fileoverview HealthLogBlurb component presents a blurb with previous mental health log entry with date and mood number, and clicking on this blurb presents the entry as a modal.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -28,9 +28,15 @@ import ClientManager from "../Managers/ClientManager";
  */
 class HealthLogBlurb extends React.Component {
 
-    /*
-     * Class constructor
-     */
+    /** Class constructor
+   * @param {String} authString The authstring for making requests
+   * @param {useNavigation} navigation The navigation prop used to navigate between pages
+   * @param {String} logDate String version of date of mental health entry (year,month,day)
+   * @param {String} entry String containing journal entry associated with log.
+   * @param {Number} score The number associated with mental health log (-5 poor to 5 good)
+   * @param {Boolean} modalVisible Boolean regrading modal being present. Is set as false by default and turns true when user clicks on date.
+   * @param {String} dateString The string representing the logDate as a string. Set initially as an empty string and logDate is parsed to display string as "month/date/year"
+  */
     constructor(props) {
         super();
 
@@ -53,12 +59,14 @@ class HealthLogBlurb extends React.Component {
     /**
      * Runs when component first loads
      *
-     * @function componentDidMount()
      */
     componentDidMount(){
         this.initLog();
     }
 
+    /**
+     * Parses logDate into string with correct view.
+     */
     initLog() {
         console.log("Date: "+this.props.logDate)
         console.log("init log");
@@ -81,7 +89,6 @@ class HealthLogBlurb extends React.Component {
     /**
      * Sets state.wasRemoved to true if the log for that date was just deleted
      *
-     * @function handleRemovedEntry
      */
     handleRemovedEntry(){
         this.setState({
@@ -91,7 +98,7 @@ class HealthLogBlurb extends React.Component {
     /**
      * Handles removing a log from user's Mood History
      *
-     * @function handleRemoveEntry
+     * @returns deleteHealthDataForUserResponse Returns response when deleting health data
      */
     handleRemoveEntry = () => {
         let cm = new ClientManager();
@@ -168,6 +175,7 @@ class HealthLogBlurb extends React.Component {
                         </TouchableOpacity>
                     </View>
                     <StatusBar style="auto" />
+                     {/* Display modal */}
                     <Modal
                         animationType="slide"
                         transparent={true}
@@ -199,7 +207,7 @@ class HealthLogBlurb extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for an individual UserBlurb's components.
+ * @constant styles creates stylesheet for an individual HealthLogBlurb's components.
  */
 const styles = StyleSheet.create({
     container: {

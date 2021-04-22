@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
  */
 class PostNav extends React.Component {
     /**
-     * Renders personal page navigation components.
+     * Renders post page navigation components.
      * @returns {Component}
      */
     render() {
@@ -39,7 +39,7 @@ class PostNav extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for post page components
+ * @constant styles creates stylesheet for post navigation page components
  */
 const styles = StyleSheet.create({
     container: {

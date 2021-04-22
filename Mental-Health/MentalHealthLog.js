@@ -1,5 +1,5 @@
 /**
- * @fileoverview MentalHealthLog page - allows users track their mental health through logging and journaling.
+ * @fileoverview MentalHealthLog screen allows users track their mental health through logging and journaling.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -21,30 +21,57 @@ import {AddHealthDataForUserRequest, MentalHealthLog as HealthLog} from "../gen/
 
 
 /**
- * @class Contains function for rendering MentalHealthLog screen.
+ * @returns {MentalHealthLog}
+ * @params navigation Takes in navigation prop that passes between screens
  */
 export default function MentalHealthLog({ navigation }) {
     /**
-     * Renders MentalHealth screen components.
-     * @returns {Component}
+     * @constant entry represents journal string of user log
      */
     const [entry, setEntry] = useState("");
+    /**
+     * @constant visible represents if button to store entry should be present or not
+     */
     const [visible, setVisible] = React.useState(false);
+
+    /**
+     * @constant onDismiss represents setting visible to false when dismissed
+     */
     const onDismiss = React.useCallback(() => {
         setVisible(false);
     }, [setVisible]);
 
+    /**
+     * @constant onChange  represents setting visible to false when there is change
+     * @callback date takes in particular date for calendar
+     */
     const onChange = React.useCallback(({ date }) => {
         setVisible(false);
         console.log({ date });
     }, []);
 
+    /**
+     * @constant value  represents mood tracker value user sets for their entry
+     */
     const [value, setValue] = useState(1)
+
+    /**
+     * @constant onValueChange sets value when called
+     * @param {number} value takes in value of mental health mood tracker
+     */
     const onValueChange = (value) => {
         setValue(value)
     }
 
+    /**
+     * @constant date  represents mood tracker value user sets for their entry
+     */
     const [date, setDate] = useState(new Date());
+
+    /**
+     * @constant onDateChange sets date when called
+     * @param {Date} date takes in date of mental health mood tracker
+     */
     const onDateChange = (date) => {
         setDate(date)
     }
@@ -54,11 +81,18 @@ export default function MentalHealthLog({ navigation }) {
     let cm = new ClientManager();
     let client = cm.createHealthClient();
 
-    //to store mental health entry, start chain of functions
+    /**
+     * @constant storeHealthEntry starts chain of functions to store health entry
+     * @return callGetAuthString constant to obtain auth string
+     */
     const storeHealthEntry = async () => {
         return callGetAuthString();
     }
 
+    /**
+     * @constant callGetAuthString get auth string
+     * @return getUserID constant to obtain user ID
+     */
     //first, do this to get authorization string
     const callGetAuthString = async () => {
         let um = new UserManager();
@@ -66,12 +100,22 @@ export default function MentalHealthLog({ navigation }) {
         return um.getAuthString().then(authString  => {getUserID(authString, um)});
     }
 
-    //then, get user ID
+    /**
+     * @constant getUserID  obtains user feed
+     * @param {String} authString takes in authorization string
+     * @param {UserManager} um takes in user manager
+     * @return makeAddEntryRequest to make request to add entry based on entered data
+     */
     const getUserID = async(authString, um) => {
         um.getMyUserID().then(userID  => makeAddEntryRequest(userID, authString));
     }
 
-    //then, make request to add entry based on entered data
+    /**
+     * @constant makeAddEntryRequest make request to add entry based on entered data
+     * @param {String} userID user ID for this user
+     * @param {String} authString authorization string
+     * @return addHealthDataForUserResponse response for addHealthDataForUser request
+     */
     const makeAddEntryRequest = async (userID, authString) => {
         let req = new AddHealthDataForUserRequest();
         console.log("Auth: " + authString);
@@ -127,7 +171,7 @@ export default function MentalHealthLog({ navigation }) {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <Text>
                         Rate your mental health on a scale from -5 (extremely poor) to 5 (extremely good).
-      </Text>
+                    </Text>
                 </TouchableWithoutFeedback>
                 <NumberSlider
                     onValueChange={onValueChange}
@@ -201,7 +245,7 @@ export default function MentalHealthLog({ navigation }) {
 }
 
 /**
- * @constant styles creates stylesheet for Mental Health screen components
+ * @constant styles creates stylesheet for Mental Health Log screen components
  */
 const styles = StyleSheet.create({
     container: {

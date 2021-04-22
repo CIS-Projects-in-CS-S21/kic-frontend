@@ -1,5 +1,5 @@
 /**
- * @fileoverview MoodHistory page - allows users to view history of their mood entries (journal + mood #)
+ * @fileoverview MoodHistory screen allows users to view history of their mood entries by date(journal entry + mood #)
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -26,28 +26,37 @@ import HealthLogBlurb from "../Components/HealthLogBlurb";
 
 
 /**
- * @class Contains function for rendering Mood History Tracker screen.
+ * @returns {MoodHistory}
  */
 export default function MoodHistory() {
-    /**
-     * Renders MentalHealth mood history screen components.
-     * @returns {Component}
-     */
 
-    const [expanded, setExpanded] = React.useState(true);
-    const [modalVisible, setModalVisible] = React.useState(false);
-    const [journalString, setString] = React.useState("");
+    /**
+     *
+     * @constant navigation used to navigate between screens
+     */
     const navigation = useNavigation();
+
+    /**
+     * @constant healthData used to store the list of mental health entries of the user
+     */
     const [healthData, setHealthData]= React.useState([]);
+
+    /**
+     * @constant authString string used to store authString
+     */
     const [authString, setAuthString] = React.useState("");
+
+    /**
+     * @constant userID used to store the user ID of the current user
+     */
     const [userID, setUserID] = React.useState(null);
 
     let um = new UserManager();
 
     /**
      * Runs when component first loads
+     * Calls fetchLogs() function
      *
-     * @function useEffect
      */
     useEffect(() => {
         console.log("Health data:" + healthData);
@@ -63,7 +72,6 @@ export default function MoodHistory() {
      * The start of the process to fetch mood data;
      * Handles creating a UserManager to fetch the authstring
      *
-     * @function fetchLogs
      * @returns {String} authString The string necessary for the authorization to send requests,
      * then calls the next function, callGetUserByUserID
      */
@@ -76,7 +84,6 @@ export default function MoodHistory() {
     /**
      * Handles making the GetUserByID request
      *
-     * @function callGetUserByUserID
      * @param {String} authString the auth string to be used as part of the authorization header for requests
      * @returns {GetUserByIDResponse} res then calls the next function, callGetHealthForUser
      */
@@ -89,7 +96,6 @@ export default function MoodHistory() {
     /**
      * Handles making the GetHealthDataForUserRequest
      *
-     * @function callGetHealthForUser
      * @param {Number} userID value
      * @param {String} authString The auth string to be used as part of the authorization header for requests
      * @returns {GetHealthDataForUserResponse} res then calls the next function, parseHealthData
@@ -111,7 +117,6 @@ export default function MoodHistory() {
     /**
      * Retrieves the health data list from the response object and saves it to the state
      *
-     * @function updateState
      * @param {String} authString The auth string to be used as part of the authorization header for requests
      * @param {GetHealthDataForUserResponse} res Returned in response to GetHealthDataForUserRequest
      */
@@ -168,7 +173,7 @@ export default function MoodHistory() {
 }
 
 /**
- * @constant styles creates stylesheet for FindHelp screen components
+ * @constant styles creates stylesheet for MoodHistory screen components
  */
 const style = StyleSheet.create({
     container: {
