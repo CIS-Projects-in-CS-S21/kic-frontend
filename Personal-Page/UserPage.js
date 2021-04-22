@@ -24,7 +24,6 @@ class UserPage extends React.Component {
   /**
    * Class constructor
     * @param {String} myUserid The id of the current active user
-    * @param {useNavigation} navigation The navigation prop used to navigate between pages
     * @param {String} userid The id of the user that this page belongs to
     * @param {String} username The username of the user that this page belongs to
     * @param {String} bio The bio of the user that this page belongs to

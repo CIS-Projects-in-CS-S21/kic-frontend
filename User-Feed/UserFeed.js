@@ -21,9 +21,13 @@ import UserManager from '../Managers/UserManager';
  * @class Contains function for rendering the user feed.
  */
 class UserFeed extends React.Component {
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} myUserid The id of the current active user
+     * @param {User} myUser defaults to null, is current user
+     * @param {Array} feedFiles contains files of userfeed
+     * @param {boolean} finishedLoading default set to false and is set to true when loading is finished
+     */
   constructor(props) {
     super();
 
