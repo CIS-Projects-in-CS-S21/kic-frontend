@@ -10,10 +10,11 @@
  import { SafeAreaView } from 'react-native-safe-area-context';
  import { Platform, StyleSheet, Text, View, Image, Button } from 'react-native';
  
+
  /**
-  * @class Contains function for rendering Home screen.
-  */
-  
+    * Constant that holds the props given to the app intro slider. 
+    * Used to style and create our mobile application home screen.
+    */
   const slides = [
     {
       key: '1',
@@ -36,14 +37,25 @@
     }
   ];
 
+   /**
+  * @class Contains function for rendering Home screen on mobile.
+  */
  class HomePageMobile extends React.Component {
+   /**
+    * Class constructor
+    */
     constructor(props) {
       super();
+
+      // Define the initial state
       this.state = {
         showRealApp: false
       }
     }
 
+    /*
+    * Renders the home page elements, including the title and description of each page.
+    */
     _renderItem = ({ item }) => {
       return (
         <SafeAreaView style = {[styles.container, {backgroundColor: item.backgroundColor}]} >
@@ -52,9 +64,12 @@
         </SafeAreaView>
       );
     }
+
+    /**
+     * When user is done the introduction and clicks the 
+     * last slider button, it navigates to the sign up page. 
+     */
     _onDone = () => {
-      // User finished the introduction. Show real app through
-      // navigation or simply by controlling state
       this.props.navigation.navigate('SignUp');
     }
 

@@ -50,7 +50,9 @@ class Explore extends React.Component {
     this.callGetAuthString = this.callGetAuthString.bind(this)
 
   }
-
+  /**
+   * Runs when component first loads
+   */
   componentDidMount() {
     //this.fetchUserInfo()
     this.fetchUserInfo().then(response => {
@@ -59,7 +61,10 @@ class Explore extends React.Component {
       console.log(error)
     });
   }
-
+    /**
+     * Ensure that the props were updated.
+     * @param {props} prevProps The previous states props
+     */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userid !== prevProps.userid) {
@@ -71,19 +76,42 @@ class Explore extends React.Component {
       }
     }
 
+    /**
+     * A function that begins the chain of functions.
+     * @returns {function} callGetAuthString() Function to get authorization string
+     */
     fetchUserInfo() {
         return this.callGetAuthString();
     }
+
+    /**
+     * Function to get authorization string
+     * @returns {String} authString The authorization string to be used for requests
+     */
     callGetAuthString(){
         let um = new UserManager();
         return um.getAuthString().then(authString => {this.callGetUserID(um, authString)});
     }
+
+    /**
+     * Function to find the user id of current user.
+     * @param {UserManager} um The UserManager to be reused 
+     * @param {String} authString The authorization string to be used for requests
+     * @returns {String} userID A string of the active user's ID
+     */
     callGetUserID(um, authString){
         this.setState({
             authString: authString,
         })
         return um.getMyUserID().then(userID => {this.callGetUserByUserID(authString, userID)});
     }
+
+    /**
+     * 
+     * @param {String} authString The authorization string to be used for requests
+     * @param {String} userID A string of the active user's ID
+     * @returns {User} res Object representing user
+     */
     callGetUserByUserID(authString, userID){
 
         let cm = new ClientManager();
@@ -93,6 +121,15 @@ class Explore extends React.Component {
         req.setUserid(userID);
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetRecommendationsForUser(res, userID, authString, cm)})
     }
+
+    /**
+     * A function that makes a request for the recommendations of a user.
+     * @param {User} res Object representing user
+     * @param {String} userID A string of the active user's ID 
+     * @param {String} authString The authorization string to be used for requests
+     * @param {ClientManager} cm The ClientManager to be reused
+     * @returns {Array} res An array of Users that are recommended for a user.
+     */
     callGetRecommendationsForUser(res, userID, authString, cm){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
@@ -123,6 +160,12 @@ class Explore extends React.Component {
         return client.getRecommendationsForUser(req, {'Authorization': authString}).then(response => {this.storeRecommendationsForUser(response, res)})
     }
 
+    /**
+     * A function that stores the array of recommendations to be rendered by the
+     * component.
+     * @param {Array} res An array of Users that are recommended for a user. 
+     */
+
     storeRecommendationsForUser(res) {
         console.log("Found " + res.getRecommendationsList().length + " friends."); 
         console.log(res.getRecommendationsList()); 
@@ -134,6 +177,10 @@ class Explore extends React.Component {
         }); 
     }
 
+    /**
+     * A function that sets the search string as it is input.
+     * @param {String} text The search string for finding new users.
+     */
     setSearchString = (text) => {
         this.setState({ searchString: text });
         if(text === '') {
@@ -144,7 +191,10 @@ class Explore extends React.Component {
         }
     }
 
-
+    /**
+     * A function handling the search for a user.
+     * @returns {User} res The user found from username search
+     */
     handleSearch() {
         console.log("Searching for " + this.state.searchString + "...");
         this.setState({
@@ -160,6 +210,10 @@ class Explore extends React.Component {
         return client.getUserByUsername(req, {'Authorization' : this.state.authString}).then(res => {this.showSearchResults(res)})
     }
 
+    /**
+     * A function showing the result of a search.
+     * @param {User} res The user found from username search
+     */
     showSearchResults(res) {
         if(res.getSuccess() === true && res.hasUser() === true) {
             let foundUser = res.getUser().getUserid();
@@ -175,12 +229,11 @@ class Explore extends React.Component {
     }
 
 
-
-  render() {
     /**
      * Renders Explore screen components.
      * @returns {Component}
      */
+  render() {
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={this.props.navigation} />

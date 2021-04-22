@@ -15,6 +15,7 @@ import UserManager from '../Managers/UserManager';
 import { TouchableOpacity, View, Text } from "react-native";
 import KIC_Style from "../Components/Style";
 
+
 export default function logIn() {
 
   const navigation = useNavigation();
@@ -23,7 +24,7 @@ export default function logIn() {
   const [password, setPassword] = useState("");
 
     /**
-    * Handles submitting a login form
+    * Function that handles submitting a login form
     */
   const handleSubmit = evt => {
     evt.preventDefault();

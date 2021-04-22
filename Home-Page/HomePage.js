@@ -10,9 +10,20 @@ import HomePageWeb from './HomePageWeb';
 import HomePageMobile from './HomePageMobile';
 import { TextInput } from 'react-native-gesture-handler';
  
+
+/**
+ * Constant that creates a stack navigator.
+ */
  const Stack = createStackNavigator(); 
 
+ /**
+  * @class Contains function for rendering the home screen. 
+  */
+
  class HomePage extends React.Component {
+   /*
+   * Class constructor
+   */
     constructor(props) {
       super();
       }

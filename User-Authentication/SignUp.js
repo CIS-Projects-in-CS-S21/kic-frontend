@@ -5,7 +5,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
+import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest, GetJWTTokenResponse } from "../gen/proto/users_pb";
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TokenManager from "../Managers/TokenManager";
@@ -16,12 +16,14 @@ import KIC_Style from "../Components/Style";
 import { Text, TouchableOpacity, Image, View, TextInput } from "react-native";
 
 /**
- * @class Contains function for rendering the signup page
+ * Contains function for rendering the signup page
  */
-
 export default function signUp() {
+
+    //Navigation constant
     const navigation = useNavigation();
 
+    //Store user inputs
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [username, setUserName] = useState("");
@@ -31,6 +33,11 @@ export default function signUp() {
     const [bio, setBio] = useState("");
     const [myUser, setMyUser] = useState("");
 
+
+    /**
+     * 
+     * @param On click of registration, this function begins chain of requests. 
+     */
     const handleSubmit = evt => {
         evt.preventDefault();
         if (password1 !== password2) {
@@ -54,6 +61,10 @@ export default function signUp() {
         }
     };
 
+    /**
+     * A function that runs when input data is properly submitted. 
+     * Begins the process of requesting to add user to the database.
+     */
     const makeRequest = async () => {
       callAddUser().then(response => {
         console.log("Successfully added user");
@@ -64,6 +75,11 @@ export default function signUp() {
         }
       });
     }
+
+    /**
+     * Creates a request to add a user to the database based off of user input.
+     * @returns {addUser}
+     */
     const callAddUser = () => {
         let cm = new ClientManager();
         let client = cm.createUsersClient();
@@ -81,6 +97,12 @@ export default function signUp() {
 
         return client.addUser(req, {}).then(res => {callGetJWTToken(client)});
     }
+
+    /**
+     * Handles getting a JWTToken. 
+     * @param {UsersClient} client A client that manages user requests
+     * @returns {GetJWTTokenResponse} res The response object to a GetJWTTokenRequest
+     */
     const callGetJWTToken = (client) => {
         let req = new GetJWTTokenRequest();
         req.setUsername(username);
@@ -88,19 +110,49 @@ export default function signUp() {
 
         return client.getJWTToken(req, {}).then(res => {callStoreToken(client, res)});
     }
+
+    /**
+     * 
+     * @param {UsersClient} client A client that manages user requests
+     * @param {GetJWTTokenResponse} res The response object to a GetJWTTokenRequest
+     * @returns Token
+     */
     const callStoreToken = (client, res) => {
         let tm = new TokenManager();
         return tm.storeToken(res.getToken()).then(res => {callGetAuthString(client)});
     }
+
+    /**
+     * 
+     * @param {UsersClient} client A client that manages user requests
+     * @returns {String} authString A string that allows for authorization of requests. 
+     */
     const callGetAuthString = (client) => {
         console.log("callgetauthstr");
         let um = new UserManager();
         return um.getAuthString().then(authString => {callGetUserID(client, um, authString)});
     }
+
+    /**
+     * 
+     * @param {UsersClient} client A client that manages user requests
+     * @param {UserManager} um A manager for extracting aspects of user
+     * @param {String} authString A string that allows for authorization of requests.
+     * @returns userID The id of the user signing up
+     */
     const callGetUserID = (client, um, authString) => {
         console.log("callgetuserid");
         return um.getMyUserID().then(userID => {callGetUserByUserID(client, authString, userID)});
     }
+
+
+    /**
+     * 
+     * @param {UsersClient} client A client that manages user requests
+     * @param {String} authString A string that allows for authorization of requests.
+     * @param {String} userID The id of the user signing up
+     * @returns {User} res An object representing a User
+     */
     const callGetUserByUserID = (client, authString, userID) => {
         console.log("callgetuserbyuserid");
         let req = new GetUserByIDRequest();
@@ -108,6 +160,14 @@ export default function signUp() {
 
         return client.getUserByID(req, {'Authorization': authString}).then(res => {callUpdateUserInfo(client, authString, userID)});
     }
+
+    /**
+     * 
+     * @param {UsersClient} client A client that manages user requests
+     * @param {String} authString A string that allows for authorization of requests.
+     * @param {String} userID The id of the user signing up
+     * @returns {User} res The signed up user
+     */
     const callUpdateUserInfo = (client, authString, userID) => {
         console.log("callupdateuserinfo");
         let req = new UpdateUserInfoRequest();
@@ -116,11 +176,19 @@ export default function signUp() {
 
         return client.updateUserInfo(req, {'Authorization': authString}).then(res => { finishSignUp(res) });
     }
+
+    /**
+     * 
+     * @param {User} res The signed up user 
+     */
     const finishSignUp = (res) => {
         console.log("User: " + res.getUpdateduser());
         navigation.navigate('LogIn');
     }
 
+    /**
+     * Sign up page components
+     */
     return (
         <SafeAreaView style={KIC_Style.container}>
             <Text style={KIC_Style.title}>Keeping It Casual: Sign Up Page</Text>
