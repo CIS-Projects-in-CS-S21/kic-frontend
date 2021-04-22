@@ -37,11 +37,6 @@
   ];
 
  class HomePageMobile extends React.Component {
-   /**
-    * Renders Home screen components.
-    * @returns {Component}
-    */
-
     constructor(props) {
       super();
       this.state = {
@@ -62,6 +57,11 @@
       // navigation or simply by controlling state
       this.props.navigation.navigate('SignUp');
     }
+
+   /**
+    * Renders HomePageMobile components.
+    * @returns {HomePageMobile}
+    */
     render() {
         return <AppIntroSlider 
           showPrevButton 
@@ -77,7 +77,7 @@
 
  
  /**
-  * @constant styles creates stylesheet for FindHelp screen components
+  * @constant styles creates stylesheet for HomePageMobile screen components
   */
  const styles = StyleSheet.create({
   buttonCircle: {
