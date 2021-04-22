@@ -9,7 +9,6 @@ export default class TokenManager {
     * Store a token using AsyncStorage.
     *
     * @async
-    * @function storeToken
     * @param {Object} token - The token to store.
     */
     storeToken = async (token) => {
@@ -29,7 +28,6 @@ export default class TokenManager {
     * Retrieve a token from AsyncStorage.
     *
     * @async
-    * @function getToken
     * @return {Promise<Token>} The token retrieved from storage.
     */
     getToken = async () => {
@@ -47,7 +45,6 @@ export default class TokenManager {
     * Clears AsyncStorage and forgets the token.
     *
     * @async
-    * @function forgetToken
     */
     forgetToken = async() => {
         try {
@@ -63,7 +60,6 @@ export default class TokenManager {
     /**
     * Check if the current session is authenticated by attempting to retrieve the token.
     *
-    * @function getToken
     * @return {boolean} A boolean signifying if the session is authenticated or not.
     */
     isAuthenticated = async() => {
