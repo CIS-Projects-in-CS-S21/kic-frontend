@@ -125,7 +125,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.kic.health.GetHealthDataByDateResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.kic.health.GetHealthDataByDateResponse.repeatedFields_, null);
 };
 goog.inherits(proto.kic.health.GetHealthDataByDateResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -1016,6 +1016,13 @@ proto.kic.health.GetHealthDataByDateRequest.prototype.hasLogdate = function() {
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.kic.health.GetHealthDataByDateResponse.repeatedFields_ = [1];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -1047,7 +1054,8 @@ proto.kic.health.GetHealthDataByDateResponse.prototype.toObject = function(opt_i
  */
 proto.kic.health.GetHealthDataByDateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    healthdata: (f = msg.getHealthdata()) && proto.kic.health.MentalHealthLog.toObject(includeInstance, f)
+    healthdataList: jspb.Message.toObjectList(msg.getHealthdataList(),
+    proto.kic.health.MentalHealthLog.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -1087,7 +1095,7 @@ proto.kic.health.GetHealthDataByDateResponse.deserializeBinaryFromReader = funct
     case 1:
       var value = new proto.kic.health.MentalHealthLog;
       reader.readMessage(value,proto.kic.health.MentalHealthLog.deserializeBinaryFromReader);
-      msg.setHealthdata(value);
+      msg.addHealthdata(value);
       break;
     default:
       reader.skipField();
@@ -1118,9 +1126,9 @@ proto.kic.health.GetHealthDataByDateResponse.prototype.serializeBinary = functio
  */
 proto.kic.health.GetHealthDataByDateResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getHealthdata();
-  if (f != null) {
-    writer.writeMessage(
+  f = message.getHealthdataList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
       1,
       f,
       proto.kic.health.MentalHealthLog.serializeBinaryToWriter
@@ -1130,39 +1138,40 @@ proto.kic.health.GetHealthDataByDateResponse.serializeBinaryToWriter = function(
 
 
 /**
- * optional MentalHealthLog healthData = 1;
- * @return {?proto.kic.health.MentalHealthLog}
+ * repeated MentalHealthLog healthData = 1;
+ * @return {!Array<!proto.kic.health.MentalHealthLog>}
  */
-proto.kic.health.GetHealthDataByDateResponse.prototype.getHealthdata = function() {
-  return /** @type{?proto.kic.health.MentalHealthLog} */ (
-    jspb.Message.getWrapperField(this, proto.kic.health.MentalHealthLog, 1));
+proto.kic.health.GetHealthDataByDateResponse.prototype.getHealthdataList = function() {
+  return /** @type{!Array<!proto.kic.health.MentalHealthLog>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.kic.health.MentalHealthLog, 1));
 };
 
 
 /**
- * @param {?proto.kic.health.MentalHealthLog|undefined} value
+ * @param {!Array<!proto.kic.health.MentalHealthLog>} value
  * @return {!proto.kic.health.GetHealthDataByDateResponse} returns this
 */
-proto.kic.health.GetHealthDataByDateResponse.prototype.setHealthdata = function(value) {
-  return jspb.Message.setWrapperField(this, 1, value);
+proto.kic.health.GetHealthDataByDateResponse.prototype.setHealthdataList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
 /**
- * Clears the message field making it undefined.
+ * @param {!proto.kic.health.MentalHealthLog=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.kic.health.MentalHealthLog}
+ */
+proto.kic.health.GetHealthDataByDateResponse.prototype.addHealthdata = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.kic.health.MentalHealthLog, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
  * @return {!proto.kic.health.GetHealthDataByDateResponse} returns this
  */
-proto.kic.health.GetHealthDataByDateResponse.prototype.clearHealthdata = function() {
-  return this.setHealthdata(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.kic.health.GetHealthDataByDateResponse.prototype.hasHealthdata = function() {
-  return jspb.Message.getField(this, 1) != null;
+proto.kic.health.GetHealthDataByDateResponse.prototype.clearHealthdataList = function() {
+  return this.setHealthdataList([]);
 };
 
 

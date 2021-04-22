@@ -1,5 +1,5 @@
 /**
- * @fileoverview MentalHealthLog page - allows users track their mental health through logging and journaling.
+ * @fileoverview MentalHealthLog screen allows users track their mental health through logging and journaling.
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -9,43 +9,154 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import FeedHeader from '../Components/FeedHeader';
 import KIC_Style from "../Components/Style";
 import { useNavigation } from "@react-navigation/native";
-import { DateTimePickerModal } from "react-native-paper-datetimepicker";
+import { DatePickerModal } from 'react-native-paper-dates';
 import NumberSlider from 'react-native-number-slider'
+import { Date as CommonDate } from "../gen/proto/common_pb";
 import 'intl';
-import 'intl/locale-data/jsonp/en'; // or any other locale you need
+import 'intl/locale-data/jsonp/en';
+import ClientManager from "../Managers/ClientManager";
+import UserManager from "../Managers/UserManager";
+import {AddHealthDataForUserRequest, MentalHealthLog as HealthLog} from "../gen/proto/health_pb";
 
 
 
 /**
- * @class Contains function for rendering MentalHealthLog screen.
+ * @returns {MentalHealthLog}
+ * @params navigation Takes in navigation prop that passes between screens
  */
 export default function MentalHealthLog({ navigation }) {
     /**
-     * Renders MentalHealth screen components.
-     * @returns {Component}
+     * @constant entry represents journal string of user log
      */
     const [entry, setEntry] = useState("");
+    /**
+     * @constant visible represents if button to store entry should be present or not
+     */
     const [visible, setVisible] = React.useState(false);
+
+    /**
+     * @constant onDismiss represents setting visible to false when dismissed
+     */
     const onDismiss = React.useCallback(() => {
         setVisible(false);
     }, [setVisible]);
 
+    /**
+     * @constant onChange  represents setting visible to false when there is change
+     * @callback date takes in particular date for calendar
+     */
     const onChange = React.useCallback(({ date }) => {
         setVisible(false);
+        setDate(date);
         console.log({ date });
     }, []);
 
+    /**
+     * @constant value  represents mood tracker value user sets for their entry
+     */
     const [value, setValue] = useState(1)
+
+    /**
+     * @constant onValueChange sets value when called
+     * @param {number} value takes in value of mental health mood tracker
+     */
     const onValueChange = (value) => {
         setValue(value)
     }
 
-    const date = new Date();
+    /**
+     * @constant date  represents mood tracker value user sets for their entry
+     */
+    const [date, setDate] = useState(new Date());
+
+
+    {/* Create UsersClientManager & create a UsersClient */}
+    let cm = new ClientManager();
+    let client = cm.createHealthClient();
+
+    /**
+     * @constant storeHealthEntry starts chain of functions to store health entry
+     * @return callGetAuthString constant to obtain auth string
+     */
+    const storeHealthEntry = async () => {
+        return callGetAuthString();
+    }
+
+    /**
+     * @constant callGetAuthString get auth string
+     * @return getUserID constant to obtain user ID
+     */
+    //first, do this to get authorization string
+    const callGetAuthString = async () => {
+        let um = new UserManager();
+        console.log("Obtained authorization string");
+        return um.getAuthString().then(authString  => {getUserID(authString, um)});
+    }
+
+    /**
+     * @constant getUserID  obtains user feed
+     * @param {String} authString takes in authorization string
+     * @param {UserManager} um takes in user manager
+     * @return makeAddEntryRequest to make request to add entry based on entered data
+     */
+    const getUserID = async(authString, um) => {
+        um.getMyUserID().then(userID  => makeAddEntryRequest(userID, authString));
+    }
+
+    /**
+     * @constant makeAddEntryRequest make request to add entry based on entered data
+     * @param {String} userID user ID for this user
+     * @param {String} authString authorization string
+     * @return addHealthDataForUserResponse response for addHealthDataForUser request
+     */
+    const makeAddEntryRequest = async (userID, authString) => {
+        let req = new AddHealthDataForUserRequest();
+        console.log("Auth: " + authString);
+
+        //the request requires the user ID and the mental health log entry
+
+        req.setUserid(userID);
+
+        //set health log entry with score, logdata aka journal name
+        let logEntry = new HealthLog();
+        logEntry.setScore(value); //from NumberSlider
+        logEntry.setJournalname(entry); //from journal entry text input box
+        logEntry.setUserid(userID);
+
+        // Fetch the date the user would like for this entry from the DateTimePickerModal and set as logDate
+        let logDate = new CommonDate();
+        logDate.setDay(String(date.getDate()).padStart(2, '0'));
+        logDate.setMonth(String(date.getMonth() + 1).padStart(2, '0'));
+        logDate.setYear(String(date.getFullYear()).padStart(2, '0'));
+
+
+        logEntry.setLogdate(logDate);
+        //set new entry with log entry
+
+        console.log("log date" + logDate);
+
+        req.setNewentry(logEntry);
+
+        console.log(req.getNewentry());
+        return client.addHealthDataForUser(req,{'Authorization': authString}).then(
+            res => {
+                console.log("SUCCESS" + res.getSuccess());
+                console.log(res);
+                alert("Entry stored!")
+            })
+            .catch(error =>{
+                console.log("There is an error :(");
+                alert("Sorry, there was an error. Please try again")
+                console.log(error);
+            });
+    }
+
+
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation} />
             <SafeAreaView style={[KIC_Style.innerContainer, {marginTop:30}]}>
-               <ScrollView>
+               <ScrollView style = {{justifyContent: 'center', alignSelf: 'center'}}>
                 <Image
                     style={{ width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center' }}
                     source={require('../assets/kic.png')}
@@ -53,9 +164,8 @@ export default function MentalHealthLog({ navigation }) {
                 <Text style={KIC_Style.title}> Mental Health Tracker</Text>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <Text>
-                        Rate your mental health on a scale from -5 (extremely depressed) to 5 (extremely anxious).
-                        0 is neither anxious nor depressed.
-      </Text>
+                        Rate your mental health on a scale from -5 (extremely poor) to 5 (extremely good).
+                    </Text>
                 </TouchableWithoutFeedback>
                 <NumberSlider
                     onValueChange={onValueChange}
@@ -77,14 +187,17 @@ export default function MentalHealthLog({ navigation }) {
                     value={entry}
                     onChange={e => setEntry(e.nativeEvent.text)}
                     placeholder="Entry (max. 250 characters)" />
-                <DateTimePickerModal
+                <DatePickerModal
                     visible={visible}
                     onDismiss={onDismiss}
                     date={date}
                     onConfirm={onChange}
                     label="Pick A Date"
-                />
-                {/* <TextInput value={date.toLocaleString()} /> */}
+                    animationType="slide"
+                    mode={"single"}
+                    validRange={{
+                          endDate: new Date(), // optional
+                        }}/>
                 <TouchableOpacity
                     style={KIC_Style.button}
                     onPress={() =>
@@ -95,7 +208,7 @@ export default function MentalHealthLog({ navigation }) {
                 <TouchableOpacity
                     style={KIC_Style.button}
                     onPress={() =>
-                        alert("Entry stored!")
+                        storeHealthEntry()
                     }>
                     <Text style={KIC_Style.button_font}> Store Entry </Text>
                 </TouchableOpacity>
@@ -129,7 +242,7 @@ export default function MentalHealthLog({ navigation }) {
 }
 
 /**
- * @constant styles creates stylesheet for Mental Health screen components
+ * @constant styles creates stylesheet for Mental Health Log screen components
  */
 const styles = StyleSheet.create({
     container: {

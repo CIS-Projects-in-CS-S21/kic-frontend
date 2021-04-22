@@ -14,24 +14,44 @@ import FeedHeader from '../Components/FeedHeader';
 
 
 
+/**
+ * @param navigation The navigation prop used to navigate between page
+ *  @returns a {Post}
+ */
 export default function Post({ navigation }) {
-    //allows for permission to use image library
+
+    /**
+     * @constant hasGalleryPermission allows for permission to use image library
+     */
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-    //allows for permission to use mobile camera
+    /**
+     * @constant hasCameraPermission allows for permission to use camera on device
+     */
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
-    //camera variable
+
+    /**
+     * @constant camera sets variable that represents camera as default to null
+     */
     const [camera, setCamera] = useState(null);
-    //image variable
+
     const [image, setImage] = useState(null);
-    //type variable, default set to back camera
+    /**
+     * @constant type sets variable that represents type of camera as default to front camera
+     */
     const [type, setType] = useState(Camera.Constants.Type.front);
-    //stores base64 of image
+    /**
+     * @constant base64 sets variable that represents base64 representation of image as default to null
+     */
     const[base64, setBase64] = useState(null);
 
-    //state for determining if on web
+    /**
+     * @constant notWeb sets variable that indicates if device is not web to null
+     */
     const [notWeb, setNotWeb] = useState(null);
 
-    //permissions for camera
+    /**
+     * @constant permission sets variable that represents camera permissions
+     */
     const [permission, askPermission] = Permissions.usePermissions(
         Permissions.CAMERA,
     );
@@ -67,8 +87,8 @@ export default function Post({ navigation }) {
     }, [permission?.permissions?.camera, askPermission]);
 
     /**
-    * Take picture if camera access is granted and set image and base64
-    */
+     * @constant takePicture take picture if camera access is granted and set image and base64
+     */
     const takePicture = async () => {
         if (camera) {
             const data = await camera.takePictureAsync({
@@ -92,8 +112,8 @@ export default function Post({ navigation }) {
     }
 
     /**
-    * Pick image from image library and set image and base64
-    */
+     * @constant pickImage pick image from image library and set image and base64
+     */
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,//allows access to images and videos
@@ -191,9 +211,10 @@ export default function Post({ navigation }) {
     );
 }
 
- /**
-  * @constant styles creates stylesheet for Post component
-  */
+
+/**
+ * @constant styles creates stylesheet for Post Page
+ */
 const styles = StyleSheet.create({
     cameraContainer: {
         flex: 1,
