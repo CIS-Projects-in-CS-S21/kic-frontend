@@ -36,7 +36,10 @@ export default function Post({ navigation }) {
         Permissions.CAMERA,
     );
 
-    //if we are on web, use permissions to get camera permissions. otherwise, use requestPermissionsAsync() function
+
+    /**
+    * If we are on web, use permissions to get camera permissions. Otherwise, use requestPermissionsAsync() function
+    */
     useEffect(() => {
         (async () => {
            if (Platform.OS !== 'web') {
@@ -63,7 +66,9 @@ export default function Post({ navigation }) {
         })();
     }, [permission?.permissions?.camera, askPermission]);
 
-    //take picture if camera access is granted and set image and base64
+    /**
+    * Take picture if camera access is granted and set image and base64
+    */
     const takePicture = async () => {
         if (camera) {
             const data = await camera.takePictureAsync({
@@ -86,7 +91,9 @@ export default function Post({ navigation }) {
         }
     }
 
-    //pick image from image library and set image and base64
+    /**
+    * Pick image from image library and set image and base64
+    */
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,//allows access to images and videos
@@ -134,6 +141,10 @@ export default function Post({ navigation }) {
         )
     };
 
+   /**
+    * Renders Post components.
+    * @returns {Post}
+    */
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation} />
@@ -180,6 +191,9 @@ export default function Post({ navigation }) {
     );
 }
 
+ /**
+  * @constant styles creates stylesheet for Post component
+  */
 const styles = StyleSheet.create({
     cameraContainer: {
         flex: 1,

@@ -156,7 +156,10 @@ export default function PostInfo(props) {
     }
 
 
-    //For generating file name
+    /**
+    * An async function that randomizes a string for the file name
+    * @returns {String} vtoString(16) The file name
+    */
     const randomizeFileName = async() => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -169,7 +172,10 @@ export default function PostInfo(props) {
     const [triggerString, setTriggerString] = useState("")
     const [tagString, setTagString] = useState("")
 
-
+    /**
+     * Renders the post info page
+     * @returns {PostInfo}
+     */
     return (
         <SafeAreaView style={{
             flex: 1,
