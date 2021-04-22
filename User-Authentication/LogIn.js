@@ -22,6 +22,9 @@ export default function logIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+    /**
+    * Handles submitting a login form
+    */
   const handleSubmit = evt => {
     evt.preventDefault();
 
@@ -71,6 +74,10 @@ export default function logIn() {
     });
   };
 
+/**
+ * Renders the LogIn page
+ * @returns {LogIn}
+ */
   return (
     <SafeAreaView style={KIC_Style.container}>
       <Text style={KIC_Style.title}>Keeping It Casual: Log In Page</Text>
