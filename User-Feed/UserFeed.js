@@ -1,6 +1,5 @@
 /**
- * @fileoverview The screen for the user's feed, containing links to the
- * Explore Page and Personal Page.
+ * @fileoverview The screen for the user's feed
  */
 
 import React from 'react';
@@ -38,6 +37,10 @@ class UserFeed extends React.Component {
     };
   }
 
+/**
+* Runs when component first loads
+*
+*/
   async componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.setState({
@@ -51,92 +54,118 @@ class UserFeed extends React.Component {
     })
   }
 
+    /**
+    * Runs before the component is unmounted
+    */
   componentWillUnmount(){
     this._unsubscribe();
   }
 
+    /**
+    * Calls callGetAuthString. Starts the process of fetching active user info.
+    *
+    */
+    fetchUserInfo() {
+        return this.callGetAuthString();
+    }
 
-  // Starts the process of fetching active user info.
-  fetchUserInfo() {
-    return this.callGetAuthString();
-  }
+    /**
+    * Creates a UserManager to fetch the authString, then calls callGetUserID
+    *
+    * @returns {String} authString The authorization string to be used for requests
+    */
+    callGetAuthString() {
+        let um = new UserManager();
+        return um.getAuthString().then(authString => { this.callGetUserID(um, authString) });
+    }
 
-  // Uses UserManager to fetch authstring then calls callgetUserID
-  callGetAuthString() {
-    let um = new UserManager();
-    return um.getAuthString().then(authString => { this.callGetUserID(um, authString) });
-  }
+    /**
+    * Saves authString to state then calls getUserByID
+    *
+    * @params {UserManager} um The UserManager to be reused
+    * @params {String} authString The authorization string to be used for requests
+    * @returns {String} userID A string of the active user's ID
+    */
+    callGetUserID(um, authString) {
+        this.setState({
+          authString: authString,
+        })
+        return um.getMyUserID().then(userID => { this.callGetUserByUserID(userID) });
+    }
 
-  // Sets the authstring to the state and calls getMyUserID
-  callGetUserID(um, authString) {
-    this.setState({
-      authString: authString,
-    })
-    return um.getMyUserID().then(userID => { this.callGetUserByUserID(userID) });
-  }
+    /**
+    * Gets a user by their user ID via a GetUserByIDRequest
+    *
+    * @params {String} userID A string of the active user's ID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
+    callGetUserByUserID(userID) {
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
 
-  // Inits GetUserByIDRequest and sends it through client
-  callGetUserByUserID(userID) {
-    let cm = new ClientManager();
-    let client = cm.createUsersClient();
+        let req = new GetUserByIDRequest();
+        req.setUserid(userID);
+        return client.getUserByID(req, { 'Authorization': this.state.authString }).then(res => { this.setUserInfo(cm, res, userID) })
+    }
 
-    let req = new GetUserByIDRequest();
-    req.setUserid(userID);
-    return client.getUserByID(req, { 'Authorization': this.state.authString }).then(res => { this.setUserInfo(cm, res, userID) })
-  }
+    /**
+    * Parses user's info from the GetUserByIDResponse and then inits a GetFilesByMetadataRequest to retrieve user's own posts
+    *
+    * @params {ClientManager} cm The ClientManager to reuse
+    * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    * @params {String} userID A string of the active user's ID
+    * @returns {GenerateFeedForUserResponse} res The response object to a GenerateFeedForUserRequest
+    */
+    setUserInfo(cm, res, userID) {
+        let user = res.getUser();
+        //let myusername = user.getUsername();
+        this.setState({
+          myUserid: userID,
+          myUser: user,
+          feedFiles : []
+        })
 
-  // Sets the active userID to the state and then inits a GetFilesByMetadataRequest to retrieve user's own posts
-  setUserInfo(cm, res, userID) {
-    let user = res.getUser();
-    //let myusername = user.getUsername();
-    this.setState({
-      myUserid: userID,
-      myUser: user,
-      feedFiles : []
-    })
+        // Create a new request that will create a stream for files for ACTIVE USERS userid
+        let req = new GenerateFeedForUserRequest();
+        req.setUserid(this.state.myUserid);
 
-    // Create a new request that will create a stream for files for ACTIVE USERS userid
-    let req = new GenerateFeedForUserRequest();
-    req.setUserid(this.state.myUserid);
+        let client = cm.createFeedClient();
 
-    let client = cm.createFeedClient();
+        let stream = client.generateFeedForUser(req, { 'Authorization': this.state.authString });
+        //Take stream of files, store them to the file posts array
+        stream.on('data', function (response) {
+          //console.log(response);
+          //console.log(response.getFileinfo());
 
-    let stream = client.generateFeedForUser(req, { 'Authorization': this.state.authString });
-    //Take stream of files, store them to the file posts array
-    stream.on('data', function (response) {
-      //console.log(response);
-      //console.log(response.getFileinfo()); 
+          let file = response.getFileinfo();
+          console.log("Files: " + file);
+          let files = this.state.feedFiles;
+          let combinedfiles = files.concat(file);
 
-      let file = response.getFileinfo(); 
-      console.log("Files: " + file);
-      let files = this.state.feedFiles; 
-      let combinedfiles = files.concat(file);
-      
-      this.setState({
-        feedFiles : combinedfiles,
-      })
+          this.setState({
+            feedFiles : combinedfiles,
+          })
 
-    }.bind(this));
+        }.bind(this));
 
-    //Prints and handles errors
-    stream.on('status', function (status) {
+        //Prints and handles errors
+        stream.on('status', function (status) {
 
-    });
+        });
 
-    //When stream is over
-    stream.on('end', function (end) {
-      this.setState({
-        finishedLoading: true,
-      })
-    }.bind(this));
-  }
+        //When stream is over
+        stream.on('end', function (end) {
+          this.setState({
+            finishedLoading: true,
+          })
+        }.bind(this));
+    }
 
 
   /**
    * Renders user feed components.
    * @returns {Component}
    */
-
   render() {
     return (
       <SafeAreaView style={KIC_Style.outContainer}>
