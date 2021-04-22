@@ -2,7 +2,7 @@
  * @fileoverview KIC_Image component downloads image for a particular user and is used to present images on personal page, detailed post view, and user feed.
  */
 import React, { useState } from 'react'
-import {Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
+import {Dimensions, Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
 import KIC_Style from "../Components/Style";
 import ClientManager from "../Managers/ClientManager";
 import {DownloadFileRequest} from "../gen/proto/media_pb";
@@ -148,7 +148,7 @@ class KIC_Image extends React.Component {
      * postcondition: navigate to appropriate postview
      */
     handleViewPost = () => {
-        if (Platform.OS === 'web') {
+        if (Dimensions.get('window').width > 768){
             this.props.navigation.navigate('DetailedPostViewWeb', {
               myUserid: this.props.myUserid,
               authString: this.props.authString,
