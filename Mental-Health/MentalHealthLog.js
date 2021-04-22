@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import FeedHeader from '../Components/FeedHeader';
 import KIC_Style from "../Components/Style";
 import { useNavigation } from "@react-navigation/native";
-import { DateTimePickerModal } from "react-native-paper-datetimepicker";
+import { DatePickerModal } from 'react-native-paper-dates';
 import NumberSlider from 'react-native-number-slider'
 import { Date as CommonDate } from "../gen/proto/common_pb";
 import 'intl';
@@ -47,6 +47,7 @@ export default function MentalHealthLog({ navigation }) {
      */
     const onChange = React.useCallback(({ date }) => {
         setVisible(false);
+        setDate(date);
         console.log({ date });
     }, []);
 
@@ -67,14 +68,6 @@ export default function MentalHealthLog({ navigation }) {
      * @constant date  represents mood tracker value user sets for their entry
      */
     const [date, setDate] = useState(new Date());
-
-    /**
-     * @constant onDateChange sets date when called
-     * @param {Date} date takes in date of mental health mood tracker
-     */
-    const onDateChange = (date) => {
-        setDate(date)
-    }
 
 
     {/* Create UsersClientManager & create a UsersClient */}
@@ -153,6 +146,7 @@ export default function MentalHealthLog({ navigation }) {
             })
             .catch(error =>{
                 console.log("There is an error :(");
+                alert("Sorry, there was an error. Please try again")
                 console.log(error);
             });
     }
@@ -193,14 +187,17 @@ export default function MentalHealthLog({ navigation }) {
                     value={entry}
                     onChange={e => setEntry(e.nativeEvent.text)}
                     placeholder="Entry (max. 250 characters)" />
-                <DateTimePickerModal
+                <DatePickerModal
                     visible={visible}
                     onDismiss={onDismiss}
                     date={date}
                     onConfirm={onChange}
-                    onChange = {onDateChange}
                     label="Pick A Date"
-                />
+                    animationType="slide"
+                    mode={"single"}
+                    validRange={{
+                          endDate: new Date(), // optional
+                        }}/>
                 <TouchableOpacity
                     style={KIC_Style.button}
                     onPress={() =>
