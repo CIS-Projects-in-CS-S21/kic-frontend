@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: FriendsList.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: FriendsList.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* @fileoverview A friends list of fixed height and scrollbar populated by UserBlurbs.
+*/
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import UserBlurb from "../Components/UserBlurb";
+import AddFriendButton from "../Components/AddFriendButton";
+import TokenManager from "../Managers/TokenManager";
+import ClientManager from "../Managers/ClientManager";
+import UserManager from '../Managers/UserManager';
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
+
+
+/**
+* @class Contains functions for rendering a friends list
+*/
+class FriendsList extends React.Component {
+
+    /**
+     * Class constructor
+     * @param {String} authString The authstring for making requests
+     * @param {String} myUserid The id of the current active user
+     * @param {String} userid The id of the user who is on the friendslist
+     * @param {String} username The name of the user who is on the friendslist
+     * @param {Array} friends The list of friends of the user
+     * @param {Number} renderer initially set to 0
+     */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            authString: "authstring",
+            myUserid: props.myUserid,
+            userid: props.userid,
+            username: props.username,
+            friends: [],
+            renderer: 0,
+        };
+
+        this.fetchFriends = this.fetchFriends.bind(this);
+    }
+
+    /**
+    * Runs when component first loads
+    * @exception error sets error if fetching friends does not work
+     * postcondition: fetchFriends()
+    */
+    componentDidMount(){
+        this.fetchFriends().then(response => {
+          console.log("Fetched friends successfully");
+        }).catch(error => {
+          console.log("Error fetching friends: " + error)
+        });
+    }
+
+    /**
+    * Runs when the props change and updates the component accordingly.
+    * postcondition: fetchFriends
+     * @exception error logs if fetching friends does not work
+    */
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+
+          this.setState({
+              myUserid: this.props.myUserid,
+              userid: this.props.userid,
+              username: this.props.username,
+          })
+          this.fetchFriends().then(response => {
+              console.log("Fetched friends successfully");
+          }).catch(error => {
+              console.log("Error fetching friends: " + error)
+          });
+      }
+    }
+
+    /**
+    * The start of the process to fetch friends;
+    * Handles creating a UserManager to fetch the authstring
+    *
+    * @returns {String} authString The string necessary for the authorization to send requests,
+    * then calls the next function, callGetUserByUserID
+     * postcondition: callGetUserByUserID
+     * precondition:componentDidUpdate
+    */
+    fetchFriends = () => {
+        // Create a new UserManager, which will provide the authString
+        let um = new UserManager();
+        return um.getAuthString().then(authString => {this.callGetUserByUserID(authString)});
+    }
+
+    /**
+    * Handles making the GetUserByID request
+    * precondition: fetchFriends()
+     * postcondition: callGetFriendsForUser()
+    * @param {String} authString the auth string to be used as part of the authorization header for requests
+    * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
+    */
+    callGetUserByUserID(authString){
+
+        //Create a ClientManager &amp; use to create a UsersClient
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        // Create the request and set the active user's ID
+        let req = new GetUserByIDRequest();
+        req.setUserid(this.props.userid);
+
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetFriendsForUser(cm, authString, res)});
+    }
+
+    /**
+    * Handles making the GetFriendsForUserRequest
+    * precondition: callGetUserByUserID
+     * postcondition: updateState
+    * @param {ClientManager} cm The ClientManager to be reused
+    * @param {String} authString The auth string to be used as part of the authorization header for requests
+    * @param {GetUserByIDResponse} res Returned in response to GetUserByIDRequest
+    * @returns {GetFriendsForUserResponse} res then calls the next function, parseFriends
+    */
+    callGetFriendsForUser(cm, authString, res){
+
+        // Gets the user from GetUserByIDResponse
+        let user = res.getUser()
+        //console.log("user is: " + user);
+
+        // Create a FriendsClient
+        let client = cm.createFriendsClient();
+
+        // Create the request &amp; set the active user's ID
+        let req = new GetFriendsForUserRequest();
+        req.setUser(user);
+
+        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {this.updateState(authString, res)});
+    }
+
+    /**
+    * Retrieves the friend list from the response object and saves it to the state
+    * precondition: callGetFriendsForUser
+    * @param {String} authString The auth string to be used as part of the authorization header for requests
+    * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
+    */
+    updateState(authString, res){
+        console.log("User " + this.props.userid + "s friends' by ID: " + res.getFriendsList());
+        // Save friends list to state
+        this.setState({
+            authString: authString,
+            friends: res.getFriendsList()
+        })
+
+    }
+
+    /**
+    * Renders a scrollable FriendsList of user blurbs.
+    * @returns {FriendsList}
+    */
+    render() {
+        return (
+            &lt;View style={styles.friendsList}>
+                &lt;Text style={styles.friendCounter}>Displaying {this.state.friends.length} friends for @{this.state.username}&lt;/Text>
+
+                {/* Friend list container */}
+                &lt;View style={styles.friendsList}>
+                    {/* FlatList that renders a UserBlurb per user in the friend list */}
+                    &lt;FlatList
+                        style={styles.listcontainer}
+                        data={this.state.friends}
+                        renderItem={({item}) => &lt;UserBlurb
+                                                    navigation = {this.props.navigation}
+                                                    authString = {this.state.authString}
+                                                    myUsername = {this.state.username}
+                                                    myUserid = {this.props.myUserid}
+                                                    userid = {this.props.userid}
+                                                    blurbUserid = {item}
+                                                />}
+                        keyExtractor={friend => friend.userid}
+                    />
+                &lt;/View>
+            &lt;/View>
+        );
+    }
+}
+
+/**
+* @constant styles creates stylesheet for the Comment Section
+*/
+const styles = StyleSheet.create({
+    friendsList: {
+        flex: 1,
+    },
+    userBar: {
+        flexDirection: 'row',
+    },
+    friendBlurb: {
+        backgroundColor: '#fff',
+        width: '95%',
+        padding: 15,
+        marginBottom: 10,
+        borderTopRightRadius: 25,
+        borderTopLeftRadius: 25,
+        borderBottomRightRadius: 25,
+    },
+    friendCounter: {
+        fontSize: 18,
+        fontStyle: 'italic',
+        color: '#707070',
+        marginTop: 5,
+        marginBottom: 5,
+        paddingBottom: 5,
+        textAlign: 'center',
+    }
+});
+
+export default FriendsList;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FriendsList.html">FriendsList</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="PersonalPage.html">PersonalPage</a></li><li><a href="PersonalPageNav.html">PersonalPageNav</a></li><li><a href="ProfilePost.html">ProfilePost</a></li><li><a href="RequestsList.html">RequestsList</a></li><li><a href="UserPage.html">UserPage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:21:58 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

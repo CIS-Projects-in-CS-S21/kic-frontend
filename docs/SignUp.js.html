@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: SignUp.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: SignUp.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview The screen for the signup page, containing a link
+ * back to the log in page.
+ */
+import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { GetJWTTokenRequest, AddUserRequest, GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
+import { CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
+import { UsersClient, FriendsClient } from "../gen/proto/UsersServiceClientPb";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import TokenManager from "../Managers/TokenManager";
+import ClientManager from '../Managers/ClientManager';
+import UserManager from '../Managers/UserManager';
+import { Date } from "../gen/proto/common_pb";
+import KIC_Style from "../Components/Style";
+import { Text, TouchableOpacity, Image, View, TextInput } from "react-native";
+
+/**
+ * @class Contains function for rendering the signup page
+ */
+
+export default function signUp() {
+    const navigation = useNavigation();
+
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [username, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password1, setPassword1] = useState("");
+    const [password2, setPassword2] = useState("");
+    const [bio, setBio] = useState("");
+    const [myUser, setMyUser] = useState("");
+
+    /**
+    * Handles submitting a signup form
+    */
+    const handleSubmit = evt => {
+        evt.preventDefault();
+        if (password1 !== password2) {
+            alert('Error: Passwords must be equal.');
+        } else if (username == null || username == "") {
+            alert('Error: Must input username');
+        } else if (password1 == null || password1 == "") {
+            alert('Error: Must input password');
+        } else if (password2 == null || password2 == "") {
+            alert('Error: Must input password');
+        } else if (password1.length &lt; 8) {
+            alert('Error: Passwords must be at least 8 characters.');
+        } else if (email.includes("@") == false) {
+            alert('Error: Must include a valid email.');
+        } else if (firstName == "" || lastName == "") {
+            alert('Missing first or last name entries.');
+        } else if (bio.length >= 250) {
+            alert('Sorry, your bio must be less than 250 characters long!');
+        } else {
+            makeRequest();
+        }
+    };
+
+    /**
+    * Handles initiating the Promise chain of signup methods
+    * @returns {Promise} res The Promise object returned by a callAddUser() call
+    */
+    const makeRequest = async () => {
+      callAddUser().then(response => {
+        console.log("Successfully added user");
+      }).catch(error => {
+        console.log(error);
+        if(error.message == 'User already exists') {
+            alert('Error: Username already exists.');
+        }
+      });
+    }
+
+    /**
+    * Handles making the AddUser request
+    * @returns {AddUserResponse} res The response object to a AddUserRequest
+    */
+    const callAddUser = () => {
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new AddUserRequest();
+        let date = new Date();
+        date.setYear(1998);
+        date.setMonth(8);
+        date.setDay(21);
+        req.setEmail(email);
+        req.setBirthday(date);
+        req.setCity("city");
+        req.setDesiredusername(username);
+        req.setDesiredpassword(password1);
+
+        return client.addUser(req, {}).then(res => {callGetJWTToken(cm, client)});
+    }
+
+    /**
+    * Handles making a getJWTToken request
+    * @returns {GetJWTTokenResponse} res The response object to a GetJWTTokenRequest
+    */
+    const callGetJWTToken = (cm, client) => {
+        let req = new GetJWTTokenRequest();
+        req.setUsername(username);
+        req.setPassword(password1);
+
+        return client.getJWTToken(req, {}).then(res => {callStoreToken(cm, client, res)});
+    }
+
+    /**
+    * Handles storing the retrieved token to TokenManager
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @params {GetJWTTokenResponse} res The response object returned by a GetJWTTokenRequest
+    * @returns {Promise} res The Promise object returned by a storeToken() call
+    */
+    const callStoreToken = (cm, client, res) => {
+        let tm = new TokenManager();
+        return tm.storeToken(res.getToken()).then(res => {callGetAuthString(cm, client)});
+    }
+
+    /**
+    * Handles fetching the authString from a UserManager
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @returns {String} authString The authorization string to be used in future requests
+    */
+    const callGetAuthString = (cm, client) => {
+        let um = new UserManager();
+        return um.getAuthString().then(authString => {callGetUserID(cm, client, um, authString)});
+    }
+
+    /**
+    * Handles fetching the active user's userID
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UserManager} um The UserManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @params {String} authString The authorization string to be used in future requests
+    * @returns {String} userID The active user's userID
+    */
+    const callGetUserID = (cm, client, um, authString) => {
+        return um.getMyUserID().then(userID => {callGetUserByUserID(cm, client, authString, userID)});
+    }
+
+    /**
+    * Handles fetching the active user's userID via a GetUserByIDRequest
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @params {String} authString The authorization string to be used in future requests
+    * @params {String} userID The active user's userID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
+    const callGetUserByUserID = (cm, client, authString, userID) => {
+        let req = new GetUserByIDRequest();
+        req.setUserid(userID);
+
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {callUpdateUserInfo(cm, client, authString, userID)});
+    }
+
+    /**
+    * Handles updating the active user's info via a UpdateUserInfoRequest
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {UsersClient} client The UsersClient to be reused
+    * @params {String} authString The authorization string to be used in future requests
+    * @params {String} userID The active user's userID
+    * @returns {UpdateUserInfoResponse} res The response object to a UpdateUserInfoRequest
+    */
+    const callUpdateUserInfo = (cm, client, authString, userID) => {
+        console.log("callupdateuserinfo");
+        let req = new UpdateUserInfoRequest();
+        req.setUserid(userID);
+        req.setBio(bio);
+
+        return client.updateUserInfo(req, {'Authorization': authString}).then(res => { addDefaultFriend(cm, authString, res, userID) });
+    }
+
+    /**
+    * Handles giving the user a default friend via a CreateConnectionForUsersRequest
+    * @params {ClientManager} cm The ClientManager to be reused
+    * @params {String} authString The authorization string to be used in future requests
+    * @params {UpdateUserInfoResponse} res The response object to a UpdateUserInfoRequest
+    * @params {String} userID The active user's userID
+    * @returns {CreateConnectionForUsersResponse} res The response object to a CreateConnectionForUsersRequest
+    */
+    const addDefaultFriend = (cm, authString, res, userID) => {
+        let req = new CreateConnectionForUsersRequest();
+        req.setFirstuserid(userID);
+        req.setSeconduserid('153');
+
+        let client = cm.createFriendsClient();
+
+        return client.createConnectionForUsers(req, {'Authorization': authString}).then(res => { finishSignUp(res) });
+    }
+
+    /**
+    * The final method in the signup process that redirects user to the login page
+    * @params {CreateConnectionForUsersResponse} res The response object to a CreateConnectionForUsersRequest
+    */
+    const finishSignUp = (res) => {
+        navigation.navigate('LogIn');
+    }
+
+    return (
+        &lt;SafeAreaView style={KIC_Style.container}>
+            &lt;Text style={KIC_Style.title}>Keeping It Casual: Sign Up Page&lt;/Text>
+            &lt;Image
+                style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+                source={require('../assets/kic.png')} />
+            &lt;TextInput
+                style={KIC_Style.input}
+                value={firstName}
+                onChange={e => setFirstName(e.nativeEvent.text)}
+                placeholder=" First name"
+                required="required" />
+            &lt;TextInput
+                style={KIC_Style.input}
+                value={lastName}
+                onChange={e => setLastName(e.nativeEvent.text)}
+                placeholder=" Last name"
+                required="required" />
+            &lt;TextInput
+                style={KIC_Style.input}
+                value={username}
+                onChange={e => setUserName(e.nativeEvent.text)}
+                placeholder=" Username"
+                required="required" />
+            &lt;TextInput
+                style={KIC_Style.input}
+                value={email}
+                onChange={e => setEmail(e.nativeEvent.text)}
+                placeholder=" Email"
+                required="required" />
+            &lt;TextInput
+                style={KIC_Style.input}
+                value={password1}
+                onChange={e => setPassword1(e.nativeEvent.text)}
+                placeholder=" Password"
+                required="required"
+                secureTextEntry={true} />
+            &lt;TextInput
+                style={KIC_Style.input}
+                value={password2}
+                onChange={e => setPassword2(e.nativeEvent.text)}
+                placeholder=" Retype password"
+                required="required"
+                secureTextEntry={true} />
+            &lt;TextInput
+                style={KIC_Style.input}
+                value={bio}
+                onChange={e => setBio(e.nativeEvent.text)}
+                placeholder=" Bio (max. 250 characters)" />
+            &lt;TouchableOpacity
+                style={KIC_Style.button}
+                onPress={handleSubmit}>
+                &lt;Text style={KIC_Style.button_font}>Register&lt;/Text>
+            &lt;/TouchableOpacity>
+            &lt;TouchableOpacity
+                style={KIC_Style.button}
+                onPress={() => navigation.navigate('LogIn')}>
+                &lt;Text style={KIC_Style.button_font}>Log In&lt;/Text>
+            &lt;/TouchableOpacity>
+        &lt;/SafeAreaView>
+    );
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:26:57 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

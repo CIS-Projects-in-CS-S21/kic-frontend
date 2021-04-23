@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: RequestBlurb.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: RequestBlurb.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview A component that displays a user's name, username, and bio
+ */
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import KIC_Style from "../Components/Style";
+import PostDetails from "../Components/PostDetails";
+import ProfileHeader from "../Components/ProfileHeader";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import { CreateConnectionForUsersRequest, DeleteConnectionBetweenUsersRequest, AddAwaitingFriendRequest } from '../gen/proto/friends_pb';
+import ClientManager from "../Managers/ClientManager";
+import UserManager from '../Managers/UserManager';
+
+/**
+ * @class Contains function for rendering the detailed post view.
+ */
+class RequestBlurb extends React.Component {
+
+    /**
+     * Class constructor
+     * @param {String} myUserid The id of the current active user
+     * @param {String} username The username of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     * @param {Number} birthDay day of birth of user
+     * @param {Number} birthMonth month of birth of user
+     * @param {Number} birthYear day of birth of user
+     * @param {boolean} canAdd default set to true, means that user can request friend
+     * @param {String} status default set to empty string, indicates if friend status is accepted, pending, or denied
+     */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            userid: props.userid,
+            username: "default",
+            bio: "bio",
+            birthDay: 0,
+            birthMonth: 0,
+            birthYear: 0,
+            canAdd: true,
+            status: "",
+        };
+
+        this.callGetUserByUserID = this.callGetUserByUserID.bind(this)
+    }
+
+   /**
+    * Runs when component first loads
+    *
+    */
+    componentDidMount(){
+        this.callGetUserByUserID().then(response => {
+          console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
+        }).catch(error => {
+          console.log("Error mounting userblurb for userid " + this.props.userid + ": " + error);
+        });
+    }
+
+    /**
+    * Handles making the GetUserByID request
+    *
+    * @param {String} authString the auth string to be used as part of the authorization header for requests
+    * @returns {GetUserByIDResponse} res then calls the next function, callGetFriendsForUser
+    */
+    callGetUserByUserID(){
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new GetUserByIDRequest();
+        req.setUserid(this.props.userid);
+        return client.getUserByID(req, {'Authorization': this.props.authString}).then(res => {this.setUserInfo(res)})
+    }
+
+    /**
+    * Parses user information from a GetUserByIDRequest and updates the state
+    *
+    * @param {GetUserByIDResponse} res The response object from a GetUserByIDRequest
+    */
+    setUserInfo(res){
+        {/* Store user information */}
+        let myusername = res.getUser().getUsername();
+        let mybio = res.getUser().getBio();
+
+        this.setState({
+            username: myusername,
+            bio: mybio,
+        })
+    }
+
+    /**
+    * Handles accepting a friend request
+    * @returns {CreateConnectionForUsersResponse} res The response object to a CreateConnectionForUsersRequest
+    */
+    handleAccept = () => {
+        this.setState({
+            canAdd: false,
+            status: "Accepted", });
+
+        let req = new CreateConnectionForUsersRequest();
+        req.setFirstuserid(this.state.userid);
+        req.setSeconduserid(this.props.myUserid);
+
+        let cm = new ClientManager();
+        let client = cm.createFriendsClient();
+
+        return client.createConnectionForUsers(req, {'Authorization': this.props.authString}).then(res => { console.log("Users " + this.state.userid + " (blurb) and " + this.props.myUserid + " (me) are now friends!")});
+    }
+
+    /**
+    * Handles denying a friend request
+    * @returns {DeleteConnectionBetweenUsersResponse} res The response object to a DeleteConnectionBetweenUsersRequest
+    */
+    handleDeny = () => {
+        this.setState({
+            canAdd: false,
+            status: "Denied", });
+
+        let req = new DeleteConnectionBetweenUsersRequest();
+        req.setFirstuserid(this.state.userid);
+        req.setSeconduserid(this.props.myUserid);
+
+        let cm = new ClientManager();
+        let client = cm.createFriendsClient();
+
+        return client.deleteAwaitingFriendBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { console.log("Deleted req from user " + this.props.userid)});
+    }
+
+    doNothing = () => {
+        //do nothing
+    }
+
+    /**
+    * Renders the RequestBlurb component.
+    * @returns a {RequestBlurb}
+    */
+    render() {
+      return (
+        &lt;View style={styles.container}>
+              {/* User's icon */}
+              &lt;Image
+                style={styles.icon}
+                source = {require('../assets/default/default_icon_2.png')}
+              />
+
+              {/* User's blurb */}
+              &lt;View style ={styles.userInfo}>
+                  {/* User's display name and handle */}
+                  &lt;View style ={styles.userID}>
+                      {/* Display name */}
+                      &lt;Text style ={styles.textUsername}>{this.state.username}&lt;/Text>
+                  &lt;/View>
+                  {/* # of posts and friends */}
+                  &lt;Text style ={styles.textBio}>{this.state.bio}&lt;/Text>
+              &lt;/View>
+
+            {(this.state.canAdd) ?  &lt;View>&lt;TouchableOpacity
+                                            style={styles.choiceButton}
+                                            onPress={this.handleAccept}>
+                                            &lt;Ionicons name="checkmark-circle-outline" color='#ffff' size={25} />
+                                        &lt;/TouchableOpacity>
+                                        &lt;TouchableOpacity
+                                            style={styles.choiceButton}
+                                            onPress={this.handleDeny}>
+                                            &lt;Ionicons name="close-circle-outline" color='#ffff' size={25} />
+                                        &lt;/TouchableOpacity>&lt;/View> :
+                                        &lt;View>&lt;TouchableOpacity
+                                            style={KIC_Style.disabledButton}
+                                            onPress={this.doNothing}>
+                                            &lt;Text style={{ color: '#000000' }}>{this.status}&lt;/Text>
+                                        &lt;/TouchableOpacity>&lt;/View>}
+
+          &lt;StatusBar style="auto" />
+        &lt;/View>
+      );
+    }
+}
+
+/**
+ * @constant styles creates stylesheet for an individual RequestBlurb's components.
+ */
+const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor: '#c3dee6',
+        paddingVertical: 20,
+        justifyContent: 'flex-start',
+        paddingTop: 30,
+        paddingBottom: 30,
+        paddingRight: 10,
+        paddingLeft: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 10,
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        borderBottomLeftRadius: 40,
+    },
+    icon: {
+        width: 70,
+        height: 70,
+        borderTopRightRadius: 35,
+        borderTopLeftRadius: 35,
+        borderBottomRightRadius: 35,
+        borderBottomLeftRadius: 35,
+        marginRight: 15,
+        marginLeft: 15,
+    },
+    userInfo: {
+        flexDirection: 'column',
+        width: '80%',
+        paddingRight: 10,
+        flex: 1,
+    },
+    userID: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+    textUsername: {
+        fontSize: 15,
+        marginRight: 5,
+        fontWeight: "bold",
+    },
+    textBio: {
+        fontSize: 13,
+    },
+    choiceButton: {
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 7,
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    disabledButton: {
+        width: "80%",
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#8a8a8a",
+        marginTop: 7,
+        padding: 10,
+    },
+});
+
+export default RequestBlurb;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

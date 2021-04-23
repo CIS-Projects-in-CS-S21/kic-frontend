@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: FeedPost.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: FeedPost.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* @fileoverview The FeedPost file holds the content of a user's post for the user feed. 
+This includes a user handle at top, image in middle, and user handle and caption at the bottom. 
+*/
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, Image} from 'react-native';
+import KIC_Image from "./KIC_Image";
+import { GetUserByIDRequest } from '../gen/proto/users_pb';
+import ClientManager from "../Managers/ClientManager";
+
+/**
+* @class Contains function for rendering a post
+*/
+class FeedPost extends React.Component {
+    /*
+    * Class constructor
+    */
+     constructor(props) {
+      super();
+
+      // Define the initial state
+      this.state = {
+          // ID of the current active user
+          myUserid: props.myUserid,
+
+          // ID of the poster
+          posterid: 0,
+
+          // Username of the poster
+          posterusername: "default",
+
+          // Authstring
+          authString: props.authString,
+
+          // The File object to be displayed
+          file: props.file,
+
+          // The image caption
+          caption: "Caption",
+
+          finishedUpdating: false,
+      };
+
+      this.parseFileinfo = this.parseFileinfo.bind(this)
+  }
+
+    /**
+    * Runs when component first loads
+    *
+    */
+  componentDidMount(){
+    this.parseFileinfo().then(response => {
+        console.log("Success");
+    }).catch(error => {
+        console.log(error)
+    });
+  }
+
+    /**
+    * Parses the File to be displayed by this component
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * post condition: updateState of reponse
+    */
+  parseFileinfo(){
+      //console.log("My name is " + this.state.file)
+      let map = this.state.file.getMetadataMap();
+      let posterid = map.get("userID");
+      let caption = map.get("caption");
+
+      this.setState({
+          caption: caption,
+          posterid: posterid,
+          metadata: map,
+      })
+
+      let cm = new ClientManager();
+      let client = cm.createUsersClient();
+
+      let req = new GetUserByIDRequest();
+      req.setUserid(posterid);
+
+      return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.updateState(res)});
+  }
+
+    /**
+    * Updates the state with the parsed information
+    * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: parseFileInfo
+    */
+  updateState(res){
+      console.log("1");
+      let poster = res.getUser();
+      let posterusername = poster.getUsername();
+
+      console.log("Username: " + posterusername + " and user: " + poster);
+
+      this.setState({
+          posterusername: posterusername,
+          finishedUpdating: true,
+      })
+  }
+
+    /**
+    * Renders a user's post
+    * @returns {FeedPost}
+    */
+    render() {
+      return (
+        &lt;View style ={styles.feedPost}>
+          {/* Handle of user who posted image */}
+            &lt;Text style = {styles.headerHandle}>@{this.state.posterusername}&lt;/Text>
+            {/* Image of post */}
+            { (this.state.finishedUpdating) ? &lt;KIC_Image
+              authString = {this.props.authString}
+              navigation = {this.props.navigation}
+              fileInfo = {this.props.file}
+              userid = {this.state.posterid}
+              username = {this.state.posterusername}
+              myUserid = {this.props.myUserid}
+            /> : &lt;View>&lt;/View>}
+            {/* Handle of user who posted image and caption */}
+            &lt;Text style = {styles.bottomText}>@{this.state.posterusername}: {this.state.caption}&lt;/Text>
+        &lt;/View>
+      );
+    }
+}
+
+/**
+* @constant styles creates stylesheet for the FeedPost component
+*/
+const styles = StyleSheet.create({
+  feedPost: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 15,
+    marginLeft: 15,
+    marginRight: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  headerHandle: {
+    alignSelf: 'auto'
+  },
+  postImage: {
+    borderWidth: 5, 
+    borderColor: 'black', 
+    width: 350,
+    height: 350,
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 5,
+    marginBottom: 5,
+    resizeMode: 'contain',
+  },
+  bottomText: {
+    alignSelf: 'auto'
+  },
+});
+
+export default FeedPost;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

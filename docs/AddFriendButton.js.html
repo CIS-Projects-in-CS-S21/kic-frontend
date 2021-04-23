@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: AddFriendButton.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: AddFriendButton.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* @fileoverview An AddFriendButton that sends a friend request to a user
+*/
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import KIC_Style from "../Components/Style";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { AddAwaitingFriendRequest } from '../gen/proto/friends_pb';
+import ClientManager from "../Managers/ClientManager";
+
+/**
+* @class Contains function for rendering an add friend button
+*/
+class AddFriendButton extends React.Component {
+
+    /**
+    * Handles sending a friend request from the active user to the target user
+     * precondition: none
+     * post condition: allowFriendRequest
+     * @exception error catches error when friend request is not allowed
+    *
+    */
+    handleSendRequest() {
+        let cm = new ClientManager();
+        let client = cm.createFriendsClient();
+
+        let req = new AddAwaitingFriendRequest();
+
+        //First user is the sender of the request (aka the active user)
+        req.setFirstuserid(this.props.myUserid);
+
+        //Second user is the receiver of the request (aka the potential friend)
+        req.setSeconduserid(this.props.userid);
+
+        return client.addAwaitingFriend(req, {'Authorization': this.state.authString}).then(res => { this.allowFriendReqs(); })
+                        .catch(error => { this.disallowFriendReqs() });
+    }
+
+    /**
+    * Renders AddFriendButton.
+    * @returns {AddFriendButton}
+    */
+    render() {
+      return (
+        &lt;View>
+            &lt;TouchableOpacity
+              style={styles.choiceButton}
+              onPress = {this.handleSendRequest}>
+              &lt;Ionicons name="person-add-outline" color='#ffff' size={25} />
+            &lt;/TouchableOpacity>
+        &lt;/View>
+      );
+    }
+}
+
+/**
+ * @constant styles creates stylesheet for an individual AddFriendButton's components.
+ */
+const styles = StyleSheet.create({
+    choiceButton: {
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 7,
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+});
+
+export default AddFriendButton;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

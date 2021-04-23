@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: FriendsPage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: FriendsPage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview The screen for the Detailed View of a post, which is accessed when clicking on a post.
+ */
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Platform} from 'react-native';
+import KIC_Style from "../Components/Style";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import PostDetails from "../Components/PostDetails";
+import ProfileHeader from "../Components/ProfileHeader";
+import FriendsList from "./FriendsList";
+import RequestsList from "./RequestsList";
+import ClientManager from "../Managers/ClientManager";
+import UserManager from '../Managers/UserManager';
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import { GetFriendsForUserRequest, CreateConnectionForUsersRequest } from '../gen/proto/friends_pb';
+import FeedHeader from '../Components/FeedHeader';
+
+
+/**
+ * @class Contains functions for rendering the friends page.
+ */
+class FriendsPage extends React.Component {
+
+    /**
+     * Class constructor
+     * @param {String} username The username of the current active user
+     * @param {String} userid The userid of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     * @param {Number} yearPosted year of user post
+     * @param {Number} monthPosted month of post of user
+     * @param {Number} dayPosted day of post of user
+     * @param {boolean} showFriends default set to true so friends are shown
+     * @param {boolean} isMyPage default set to true, so user is on user's page
+     */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            myUserid: props.route.params.myUserid,
+            userid: props.route.params.userid,
+            username: props.route.params.username,
+            bio: props.route.params.bio,
+            yearPosted: 0,
+            monthPosted: 0,
+            dayPosted: 0,
+            showFriends: true,
+            isMyPage: true,
+        };
+
+        this.compareIDs = this.compareIDs.bind(this)
+
+    }
+
+    /**
+    * Runs when component first loads
+    *
+    */
+    componentDidMount(){
+      this.compareIDs();
+    }
+
+    /**
+    * Runs when the props change and updates the component accordingly.
+    *
+    */
+    componentDidUpdate(prevProps) {
+      if (this.props.userid !== prevProps.userid) {
+        this.setState({
+            myUserid: this.props.route.params.myUserid,
+            userid: this.props.route.params.userid,
+            username: this.props.route.params.username,
+            isMyPage: this.props.isMyPage,
+        })
+        this.compareIDs();
+      }
+    }
+
+    /**
+    * Compares the user IDs of the active user and the user to whom this friends page belongs
+    *
+    */
+    compareIDs(){
+        console.log("My id is " + this.state.myUserid + " and this friendlist belongs to userid " + this.state.userid)
+        // Check if this is our own page
+        if (this.state.myUserid == this.state.userid){
+            console.log("This is my friends list!");
+            this.setState({
+                isMyPage: true,
+            })
+        } else {
+            console.log("This is not my friends list!");
+            this.setState({
+                isMyPage: false,
+            })
+        }
+    }
+
+  /**
+   * Renders the FriendsPage.
+   * @returns a {FriendsPage}
+   */
+  render() {
+
+      const renderItem = ({ item }) => (
+        &lt;Item title={item.title} />
+      );
+      return (
+        &lt;SafeAreaView style={KIC_Style.outContainer}>
+        &lt;FeedHeader navigation={this.props.navigation} />
+        &lt;SafeAreaView style={styles.container}>
+            {/* Switches between friends/requests list */}
+            {(!this.state.showFriends) ? &lt;RequestsList
+                                                                  userid = {this.state.userid}
+                                                                  username = {this.state.username}
+                                                                /> :
+                                        &lt;FriendsList
+                                           navigation = {this.props.navigation}
+                                           userid = {this.props.route.params.userid}
+                                           username = {this.props.route.params.username}
+                                           myUserid = {this.props.route.params.myUserid}
+                                       />}
+            &lt;View style={styles.content}>
+
+            {/* Allow user to switch between friends/requests list by clicking button */}
+            {(this.state.showFriends) ?  &lt;TouchableOpacity
+                                            style={KIC_Style.button}
+                                            onPress = {() =>
+                                                this.setState({ showFriends:false })}>
+                                            &lt;Text style={KIC_Style.button_font}>Pending Requests&lt;/Text>
+                                        &lt;/TouchableOpacity> :
+             (!this.state.showFriends) ?
+                                        &lt;TouchableOpacity
+                                            style={KIC_Style.button}
+                                            onPress = {() =>
+                                                this.setState({ showFriends:true })}>
+                                            &lt;Text style={KIC_Style.button_font}>Friends&lt;/Text>
+                                        &lt;/TouchableOpacity> :
+                                        &lt;View>&lt;/View>}
+
+            &lt;StatusBar style="auto" />
+            &lt;/View>
+        &lt;/SafeAreaView>
+        &lt;/SafeAreaView>
+      );
+  }
+}
+
+/**
+ * @constant styles creates stylesheet for a FriendsPage
+ */
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
+        height: 'auto',
+        marginLeft: '10%',
+        marginRight: '10%',
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingVertical: 20,
+        ...Platform.select({
+            ios: {
+              top:30,
+              marginBottom:30,
+            },
+            android: {
+              top:30,
+              marginBottom:30,
+            },
+            default: {
+              top:60,
+              marginBottom: 60,
+            }
+          }),
+    },
+    content: {
+        alignItems: 'center',
+        paddingBottom: 5,
+    },
+    icon: {
+        width: 100,
+        height: 100,
+        borderTopRightRadius: 50,
+        borderTopLeftRadius: 50,
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        marginRight: 20,
+        marginLeft: 20,
+    },
+    userInfo: {
+        flexDirection: 'column',
+        width: '80%',
+        paddingRight: 10,
+        flex: 1,
+    },
+    userID: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+    textUsername: {
+        fontSize: 18,
+        marginRight: 5,
+        fontWeight: "bold",
+    },
+});
+
+export default FriendsPage;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FriendsList.html">FriendsList</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="PersonalPage.html">PersonalPage</a></li><li><a href="PersonalPageNav.html">PersonalPageNav</a></li><li><a href="ProfilePost.html">ProfilePost</a></li><li><a href="RequestsList.html">RequestsList</a></li><li><a href="UserPage.html">UserPage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:21:58 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
