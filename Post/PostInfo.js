@@ -80,12 +80,16 @@ export default function PostInfo(props) {
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
         } else {
+            //if platform is mobile
             const parsedURI = uri.split(/[.]/);
             extension = parsedURI[parsedURI.length-1];
             console.log("mobile ext:" + extension);
             if (extension == "mp4" || extension == "mov" || extension == "wmv") {
                 uri = _videoTo64URI(uri,extension);
+                format = "video"
                 console.log("video extension detected");
+            } else {
+                format = "image"
             }
         }
         //start new file request

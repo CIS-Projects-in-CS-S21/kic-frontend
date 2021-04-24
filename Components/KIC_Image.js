@@ -34,6 +34,7 @@ class KIC_Image extends React.Component {
             imageSrc: "",
             imagefixed: false,
             metadata: [],
+            isVideo: false //by default, assumes that this is an image
         };
 
         this.fetchImage = this.fetchImage.bind(this)
