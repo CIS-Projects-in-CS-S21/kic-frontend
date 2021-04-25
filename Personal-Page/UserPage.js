@@ -15,6 +15,7 @@ import TokenManager from "../Managers/TokenManager";
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import FeedHeader from '../Components/FeedHeader';
+import {GetConnectionBetweenUsersRequest, GetFriendsForUserRequest} from "../gen/proto/friends_pb";
 
 /**
  * @class Contains function for rendering the user page.
@@ -32,6 +33,7 @@ class UserPage extends React.Component {
    * @param {Number} birthYear day of birth of user
    * @param {useNavigation} navigation The navigation prop used to navigate between pages
    * @param {boolean} finishedLoading default set to false and is set to true when loading is finished
+   * @param {String} isPrivate default set to null
    */
   constructor(props) {
     super();
@@ -49,6 +51,7 @@ class UserPage extends React.Component {
       birthMonth: 0,
       birthYear: 0,
       finishedLoading: false,
+      isPrivate: null,
     };
 
     this.fetchUserInfo = this.fetchUserInfo.bind(this)
@@ -141,17 +144,17 @@ class UserPage extends React.Component {
 
         let req = new GetUserByIDRequest();
         req.setUserid(this.state.userid);
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res)})
+        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res, cm, authString)})
     }
 
     /**
     * Parses a user's information from the user found in the GetUserByIDResponse
+    * @param res GetUserByIDResponse response
+     * @param  cm Client Manager
+     * @param {String} authString The authorization string to be used for requests
     *
-    * @params {String} authString The authorization string to be used for requests
-    * @params {String} userID A string of the active user's ID
-    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
     */
-    setUserInfo(res){
+    setUserInfo(res,cm, authString){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
@@ -160,6 +163,7 @@ class UserPage extends React.Component {
         let mybirthday = bday.split(",")[2]
         let mycity = res.getUser().getCity();
         let mybio = res.getUser().getBio();
+        let myPrivacy = res.getUser().getIsprivate();
 
         this.setState({
             username: myusername,
@@ -169,8 +173,27 @@ class UserPage extends React.Component {
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
             finishedLoading: true,
+            isPrivate: myPrivacy,
+        })
+
+        // Create a FriendsClient
+        let client = cm.createFriendsClient();
+
+        //check for friendship. if user is friends with active user,
+        let req = new  GetFriendsForUserRequest();
+        req.setUser(res.getUser());
+
+        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {
+            console.log(res);
+            //set state as private to false if friends
+            if (res.getFriendsList().includes(this.state.userid)) {
+                console.log("We are friends");
+                this.setState({
+                    isPrivate: "0"})
+            }
         })
     }
+
 
   /**
    * Renders user page components.
@@ -193,8 +216,10 @@ class UserPage extends React.Component {
                 birthYear = {this.state.birthYear}
                 /> : <View></View>}
 
-            {/* Show posts */}
-            {(this.state.finishedLoading) ? <PostsGrid
+
+            {/* Show posts if non-private account or private but friends */}
+            {(this.state.isPrivate == "1") && <Text> Account is Private! Add as Friend to View Posts. </Text>}
+            {(this.state.finishedLoading && (this.state.isPrivate != "1")) ? <PostsGrid
                 myUserid = {this.state.myUserid}
                 navigation = {this.props.navigation}
                 username = {this.state.username}

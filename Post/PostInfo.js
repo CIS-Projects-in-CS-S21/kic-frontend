@@ -63,17 +63,6 @@ export default function PostInfo(props) {
         um.getMyUserID().then(userID  => makeUploadFileRequest(userID, authString));
     }
 
-    /**
-     * @constant parseTriggers parse triggers from text input (given in //trigger format)
-     * @param {String} triggerString string containing input from user of triggers
-     * @returns triggersParsed array of parsed triggers
-     */
-    const parseTriggers = (triggerString) => {
-        let triggersNoCommas = triggerString.replace(",", " ");
-        let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
-        triggersParsed = triggersParsed.filter(e => e !== '');
-        return triggersParsed;
-    }
 
     /**
      * @constant parseTags parse tags from text input (given in #tag format)
