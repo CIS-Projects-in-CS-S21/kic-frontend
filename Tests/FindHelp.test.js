@@ -13,7 +13,6 @@ const un = "kic_team";
 const email = "email@gmail.com";
 const url = "https://api.keeping-it-casual.com";
 authString = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTkwMTYzNjYsInVpZCI6IjEyOCJ9.Qeo6Xowy6XWih3XXoILgePC6frLoMCcFNBkbP_iBNeE";
-const userid = '128';
 
 /**
 * @function shouldFindLocation
@@ -35,8 +34,8 @@ test('shouldFindLocation', () => {
 });
 
 /**
-* @function shouldFindLocation
-* @return success if getUserByID() returns an array including the user's location.
+* @function getNearbyProfessionals
+* @return success if getUserByID() returns an array including the user's location, which is substituted correctly into the url to fetch mental health professionals from.
 */
 test('getNearbyProfessionals', () => {
     let req = new GetUserByIDRequest();
