@@ -18,7 +18,6 @@ export default class UserManager {
     /**
     * Retrieves the active user's unique userid
     *
-    * @function getMyUserID
     * @return {Object} The token.uid object retrieved
     */
     getMyUserID = () => {
@@ -38,7 +37,6 @@ export default class UserManager {
     /**
     * Builds the authorization header string using the stored token
     *
-    * @function getAuthString
     * @return {String} The Authorization header built using the token
     */
     getAuthString = () => {

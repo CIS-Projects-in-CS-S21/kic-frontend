@@ -14,19 +14,13 @@ import ClientManager from "../Managers/ClientManager";
 * @class Contains function for rendering a post
 */
 class FeedPost extends React.Component {
-    /**
-    * Renders a user's post
-    * @returns {FeedPost}
+    /*
+    * Class constructor
     */
-
-
-     /*
-      * Class constructor
-      */
      constructor(props) {
       super();
 
-      // Define the initial state; pro
+      // Define the initial state
       this.state = {
           // ID of the current active user
           myUserid: props.myUserid,
@@ -52,7 +46,10 @@ class FeedPost extends React.Component {
       this.parseFileinfo = this.parseFileinfo.bind(this)
   }
 
-
+    /**
+    * Runs when component first loads
+    *
+    */
   componentDidMount(){
     this.parseFileinfo().then(response => {
         console.log("Success");
@@ -61,6 +58,11 @@ class FeedPost extends React.Component {
     });
   }
 
+    /**
+    * Parses the File to be displayed by this component
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * post condition: updateState of reponse
+    */
   parseFileinfo(){
       //console.log("My name is " + this.state.file)
       let map = this.state.file.getMetadataMap();
@@ -82,6 +84,11 @@ class FeedPost extends React.Component {
       return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.updateState(res)});
   }
 
+    /**
+    * Updates the state with the parsed information
+    * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: parseFileInfo
+    */
   updateState(res){
       console.log("1");
       let poster = res.getUser();
@@ -93,10 +100,12 @@ class FeedPost extends React.Component {
           posterusername: posterusername,
           finishedUpdating: true,
       })
-
-
-
   }
+
+    /**
+    * Renders a user's post
+    * @returns {FeedPost}
+    */
     render() {
       return (
         <View style ={styles.feedPost}>
@@ -119,7 +128,7 @@ class FeedPost extends React.Component {
 }
 
 /**
-* @constant styles creates stylesheet for the PostsGrid component
+* @constant styles creates stylesheet for the FeedPost component
 */
 const styles = StyleSheet.create({
   feedPost: {

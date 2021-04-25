@@ -1,3 +1,6 @@
+/**
+ * @fileoverview initializes users with details requested from server
+ */
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import TokenManager from "../Managers/TokenManager";
@@ -5,9 +8,11 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 
 export default class MyUser {
-    /*
-    * Class constructor
-    */
+    /** Class constructor
+     * @param {String} username The username of the current active user
+     *
+     *
+     */
     constructor(props) {
         this.username = "default_username";
         this.initMyUser();
@@ -15,8 +20,9 @@ export default class MyUser {
 
     /**
     * Initializes a MyUser with details requested from the server and saves each one
-    *
-    * @function initMyUser
+    *post condition: getUserByUserID obtains user information
+    * @exception error catches error in getting user by user ID
+    * @return getUserByUserIDResponse gets user information when given a userID
     */
     initMyUser() {
         {/* Init UsersClientManager & get client */}
@@ -73,7 +79,6 @@ export default class MyUser {
     /**
     * Returns username
     *
-    * @function getUsername
     * @return String The user's username, retrieved from the server
     */
     getUsername() {
@@ -84,7 +89,6 @@ export default class MyUser {
     /**
     * Returns userID
     *
-    * @function getUserID
     * @return String The user's unique userID
     */
     getUserID() {
@@ -94,7 +98,6 @@ export default class MyUser {
     /**
     * Returns birthday
     *
-    * @function getBirthday
     * @return Date The user's unique userID
     */
     getBirthday() {

@@ -7,15 +7,20 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
 import {useRoute} from '@react-navigation/native';
+import ProfilePicture from "./ProfilePicture";
 
 /**
 * @class Contains function for rendering the profile header.
 */
 class ProfileHeader extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} myUserid The id of the current active user
+     * @param {String} username The username of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     */
     constructor(props) {
         super();
 
@@ -28,6 +33,10 @@ class ProfileHeader extends React.Component {
         };
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    * @params {props} prevProps The previous state's props
+    */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userid !== prevProps.userid) {
@@ -40,6 +49,9 @@ class ProfileHeader extends React.Component {
       }
     }
 
+    /**
+    * Handles redirecting the user to the friends page of a certain user
+    */
     goToFriends = () => {
         //console.log("I am id " + this.props.myUserid + " and this page has user id " + this.props.userid + " and username is " + this.props.username);
         this.props.navigation.navigate('FriendsPage', {
@@ -58,9 +70,10 @@ class ProfileHeader extends React.Component {
       return (
         <View style={styles.profileHeaderContainer}>
               {/* User's icon */}
-              <Image
-                style={styles.icon}
-                source = {require('../assets/default/default_icon_2.png')}
+              <ProfilePicture
+                  style = {styles.icon}
+                  userid = {this.props.userid}
+                  authString = {this.props.authString}
               />
 
               {/* Container for user's info */}

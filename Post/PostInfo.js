@@ -23,28 +23,51 @@ export default function PostInfo(props) {
     {/* Create UsersClientManager & create a UsersClient */}
     let cm = new ClientManager();
     let client = cm.createMediaClient();
+
+    /**
+     * @constant navigation used to pass between screens
+     */
     const navigation = useNavigation();
+
     const video = React.useRef(null);
-    //to upload image, start chain of functions
+
+    /**
+     * @constant uploadImage starts chain of functions to upload image
+     */
     const uploadImage = async () => {
         return callGetAuthString();
     }
 
 
-    //first, do this to get authorization string
+    /**
+     * @constant callGetAuthString obtains authorization string
+     * @return getUserID to obtain userID
+     * precondition: uploadImage
+     * postcondition: getUserID
+     */
     const callGetAuthString = async () => {
         let um = new UserManager();
         console.log("Obtained authorization string");
         return um.getAuthString().then(authString  => {getUserID(authString, um)});
     }
 
-    //then, get user ID
+    /**
+     * @constant getUserID to obtain userID
+     * @param  {String} authString authorization string
+     * @param {UserManager} um User Manager
+     * @return makeUploadFileRequest constant to upload file to database
+     * precondition: callGetAuthString
+     * postcondition: makeUploadFileRequest
+     */
     const getUserID = async(authString, um) => {
         um.getMyUserID().then(userID  => makeUploadFileRequest(userID, authString));
     }
 
-
-    //parse triggers from text input (given in //trigger format)
+    /**
+     * @constant parseTriggers parse triggers from text input (given in //trigger format)
+     * @param {String} triggerString string containing input from user of triggers
+     * @returns triggersParsed array of parsed triggers
+     */
     const parseTriggers = (triggerString) => {
         let triggersNoCommas = triggerString.replace(",", " ");
         let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
@@ -52,7 +75,11 @@ export default function PostInfo(props) {
         return triggersParsed;
     }
 
-    //parse tags from text input (given in #tag format)
+    /**
+     * @constant parseTags parse tags from text input (given in #tag format)
+     * @param {String} tags string containing input from user of tags
+     * @returns tagsParsed array of parsed tags
+     */
     const parseTags = (tags) => {
         let tagsNoCommas = tags.replace(",", " ");
         let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);
@@ -60,7 +87,13 @@ export default function PostInfo(props) {
         return tagsParsed;
     }
 
-    //then, make request to upload file with uri
+    /**
+     * @constant makeUploadFileRequest make request to upload file with uri
+     *  @param {String} userID of user
+     * @param  {String} authString authorization string
+     * @return uploadFileResponse uploads file to database
+     * precondition: getUserID
+     */
     const makeUploadFileRequest = async (userID, authString) => {
        //obtain uri and base64 from Post.js
         let uri = props.route.params.image;
@@ -124,8 +157,6 @@ export default function PostInfo(props) {
         map.set("tag", tagString);
         map.set("ext", extension);
         map.set("format", format);
-        // map.set("uri", uri);
-        // map.set("base64", base64);
 
         // Fetch the current date and set in file
         let today = new Date();
@@ -141,7 +172,6 @@ export default function PostInfo(props) {
         req.setFileuri(uri);
         req.setFileinfo(file);
 
-        //console.log("URI FROM UPLOAD: " + uri);
 
         //set metadata and check that it is set correctly
         console.log("Metadata after set: ");
@@ -149,7 +179,6 @@ export default function PostInfo(props) {
             console.log(k, v);
         });
 
-    //    console.log("request: " + req);
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {
@@ -166,13 +195,17 @@ export default function PostInfo(props) {
     }
 
 
-    //For generating file name
+    /**
+     * @constant randomizeFileName For generating file name
+     * @returns {String} v of random file name
+     */
     const randomizeFileName = async() => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
       });
     }
+
 
     const _videoTo64URI = async (videoURI, extension) => {
         const options = { encoding: FileSystem.EncodingType.Base64 };
@@ -181,10 +214,26 @@ export default function PostInfo(props) {
         return vids;
     };
 
-    //declare constants for caption, triggers, and tags
+
+    /**
+     * @constant caption store caption from user input
+     */
+
     const [caption, setCaption] = useState("")
+    /**
+     * @constant triggerString store triggers from user input
+     */
     const [triggerString, setTriggerString] = useState("")
+    /**
+     * @constant tagString store tags from user input
+     */
     const [tagString, setTagString] = useState("")
+
+
+    /**
+     * Renders the post info page
+     * @returns {PostInfo}
+     */
 
     return (
         <SafeAreaView style={{

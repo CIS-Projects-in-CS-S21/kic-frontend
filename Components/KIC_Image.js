@@ -1,5 +1,8 @@
+/**
+ * @fileoverview KIC_Image component downloads image for a particular user and is used to present images on personal page, detailed post view, and user feed.
+ */
 import React, { useState } from 'react'
-import {Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
+import {Dimensions, Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
 import KIC_Style from "../Components/Style";
 import ClientManager from "../Managers/ClientManager";
 import {DownloadFileRequest} from "../gen/proto/media_pb";
@@ -14,9 +17,16 @@ import { Video, AVPlaybackStatus } from 'expo-av';
  * pass in authString and fileInfo
  */
 class KIC_Image extends React.Component {
-    /*
-      * Class constructor
-      */
+    /** Class constructor
+     * @param {String} myUserid The id of the current active user
+     * @param {String} userid The id of the user who owns the image trying to be displayed
+     * @param {String} username The username of user who owns the image trying to be displayed
+     * @param {String} authString The authstring for making requests
+     * @param {useNavigation} navigation The navigation prop used to navigate between pages
+     * @param {String} imageSrc by default an empty string, will be set to downloaded image
+     * @param {Array} metadata Array of metadata related to file being downloaded
+     * @param {Boolean} imagefixed Boolean regrading image src being fixed correctly. Is set as false by default and turns true when image is fixed after downloading.
+     */
     constructor(props) {
         super();
 
@@ -41,11 +51,20 @@ class KIC_Image extends React.Component {
         this.fetchImage = this.fetchImage.bind(this)
     }
 
-
-    componentDidMount() {
+    /**
+     * mounts fetchImage upon starting of component
+     * postcondition: fetchImage() function that downloads file by name
+     */
+    componentDidMount(){
         this.fetchImage();
     }
 
+    /**
+     *
+     * @param prevProps takes in previous props of component
+     * function that updates and fetches image
+     * postcondition: fetchImage which downloads file by name
+     */
     componentDidUpdate(prevProps) {
         // Typical usage (don't forget to compare props):
         if (this.props.userid !== prevProps.userid) {
@@ -61,6 +80,11 @@ class KIC_Image extends React.Component {
         }
     }
 
+    /**
+     * function that downloadsFileByName and binds said file so it can be used
+     * precondition: componentDidUpdate
+     * postcondition: bind downloaded file to this
+     */
     fetchImage() {
         let cm = new ClientManager();
         let client = cm.createMediaClient();
@@ -128,8 +152,13 @@ class KIC_Image extends React.Component {
 
     }
 
+    /**
+     * handles view post navigation to either DetailedPostViewWeb or DetailedPostView based on platform of user
+     * precondtion:none
+     * postcondition: navigate to appropriate postview
+     */
     handleViewPost = () => {
-        if (Platform.OS === 'web') {
+        if (Dimensions.get('window').width > 768){
             this.props.navigation.navigate('DetailedPostViewWeb', {
                 myUserid: this.props.myUserid,
                 authString: this.props.authString,

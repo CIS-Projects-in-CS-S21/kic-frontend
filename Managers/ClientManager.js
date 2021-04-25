@@ -13,7 +13,6 @@ export default class ClientManager {
     /**
     * Checks for production or development mode, then sets the correct URL to use
     *
-    * @function getURL
     * @return {String} The URL to use
     */
     getURL = () => {
@@ -34,7 +33,6 @@ export default class ClientManager {
     * Initializes a UsersClient using the appropriate url, then
     * returns the client
     *
-    * @function createUsersClient
     * @return {UsersClient} The UsersClient created
     */
     createUsersClient = () => {
@@ -47,7 +45,6 @@ export default class ClientManager {
     * Initializes a MediaServiceClient using the appropriate url, then
     * returns the client
     *
-    * @function createMediaServiceClient
     * @return {MediaServiceClient} The MediaServiceClient created
     */
     createMediaClient = () => {
@@ -60,7 +57,6 @@ export default class ClientManager {
     * Initializes a FeedClient using the appropriate url, then
     * returns the client
     *
-    * @function createFeedClient
     * @return {FeedClient} The FeedClient created
     */
     createFeedClient = () => {
@@ -73,7 +69,6 @@ export default class ClientManager {
     * Initializes a HealthTrackingClient using the appropriate url, then
     * returns the client
     *
-    * @function createHealthClient
     * @return {HealthTrackingClient} The HealthTrackingClient created
     */
     createHealthClient = () => {
@@ -86,7 +81,6 @@ export default class ClientManager {
     * Initializes a FriendsClient using the appropriate url, then
     * returns the client
     *
-    * @function createFriendsClient
     * @return {FriendsClient} The FriendsClient created
     */
     createFriendsClient = () => {

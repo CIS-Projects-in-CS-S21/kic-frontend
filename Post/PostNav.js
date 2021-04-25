@@ -11,12 +11,12 @@ import PostInfo from "./PostInfo";
 const Stack = createStackNavigator();
 
 /**
- * @class Contains function for rendering the personal page navigation.
+ * @class Contains functions for rendering the post navigation.
  */
 class PostNav extends React.Component {
     /**
-     * Renders personal page navigation components.
-     * @returns {Component}
+     * Renders the post navigation
+     * @returns {PostNav}
      */
     render() {
         return (
@@ -39,7 +39,7 @@ class PostNav extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for post page components
+ * @constant styles creates stylesheet for post nav components
  */
 const styles = StyleSheet.create({
     container: {

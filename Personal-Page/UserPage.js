@@ -1,6 +1,5 @@
 /**
- * @fileoverview The screen for the user's personal page, containing links
- * to the Mental Health Log page and User Feed.
+ * @fileoverview The profile page for some "other" user (a user that is not the active user).
  */
 
 import { StatusBar } from 'expo-status-bar';
@@ -18,12 +17,21 @@ import UserManager from '../Managers/UserManager';
 import FeedHeader from '../Components/FeedHeader';
 
 /**
- * @class Contains function for rendering the personal page.
+ * @class Contains function for rendering the user page.
  */
 class UserPage extends React.Component {
 
-  /*
+  /**
    * Class constructor
+    * @param {String} myUserid The id of the current active user
+    * @param {String} userid The id of the user that this page belongs to
+    * @param {String} username The username of the user that this page belongs to
+    * @param {String} bio The bio of the user that this page belongs to
+   *  @param {Number} birthDay day of birth of user
+   * @param {Number} birthMonth month of birth of user
+   * @param {Number} birthYear day of birth of user
+   * @param {useNavigation} navigation The navigation prop used to navigate between pages
+   * @param {boolean} finishedLoading default set to false and is set to true when loading is finished
    */
   constructor(props) {
     super();
@@ -31,6 +39,7 @@ class UserPage extends React.Component {
     // Define the initial state: myUserid is the ID of the current active user and userid is the ID of
     // the user whose page is currently on display
     this.state = {
+      authString: '',
       myUserid: props.route.params.myUserid,
       navigation: props.route.params.navigation,
       userid: props.route.params.userid,
@@ -46,40 +55,87 @@ class UserPage extends React.Component {
 
   }
 
-    componentDidMount(){
-      console.log("User page mounted");
-      this.fetchUserInfo().then(response => {
-          //console.log("Success");
-      }).catch(error => {
-          console.log(error)
+    /**
+    * Runs when component first loads
+    * postcondition: fetchUserInfo()
+     * @exception error caught if fetching info does not work
+    */
+  componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.setState({
+        finishedLoading : false
       });
+      this.fetchUserInfo().then(response => {
+        console.log("User page mount success");
+      }).catch(error => {
+        console.log(error)
+      });
+    })
+  }
+
+    /**
+    * Runs before the component is unmounted
+    *
+    */
+    componentWillUnmount() {
+        this._unsubscribe();
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    * @params {props} prevProps The previous state's props
+     * postcondition: fetchUserInfo()
+     * @exception error caught if fetching info does not work
+     */
     componentDidUpdate(prevProps) {
-      // Typical usage (don't forget to compare props):
-      if (this.props.userid !== prevProps.userid) {
-        this.setState({
-          myUserid: this.props.myUserid,
-          userid: this.props.userid,
-          username: this.props.username,
-          finishedLoading: false,
-        })
-        this.fetchUserInfo().then(response => {
-          console.log("User page updated");
-        }).catch(error => {
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+          this.setState({
+            myUserid: this.props.route.params.myUserid,
+            userid: this.props.route.params.userid,
+            username: this.props.route.params.username,
+            finishedLoading: false,
+          });
+          this.fetchUserInfo().then(response => {
+            console.log("User page updated");
+          }).catch(error => {
             console.log(error)
-        });
-      }
+          });
+        })
     }
 
+    /**
+    * Calls callGetAuthString
+    * postcondition: callGetAuthString()
+    */
     fetchUserInfo() {
         return this.callGetAuthString();
     }
+
+    /**
+    * Creates a UserManager to fetch the authString, then calls callGetUserID
+    * precondition: fetchUserInfo()
+     * postconditon: callGetUserByUserID()
+    * @returns {String} authString The authorization string to be used for requests
+    */
     callGetAuthString(){
         let um = new UserManager();
         return um.getAuthString().then(authString => {this.callGetUserByUserID(authString)});
     }
+
+    /**
+    * Gets a user by their user ID via a GetUserByIDRequest
+    *
+    * @params {String} authString The authorization string to be used for requests
+    * @params {String} userID A string of the active user's ID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * precondition: callGetAuthString()
+     * postcondition: setUserInfo()
+    */
     callGetUserByUserID(authString){
+        this.setState({
+            authString: authString,
+        })
+
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
@@ -87,7 +143,15 @@ class UserPage extends React.Component {
         req.setUserid(this.state.userid);
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res)})
     }
-    setUserInfo(res, userID){
+
+    /**
+    * Parses a user's information from the user found in the GetUserByIDResponse
+    *
+    * @params {String} authString The authorization string to be used for requests
+    * @params {String} userID A string of the active user's ID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
+    setUserInfo(res){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
@@ -108,25 +172,8 @@ class UserPage extends React.Component {
         })
     }
 
-    handleViewPost = () => {
-        if (Platform.OS === 'web') {
-            this.state.navigation.navigate('DetailedPostViewWeb', {
-                username: this.state.username,
-                userid: this.state.userid,
-                navigation: this.state.navigation
-            })
-        } else {
-            this.state.navigation.navigate('DetailedPostView', {
-                username: this.state.username,
-                userid: this.state.userid,
-                navigation: this.state.navigation
-            })
-        }
-    }
-
   /**
-   * Renders personal page components.
-   * @returns {PersonalPage}
+   * Renders user page components.
    */
   render() {
       return (
@@ -134,7 +181,8 @@ class UserPage extends React.Component {
         <FeedHeader navigation={this.state.navigation} />
         <SafeAreaView style={styles.container}>
             {/* Display profile header with state information */}
-            <ProfileHeader
+            {(this.state.finishedLoading) ? <ProfileHeader
+                authString = {this.state.authString}
                 navigation = {this.state.navigation}
                 myUserid = {this.state.myUserid}
                 username = {this.state.username}
@@ -143,27 +191,15 @@ class UserPage extends React.Component {
                 birthDay = {this.state.birthDay}
                 birthMonth = {this.state.birthMonth}
                 birthYear = {this.state.birthYear}
-                />
+                /> : <View></View>}
 
             {/* Show posts */}
             {(this.state.finishedLoading) ? <PostsGrid
                 myUserid = {this.state.myUserid}
-                navigation = {this.state.navigation}
+                navigation = {this.props.navigation}
                 username = {this.state.username}
                 userid = {this.state.userid}
                 /> : <View></View>}
-
-            {/* NAVIGATION */}
-            <TouchableOpacity
-                style={KIC_Style.button}
-                onPress={() => this.state.navigation.navigate('MentalHealthLog')}>
-                <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={KIC_Style.button}
-                onPress={() => this.state.navigation.navigate('Feed')}>
-                <Text style={KIC_Style.button_font}>User Feed</Text>
-            </TouchableOpacity>
             <StatusBar style="auto" />
           </SafeAreaView>
       </SafeAreaView>
@@ -172,7 +208,7 @@ class UserPage extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for personal page components
+ * @constant styles creates stylesheet for user page components
  */
 const styles = StyleSheet.create({
   container: {

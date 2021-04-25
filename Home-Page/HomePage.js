@@ -2,26 +2,35 @@
  * @fileoverview Home page - opens up when user first starts up website or app
  */
 
- import React from 'react';
- import { SafeAreaView } from 'react-native-safe-area-context';
- import { Platform, StyleSheet, Text } from 'react-native';
- import { createStackNavigator } from '@react-navigation/stack';
- import HomePageWeb from './HomePageWeb';
- import HomePageMobile from './HomePageMobile';
+import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Platform, StyleSheet, Text } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomePageWeb from './HomePageWeb';
+import HomePageMobile from './HomePageMobile';
 import { TextInput } from 'react-native-gesture-handler';
  
+
+/**
+ * Constant that creates a stack navigator.
+ */
  const Stack = createStackNavigator(); 
 
- class HomePage extends React.Component {
-   /**
-    * Renders Home screen components.
-    * @returns {Component}
-    */
+ /**
+  * @class Contains function for rendering the home screen. 
+  */
 
+ class HomePage extends React.Component {
+   /*
+   * Class constructor
+   */
     constructor(props) {
       super();
       }
 
+   /**
+    * Runs when the component is first rendered
+    */
       componentDidMount() {
         if(Platform.OS === 'web') {
           this.props.navigation.navigate('HomePageWeb');
@@ -30,18 +39,19 @@ import { TextInput } from 'react-native-gesture-handler';
         }
       }
 
+   /**
+    * Renders HomePage components.
+    * @returns {Component}
+    */
     render() {
       return(
         <Text></Text>
       )
   }
 }
-
-    
-
  
  /**
-  * @constant styles creates stylesheet for FindHelp screen components
+  * @constant styles creates stylesheet for HomePage screen components
   */
  const styles = StyleSheet.create({
   buttonCircle: {

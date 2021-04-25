@@ -1,7 +1,13 @@
+/**
+ * @fileoverview This contains the KIC_style stylesheet, which is used for styling the entire application.
+ */
 import React from 'react';
 import { StyleSheet, Platform } from 'react-native';
 import {StatusBar} from "expo-status-bar";
 
+/**
+ * @constant Contains stylesheet for general application views including containers and buttons
+ */
 const KIC_Style = StyleSheet.create({
     outContainer: {
         flex:1,

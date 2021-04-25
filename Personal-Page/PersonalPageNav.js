@@ -14,6 +14,7 @@ import UserPage from "./UserPage";
 import DetailedPostView from "../Components/DetailedPostView";
 import DetailedPostViewWeb from "../Components/DetailedPostViewWeb";
 import MoodHistory from "../Mental-Health/MoodHistory";
+import MapView from "../Mental-Health/MapView";
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,10 @@ class PersonalPageNav extends React.Component {
                     <Stack.Screen
                         name="MoodHistory"
                         component={MoodHistory}
+                    />
+                    <Stack.Screen
+                        name="MapView"
+                        component={MapView}
                     />
                 </Stack.Navigator>
         );
