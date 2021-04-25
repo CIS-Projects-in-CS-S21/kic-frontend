@@ -1,6 +1,5 @@
 /**
- * @fileoverview Generates navigation for personal page, which is the screen for the user's personal page, containing links
- * to the Mental Health Log page and User Feed.
+ * @fileoverview Generates navigation for user feed.
  */
 
 import React from 'react';
@@ -16,12 +15,12 @@ import DetailedPostViewWeb from "../Components/DetailedPostViewWeb";
 const Stack = createStackNavigator();
 
 /**
- * @class Contains function for rendering the personal page navigation.
+ * @class Contains function for rendering the user feed navigation.
  */
 class UserFeedNav extends React.Component {
     /**
-     * Renders personal page navigation components.
-     * @returns {Component}
+     * Renders user feed navigation components.
+     * @returns {UserFeedNav}
      */
     render() {
         return (
@@ -52,7 +51,7 @@ class UserFeedNav extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for personal page components
+ * @constant styles creates stylesheet for user feed nav
  */
 const styles = StyleSheet.create({
     container: {

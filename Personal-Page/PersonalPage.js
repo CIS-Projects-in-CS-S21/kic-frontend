@@ -18,18 +18,27 @@ import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 
 /**
- * @class Contains function for rendering the personal page.
+ * @class Contains functions for rendering the personal page.
  */
 class PersonalPage extends React.Component {
 
-  /*
-   * Class constructor
-   */
+    /**
+     * Class constructor
+     * @param {String} authString The authstring for making requests
+     * @param {String} username The username of the current active user
+     * @param {String} userid The userid of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on     * @param {Number} birthDay day of birth of user
+     * @param {Number} birthMonth month of birth of user
+     * @param {Number} birthYear day of birth of user
+     * @param {boolean} finishedLoading default set to false to loading is not finished
+     */
   constructor(props) {
     super();
 
     // Define the initial state:
     this.state = {
+      authString: '',
       userid: "0",
       username: "default",
       bio: "bio",
@@ -43,6 +52,11 @@ class PersonalPage extends React.Component {
 
   }
 
+    /**
+    * Runs when component first loads
+    * postcondition: fetchUserInfo
+     * @exception error if user info is not able ot be fetched
+    */
   componentDidMount() {
     //this.fetchUserInfo()
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
@@ -54,14 +68,23 @@ class PersonalPage extends React.Component {
       }).catch(error => {
         console.log(error)
       });
-    }) 
+    })
   }
 
+    /**
+    * Runs before the component is unmounted
+    */
   componentWillUnmount() {
     this._unsubscribe();
 
   }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    * @params {props} prevProps The previous state's props
+     * postcondition: fetchUserInfo
+     * @exception error if user info is not able ot be fetched
+    */
     componentDidUpdate(prevProps) {
       // Typical usage (don't forget to compare props):
       if (this.props.userid !== prevProps.userid) {
@@ -73,16 +96,48 @@ class PersonalPage extends React.Component {
       }
     }
 
+    /**
+    * Calls callGetAuthString
+    * postcondition: callGetAuthString()
+    */
     fetchUserInfo() {
         return this.callGetAuthString();
     }
+
+    /**
+    * Creates a UserManager to fetch the authString, then calls callGetUserID
+    * precondition: fetchUserInfo()
+     * postcondition: callGetUserID()
+    * @returns {String} authString The authorization string to be used for requests
+    */
     callGetAuthString(){
         let um = new UserManager();
         return um.getAuthString().then(authString => {this.callGetUserID(um, authString)});
     }
+
+    /**
+    * Saves authString to state then calls getUserByID
+    * precondition: callGetAuthString()
+     * postcondition: callGetUserByUserID()
+    * @params {UserManager} um The UserManager to be reused
+    * @params {String} authString The authorization string to be used for requests
+    * @returns {String} userID A string of the active user's ID
+    */
     callGetUserID(um, authString){
+        this.setState({
+            authString: authString,
+        })
         return um.getMyUserID().then(userID => {this.callGetUserByUserID(authString, userID)});
     }
+
+    /**
+    * Gets a user by their user ID via a GetUserByIDRequest
+    * precondition: callGetUserID()
+     * postcondition: setUserInfo()
+    * @params {String} authString )The authorization string to be used for requests
+    * @params {String} userID A string of the active user's ID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
     callGetUserByUserID(authString, userID){
 
         let cm = new ClientManager();
@@ -92,6 +147,14 @@ class PersonalPage extends React.Component {
         req.setUserid(userID);
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res, userID)})
     }
+
+    /**
+    * Parses a user's information from the user found in the GetUserByIDResponse
+    * precondition: callGetUserByUserID
+    * @params {String} authString The authorization string to be used for requests
+    * @params {String} userID A string of the active user's ID
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
     setUserInfo(res, userID){
         {/* Store user information */}
         let myusername = res.getUser().getUsername();
@@ -114,36 +177,6 @@ class PersonalPage extends React.Component {
         })
     }
 
-  handleViewPost = () => {
-    if (Platform.OS === 'web') {
-      this.props.navigation.navigate('DetailedPostViewWeb', {
-        username: this.state.username,
-        userid: this.state.userid,
-        navigation: this.props.navigation
-      })
-    } else {
-      this.props.navigation.navigate('DetailedPostView', {
-        username: this.state.username,
-        userid: this.state.userid,
-        navigation: this.props.navigation
-      })
-    }
-  }
-
-  /**
-   * Gets user's posts. Returns an array of the user's posts.
-   */
-  fetchPosts = () => {
-      // Request posts for user
-  }
-
-  /**
-   * Gets a post's corresponding image to display in the grid.
-   */
-  fetchPostImage = () => {
-      // Request the image from backend
-  }
-
   /**
    * Renders personal page components.
    * @returns {PersonalPage}
@@ -154,7 +187,8 @@ class PersonalPage extends React.Component {
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
             {/* Display profile header with state information */}
-            <ProfileHeader
+            {(this.state.finishedLoading) ? <ProfileHeader
+                authString = {this.state.authString}
                 navigation = {this.props.navigation}
                 myUserid = {this.state.userid}
                 username = {this.state.username}
@@ -163,7 +197,7 @@ class PersonalPage extends React.Component {
                 birthDay = {this.state.birthDay}
                 birthMonth = {this.state.birthMonth}
                 birthYear = {this.state.birthYear}
-                />
+                /> : <View></View>}
 
             {/* Show posts */}
             {(this.state.finishedLoading) ? <PostsGrid

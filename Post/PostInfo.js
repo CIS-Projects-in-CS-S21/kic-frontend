@@ -12,7 +12,8 @@ import { Buffer } from "buffer";
 import { File, Date as CommonDate } from "../gen/proto/common_pb";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { Video, AVPlaybackStatus } from 'expo-av';
+import * as FileSystem from "expo-file-system";
 
 /**
  * @class Contains function for rendering the Post Info page
@@ -22,27 +23,51 @@ export default function PostInfo(props) {
     {/* Create UsersClientManager & create a UsersClient */}
     let cm = new ClientManager();
     let client = cm.createMediaClient();
+
+    /**
+     * @constant navigation used to pass between screens
+     */
     const navigation = useNavigation();
 
-    //to upload image, start chain of functions
+    const video = React.useRef(null);
+
+    /**
+     * @constant uploadImage starts chain of functions to upload image
+     */
     const uploadImage = async () => {
         return callGetAuthString();
     }
 
-    //first, do this to get authorization string
+
+    /**
+     * @constant callGetAuthString obtains authorization string
+     * @return getUserID to obtain userID
+     * precondition: uploadImage
+     * postcondition: getUserID
+     */
     const callGetAuthString = async () => {
         let um = new UserManager();
         console.log("Obtained authorization string");
         return um.getAuthString().then(authString  => {getUserID(authString, um)});
     }
 
-    //then, get user ID
+    /**
+     * @constant getUserID to obtain userID
+     * @param  {String} authString authorization string
+     * @param {UserManager} um User Manager
+     * @return makeUploadFileRequest constant to upload file to database
+     * precondition: callGetAuthString
+     * postcondition: makeUploadFileRequest
+     */
     const getUserID = async(authString, um) => {
         um.getMyUserID().then(userID  => makeUploadFileRequest(userID, authString));
     }
 
-
-    //parse triggers from text input (given in //trigger format)
+    /**
+     * @constant parseTriggers parse triggers from text input (given in //trigger format)
+     * @param {String} triggerString string containing input from user of triggers
+     * @returns triggersParsed array of parsed triggers
+     */
     const parseTriggers = (triggerString) => {
         let triggersNoCommas = triggerString.replace(",", " ");
         let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
@@ -50,7 +75,11 @@ export default function PostInfo(props) {
         return triggersParsed;
     }
 
-    //parse tags from text input (given in #tag format)
+    /**
+     * @constant parseTags parse tags from text input (given in #tag format)
+     * @param {String} tags string containing input from user of tags
+     * @returns tagsParsed array of parsed tags
+     */
     const parseTags = (tags) => {
         let tagsNoCommas = tags.replace(",", " ");
         let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);
@@ -58,10 +87,16 @@ export default function PostInfo(props) {
         return tagsParsed;
     }
 
-    //then, make request to upload file with uri
+    /**
+     * @constant makeUploadFileRequest make request to upload file with uri
+     *  @param {String} userID of user
+     * @param  {String} authString authorization string
+     * @return uploadFileResponse uploads file to database
+     * precondition: getUserID
+     */
     const makeUploadFileRequest = async (userID, authString) => {
        //obtain uri and base64 from Post.js
-        const uri = props.route.params.image;
+        let uri = props.route.params.image;
         const base64 = props.route.params.base64;
 
         //need to get extension (jpeg, png, etc) and format [if on web] (image or video) for metadata for file request
@@ -79,11 +114,19 @@ export default function PostInfo(props) {
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
         } else {
+            //if platform is mobile
             const parsedURI = uri.split(/[.]/);
             extension = parsedURI[parsedURI.length-1];
             console.log("mobile ext:" + extension);
-
+            if (extension == "mp4" || extension == "mov" || extension == "wmv") {
+                uri = _videoTo64URI(uri,extension);
+                format = "video"
+                console.log("video extension detected");
+            } else {
+                format = "image"
+            }
         }
+
         //start new file request
         console.log("Started Upload File Request");
         let req = new UploadFileRequest();
@@ -107,15 +150,13 @@ export default function PostInfo(props) {
 
         //each image is associated with a userID, array of captions, triggers, comments, and tags, its uri, extension of the image, and the format of the image
         map.set("userID", userID.toString()) ;
-        map.set("filename", filename),
+        map.set("filename", filename);
         map.set("caption", caption);
         map.set("trigger", triggerString);
         map.set("comments", comments);
         map.set("tag", tagString);
         map.set("ext", extension);
         map.set("format", format);
-        // map.set("uri", uri);
-        // map.set("base64", base64);
 
         // Fetch the current date and set in file
         let today = new Date();
@@ -127,11 +168,10 @@ export default function PostInfo(props) {
 
         //convert uri to int 8 Array which is needed for setting File
         let uri2 = uri + "xx";
-       let your_bytes = Buffer.from(uri2, "base64");
-       req.setFileuri(uri);
+        let your_bytes = Buffer.from(uri2, "base64");
+        req.setFileuri(uri);
         req.setFileinfo(file);
 
-        //console.log("URI FROM UPLOAD: " + uri);
 
         //set metadata and check that it is set correctly
         console.log("Metadata after set: ");
@@ -139,7 +179,6 @@ export default function PostInfo(props) {
             console.log(k, v);
         });
 
-    //    console.log("request: " + req);
 
         return client.uploadFile(req,{'Authorization': authString}).then(
             res => {
@@ -156,7 +195,10 @@ export default function PostInfo(props) {
     }
 
 
-    //For generating file name
+    /**
+     * @constant randomizeFileName For generating file name
+     * @returns {String} v of random file name
+     */
     const randomizeFileName = async() => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -164,18 +206,53 @@ export default function PostInfo(props) {
       });
     }
 
-    //declare constants for caption, triggers, and tags
+
+    const _videoTo64URI = async (videoURI, extension) => {
+        const options = { encoding: FileSystem.EncodingType.Base64 };
+        const data = await FileSystem.readAsStringAsync(videoURI, options);
+        let vids = "data:video/" +  extension + ";base64,"+ data;
+        return vids;
+    };
+
+
+    /**
+     * @constant caption store caption from user input
+     */
+
     const [caption, setCaption] = useState("")
+    /**
+     * @constant triggerString store triggers from user input
+     */
     const [triggerString, setTriggerString] = useState("")
+    /**
+     * @constant tagString store tags from user input
+     */
     const [tagString, setTagString] = useState("")
 
+
+    /**
+     * Renders the post info page
+     * @returns {PostInfo}
+     */
 
     return (
         <SafeAreaView style={{
             flex: 1,
             backgroundColor: '#ffff'
            }}>
-            <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>
+            {!props.route.params.isVideo && <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>}
+            {props.route.params.isVideo && <Video
+                ref={video}
+                style={{
+                    flex: 1,
+                     alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1,
+                   }}
+                source={{
+                    uri: props.route.params.image,
+                }}
+                useNativeControls = {true}
+                resizeMode="contain"
+            />}
             <TextInput
                 style={KIC_Style.postInput}
                 textAlign = {'center'}

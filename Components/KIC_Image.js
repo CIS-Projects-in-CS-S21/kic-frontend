@@ -1,11 +1,15 @@
+/**
+ * @fileoverview KIC_Image component downloads image for a particular user and is used to present images on personal page, detailed post view, and user feed.
+ */
 import React, { useState } from 'react'
-import {Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
+import {Dimensions, Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
 import KIC_Style from "../Components/Style";
 import ClientManager from "../Managers/ClientManager";
 import {DownloadFileRequest} from "../gen/proto/media_pb";
 import {Buffer} from "buffer";
 import {bytesToBase64} from "../util/BytesDecoder"
-
+import {SafeAreaView} from "react-native-safe-area-context";
+import { Video, AVPlaybackStatus } from 'expo-av';
 
 // { image, base64 }
 /**
@@ -13,9 +17,16 @@ import {bytesToBase64} from "../util/BytesDecoder"
  * pass in authString and fileInfo
  */
 class KIC_Image extends React.Component {
-    /*
-      * Class constructor
-      */
+    /** Class constructor
+     * @param {String} myUserid The id of the current active user
+     * @param {String} userid The id of the user who owns the image trying to be displayed
+     * @param {String} username The username of user who owns the image trying to be displayed
+     * @param {String} authString The authstring for making requests
+     * @param {useNavigation} navigation The navigation prop used to navigate between pages
+     * @param {String} imageSrc by default an empty string, will be set to downloaded image
+     * @param {Array} metadata Array of metadata related to file being downloaded
+     * @param {Boolean} imagefixed Boolean regrading image src being fixed correctly. Is set as false by default and turns true when image is fixed after downloading.
+     */
     constructor(props) {
         super();
 
@@ -34,30 +45,46 @@ class KIC_Image extends React.Component {
             imageSrc: "",
             imagefixed: false,
             metadata: [],
+            isVideo: false, //by default, assumes that this is an image
         };
 
         this.fetchImage = this.fetchImage.bind(this)
     }
 
+    /**
+     * mounts fetchImage upon starting of component
+     * postcondition: fetchImage() function that downloads file by name
+     */
     componentDidMount(){
         this.fetchImage();
     }
 
+    /**
+     *
+     * @param prevProps takes in previous props of component
+     * function that updates and fetches image
+     * postcondition: fetchImage which downloads file by name
+     */
     componentDidUpdate(prevProps) {
-      // Typical usage (don't forget to compare props):
-      if (this.props.userid !== prevProps.userid) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.userid !== prevProps.userid) {
 
-          this.setState({
-              myUserid: this.props.myUserid,
-              userid: this.props.userid,
-              username: this.props.username,
-              navigation: this.props.navigation,
-              authString: this.props.authString,
-          })
-          this.fetchImage();
-      }
+            this.setState({
+                myUserid: this.props.myUserid,
+                userid: this.props.userid,
+                username: this.props.username,
+                navigation: this.props.navigation,
+                authString: this.props.authString,
+            })
+            this.fetchImage();
+        }
     }
 
+    /**
+     * function that downloadsFileByName and binds said file so it can be used
+     * precondition: componentDidUpdate
+     * postcondition: bind downloaded file to this
+     */
     fetchImage() {
         let cm = new ClientManager();
         let client = cm.createMediaClient();
@@ -76,14 +103,14 @@ class KIC_Image extends React.Component {
 
         });
 
-        stream.on('status', function(status) {
+        stream.on('status', function (status) {
             // This function prints the status of the stream. This handles errors if they happen
             //console.log("Status code: " + status.code);
             //console.log("Status details: " + status.details);
             //console.log("Status metadata: " + status.metadata);
         })
 
-        stream.on('end', function(end) {
+        stream.on('end', function (end) {
             // This function runs when the stream ends
 
             // Just checking that the chunks have been combined at the end of the stream. The logged string should
@@ -106,6 +133,14 @@ class KIC_Image extends React.Component {
                 console.log("This image was taken from mobile");
                 finalsrc = byte64;
             }
+
+            //determines if media is video or not
+            if (map.get("format") == "video") {
+                this.setState({
+                    isVideo: true
+                })
+            }
+
             // Save the fixed uri to state
             this.setState({
                 imageSrc: finalsrc,
@@ -117,48 +152,61 @@ class KIC_Image extends React.Component {
 
     }
 
+    /**
+     * handles view post navigation to either DetailedPostViewWeb or DetailedPostView based on platform of user
+     * precondtion:none
+     * postcondition: navigate to appropriate postview
+     */
     handleViewPost = () => {
-        if (Platform.OS === 'web') {
+        if (Dimensions.get('window').width > 768){
             this.props.navigation.navigate('DetailedPostViewWeb', {
-              myUserid: this.props.myUserid,
-              authString: this.props.authString,
-              navigation: this.props.navigation,
-              userid: this.props.userid,
-              username: this.props.username,
-              imageSrc: this.state.imageSrc,
-              fileinfo: this.props.fileInfo,
+                myUserid: this.props.myUserid,
+                authString: this.props.authString,
+                navigation: this.props.navigation,
+                userid: this.props.userid,
+                username: this.props.username,
+                imageSrc: this.state.imageSrc,
+                fileinfo: this.props.fileInfo,
             })
         } else {
             this.props.navigation.navigate('DetailedPostView', {
-              myUserid: this.props.myUserid,
-              authString: this.props.authString,
-              navigation: this.props.navigation,
-              userid: this.props.userid,
-              username: this.props.username,
-              imageSrc: this.state.imageSrc,
-              fileinfo: this.props.fileInfo,
+                myUserid: this.props.myUserid,
+                authString: this.props.authString,
+                navigation: this.props.navigation,
+                userid: this.props.userid,
+                username: this.props.username,
+                imageSrc: this.state.imageSrc,
+                fileinfo: this.props.fileInfo,
             })
         }
     }
 
     render() {
-        return(
-           <View>
-               {(this.state.imagefixed) ?
-               <View>
-                   <TouchableOpacity
-                        onPress={this.handleViewPost}>
-                       <Image
-                           style={{width: 180, height: 180, alignSelf: 'center'}}
-                           source={this.state.imageSrc}>
-                       </Image>
-                   </TouchableOpacity>
-               </View> : <View></View>}
-           </View>
+        const video = null;
+        return (
+            <View>
+                {(this.state.imagefixed) ?
+                    <View>
+                        <TouchableOpacity
+                            onPress={this.handleViewPost}>
+                            {!this.state.isVideo && <Image
+                                style={{width: 180, height: 180, alignSelf: 'center'}}
+                                source={this.state.imageSrc}>
+                            </Image>}
+                            {this.state.isVideo && <Video
+                                ref={video}
+                                style={{width: 180, height: 180, alignSelf: 'center'}}
+                                source={
+                                    this.state.imageSrc
+                                }
+                                useNativeControls={true}
+                                resizeMode="contain"
+                            />}
+                        </TouchableOpacity>
+                    </View> : <View></View>}
+            </View>
         )
     }
-
-
 }
 
 export default KIC_Image;

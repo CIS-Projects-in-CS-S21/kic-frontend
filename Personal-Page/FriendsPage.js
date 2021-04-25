@@ -19,12 +19,21 @@ import FeedHeader from '../Components/FeedHeader';
 
 
 /**
- * @class Contains function for rendering the friends page.
+ * @class Contains functions for rendering the friends page.
  */
 class FriendsPage extends React.Component {
 
-    /*
+    /**
      * Class constructor
+     * @param {String} username The username of the current active user
+     * @param {String} userid The userid of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     * @param {Number} yearPosted year of user post
+     * @param {Number} monthPosted month of post of user
+     * @param {Number} dayPosted day of post of user
+     * @param {boolean} showFriends default set to true so friends are shown
+     * @param {boolean} isMyPage default set to true, so user is on user's page
      */
     constructor(props) {
         super();
@@ -49,12 +58,15 @@ class FriendsPage extends React.Component {
     /**
     * Runs when component first loads
     *
-    * @function componentDidMount()
     */
     componentDidMount(){
       this.compareIDs();
     }
 
+    /**
+    * Runs when the props change and updates the component accordingly.
+    *
+    */
     componentDidUpdate(prevProps) {
       if (this.props.userid !== prevProps.userid) {
         this.setState({
@@ -67,6 +79,10 @@ class FriendsPage extends React.Component {
       }
     }
 
+    /**
+    * Compares the user IDs of the active user and the user to whom this friends page belongs
+    *
+    */
     compareIDs(){
         console.log("My id is " + this.state.myUserid + " and this friendlist belongs to userid " + this.state.userid)
         // Check if this is our own page
@@ -134,7 +150,7 @@ class FriendsPage extends React.Component {
 }
 
 /**
- * @constant styles creates stylesheet for an individual DetailedPostView's components.
+ * @constant styles creates stylesheet for a FriendsPage
  */
 const styles = StyleSheet.create({
     container: {

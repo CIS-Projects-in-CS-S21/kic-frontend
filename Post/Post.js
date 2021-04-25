@@ -14,29 +14,57 @@ import FeedHeader from '../Components/FeedHeader';
 
 
 
+/**
+ * @param navigation The navigation prop used to navigate between page
+ *  @returns a {Post}
+ */
 export default function Post({ navigation }) {
-    //allows for permission to use image library
+
+    /**
+     * @constant hasGalleryPermission allows for permission to use image library
+     */
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-    //allows for permission to use mobile camera
+    /**
+     * @constant hasCameraPermission allows for permission to use camera on device
+     */
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
-    //camera variable
+
+    /**
+     * @constant camera sets variable that represents camera as default to null
+     */
     const [camera, setCamera] = useState(null);
-    //image variable
+
     const [image, setImage] = useState(null);
-    //type variable, default set to back camera
+    /**
+     * @constant type sets variable that represents type of camera as default to front camera
+     */
     const [type, setType] = useState(Camera.Constants.Type.front);
-    //stores base64 of image
+    /**
+     * @constant base64 sets variable that represents base64 representation of image as default to null
+     */
     const[base64, setBase64] = useState(null);
 
-    //state for determining if on web
+
+    //keeps track of if video is uploaded
+    const [isVideo, setIsVideo] = useState(false);
+
+
+    /**
+     * @constant notWeb sets variable that indicates if device is not web to null
+     */
     const [notWeb, setNotWeb] = useState(null);
 
-    //permissions for camera
+    /**
+     * @constant permission sets variable that represents camera permissions
+     */
     const [permission, askPermission] = Permissions.usePermissions(
         Permissions.CAMERA,
     );
 
-    //if we are on web, use permissions to get camera permissions. otherwise, use requestPermissionsAsync() function
+
+    /**
+    * If we are on web, use permissions to get camera permissions. Otherwise, use requestPermissionsAsync() function
+    */
     useEffect(() => {
         (async () => {
            if (Platform.OS !== 'web') {
@@ -63,7 +91,9 @@ export default function Post({ navigation }) {
         })();
     }, [permission?.permissions?.camera, askPermission]);
 
-    //take picture if camera access is granted and set image and base64
+    /**
+     * @constant takePicture take picture if camera access is granted and set image and base64
+     */
     const takePicture = async () => {
         if (camera) {
             const data = await camera.takePictureAsync({
@@ -86,12 +116,15 @@ export default function Post({ navigation }) {
         }
     }
 
-    //pick image from image library and set image and base64
+    /**
+     * @constant pickImage pick image from image library and set image and base64
+     */
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,//allows access to images and videos
+            mediaTypes: ImagePicker.MediaTypeOptions.All,//allows access to images and videos
             allowsEditing: true,
             aspect: [1, 1],
+            videoMaxDuration: 3,
             quality: 1,
             base64: true
         });
@@ -100,11 +133,19 @@ export default function Post({ navigation }) {
             setImage(result.uri);
             if (Platform.OS === "web") {
                 //this is the base 64
+                const extractedFormat = result.uri.split(/[:, /]/);
+                if (extractedFormat[1] == "video") {
+                    setIsVideo(true);
+                }
                 const parsedURI = result.uri.split(/[,]/);
                 setBase64(parsedURI[1]);
             } else {
                 setBase64(result.base64);
+                if (result.type === 'video') {
+                    setIsVideo(true);
+                }
             }
+
 
             alert("Picture selected!");
         }
@@ -122,7 +163,7 @@ export default function Post({ navigation }) {
                     />
                     <Text>
                         Sorry! No access to gallery or camera. This feature is only available on mobile!
-            </Text>
+                    </Text>
                     <TouchableOpacity
                         style={KIC_Style.button}
                         onPress={() => navigation.navigate('Profile')}>
@@ -134,6 +175,10 @@ export default function Post({ navigation }) {
         )
     };
 
+   /**
+    * Renders Post components.
+    * @returns {Post}
+    */
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation} />
@@ -165,14 +210,14 @@ export default function Post({ navigation }) {
                 onPress={() => takePicture()}>
                 <Text style={KIC_Style.button_font}>Take Picture</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+                <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => pickImage()}>
                 <Text style={KIC_Style.button_font}>Select Image from Gallery</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button_post}
-                onPress={() => navigation.navigate('PostInfo', { image, base64 })}>
+                onPress={() => navigation.navigate('PostInfo', { image, base64, isVideo })}>
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
         </SafeAreaView>
@@ -180,6 +225,10 @@ export default function Post({ navigation }) {
     );
 }
 
+
+/**
+ * @constant styles creates stylesheet for Post Page
+ */
 const styles = StyleSheet.create({
     cameraContainer: {
         flex: 1,

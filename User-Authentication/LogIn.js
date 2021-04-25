@@ -15,6 +15,7 @@ import UserManager from '../Managers/UserManager';
 import { TouchableOpacity, View, Text } from "react-native";
 import KIC_Style from "../Components/Style";
 
+
 export default function logIn() {
 
   const navigation = useNavigation();
@@ -22,6 +23,9 @@ export default function logIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+    /**
+    * Function that handles submitting a login form
+    */
   const handleSubmit = evt => {
     evt.preventDefault();
 
@@ -71,6 +75,10 @@ export default function logIn() {
     });
   };
 
+/**
+ * Renders the LogIn page
+ * @returns {LogIn}
+ */
   return (
     <SafeAreaView style={KIC_Style.container}>
       <Text style={KIC_Style.title}>Keeping It Casual: Log In Page</Text>

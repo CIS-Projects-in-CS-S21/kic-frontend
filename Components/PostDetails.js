@@ -5,15 +5,20 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image, FlatList, ScrollView, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, ScrollView, SafeAreaView, Button, TouchableOpacity } from 'react-native';
+import ProfilePicture from "./ProfilePicture";
 
 /**
 * @class Contains function for rendering a PostDetails component.
 */
 class PostDetails extends React.Component {
-    /*
-    * Class constructor
-    */
+    /** Class constructor
+     *  @param {String} caption The caption of the post
+     *  @param {Number} month Month of post
+     *  @param {Number} year year of post
+     *  @param {Number} day day of post
+     *
+     */
     constructor(props) {
         super();
 
@@ -23,15 +28,18 @@ class PostDetails extends React.Component {
             year: props.yearPosted,
             caption: props.caption,
         };
-
-        this.fetchPostDetails = this.fetchPostDetails.bind(this);
     }
 
     /**
-    * Gets post's description.
+    * Handles redirecting user to a UserPage for a certain user
     */
-    fetchPostDetails = () => {
-       console.log("Day posted: " + this.state.day + " // from props: " + this.props.dayPosted)
+    goToUserPage = () => {
+        this.props.navigation.navigate('UserPage', {
+          navigation: this.props.navigation,
+          myUserid: this.props.myUserid,
+          userid: this.props.userid,
+        })
+        //console.log("Blurb belongs to " + this.state.username);
     }
 
     /**
@@ -45,11 +53,14 @@ class PostDetails extends React.Component {
             {/* Container for user's info */}
             <View style ={styles.userInfo}>
                 {/* User's icon */}
-                <Image
-                style={styles.icon}
-                source = {require('../assets/default/default_icon_2.png')}
-                />
-
+                <TouchableOpacity
+                    onPress = {this.goToUserPage}>
+                    <ProfilePicture
+                        style = {styles.icon}
+                        userid = {this.props.userid}
+                        authString = {this.props.authString}
+                    />
+                </TouchableOpacity>
                 {/* User's display name and handle */}
                 <Text style ={styles.textUsername}>@{this.props.username}</Text>
             </View>
