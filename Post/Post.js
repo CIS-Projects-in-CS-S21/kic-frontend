@@ -44,6 +44,11 @@ export default function Post({ navigation }) {
      */
     const[base64, setBase64] = useState(null);
 
+
+    //keeps track of if video is uploaded
+    const [isVideo, setIsVideo] = useState(false);
+
+
     /**
      * @constant notWeb sets variable that indicates if device is not web to null
      */
@@ -116,9 +121,10 @@ export default function Post({ navigation }) {
      */
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,//allows access to images and videos
+            mediaTypes: ImagePicker.MediaTypeOptions.All,//allows access to images and videos
             allowsEditing: true,
             aspect: [1, 1],
+            videoMaxDuration: 3,
             quality: 1,
             base64: true
         });
@@ -127,11 +133,19 @@ export default function Post({ navigation }) {
             setImage(result.uri);
             if (Platform.OS === "web") {
                 //this is the base 64
+                const extractedFormat = result.uri.split(/[:, /]/);
+                if (extractedFormat[1] == "video") {
+                    setIsVideo(true);
+                }
                 const parsedURI = result.uri.split(/[,]/);
                 setBase64(parsedURI[1]);
             } else {
                 setBase64(result.base64);
+                if (result.type === 'video') {
+                    setIsVideo(true);
+                }
             }
+
 
             alert("Picture selected!");
         }
@@ -149,7 +163,7 @@ export default function Post({ navigation }) {
                     />
                     <Text>
                         Sorry! No access to gallery or camera. This feature is only available on mobile!
-            </Text>
+                    </Text>
                     <TouchableOpacity
                         style={KIC_Style.button}
                         onPress={() => navigation.navigate('Profile')}>
@@ -196,14 +210,14 @@ export default function Post({ navigation }) {
                 onPress={() => takePicture()}>
                 <Text style={KIC_Style.button_font}>Take Picture</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+                <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => pickImage()}>
                 <Text style={KIC_Style.button_font}>Select Image from Gallery</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button_post}
-                onPress={() => navigation.navigate('PostInfo', { image, base64 })}>
+                onPress={() => navigation.navigate('PostInfo', { image, base64, isVideo })}>
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
         </SafeAreaView>

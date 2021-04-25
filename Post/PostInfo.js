@@ -12,7 +12,8 @@ import { Buffer } from "buffer";
 import { File, Date as CommonDate } from "../gen/proto/common_pb";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { Video, AVPlaybackStatus } from 'expo-av';
+import * as FileSystem from "expo-file-system";
 
 /**
  * @class Contains function for rendering the Post Info page
@@ -28,12 +29,15 @@ export default function PostInfo(props) {
      */
     const navigation = useNavigation();
 
+    const video = React.useRef(null);
+
     /**
      * @constant uploadImage starts chain of functions to upload image
      */
     const uploadImage = async () => {
         return callGetAuthString();
     }
+
 
     /**
      * @constant callGetAuthString obtains authorization string
@@ -92,7 +96,7 @@ export default function PostInfo(props) {
      */
     const makeUploadFileRequest = async (userID, authString) => {
        //obtain uri and base64 from Post.js
-        const uri = props.route.params.image;
+        let uri = props.route.params.image;
         const base64 = props.route.params.base64;
 
         //need to get extension (jpeg, png, etc) and format [if on web] (image or video) for metadata for file request
@@ -110,11 +114,19 @@ export default function PostInfo(props) {
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
         } else {
+            //if platform is mobile
             const parsedURI = uri.split(/[.]/);
             extension = parsedURI[parsedURI.length-1];
             console.log("mobile ext:" + extension);
-
+            if (extension == "mp4" || extension == "mov" || extension == "wmv") {
+                uri = _videoTo64URI(uri,extension);
+                format = "video"
+                console.log("video extension detected");
+            } else {
+                format = "image"
+            }
         }
+
         //start new file request
         console.log("Started Upload File Request");
         let req = new UploadFileRequest();
@@ -138,7 +150,7 @@ export default function PostInfo(props) {
 
         //each image is associated with a userID, array of captions, triggers, comments, and tags, its uri, extension of the image, and the format of the image
         map.set("userID", userID.toString()) ;
-        map.set("filename", filename),
+        map.set("filename", filename);
         map.set("caption", caption);
         map.set("trigger", triggerString);
         map.set("comments", comments);
@@ -156,8 +168,8 @@ export default function PostInfo(props) {
 
         //convert uri to int 8 Array which is needed for setting File
         let uri2 = uri + "xx";
-       let your_bytes = Buffer.from(uri2, "base64");
-       req.setFileuri(uri);
+        let your_bytes = Buffer.from(uri2, "base64");
+        req.setFileuri(uri);
         req.setFileinfo(file);
 
 
@@ -194,9 +206,19 @@ export default function PostInfo(props) {
       });
     }
 
+
+    const _videoTo64URI = async (videoURI, extension) => {
+        const options = { encoding: FileSystem.EncodingType.Base64 };
+        const data = await FileSystem.readAsStringAsync(videoURI, options);
+        let vids = "data:video/" +  extension + ";base64,"+ data;
+        return vids;
+    };
+
+
     /**
      * @constant caption store caption from user input
      */
+
     const [caption, setCaption] = useState("")
     /**
      * @constant triggerString store triggers from user input
@@ -207,16 +229,30 @@ export default function PostInfo(props) {
      */
     const [tagString, setTagString] = useState("")
 
+
     /**
      * Renders the post info page
      * @returns {PostInfo}
      */
+
     return (
         <SafeAreaView style={{
             flex: 1,
             backgroundColor: '#ffff'
            }}>
-            <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>
+            {!props.route.params.isVideo && <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>}
+            {props.route.params.isVideo && <Video
+                ref={video}
+                style={{
+                    flex: 1,
+                     alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1,
+                   }}
+                source={{
+                    uri: props.route.params.image,
+                }}
+                useNativeControls = {true}
+                resizeMode="contain"
+            />}
             <TextInput
                 style={KIC_Style.postInput}
                 textAlign = {'center'}
