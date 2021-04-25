@@ -1,10 +1,10 @@
 /**
- * @fileoverview A testing suite for MyUser functions, which handle fetching user information.
+ * @fileoverview A testing suite for various search functions.
  */
 
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest, AddUserRequest, GetUserByUsernameRequest } from '../gen/proto/users_pb';
-import { Friends } from "../gen/proto/FriendsServiceClientPb";
+import { FriendsClient } from "../gen/proto/FriendsServiceClientPb";
 import { GetRecommendationsForUserRequest } from '../gen/proto/friends_pb';
 import ClientManager from "../Managers/ClientManager";
 
