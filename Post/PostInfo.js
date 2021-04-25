@@ -30,6 +30,7 @@ export default function PostInfo(props) {
         return callGetAuthString();
     }
 
+
     //first, do this to get authorization string
     const callGetAuthString = async () => {
         let um = new UserManager();
@@ -92,6 +93,7 @@ export default function PostInfo(props) {
                 format = "image"
             }
         }
+
         //start new file request
         console.log("Started Upload File Request");
         let req = new UploadFileRequest();
@@ -189,20 +191,19 @@ export default function PostInfo(props) {
             flex: 1,
             backgroundColor: '#ffff'
            }}>
-             <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>
-             <Video
+            {!props.route.params.isVideo && <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>}
+            {props.route.params.isVideo && <Video
                 ref={video}
                 style={{
-                    alignSelf: 'center',
-                    width: 320,
-                    height: 200,
-                }}
+                    flex: 1,
+                     alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1,
+                   }}
                 source={{
                     uri: props.route.params.image,
                 }}
                 useNativeControls = {true}
                 resizeMode="contain"
-            />
+            />}
             <TextInput
                 style={KIC_Style.postInput}
                 textAlign = {'center'}

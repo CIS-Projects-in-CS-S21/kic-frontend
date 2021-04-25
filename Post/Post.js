@@ -28,6 +28,9 @@ export default function Post({ navigation }) {
     //stores base64 of image
     const[base64, setBase64] = useState(null);
 
+    //keeps track of if video is uploaded
+    const [isVideo, setIsVideo] = useState(false);
+
     //state for determining if on web
     const [notWeb, setNotWeb] = useState(null);
 
@@ -101,11 +104,19 @@ export default function Post({ navigation }) {
             setImage(result.uri);
             if (Platform.OS === "web") {
                 //this is the base 64
+                const extractedFormat = result.uri.split(/[:, /]/);
+                if (extractedFormat[1] == "video") {
+                    setIsVideo(true);
+                }
                 const parsedURI = result.uri.split(/[,]/);
                 setBase64(parsedURI[1]);
             } else {
                 setBase64(result.base64);
+                if (result.type === 'video') {
+                    setIsVideo(true);
+                }
             }
+
 
             alert("Picture selected!");
         }
@@ -166,14 +177,14 @@ export default function Post({ navigation }) {
                 onPress={() => takePicture()}>
                 <Text style={KIC_Style.button_font}>Take Picture</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+                <TouchableOpacity
                 style={KIC_Style.button_post}
                 onPress={() => pickImage()}>
                 <Text style={KIC_Style.button_font}>Select Image from Gallery</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button_post}
-                onPress={() => navigation.navigate('PostInfo', { image, base64 })}>
+                onPress={() => navigation.navigate('PostInfo', { image, base64, isVideo })}>
                 <Text style={KIC_Style.button_font}>Save</Text>
             </TouchableOpacity>
         </SafeAreaView>
