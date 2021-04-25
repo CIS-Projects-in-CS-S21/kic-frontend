@@ -6,8 +6,8 @@
 
 import * as grpc from "@grpc/grpc-js";
 import {handleClientStreamingCall} from "@grpc/grpc-js/build/src/server-call";
-import * as proto_friends_pb from "./friends_pb";
-import * as proto_common_pb from "../../../pro-keeping-it-casual/gen/nodejs/proto/common_pb";
+import * as proto_friends_pb from "../proto/friends_pb";
+import * as proto_common_pb from "../proto/common_pb";
 
 interface IFriendsService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
     getFriendsUsernamesForUser: IFriendsService_IGetFriendsUsernamesForUser;
