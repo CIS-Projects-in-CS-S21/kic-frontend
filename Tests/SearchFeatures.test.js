@@ -4,6 +4,8 @@
 
 import { UsersClient } from "../gen/proto/UsersServiceClientPb";
 import { GetJWTTokenRequest, AddUserRequest, GetUserByUsernameRequest } from '../gen/proto/users_pb';
+import { Friends } from "../gen/proto/FriendsServiceClientPb";
+import { GetRecommendationsForUserRequest } from '../gen/proto/friends_pb';
 import ClientManager from "../Managers/ClientManager";
 
 const un = "test14";
@@ -42,5 +44,69 @@ test('shouldNotFindMockUserName', () => {
         expect(res.getSuccess.toBe(false));
     }).catch(e => {
         expect(res.array.length).toBe(0);
+    });
+});
+
+/**
+* @function shouldRecommendUsers
+* @return success if getRecommendationsForUser() returns an array of friend recommendations 10 friend recommendations.
+*/
+test('shouldRecommendUsers', () => {
+
+    let client = new UsersClient(url);
+
+    let req = new GetUserByUsernameRequest();
+
+    // This user has at least one friend
+    req.setUsername("tinky_winky");
+
+    client.getUserByUsername(req, {'Authorization': authString}).then(res => {
+        let user = res.getUser();
+
+        let client = new FriendsClient(url);
+        let req = new GetRecommendationsForUserRequest();
+        req.setUser(user);
+        req.setNumberrecommendations(10);
+
+        client.getRecommendationsForUser(req, {'Authorization': authString}).then(res => {
+            expect(res.getRecommendationsList().length).toBe(10);
+        }).catch(e => {
+            console.log(e);
+        });
+
+    }).catch(e => {
+        console.log(e);
+    });
+});
+
+/**
+* @function shouldNotRecommendUsers
+* @return success if getRecommendationsForUser() returns an empty array of friend recommendations.
+*/
+test('shouldNotRecommendUsers', () => {
+
+    let client = new UsersClient(url);
+
+    let req = new GetUserByUsernameRequest();
+
+    // This user has no friends
+    req.setUsername(un);
+
+    client.getUserByUsername(req, {'Authorization': authString}).then(res => {
+        let user = res.getUser();
+
+        let client = new FriendsClient(url);
+        let req = new GetRecommendationsForUserRequest();
+        req.setUser(user);
+        req.setNumberrecommendations(10);
+
+        client.getRecommendationsForUser(req, {'Authorization': authString}).then(res => {
+            expect(res.getRecommendationsList().length).toBe(0);
+        }).catch(e => {
+            console.log(e);
+        });
+
+    }).catch(e => {
+        console.log(e);
     });
 });
