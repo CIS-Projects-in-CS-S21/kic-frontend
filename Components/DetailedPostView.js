@@ -14,6 +14,7 @@ import ClientManager from "../Managers/ClientManager";
 import { DeleteFilesWithMetaDataRequest, UpdateFilesWithMetadataRequest } from "../gen/proto/media_pb";
 import { GetUserByIDRequest } from '../gen/proto/users_pb';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Video, AVPlaybackStatus } from 'expo-av';
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -50,6 +51,7 @@ class DetailedPostView extends React.Component {
 
             finishedInit: false,
             isMyPost: false,
+            isVideo: false,
 
             // For comment adding
             comment: {},
@@ -95,6 +97,13 @@ class DetailedPostView extends React.Component {
             caption: this.state.fileinfo.getMetadataMap().get("caption"),
             finishedInit: true,
         })
+
+        //determines if media is video or not
+        if (this.state.fileinfo.getMetadataMap().get("format") == "video") {
+            this.setState({
+                isVideo: true
+            })
+        }
 
         // Only parse if there are comments to avoid error
         if (this.state.comments.length > 0){
@@ -215,15 +224,25 @@ class DetailedPostView extends React.Component {
    * @returns a {DetailedPostView}
    */
   render() {
+    const video = null;
     return (
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={{ alignItems: 'center', flex: 1, }}>
             {(this.state.finishedInit) ? <View style={styles.container}>
-                <Image
+                {!this.state.isVideo && <Image
                     style={styles.postImage}
                     source = {this.state.imageSrc}
-                />
+                />}
+                {this.state.isVideo && <Video
+                    ref={video}
+                    style={styles.postImage}
+                    source={
+                        this.state.imageSrc
+                    }
+                    useNativeControls = {true}
+                    resizeMode="contain"
+                />}
 
                 {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
                 <PostDetails

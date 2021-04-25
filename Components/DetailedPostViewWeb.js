@@ -14,6 +14,7 @@ import ClientManager from "../Managers/ClientManager";
 import { DeleteFilesWithMetaDataRequest, UpdateFilesWithMetadataRequest } from "../gen/proto/media_pb";
 import { GetUserByIDRequest } from '../gen/proto/users_pb';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Video, AVPlaybackStatus } from 'expo-av';
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -47,10 +48,12 @@ class DetailedPostViewWeb extends React.Component {
             comments: props.route.params.fileinfo.getMetadataMap().get("comments"),
             metadata: [],
             imageSrc: props.route.params.imageSrc,
+            isVideo: false,
             caption: 'Default caption',
 
             finishedInit: false,
             isMyPost: false,
+
 
             // For comment adding
             comment: {},
@@ -104,6 +107,12 @@ class DetailedPostViewWeb extends React.Component {
             })
         }
 
+        //determines if media is video or not
+        if (this.state.fileinfo.getMetadataMap().get("format") == "video") {
+            this.setState({
+                isVideo: true
+            })
+        }
         // Get active user's username
         let cm = new ClientManager();
         let client = cm.createUsersClient();
@@ -216,16 +225,25 @@ class DetailedPostViewWeb extends React.Component {
    * @returns a {DetailedPostView}
    */
   render() {
+    const video = null;
     return (
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
         <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10, }}>
             {(this.state.finishedInit) ? <View style={styles.container}>
-                <Image
+                {!this.state.isVideo && <Image
                     style={styles.postImage}
                     source = {this.state.imageSrc}
-                    />
-
+                    />}
+                {this.state.isVideo && <Video
+                    ref={video}
+                    style={styles.postImage}
+                    source={
+                        this.state.imageSrc
+                    }
+                    useNativeControls = {true}
+                    resizeMode="contain"
+                />}
                 <View style={styles.detailsAndComments}>
                     {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
                     <PostDetails
