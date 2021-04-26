@@ -358,7 +358,10 @@ proto.kic.users.AddUserRequest.toObject = function(includeInstance, msg) {
     desiredusername: jspb.Message.getFieldWithDefault(msg, 2, ""),
     desiredpassword: jspb.Message.getFieldWithDefault(msg, 3, ""),
     birthday: (f = msg.getBirthday()) && proto_common_pb.Date.toObject(includeInstance, f),
-    city: jspb.Message.getFieldWithDefault(msg, 5, "")
+    city: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    bio: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    triggers: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    isprivate: jspb.Message.getFieldWithDefault(msg, 8, "")
   };
 
   if (includeInstance) {
@@ -415,6 +418,18 @@ proto.kic.users.AddUserRequest.deserializeBinaryFromReader = function(msg, reade
     case 5:
       var value = /** @type {string} */ (reader.readString());
       msg.setCity(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setBio(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTriggers(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setIsprivate(value);
       break;
     default:
       reader.skipField();
@@ -478,6 +493,27 @@ proto.kic.users.AddUserRequest.serializeBinaryToWriter = function(message, write
   if (f.length > 0) {
     writer.writeString(
       5,
+      f
+    );
+  }
+  f = message.getBio();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
+      f
+    );
+  }
+  f = message.getTriggers();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
+      f
+    );
+  }
+  f = message.getIsprivate();
+  if (f.length > 0) {
+    writer.writeString(
+      8,
       f
     );
   }
@@ -590,6 +626,60 @@ proto.kic.users.AddUserRequest.prototype.getCity = function() {
  */
 proto.kic.users.AddUserRequest.prototype.setCity = function(value) {
   return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional string bio = 6;
+ * @return {string}
+ */
+proto.kic.users.AddUserRequest.prototype.getBio = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.AddUserRequest} returns this
+ */
+proto.kic.users.AddUserRequest.prototype.setBio = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional string triggers = 7;
+ * @return {string}
+ */
+proto.kic.users.AddUserRequest.prototype.getTriggers = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.AddUserRequest} returns this
+ */
+proto.kic.users.AddUserRequest.prototype.setTriggers = function(value) {
+  return jspb.Message.setProto3StringField(this, 7, value);
+};
+
+
+/**
+ * optional string isPrivate = 8;
+ * @return {string}
+ */
+proto.kic.users.AddUserRequest.prototype.getIsprivate = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.AddUserRequest} returns this
+ */
+proto.kic.users.AddUserRequest.prototype.setIsprivate = function(value) {
+  return jspb.Message.setProto3StringField(this, 8, value);
 };
 
 
@@ -1954,7 +2044,9 @@ proto.kic.users.UpdateUserInfoRequest.toObject = function(includeInstance, msg) 
     desiredpassword: jspb.Message.getFieldWithDefault(msg, 4, ""),
     birthday: (f = msg.getBirthday()) && proto_common_pb.Date.toObject(includeInstance, f),
     city: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    bio: jspb.Message.getFieldWithDefault(msg, 7, "")
+    bio: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    triggers: jspb.Message.getFieldWithDefault(msg, 8, ""),
+    isprivate: jspb.Message.getFieldWithDefault(msg, 9, "")
   };
 
   if (includeInstance) {
@@ -2019,6 +2111,14 @@ proto.kic.users.UpdateUserInfoRequest.deserializeBinaryFromReader = function(msg
     case 7:
       var value = /** @type {string} */ (reader.readString());
       msg.setBio(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTriggers(value);
+      break;
+    case 9:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setIsprivate(value);
       break;
     default:
       reader.skipField();
@@ -2096,6 +2196,20 @@ proto.kic.users.UpdateUserInfoRequest.serializeBinaryToWriter = function(message
   if (f.length > 0) {
     writer.writeString(
       7,
+      f
+    );
+  }
+  f = message.getTriggers();
+  if (f.length > 0) {
+    writer.writeString(
+      8,
+      f
+    );
+  }
+  f = message.getIsprivate();
+  if (f.length > 0) {
+    writer.writeString(
+      9,
       f
     );
   }
@@ -2244,6 +2358,42 @@ proto.kic.users.UpdateUserInfoRequest.prototype.getBio = function() {
  */
 proto.kic.users.UpdateUserInfoRequest.prototype.setBio = function(value) {
   return jspb.Message.setProto3StringField(this, 7, value);
+};
+
+
+/**
+ * optional string triggers = 8;
+ * @return {string}
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.getTriggers = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.setTriggers = function(value) {
+  return jspb.Message.setProto3StringField(this, 8, value);
+};
+
+
+/**
+ * optional string isPrivate = 9;
+ * @return {string}
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.getIsprivate = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.users.UpdateUserInfoRequest} returns this
+ */
+proto.kic.users.UpdateUserInfoRequest.prototype.setIsprivate = function(value) {
+  return jspb.Message.setProto3StringField(this, 9, value);
 };
 
 

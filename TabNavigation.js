@@ -11,6 +11,7 @@ import ExploreNav from "./Explore-Page/ExploreNav";
 import PersonalPageNav from "./Personal-Page/PersonalPageNav";
 import PostNav from "./Post/PostNav";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import SettingsPage from "./Settings-Page/SettingsPage";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +34,9 @@ function MyTabs() {
                     } else if (route.name === 'Explore') {
                         iconName =  'search-outline';
                         color = '#ffff';
+                    } else if (route.name === 'Settings') {
+                        iconName = 'cog-outline';
+                        color = '#ffff';
                     }
 
                     // You can return any component that you like here!
@@ -49,6 +53,7 @@ function MyTabs() {
             <Tab.Screen name="Profile" component={PersonalPageNav} />
             <Tab.Screen name="Post" component={PostNav} />
             <Tab.Screen name="Explore" component={ExploreNav} />
+            <Tab.Screen name="Settings" component={SettingsPage} />
         </Tab.Navigator>
     );
 }

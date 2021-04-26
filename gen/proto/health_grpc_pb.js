@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// 
+//
 // These are messages and services relating to mental health tracking data, allowing for
 // the logging of user mental health data and tracking the quality of their mental health state
 // from day to day.
@@ -144,8 +144,8 @@ function deserialize_kic_health_UpdateHealthDataForDateResponse(buffer_arg) {
 }
 
 
-// 
-// Service handling fetching and storing mental health tracking data about users.
+//
+// Interface provided by a service handling fetching and storing mental health tracking data about users.
 var HealthTrackingService = exports.HealthTrackingService = {
   // Given health data obtained upon user request, said health data is returned to user.
 getHealthDataForUser: {

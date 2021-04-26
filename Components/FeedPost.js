@@ -40,6 +40,18 @@ class FeedPost extends React.Component {
           // The image caption
           caption: "Caption",
 
+          //account triggers
+          accountTriggers: props.accountTriggers,
+
+          //assume does not have banned triggers
+          hasBannedTriggers: false,
+
+          //triggers
+          triggers: [],
+
+          //triggerstring
+          triggerString: "",
+
           finishedUpdating: false,
       };
 
@@ -69,10 +81,25 @@ class FeedPost extends React.Component {
       let posterid = map.get("userID");
       let caption = map.get("caption");
 
+      //get triggers associated with image
+      let triggerString = map.get("trigger");
+      let triggersNoCommas = triggerString.replace(",", " ");
+      let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
+      triggersParsed = triggersParsed.filter(e => e !== '');
+
+
+      if (triggersParsed.some(v => this.state.accountTriggers.includes(v))) {
+          this.setState({
+            hasBannedTriggers: true
+          })
+      }
+
       this.setState({
           caption: caption,
           posterid: posterid,
           metadata: map,
+          triggers: triggersParsed,
+          triggerString: triggerString
       })
 
       let cm = new ClientManager();
@@ -110,9 +137,9 @@ class FeedPost extends React.Component {
       return (
         <View style ={styles.feedPost}>
           {/* Handle of user who posted image */}
-            <Text style = {styles.headerHandle}>@{this.state.posterusername}</Text>
+            {!this.state.hasBannedTriggers && <Text style = {styles.headerHandle}>@{this.state.posterusername}</Text>}
             {/* Image of post */}
-            { (this.state.finishedUpdating) ? <KIC_Image
+            { (this.state.finishedUpdating && !this.state.hasBannedTriggers) ? <KIC_Image
               authString = {this.props.authString}
               navigation = {this.props.navigation}
               fileInfo = {this.props.file}
@@ -121,7 +148,8 @@ class FeedPost extends React.Component {
               myUserid = {this.props.myUserid}
             /> : <View></View>}
             {/* Handle of user who posted image and caption */}
-            <Text style = {styles.bottomText}>@{this.state.posterusername}: {this.state.caption}</Text>
+            {!this.state.hasBannedTriggers && <Text style = {styles.bottomText}>@{this.state.posterusername}: {this.state.caption}</Text>}
+            {!this.state.hasBannedTriggers && <Text style={styles.bottomText}> triggers: {this.state.triggerString}</Text>}
         </View>
       );
     }
