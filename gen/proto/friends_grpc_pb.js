@@ -6,8 +6,8 @@
 // and removing friends, as well as generating friend recommendations for a user.
 'use strict';
 var grpc = require('@grpc/grpc-js');
-var proto_friends_pb = require('./friends_pb.d.ts');
-var proto_common_pb = require('../../../pro-keeping-it-casual/gen/nodejs/proto/common_pb.d.ts');
+var proto_friends_pb = require('../proto/friends_pb.js');
+var proto_common_pb = require('../proto/common_pb.js');
 
 function serialize_kic_friends_AddAwaitingFriendRequest(arg) {
   if (!(arg instanceof proto_friends_pb.AddAwaitingFriendRequest)) {
@@ -165,7 +165,7 @@ function deserialize_kic_friends_UpdateConnectionBetweenUsersRequest(buffer_arg)
 
 
 //
-// Service handling fetching and storing data about friends.
+// Interface provided by a service handling fetching and storing data about friends.
 var FriendsService = exports.FriendsService = {
   // Request a list of the usernames of all friends of a particular user.
 getFriendsUsernamesForUser: {
@@ -203,7 +203,8 @@ getFriendsForUser: {
     responseSerialize: serialize_kic_friends_GetFriendsForUserResponse,
     responseDeserialize: deserialize_kic_friends_GetFriendsForUserResponse,
   },
-  getAwaitingFriendsForUser: {
+  // Request a list of the IDs of all pending friends of a particular user.
+getAwaitingFriendsForUser: {
     path: '/kic.friends.Friends/GetAwaitingFriendsForUser',
     requestStream: false,
     responseStream: false,
@@ -250,7 +251,8 @@ createConnectionForUsers: {
     responseSerialize: serialize_kic_friends_CreateConnectionForUsersResponse,
     responseDeserialize: deserialize_kic_friends_CreateConnectionForUsersResponse,
   },
-  addAwaitingFriend: {
+  // Create a friend request between two users.
+addAwaitingFriend: {
     path: '/kic.friends.Friends/AddAwaitingFriend',
     requestStream: false,
     responseStream: false,
@@ -285,7 +287,8 @@ deleteConnectionBetweenUsers: {
     responseSerialize: serialize_kic_friends_DeleteConnectionBetweenUsersResponse,
     responseDeserialize: deserialize_kic_friends_DeleteConnectionBetweenUsersResponse,
   },
-  deleteAwaitingFriendBetweenUsers: {
+  // Delete the pending friend request between two users.
+deleteAwaitingFriendBetweenUsers: {
     path: '/kic.friends.Friends/DeleteAwaitingFriendBetweenUsers',
     requestStream: false,
     responseStream: false,

@@ -115,7 +115,9 @@ proto.kic.common.User.toObject = function(includeInstance, msg) {
     email: jspb.Message.getFieldWithDefault(msg, 3, ""),
     birthday: (f = msg.getBirthday()) && proto.kic.common.Date.toObject(includeInstance, f),
     city: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    bio: jspb.Message.getFieldWithDefault(msg, 6, "")
+    bio: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    triggers: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    isprivate: jspb.Message.getFieldWithDefault(msg, 8, "")
   };
 
   if (includeInstance) {
@@ -176,6 +178,14 @@ proto.kic.common.User.deserializeBinaryFromReader = function(msg, reader) {
     case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.setBio(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTriggers(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setIsprivate(value);
       break;
     default:
       reader.skipField();
@@ -246,6 +256,20 @@ proto.kic.common.User.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writeString(
       6,
+      f
+    );
+  }
+  f = message.getTriggers();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
+      f
+    );
+  }
+  f = message.getIsprivate();
+  if (f.length > 0) {
+    writer.writeString(
+      8,
       f
     );
   }
@@ -376,6 +400,42 @@ proto.kic.common.User.prototype.getBio = function() {
  */
 proto.kic.common.User.prototype.setBio = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional string triggers = 7;
+ * @return {string}
+ */
+proto.kic.common.User.prototype.getTriggers = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.common.User} returns this
+ */
+proto.kic.common.User.prototype.setTriggers = function(value) {
+  return jspb.Message.setProto3StringField(this, 7, value);
+};
+
+
+/**
+ * optional string isPrivate = 8;
+ * @return {string}
+ */
+proto.kic.common.User.prototype.getIsprivate = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.kic.common.User} returns this
+ */
+proto.kic.common.User.prototype.setIsprivate = function(value) {
+  return jspb.Message.setProto3StringField(this, 8, value);
 };
 
 

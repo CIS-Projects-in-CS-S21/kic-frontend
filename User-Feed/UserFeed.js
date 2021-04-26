@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { FlatList, Platform, StyleSheet, ScrollView, StatusBar, View , Text} from 'react-native';
+import { FlatList, Platform, StyleSheet, Switch, ScrollView, StatusBar, View , Text} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FeedHeader from '../Components/FeedHeader';
 import FeedPost from '../Components/FeedPost';
@@ -38,7 +38,9 @@ class UserFeed extends React.Component {
       authString: '',
       feedFiles: [],
       finishedLoading: false,
+      triggers: [],
     };
+    this.parseTriggers = this.parseTriggers.bind(this);
   }
 
 /**
@@ -129,6 +131,7 @@ class UserFeed extends React.Component {
           feedFiles : []
         })
 
+        this.parseTriggers()
         // Create a new request that will create a stream for files for ACTIVE USERS userid
         let req = new GenerateFeedForUserRequest();
         req.setUserid(this.state.myUserid);
@@ -166,6 +169,18 @@ class UserFeed extends React.Component {
     }
 
 
+    /**
+     * @constant parseTriggers parse triggers from text input (given in //trigger format)
+     * @returns triggersParsed array of parsed triggers
+     */
+    parseTriggers = () => {
+        let triggerString = this.state.myUser.getTriggers();
+        let triggersNoCommas = triggerString.replace(",", " ");
+        let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
+        triggersParsed = triggersParsed.filter(e => e !== '');
+        this.state.triggers = triggersParsed;
+    }
+
   /**
    * Renders user feed components.
    * @returns {Component}
@@ -184,6 +199,7 @@ class UserFeed extends React.Component {
                 navigation={this.props.navigation}
                 authString={this.state.authString}
                 myUserid={this.state.myUserid}
+                accountTriggers = {this.state.triggers}
                 file={item}
               />}
               keyExtractor={friend => friend.userid}
