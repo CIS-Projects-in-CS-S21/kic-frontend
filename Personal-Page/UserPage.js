@@ -180,17 +180,19 @@ class UserPage extends React.Component {
         let client = cm.createFriendsClient();
 
         //check for friendship. if user is friends with active user,
-        let req = new  GetFriendsForUserRequest();
-        req.setUser(res.getUser());
+        let req = new  GetConnectionBetweenUsersRequest();
+        req.setFirstuserid(this.state.myUserid);
+        req.setSeconduserid(this.state.userid);
 
-        return client.getFriendsForUser(req, {'Authorization': authString}).then(res => {
+        return client.getConnectionBetweenUsers(req, {'Authorization': authString}).then(res => {
             console.log(res);
             //set state as private to false if friends
-            if (res.getFriendsList().includes(this.state.userid)) {
-                console.log("We are friends");
-                this.setState({
-                    isPrivate: "0"})
-            }
+            this.setState({
+                isPrivate: "0"
+            });
+        }).catch(error => {
+            console.log(error);
+            console.log("There was an error detecting connection between users");
         })
     }
 
