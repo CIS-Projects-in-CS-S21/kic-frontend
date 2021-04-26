@@ -8,6 +8,7 @@ import ClientManager from "../Managers/ClientManager";
 import {Buffer} from "buffer";
 import {bytesToBase64} from "../util/BytesDecoder"
 import {GetFilesByMetadataRequest, DownloadFileRequest} from "../gen/proto/media_pb";
+import * as FileSystem from 'expo-file-system';
 
 
 /**
@@ -31,10 +32,12 @@ class ProfilePicture extends React.Component {
 
             authString: props.authString,
             imageSrc: "",
-            iconFetched: false,
+            iconFetched: true,
+            uploading: true,
         };
 
         this.fetchImage = this.fetchImage.bind(this)
+        this.saveImage = this.saveImage.bind(this)
     }
 
     /**
@@ -59,6 +62,7 @@ class ProfilePicture extends React.Component {
               username: this.props.username,
               navigation: this.props.navigation,
               authString: this.props.authString,
+              map: null,
           })
           this.fetchImage();
       }
@@ -90,11 +94,16 @@ class ProfilePicture extends React.Component {
    */
     downloadImage(client, res) {
         let imagefile = res.getFileinfosList();
+
         // If a file was found
         if (imagefile.length > 0){
             // Download the file we found
             let req = new DownloadFileRequest();
             req.setFileinfo(imagefile[0]);
+
+            this.setState({
+                map: imagefile[0],
+            })
 
             let byte64 = '';
 
@@ -127,24 +136,65 @@ class ProfilePicture extends React.Component {
 
                 // Rebuilds the header with special characters for images taken from web app ("data:image/png;base64" format)
                 if (!src1.toString().includes("mobile")) {
-                    console.log("This image was taken from web");
                     finalsrc = byte64;
                 } else { //Rebuild the header for images taken from mobile app
-                    console.log("This image was taken from mobile");
                     finalsrc = byte64;
                 }
-                // Save the fixed uri to state
-                this.setState({
-                    imageSrc: finalsrc,
-                    iconFetched: true,
-                })
-                //console.log("FIXED SRC: " + finalsrc);
+
+                // Saving image
+                if (Platform.OS !== 'web') {
+                    //iOS or Android
+                    let locationUri = '';
+
+                    this.saveImage(finalsrc).then( (uri) => {locationUri = uri;}).then(() => {
+                        this.setState({
+                            imageSrc: locationUri,
+                            iconFetched: true,
+                        });
+                    }).then(() => { /*console.log("imageSrc = " + this.state.imageSrc)*/ });
+                } else {
+                    this.setState({
+                        imageSrc: finalsrc,
+                        iconFetched: true,
+                    })
+                }
             }.bind(this)); //binds stream.on function so we can access state
         } else {
             this.setState({
                 iconFetched: false,
             })
         }
+    }
+
+    async saveImage (base64String) {
+        this.setState({ uploading: true });
+
+        //Without this the FilySystem crashes with 'bad base-64'
+        //const base64Data = base64String.replace("data:image/png;base64,","");
+        const base64Data = base64String.split(",")[1];
+
+        let map = this.state.map;
+        let ext = map.get("ext");
+
+        let uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+        try {
+          //This creates a temp uri file so there's no neeed to download an image_source to get a URI Path
+            const uri = FileSystem.cacheDirectory + uniqueId + '.' + ext;
+            this.state.imageCounter++;
+            await FileSystem.writeAsStringAsync(
+                uri,
+                base64Data,
+                {
+                    'encoding': FileSystem.EncodingType.Base64
+                }
+            );
+            return uri;
+        } catch (e) {
+            this.setState({ uploading: false });
+            console.log('*Error*')
+            console.log(e)
+      }
     }
 
     /**
@@ -158,7 +208,7 @@ class ProfilePicture extends React.Component {
                <View>
                    <Image
                        style={this.props.style}
-                       source={this.state.imageSrc}
+                       source={{uri: this.state.imageSrc}}
                    />
                </View> :
                <View>
