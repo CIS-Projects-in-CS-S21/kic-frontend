@@ -316,7 +316,7 @@ class DetailedPostViewWeb extends React.Component {
                             <Text style = {{ textAlign: 'right', fontSize: 10, fontStyle: 'italic', color: '#707070', }} >Delete post</Text>
                     </TouchableOpacity> : <View></View>}
 
-                    <View style={{ flex: 1, height: 200 }}>
+                    <View style={{ height: 200 }}>
                         <CommentSection
                             comments = {this.state.comments}
                         />
