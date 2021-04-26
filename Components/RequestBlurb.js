@@ -8,11 +8,14 @@ import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpaci
 import KIC_Style from "../Components/Style";
 import PostDetails from "../Components/PostDetails";
 import ProfileHeader from "../Components/ProfileHeader";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import AddFriendButton from "../Components/AddFriendButton";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import { CreateConnectionForUsersRequest, DeleteConnectionBetweenUsersRequest, AddAwaitingFriendRequest } from '../gen/proto/friends_pb';
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useRoute} from '@react-navigation/native';
+import ProfilePicture from "./ProfilePicture";
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -36,7 +39,13 @@ class RequestBlurb extends React.Component {
 
         // Define the initial state:
         this.state = {
-            userid: props.userid,
+            authString: props.authString,
+
+            // myUserid is the id of the current active user
+            myUserid: props.myUserid,
+
+            // userid is the id of the user featured on this blurb
+            blurbUserid: props.blurbUserid,
             username: "default",
             bio: "bio",
             birthDay: 0,
@@ -55,9 +64,9 @@ class RequestBlurb extends React.Component {
     */
     componentDidMount(){
         this.callGetUserByUserID().then(response => {
-          console.log("Fetched info for user blurb for userid " + this.props.userid + " successfully");
+          console.log("Fetched info for user blurb for userid " + this.props.blurbUserid + " successfully");
         }).catch(error => {
-          console.log("Error mounting userblurb for userid " + this.props.userid + ": " + error);
+          console.log("Error mounting userblurb for userid " + this.props.blurbUserid + ": " + error);
         });
     }
 
@@ -72,7 +81,7 @@ class RequestBlurb extends React.Component {
         let client = cm.createUsersClient();
 
         let req = new GetUserByIDRequest();
-        req.setUserid(this.props.userid);
+        req.setUserid(this.props.blurbUserid);
         return client.getUserByID(req, {'Authorization': this.props.authString}).then(res => {this.setUserInfo(res)})
     }
 
@@ -102,13 +111,13 @@ class RequestBlurb extends React.Component {
             status: "Accepted", });
 
         let req = new CreateConnectionForUsersRequest();
-        req.setFirstuserid(this.state.userid);
+        req.setFirstuserid(this.state.blurbUserid);
         req.setSeconduserid(this.props.myUserid);
 
         let cm = new ClientManager();
         let client = cm.createFriendsClient();
 
-        return client.createConnectionForUsers(req, {'Authorization': this.props.authString}).then(res => { console.log("Users " + this.state.userid + " (blurb) and " + this.props.myUserid + " (me) are now friends!")});
+        return client.createConnectionForUsers(req, {'Authorization': this.props.authString}).then(res => { console.log("Users " + this.state.blurbUserid + " (blurb) and " + this.props.myUserid + " (me) are now friends!")});
     }
 
     /**
@@ -121,17 +130,32 @@ class RequestBlurb extends React.Component {
             status: "Denied", });
 
         let req = new DeleteConnectionBetweenUsersRequest();
-        req.setFirstuserid(this.state.userid);
+        req.setFirstuserid(this.state.blurbUserid);
         req.setSeconduserid(this.props.myUserid);
 
         let cm = new ClientManager();
         let client = cm.createFriendsClient();
 
-        return client.deleteAwaitingFriendBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { console.log("Deleted req from user " + this.props.userid)});
+        return client.deleteAwaitingFriendBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { console.log("Deleted req from user " + this.props.blurbUserid)});
     }
 
     doNothing = () => {
         //do nothing
+    }
+
+    /**
+    * Handles navigating to the user's page, given a userid
+    *
+    */
+    goToUserPage = () => {
+        this.props.navigation.navigate('UserPage', {
+          navigation: this.props.navigation,
+          myUserid: this.state.myUserid,
+          userid: this.state.blurbUserid,
+          username: this.state.username,
+          bio: this.state.bio,
+        })
+        console.log("Blurb belongs to " + this.state.username);
     }
 
     /**
@@ -142,10 +166,14 @@ class RequestBlurb extends React.Component {
       return (
         <View style={styles.container}>
               {/* User's icon */}
-              <Image
-                style={styles.icon}
-                source = {require('../assets/default/default_icon_2.png')}
-              />
+              <TouchableOpacity
+                    onPress = {this.goToUserPage}>
+                    <ProfilePicture
+                        style = {styles.icon}
+                        userid = {this.state.blurbUserid}
+                        authString = {this.props.authString}
+                    />
+              </TouchableOpacity>
 
               {/* User's blurb */}
               <View style ={styles.userInfo}>

@@ -40,6 +40,7 @@ class FriendsPage extends React.Component {
 
         // Define the initial state:
         this.state = {
+            navigation: props.route.params.navigation,
             myUserid: props.route.params.myUserid,
             userid: props.route.params.userid,
             username: props.route.params.username,
@@ -60,7 +61,13 @@ class FriendsPage extends React.Component {
     *
     */
     componentDidMount(){
-      this.compareIDs();
+        this.compareIDs();
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            this.setState({
+                showFriends: true,
+            });
+            this.compareIDs();
+        })
     }
 
     /**
@@ -69,30 +76,38 @@ class FriendsPage extends React.Component {
     */
     componentDidUpdate(prevProps) {
       if (this.props.userid !== prevProps.userid) {
+        this._unsubscribe();
         this.setState({
+            showFriends: true,
             myUserid: this.props.route.params.myUserid,
             userid: this.props.route.params.userid,
             username: this.props.route.params.username,
-            isMyPage: this.props.isMyPage,
         })
         this.compareIDs();
       }
     }
 
     /**
+    * Runs before the component is unmounted
+    */
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+
+    /**
     * Compares the user IDs of the active user and the user to whom this friends page belongs
     *
     */
     compareIDs(){
-        console.log("My id is " + this.state.myUserid + " and this friendlist belongs to userid " + this.state.userid)
+        //console.log("My id is " + this.state.myUserid + " and this friendlist belongs to userid " + this.state.userid)
         // Check if this is our own page
-        if (this.state.myUserid == this.state.userid){
-            console.log("This is my friends list!");
+        if (this.state.myUserid == this.props.route.params.userid){
+            //console.log("This is my friends list!");
             this.setState({
                 isMyPage: true,
             })
         } else {
-            console.log("This is not my friends list!");
+            //console.log("This is not my friends list!");
             this.setState({
                 isMyPage: false,
             })
@@ -110,15 +125,17 @@ class FriendsPage extends React.Component {
       );
       return (
         <SafeAreaView style={KIC_Style.outContainer}>
-        <FeedHeader navigation={this.props.navigation} />
+        <FeedHeader navigation={this.state.navigation} />
         <SafeAreaView style={styles.container}>
             {/* Switches between friends/requests list */}
             {(!this.state.showFriends) ? <RequestsList
-                                                                  userid = {this.state.userid}
-                                                                  username = {this.state.username}
+                                                                  navigation = {this.state.navigation}
+                                                                  userid = {this.props.route.params.userid}
+                                                                  username = {this.props.route.params.username}
+                                                                  myUserid = {this.props.route.params.myUserid}
                                                                 /> :
                                         <FriendsList
-                                           navigation = {this.props.navigation}
+                                           navigation = {this.state.navigation}
                                            userid = {this.props.route.params.userid}
                                            username = {this.props.route.params.username}
                                            myUserid = {this.props.route.params.myUserid}
@@ -126,13 +143,13 @@ class FriendsPage extends React.Component {
             <View style={styles.content}>
 
             {/* Allow user to switch between friends/requests list by clicking button */}
-            {(this.state.showFriends) ?  <TouchableOpacity
+            {(this.state.showFriends && this.state.isMyPage) ?  <TouchableOpacity
                                             style={KIC_Style.button}
                                             onPress = {() =>
                                                 this.setState({ showFriends:false })}>
                                             <Text style={KIC_Style.button_font}>Pending Requests</Text>
                                         </TouchableOpacity> :
-             (!this.state.showFriends) ?
+             (!this.state.showFriends && this.state.isMyPage) ?
                                         <TouchableOpacity
                                             style={KIC_Style.button}
                                             onPress = {() =>

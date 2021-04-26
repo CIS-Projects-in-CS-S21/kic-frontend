@@ -105,7 +105,7 @@ class PostsGrid extends React.Component {
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
-        console.log("For userid " + this.state.userid)
+        //console.log("For userid " + this.state.userid)
         let req = new GetUserByIDRequest();
         req.setUserid(this.state.userid);
         return client.getUserByID(req, {'Authorization': authString}).then(res => {this.getUser(cm, res)})
@@ -128,7 +128,7 @@ class PostsGrid extends React.Component {
         let req = new GetFilesByMetadataRequest();
         let desiredMap = req.getDesiredmetadataMap();
         desiredMap.set("userID", this.state.userid.toString());
-        console.log("REQUESTING FILES FOR " + this.state.userid);
+        //console.log("REQUESTING FILES FOR " + this.state.userid);
 
         let client = cm.createMediaClient();
 
@@ -150,8 +150,8 @@ class PostsGrid extends React.Component {
             finishedFetching: true,
         })
 
-        console.log("FILES FOR " + this.state.userid + ": " + myfiles);
-        console.log("FILES FOR " + this.state.userid + ": " + this.state.myFiles);
+        //console.log("FILES FOR " + this.state.userid + ": " + myfiles);
+        //console.log("FILES FOR " + this.state.userid + ": " + this.state.myFiles);
     }
 
     /**
