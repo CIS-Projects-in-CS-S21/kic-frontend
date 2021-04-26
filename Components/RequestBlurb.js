@@ -180,7 +180,10 @@ class RequestBlurb extends React.Component {
                   {/* User's display name and handle */}
                   <View style ={styles.userID}>
                       {/* Display name */}
-                      <Text style ={styles.textUsername}>{this.state.username}</Text>
+                      <TouchableOpacity
+                          onPress = {this.goToUserPage}>
+                          <Text style ={styles.textUsername}>{this.state.username}</Text>
+                      </TouchableOpacity>
                   </View>
                   {/* # of posts and friends */}
                   <Text style ={styles.textBio}>{this.state.bio}</Text>

@@ -62,7 +62,10 @@ class PostDetails extends React.Component {
                     />
                 </TouchableOpacity>
                 {/* User's display name and handle */}
-                <Text style ={styles.textUsername}>@{this.props.username}</Text>
+                <TouchableOpacity
+                    onPress = {this.goToUserPage}>
+                    <Text style ={styles.textUsername}>@{this.props.username}</Text>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.captionContainer}>
