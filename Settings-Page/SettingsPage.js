@@ -5,7 +5,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {StyleSheet, Text, Switch, View, Image, Button, ScrollView} from 'react-native';
+import {StyleSheet, Text, Switch, View, Image, Button, ScrollView, TextInput, TouchableOpacity} from 'react-native';
 import KIC_Style from "../Components/Style";
 import FeedHeader from "../Components/FeedHeader";
 import UserManager from "../Managers/UserManager";
@@ -32,8 +32,10 @@ class SettingsPage extends React.Component {
             myUserid: '',
             authString: '',
             isPrivate: false,
+            triggerString: ''
         };
         this.toggleSwitch = this.toggleSwitch.bind(this);
+        this.setTriggers = this.setTriggers.bind(this);
     }
 
     /**
@@ -122,11 +124,13 @@ class SettingsPage extends React.Component {
         if (isPrivate == "1") {
             boolPriv = true;
         }
+        let ogTriggers = res.getUser().getTriggers()
         //let myusername = user.getUsername();
         this.setState({
             myUserid: userID,
             myUser: user,
             isPrivate: boolPriv,
+            triggerString: ogTriggers
         })
     }
     /**
@@ -163,6 +167,42 @@ class SettingsPage extends React.Component {
 
     }
 
+    /**
+     * set triggers based on input
+     *@param {String} triggerString input in // format
+     */
+    setTriggers(triggerString) {
+        this.setState({
+            triggerString: triggerString
+        })
+    }
+
+    /**
+     * store triggers and update user info
+     * @return {Promise<T | void>}
+     */
+    storeTriggers() {
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new UpdateUserInfoRequest();
+        req.setBio(this.state.myUser.getBio());
+        req.setUserid(this.state.myUserid);
+        req.setEmail(this.state.myUser.getEmail());
+        req.setBirthday(this.state.myUser.getBirthday());
+        req.setDesiredusername(this.state.myUser.getUsername());
+        req.setCity(this.state.myUser.getCity());
+        req.setTriggers(this.state.triggerString);
+
+        return client.updateUserInfo(req, { 'Authorization': this.state.authString }).then(res =>
+            console.log(res)
+        ).catch(error => {
+            console.log("There was an error.");
+            console.log(error)
+        });
+
+    }
+
     render() {
         /**
          * Renders setting screen components.
@@ -186,6 +226,18 @@ class SettingsPage extends React.Component {
                     onValueChange={this.toggleSwitch}
                     value={this.state.isPrivate}
                 />
+                <Text style = {{marginTop: 30}}> Current Triggers: {this.state.triggerString} </Text>
+                <TextInput
+                    style={KIC_Style.postInput}
+                    textAlign = {'center'}
+                    onChange={(e) => this.setTriggers(e.nativeEvent.text)}
+                    placeholder="Write any triggers in // format . . ."
+                />
+                <TouchableOpacity
+                    style={KIC_Style.button2}
+                    onPress={() => this.storeTriggers()}>
+                    <Text style={KIC_Style.button_font}> Store Triggers </Text>
+                </TouchableOpacity>
                 <StatusBar style="auto" />
                 </SafeAreaView>
             </SafeAreaView>

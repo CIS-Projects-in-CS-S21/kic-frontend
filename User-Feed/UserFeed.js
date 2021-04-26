@@ -38,10 +38,9 @@ class UserFeed extends React.Component {
       authString: '',
       feedFiles: [],
       finishedLoading: false,
-      hasTriggersEnabled: false,
       triggers: [],
     };
-    this.toggleSwitch = this.toggleSwitch.bind(this);
+    this.parseTriggers = this.parseTriggers.bind(this);
   }
 
 /**
@@ -131,12 +130,8 @@ class UserFeed extends React.Component {
           myUser: user,
           feedFiles : []
         })
-        //for testing purposes, setTriggers to be "//anxiety //stress"
-        this.state.myUser.setTriggers("//anxiety //stress");
 
-        //parse triggers before generating feed
-        this.parseTriggers();
-
+        this.parseTriggers()
         // Create a new request that will create a stream for files for ACTIVE USERS userid
         let req = new GenerateFeedForUserRequest();
         req.setUserid(this.state.myUserid);
@@ -173,15 +168,6 @@ class UserFeed extends React.Component {
         }.bind(this));
     }
 
-    /**
-     * toggles switch such that if triggers are enabled, they are then disabled or vice versa
-     *
-     */
-    toggleSwitch () {
-        this.setState(prevState => ({
-            hasTriggersEnabled: !prevState.hasTriggersEnabled
-        }));
-    }
 
     /**
      * @constant parseTriggers parse triggers from text input (given in //trigger format)
@@ -192,7 +178,7 @@ class UserFeed extends React.Component {
         let triggersNoCommas = triggerString.replace(",", " ");
         let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
         triggersParsed = triggersParsed.filter(e => e !== '');
-        return triggersParsed;
+        this.state.triggers = triggersParsed;
     }
 
   /**
@@ -206,15 +192,6 @@ class UserFeed extends React.Component {
         <SafeAreaView style={styles.container}>
           { (this.state.finishedLoading) ? <ScrollView>
             {/* FlatList that renders a UserBlurb per user in the friend list */}
-              <Text style = {styles.feedPost}>Toggle Triggers</Text>
-              <Switch
-                  style = {styles.feedPost}
-                  trackColor={{ false: "#ffff", true: "#7ab7dd" }}
-                  thumbColor={this.state.hasTriggersEnabled ? "#ffff" : "#b3d2db"}
-                  ios_backgroundColor="#ffff"
-                  onValueChange={this.toggleSwitch}
-                  value={this.state.hasTriggersEnabled}
-              />
             <FlatList
               style={styles.listcontainer}
               data={this.state.feedFiles}
@@ -222,6 +199,7 @@ class UserFeed extends React.Component {
                 navigation={this.props.navigation}
                 authString={this.state.authString}
                 myUserid={this.state.myUserid}
+                accountTriggers = {this.state.triggers}
                 file={item}
               />}
               keyExtractor={friend => friend.userid}
