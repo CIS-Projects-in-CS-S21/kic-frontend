@@ -15,6 +15,7 @@ import { DeleteFilesWithMetaDataRequest, UpdateFilesWithMetadataRequest } from "
 import { GetUserByIDRequest } from '../gen/proto/users_pb';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Video, AVPlaybackStatus } from 'expo-av';
+import Filter from 'bad-words';
 
 /**
  * @class Contains function for rendering the detailed post view.
@@ -206,13 +207,18 @@ class DetailedPostViewWeb extends React.Component {
         })
 
         // Log new comment
-        console.log("Comment: " + this.state.commentText + " // comment id: " + this.state.commentID + " // commenter: " + this.state.commenterUsername);
+        //console.log("Comment: " + this.state.commentText + " // comment id: " + this.state.commentID + " // commenter: " + this.state.commenterUsername);
+
+        let filter = new Filter({ placeHolder: ' '});
+        let filtered = ['die', 'kill'];
+        filter.addWords(...filtered);
+        let cleanComment = filter.clean(this.state.commentText);
 
         // Create a Comment object with commentID, commenterUsername, and commentTest as keys
         let comment = {
             commentID: this.state.commentID,
             commenterUsername: this.state.commenterUsername,
-            commentText: this.state.commentText,
+            commentText: cleanComment,
         }
 
         // Create an array containing the single new comment
