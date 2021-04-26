@@ -120,7 +120,7 @@ const KIC_Style = StyleSheet.create({
     commentInput: {
         alignSelf: 'center',
         backgroundColor: '#ffff',
-        fontColor: '#0000',
+        //fontColor: '#0000',
         borderWidth: .2,
         borderColor: '#b3d2db',
         borderRadius: 20,
@@ -132,7 +132,7 @@ const KIC_Style = StyleSheet.create({
     searchInput: {
         alignSelf: 'center',
         backgroundColor: '#ffff',
-        fontColor: '#0000',
+        //fontColor: '#0000',
         borderWidth: .2,
         borderColor: '#b3d2db',
         borderRadius: 20,
@@ -144,7 +144,7 @@ const KIC_Style = StyleSheet.create({
     findHelpInput: {
         alignSelf: 'center',
         backgroundColor: '#ffff',
-        fontColor: '#0000',
+        //fontColor: '#0000',
         marginTop: 30,
         borderWidth: .2,
         borderColor: '#b3d2db',
