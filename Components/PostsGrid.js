@@ -5,7 +5,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Platform, StyleSheet, Text, View, Image, Modal, Button, FlatList, TouchableOpacity } from 'react-native';
+import { Dimensions, Platform, StyleSheet, Text, View, Image, Modal, Button, FlatList, TouchableOpacity } from 'react-native';
 import ProfilePost from "../Personal-Page/ProfilePost";
 import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
 import { GetFilesByMetadataRequest } from "../gen/proto/media_pb";
@@ -37,6 +37,7 @@ class PostsGrid extends React.Component {
             user: null,
             authString: '',
             myFiles: [],
+            numColumns: 1,
             finishedFetching: false,
         };
         this.callGetAuthString = this.callGetAuthString.bind(this);
@@ -145,9 +146,16 @@ class PostsGrid extends React.Component {
 
         let myfiles = res.getFileinfosList();
 
+        let imgWidth = 180;
+        let screenWidth = Dimensions.get('window').width;
+        let numColumns = Math.floor(screenWidth / imgWidth);
+
+        console.log("screen is: " + screenWidth + " // num columns: " + numColumns);
+
         this.setState({
             myFiles: myfiles,
             finishedFetching: true,
+            numColumns: numColumns,
         })
 
         //console.log("FILES FOR " + this.state.userid + ": " + myfiles);
@@ -171,12 +179,16 @@ class PostsGrid extends React.Component {
         );
         return (
             <View style ={styles.postGrid}>
-                {(this.state.finishedFetching && (this.state.myFiles.length > 0)) ? <FlatList
+                {(this.state.finishedFetching && (this.state.myFiles.length > 0)) ? <View style={{ alignItems: 'center' }}><FlatList
                     data={this.state.myFiles}
                     renderItem={renderItem}
                     keyExtractor={file => file.filename}
-                    numColumns={6}
-                /> : <View><Text style = {{fontStyle: 'italic'}}>No posts to show.</Text></View>}
+                    numColumns={this.state.numColumns}
+                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 5, }}
+                    ItemSeparatorComponent={
+                                () => <View style={{ width: 5, }}/>
+                            }
+                /></View> : <View><Text style = {{fontStyle: 'italic'}}>No posts to show.</Text></View>}
             </View>
         );
     }
@@ -188,10 +200,8 @@ class PostsGrid extends React.Component {
 const styles = StyleSheet.create({
   postGrid: {
     backgroundColor: '#b3d2db',
-    flex: 1,
     justifyContent: 'center',
     flexDirection: 'row',
-    flexWrap: 'wrap',
     alignItems: 'center',
     marginTop: 15,
     marginBottom: 15,

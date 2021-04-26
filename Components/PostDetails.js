@@ -113,12 +113,12 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
     icon: {
-        width: 45,
-        height: 45,
-        borderTopRightRadius: 75,
-        borderTopLeftRadius: 75,
-        borderBottomRightRadius: 75,
-        borderBottomLeftRadius: 75,
+        width: 36,
+        height: 36,
+        borderTopRightRadius: 18,
+        borderTopLeftRadius: 18,
+        borderBottomRightRadius: 18,
+        borderBottomLeftRadius: 18,
     },
     textUsername: {
         textAlign: 'left',

@@ -185,7 +185,7 @@ class PersonalPage extends React.Component {
     return (
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container}><ScrollView>
             {/* Display profile header with state information */}
             {(this.state.finishedLoading) ? <ProfileHeader
                 authString = {this.state.authString}
@@ -214,7 +214,7 @@ class PersonalPage extends React.Component {
                 <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
-          </SafeAreaView>
+          </ScrollView></SafeAreaView>
       </SafeAreaView>
     );
   }
