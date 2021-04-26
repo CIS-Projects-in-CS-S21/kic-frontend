@@ -55,6 +55,7 @@ class ProfileHeader extends React.Component {
     goToFriends = () => {
         //console.log("I am id " + this.props.myUserid + " and this page has user id " + this.props.userid + " and username is " + this.props.username);
         this.props.navigation.navigate('FriendsPage', {
+          navigation: this.props.navigation,
           username: this.props.username,
           userid: this.props.userid,
           bio: this.props.bio,

@@ -114,7 +114,7 @@ class ProfilePost extends React.Component {
     */
     render() {
       return (
-        <View style>
+        <View>
             <KIC_Image
               navigation = {this.props.navigation}
               authString = {this.props.authString}

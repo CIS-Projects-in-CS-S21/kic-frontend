@@ -242,12 +242,12 @@ class KIC_Image extends React.Component {
                         <TouchableOpacity
                             onPress={this.handleViewPost}>
                             {!this.state.isVideo && <Image
-                                style={{width: 180, height: 180, alignSelf: 'center'}}
+                                style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}>
                             </Image>}
                             {this.state.isVideo && <Video
                                 ref={video}
-                                style={{width: 180, height: 180, alignSelf: 'center'}}
+                                style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}
                                 resizeMode="contain"
                             />}

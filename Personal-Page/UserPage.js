@@ -204,7 +204,7 @@ class UserPage extends React.Component {
       return (
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.state.navigation} />
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container}><ScrollView>
             {/* Display profile header with state information */}
             {(this.state.finishedLoading) ? <ProfileHeader
                 authString = {this.state.authString}
@@ -228,7 +228,7 @@ class UserPage extends React.Component {
                 userid = {this.state.userid}
                 /> : <View></View>}
             <StatusBar style="auto" />
-          </SafeAreaView>
+          </ScrollView></SafeAreaView>
       </SafeAreaView>
       );
   }

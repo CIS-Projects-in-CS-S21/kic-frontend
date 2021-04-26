@@ -49,9 +49,9 @@ class RequestsList extends React.Component {
     */
     componentDidMount(){
       this.fetchRequests().then(response => {
-          console.log("Fetched friend requests successfully");
+          //console.log("Fetched friend requests successfully");
       }).catch(error => {
-          console.log("Error fetching friend requests: " + error)
+          //console.log("Error fetching friend requests: " + error)
       });
     }
 
@@ -121,7 +121,7 @@ class RequestsList extends React.Component {
     * @param {GetFriendsForUserResponse} res Returned in response to GetFriendsForUserRequest
     */
     updateState(authString, res){
-        console.log("Requests (IDs): " + res.getFriendsList())
+        //console.log("Requests (IDs): " + res.getFriendsList())
         // Save friends list to state
         this.setState({
             authString: authString,
@@ -143,10 +143,11 @@ class RequestsList extends React.Component {
                         style={styles.listcontainer}
                         data={this.state.requests}
                         renderItem={({item}) => <RequestBlurb
+                                                    navigation = {this.props.navigation}
                                                     authString = {this.state.authString}
-                                                    myUsername = {this.state.username}
-                                                    myUserid = {this.state.userid}
+                                                    myUserid = {this.props.myUserid}
                                                     userid = {item}
+                                                    blurbUserid = {item}
                                                 />}
                         keyExtractor={request => request.userid}
                     />

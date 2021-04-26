@@ -174,6 +174,7 @@ class UserBlurb extends React.Component {
         this.setState({
             wasRemoved: true,
             areFriends: false,
+            isFriendable: true,
         })
     }
 
@@ -257,7 +258,7 @@ class UserBlurb extends React.Component {
 
         let cm = new ClientManager();
         let client = cm.createFriendsClient();
-        return client.deleteConnectionBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { this.allowFriendReqs(); });
+        return client.deleteConnectionBetweenUsers(req, {'Authorization': this.props.authString}).then(res => { this.handleRemovedFriend(); });
     }
 
     /**
@@ -297,7 +298,10 @@ class UserBlurb extends React.Component {
                   {/* User's display name and handle */}
                   <View style ={styles.userID}>
                       {/* Display name */}
-                      <Text style ={styles.textUsername}>{this.state.username}</Text>
+                      <TouchableOpacity
+                          onPress = {this.goToUserPage}>
+                          <Text style ={styles.textUsername}>{this.state.username}</Text>
+                      </TouchableOpacity>
                   </View>
                   {/* Bio */}
                   <Text style ={styles.textBio}>{this.state.bio}</Text>
@@ -312,7 +316,7 @@ class UserBlurb extends React.Component {
                                                     </TouchableOpacity>
                                                  </View>
                                                  :
-                 (this.state.areFriends) ? <View>
+                 (this.state.areFriends && !this.state.wasRemoved) ? <View>
                                                      <TouchableOpacity
                                                        style={styles.choiceButton}
                                                        onPress = {this.handleRemoveFriend}>
