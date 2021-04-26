@@ -282,14 +282,12 @@ class DetailedPostView extends React.Component {
             {(this.state.finishedInit) ? <View style={styles.container}>
                 {!this.state.isVideo && <Image
                     style={styles.postImage}
-                    source = {this.state.imageSrc}
+                    source={{uri: this.state.imageSrc}}
                 />}
                 {this.state.isVideo && <Video
                     ref={video}
                     style={styles.postImage}
-                    source={
-                        this.state.imageSrc
-                    }
+                    source={{uri: this.state.imageSrc}}
                     useNativeControls = {true}
                     resizeMode="contain"
                 />}
