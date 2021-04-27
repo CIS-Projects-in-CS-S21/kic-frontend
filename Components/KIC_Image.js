@@ -62,6 +62,10 @@ class KIC_Image extends React.Component {
         let map = this.props.fileInfo.getMetadataMap();
         let ext = map.get("ext");
 
+        if (map.get("format") === "video" && ext !== "mp4"){
+            ext = "mp4";
+        }
+
         let uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
         
         try {
@@ -156,8 +160,10 @@ class KIC_Image extends React.Component {
             let ext = map.get("ext");
 
             //determines if media is video or not
-            if (map.get("format") == "video") {
-
+            if (map.get("format") === "video") {
+                if (map.get("ext") !== "mp4"){
+                    map.set("ext", "mp4");
+                }
                 this.setState({
                     isVideo: true
                 })
@@ -203,9 +209,6 @@ class KIC_Image extends React.Component {
 
                 } else {
                     // Handle web-uploaded media on web
-                    if (map.get("format") === 'video' && map.get("extension") !== "mp4"){
-                        let newBytes64 = byte64.replace(map.get("extension"), "mp4");
-                    }
                     this.setState({
                         imageSrc: byte64,
                         imagefixed: true,

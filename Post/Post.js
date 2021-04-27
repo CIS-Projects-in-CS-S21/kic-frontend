@@ -11,6 +11,7 @@ import {Platform} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import exampleImage from '../assets/kic.png';
 import FeedHeader from '../Components/FeedHeader';
+import * as FileSystem from 'expo-file-system';
 
 /**
  * @param navigation The navigation prop used to navigate between page
@@ -157,6 +158,10 @@ export default function Post({ navigation }) {
 
                 if (result.type === 'video') {
                     // If mobile video upload:
+                    let newb64 = getBase64(result.uri).then(res => {
+                        console.log("res: " + res.slice(0, 200));
+                        setBase64(res);
+                    });
                     setIsVideo(true);
                 }
             }
@@ -189,6 +194,16 @@ export default function Post({ navigation }) {
 
         )
     };
+
+    getBase64 = async(uri) => {
+        try {
+            let newb64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+            return newb64;
+        } catch (e) {
+            console.log('*Error*')
+            console.log(e)
+      }
+    }
 
    /**
     * Renders Post components.

@@ -232,15 +232,6 @@ export default function PostInfo(props) {
         return vid;
     };
 
-    const _videoTo64URI = async (videoURI, extension) => {
-        //console.log("MOBILE UPLOAD URI: " + videoURI);
-        const options = { encoding: FileSystem.EncodingType.Base64 };
-        const data = await FileSystem.readAsStringAsync(videoURI, options);
-        //console.log("MOBILE UPLOAD SAVED: " + data);
-        let vids = "data:video/" +  ext + ";base64,"+ data;
-        return vids;
-    };
-
     /**
      * @constant randomizeFileName For generating file name
      * @returns {String} v of random file name
