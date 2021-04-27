@@ -211,12 +211,20 @@ export default function PostInfo(props) {
         // Generate filename
         const filename = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
+        // Just returns the videoURI
+        let vid = videoURI;
+
+
+        // Convert video data to mp4 - MovToMp4 is not supported for expo projects
+        /*
         console.log("Beginning conversion...");
-        // Convert video data to mp4
-        let converted = await MovToMp4.convertMovToMp4(videoURI, filename).then(res => {console.log("Successful conversion")}).catch(error => {console.log("err: " + error)});
+        //let converted = await MovToMp4.convertMovToMp4(videoURI, filename).then(res => {console.log("Successful conversion")}).catch(error => {console.log("err: " + error)});
 
         // Rebuild prepending string -- use "mp4" because it will have ideally been converted to mp4
-        let vid = "data:video/" +  'mp4' + ";base64,"+ converted;
+        vid = "data:video/" +  'mp4' + ";base64,"+ converted;
+        */
+
+
         console.log("RESULTING MOBILE VIDEO URI: " + vid);
         return vid;
     };

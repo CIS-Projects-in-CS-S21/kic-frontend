@@ -11,8 +11,6 @@ import {Platform} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import exampleImage from '../assets/kic.png';
 import FeedHeader from '../Components/FeedHeader';
-import MovToMp4 from 'react-native-mov-to-mp4';
-
 
 /**
  * @param navigation The navigation prop used to navigate between page
