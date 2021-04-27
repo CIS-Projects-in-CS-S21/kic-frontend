@@ -59,10 +59,10 @@ class DetailedPostViewWeb extends React.Component {
             imageSrc: props.route.params.imageSrc,
             isVideo: false,
             caption: props.route.params.fileinfo.getMetadataMap().get("caption"),
+            commentsAllowed: true,
 
             finishedInit: false,
             isMyPost: false,
-
 
             // For comment adding
             comment: {},
@@ -116,6 +116,7 @@ class DetailedPostViewWeb extends React.Component {
             comments: this.props.route.params.fileinfo.getMetadataMap().get("comments"),
             imageSrc: this.props.route.params.imageSrc,
             caption: this.props.route.params.fileinfo.getMetadataMap().get("caption"),
+            commentsAllowed: true,
             finishedInit: false,
             isVideo: false,
             isMyPost: false,
@@ -212,6 +213,16 @@ class DetailedPostViewWeb extends React.Component {
         this.setState({
             myUsername: myusername,
             finishedInit: true,
+        }, () => {
+            let setting = true;
+            if (this.state.fileinfo.getMetadataMap().get("commentsAllowed") != null && this.state.fileinfo.getMetadataMap().get("commentsAllowed") == 'false'){
+                console.log("comments not allowed");
+                setting = false;
+            }
+            this.setState({
+                commentsAllowed: setting,
+                finishedInit: true,
+            })
         })
     }
 
@@ -331,6 +342,56 @@ class DetailedPostViewWeb extends React.Component {
       })
     }
 
+    /**
+    * An async function that handles disabling comments for a post
+    * @function handleDisableComments
+    * @returns {UpdateFilesWithMetadataResponse} res The response object to an UpdateFilesWithMetadataRequest
+    */
+    async handleDisableComments() {
+        // Send update file request
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+        let req = new UpdateFilesWithMetadataRequest();
+
+        // Search for this file using its unique filename
+        let filtermap = req.getFiltermetadataMap();
+        filtermap.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
+
+        // Overwrite
+        req.setUpdateflag(0);
+
+        // Set the map to be updated -- we are updating the comments array with the updatedComments array
+        let desiredmap = req.getDesiredmetadataMap();
+        desiredmap.set("commentsAllowed", 'false');
+
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.setState({ commentsAllowed: false, }) });
+    }
+
+    /**
+    * An async function that handles enabling comments for a post
+    * @function handleEnableComments
+    * @returns {UpdateFilesWithMetadataResponse} res The response object to an UpdateFilesWithMetadataRequest
+    */
+    async handleEnableComments() {
+        // Send update file request
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+        let req = new UpdateFilesWithMetadataRequest();
+
+        // Search for this file using its unique filename
+        let filtermap = req.getFiltermetadataMap();
+        filtermap.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
+
+        // Overwrite
+        req.setUpdateflag(0);
+
+        // Set the map to be updated -- we are updating the comments array with the updatedComments array
+        let desiredmap = req.getDesiredmetadataMap();
+        desiredmap.set("commentsAllowed", 'true');
+
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.setState({ commentsAllowed: true, }) });
+    }
+
   /**
    * Renders the DetailedPostViewWeb components.
    * @returns a {DetailedPostViewWeb}
@@ -369,21 +430,34 @@ class DetailedPostViewWeb extends React.Component {
                         caption = {this.state.caption}
                     /> : <View></View>}
 
-                    {/* Only show display button if this is active user's own post */}
+                    {/* Only display delete button if this is active user's own post */}
                     {(this.state.isMyPost) ? <TouchableOpacity
                         onPress = {this.handleDelete.bind(this)}>
                             <Text style = {{ textAlign: 'right', fontSize: 10, fontStyle: 'italic', color: '#707070', }} >Delete post</Text>
                     </TouchableOpacity> : <View></View>}
 
-                    {(this.state.comments != null && this.state.finishedInit) ? <View style={{ height: 200 }}>
+                    {/* Only display disable/enable comments button if this is active user's own post */}
+                    {(this.state.isMyPost && this.state.commentsAllowed) ? <TouchableOpacity
+                        onPress = {this.handleDisableComments.bind(this)}>
+                            <Text style = {{ textAlign: 'right', fontSize: 10, fontStyle: 'italic', color: '#707070', }} >Disable comments</Text>
+                    </TouchableOpacity> :
+                    (this.state.isMyPost && !this.state.commentsAllowed) ? <TouchableOpacity
+                            onPress = {this.handleEnableComments.bind(this)}>
+                                <Text style = {{ textAlign: 'right', fontSize: 10, fontStyle: 'italic', color: '#707070', }} >Enable comments</Text>
+                        </TouchableOpacity>  : <View></View>}
+
+                    {(this.state.comments != null && this.state.finishedInit && this.state.commentsAllowed) ? <View style={{ height: 200 }}>
                         <CommentSection
                             navigation = {this.state.navigation}
                             myUserid = {this.state.myUserid}
                             comments = {this.state.comments}
+                            isMyPost = {this.state.isMyPost}
+                            fileinfo = {this.state.fileinfo}
+                            filename = {this.state.filename}
                         />
                     </View> : <View></View>}
 
-                    <View style={{flexDirection: 'row'}}>
+                    {(this.state.finishedInit && this.state.commentsAllowed) ? <View style={{flexDirection: 'row'}}>
                         <TextInput
                             style={KIC_Style.commentInput}
                             textAlign = {'center'}
@@ -395,7 +469,7 @@ class DetailedPostViewWeb extends React.Component {
                             onPress = {this.handleAddComment}>
                             <Ionicons name="chatbubble-ellipses-outline" color='#ffff' size={25} />
                         </TouchableOpacity>
-                    </View>
+                    </View> : <View></View>}
                     <StatusBar style="auto" />
                 </View>
 
