@@ -89,7 +89,7 @@ class DetailedPostView extends React.Component {
                 isMyPost: false,
             });
             this.initPostView().then(response => {
-                console.log("User page mount success");
+                //console.log("User page mount success");
             }).catch(error => {
                 console.log(error)
             });
@@ -122,7 +122,7 @@ class DetailedPostView extends React.Component {
             isMyPost: false,
           }, () => {
                 this.initPostView().then(response => {
-                  console.log("User page updated");
+                  //console.log("User page updated");
                 }).catch(error => {
                   console.log(error)
                 });
@@ -146,8 +146,7 @@ class DetailedPostView extends React.Component {
      * post condition: getUserByUserID
     */
     initPostView() {
-        console.log("Web");
-        console.log("My id: " + this.state.myUserid + " // poster id: " + this.state.userid);
+        console.log("Viewing on mobile");
 
         // Check if this is the active user's own post
         if (this.state.myUserid == this.state.userid){
@@ -171,29 +170,24 @@ class DetailedPostView extends React.Component {
         ];
 
         this.setState({
-            filename: this.state.fileinfo.getMetadataMap().get("filename"),
-            yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
-            monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()],
-            dayPosted: this.state.fileinfo.getDatestored().getDay().toString(),
-            caption: this.state.fileinfo.getMetadataMap().get("caption"),
-        }, () => {
-                if (this.state.comments.length > 0){
-                    this.setState({
-                        comments: JSON.parse(this.state.fileinfo.getMetadataMap().get("comments")),
-                    }, () => {
-                        if (this.state.fileinfo.getMetadataMap().get("format") == "video") {
-                            this.setState({
-                                isVideo: true
-                            }, () => {
-                                this.setState({
-                                    caption: this.state.fileinfo.getMetadataMap().get("caption"),
-                                })
-                            })
-                        }
-                    })
-                }
-            }
-        )
+                    filename: this.state.fileinfo.getMetadataMap().get("filename"),
+                    yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
+                    monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()],
+                    dayPosted: this.state.fileinfo.getDatestored().getDay().toString(),
+                    caption: this.state.fileinfo.getMetadataMap().get("caption"),
+                })
+
+        if (this.state.comments.length > 0){
+            this.setState({
+                comments: JSON.parse(this.state.fileinfo.getMetadataMap().get("comments")),
+            })
+        }
+
+        if (this.state.fileinfo.getMetadataMap().get("format") == "video") {
+            this.setState({
+                isVideo: true
+            })
+        }
 
         // Get active user's username
         let cm = new ClientManager();
@@ -216,7 +210,7 @@ class DetailedPostView extends React.Component {
         }, () => {
             let setting = true;
             if (this.state.fileinfo.getMetadataMap().get("commentsAllowed") != null && this.state.fileinfo.getMetadataMap().get("commentsAllowed") == 'false'){
-                console.log("comments not allowed");
+                //console.log("comments not allowed");
                 setting = false;
             }
             this.setState({
@@ -324,7 +318,7 @@ class DetailedPostView extends React.Component {
         let desiredmap = req.getDesiredmetadataMap();
         desiredmap.set("comments", desiredCommentsJSON);
         // Send the request and print the # of files updated
-        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)}).catch(error => console.log("Saving comment failed: " + error));
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { /*console.log("Result: " + res)*/ }).catch(error => console.log("Saving comment failed: " + error));
     }
 
     /**
