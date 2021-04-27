@@ -114,9 +114,9 @@ export default function PostInfo(props) {
 
             // Detect video
             if (extension == "mp4" || extension == "mov" || extension == "wmv") {
-                uri = _videoTo64URI(base64,extension);
-                format = "video"
-                console.log("video extension detected");
+                uri = await convertToMP4(uri, extension);
+                format = "video";
+                //console.log("video extension detected: " + uri);
             } else {
                 format = "image"
             }
@@ -201,6 +201,34 @@ export default function PostInfo(props) {
             });
     }
 
+    /*
+    * Converts video uri to mp4 using this method: https://github.com/taltultc/react-native-mov-to-mp4/issues/23
+    */
+    const convertToMP4 = async (videoURI, extension) => {
+        // This is the original video uri
+        console.log("MOBILE VIDEO ORIGINAL URI: " + videoURI)
+
+        // Generate filename
+        const filename = Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+        console.log("Beginning conversion...");
+        // Convert video data to mp4
+        let converted = await MovToMp4.convertMovToMp4(videoURI, filename).then(res => {console.log("Successful conversion")}).catch(error => {console.log("err: " + error)});
+
+        // Rebuild prepending string -- use "mp4" because it will have ideally been converted to mp4
+        let vid = "data:video/" +  'mp4' + ";base64,"+ converted;
+        console.log("RESULTING MOBILE VIDEO URI: " + vid);
+        return vid;
+    };
+
+    const _videoTo64URI = async (videoURI, extension) => {
+        //console.log("MOBILE UPLOAD URI: " + videoURI);
+        const options = { encoding: FileSystem.EncodingType.Base64 };
+        const data = await FileSystem.readAsStringAsync(videoURI, options);
+        //console.log("MOBILE UPLOAD SAVED: " + data);
+        let vids = "data:video/" +  ext + ";base64,"+ data;
+        return vids;
+    };
 
     /**
      * @constant randomizeFileName For generating file name
@@ -212,15 +240,6 @@ export default function PostInfo(props) {
         return v.toString(16);
       });
     }
-
-
-    const _videoTo64URI = async (videoURI, extension) => {
-        const options = { encoding: FileSystem.EncodingType.Base64 };
-        const data = await FileSystem.readAsStringAsync(videoURI, options);
-        let vids = "data:video/" +  extension + ";base64,"+ data;
-        return vids;
-    };
-
 
     /**
      * @constant caption store caption from user input
