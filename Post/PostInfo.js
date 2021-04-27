@@ -115,6 +115,7 @@ export default function PostInfo(props) {
             // Detect video
             if (extension == "mp4" || extension == "mov" || extension == "wmv") {
                 uri = await convertToMP4(uri, extension);
+                extension = 'mp4';
                 format = "video";
                 //console.log("video extension detected: " + uri);
             } else {
@@ -162,10 +163,7 @@ export default function PostInfo(props) {
         file.setDatestored(date);
 
         // Use uri for web uploads, use base64 for mobile uploads
-        let uri2 = '';
-
         if (Platform.OS === 'web'){
-            //convert uri to int 8 Array which is needed for setting File
             map.set("origin", "web")
             console.log("UPLOADING ON WEB: " + uri)
             req.setFileuri(uri);
@@ -211,9 +209,9 @@ export default function PostInfo(props) {
         // Generate filename
         const filename = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
+        let toreplace = "." + extension;
         // Just returns the videoURI
-        let vid = videoURI;
-
+        let vid = videoURI.replace(toreplace, ".mp4");
 
         // Convert video data to mp4 - MovToMp4 is not supported for expo projects
         /*
