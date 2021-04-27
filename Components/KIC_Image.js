@@ -154,7 +154,6 @@ class KIC_Image extends React.Component {
 
             let src1 = this.state.imageSrc;
             let ext = map.get("ext");
-            let finalsrc = byte64;
 
             //determines if media is video or not
             if (map.get("format") == "video") {
@@ -170,11 +169,15 @@ class KIC_Image extends React.Component {
 
                 if (map.get("origin") == "mobile"){
                     // Handle viewing mobile-uploaded media on mobile
-                    this.setState({
-                        imageSrc: finalsrc,
-                        imagefixed: true,
-                        metadata: map,
-                    })
+                    let rebuiltb64 = 'data:' + map.get("format") + '/' + map.get('ext') + ';base64,' + byte64;
+                    this.saveImage(rebuiltb64).then( (uri) => {locationUri = uri;}).then(() => {
+                        this.setState({
+                            imageSrc: locationUri,
+                            imagefixed: true,
+                            metadata: map
+                        });
+                        console.log("VIEWING MOBILE-UPLOADED ON MOBILE: " + this.state.imageSrc)
+                    }).then(() => {/*console.log("imageSrc = " + this.state.imageSrc)*/});
                 } else {
                     // Handle viewing web-uploaded media on mobile
                     this.saveImage(src1).then( (uri) => {locationUri = uri;}).then(() => {
@@ -183,6 +186,7 @@ class KIC_Image extends React.Component {
                             imagefixed: true,
                             metadata: map
                         });
+                        console.log("VIEWING WEB-UPLOADED ON MOBILE: " + this.state.imageSrc)
                     }).then(() => {/*console.log("imageSrc = " + this.state.imageSrc)*/});
                 }
             } else {
@@ -190,9 +194,9 @@ class KIC_Image extends React.Component {
                 if (map.get("origin") == "mobile"){
                     // Handle viewing mobile-uploaded media on web
                     console.log("VIEWING MOBILE IMAGE ON WEB");
-                    let finalsrc = 'data:' + map.get("format") + '/' + map.get('ext') + ';base64,' + byte64;
+                    let rebuiltb64 = 'data:' + map.get("format") + '/' + map.get('ext') + ';base64,' + byte64;
                     this.setState({
-                        imageSrc: finalsrc,
+                        imageSrc: rebuiltb64,
                         imagefixed: true,
                         metadata: map,
                     })
@@ -200,14 +204,14 @@ class KIC_Image extends React.Component {
                 } else {
                     // Handle web-uploaded media on web
                     this.setState({
-                        imageSrc: finalsrc,
+                        imageSrc: byte64,
                         imagefixed: true,
                         metadata: map,
                     })
                 }
             }
 
-            console.log("FILE URI: " + this.state.imageSrc)
+            //console.log("FILE URI: " + this.state.imageSrc)
             
             // --------
 
