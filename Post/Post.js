@@ -195,7 +195,7 @@ export default function Post({ navigation }) {
         )
     };
 
-    getBase64 = async(uri) => {
+    const getBase64 = async(uri) => {
         try {
             let newb64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
             return newb64;
