@@ -58,7 +58,7 @@ class DetailedPostViewWeb extends React.Component {
             metadata: [],
             imageSrc: props.route.params.imageSrc,
             isVideo: false,
-            caption: 'Default caption',
+            caption: props.route.params.fileinfo.getMetadataMap().get("caption"),
 
             finishedInit: false,
             isMyPost: false,
@@ -81,8 +81,61 @@ class DetailedPostViewWeb extends React.Component {
     * @function componentDidMount()
      * precondition: initPostView waits for init post view to start
     */
-    async componentDidMount() {
-      await this.initPostView();
+    componentDidMount() {
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            this.setState({
+                finishedInit : false,
+                isVideo: false,
+                isMyPost: false,
+            });
+            this.initPostView().then(response => {
+                console.log("User page mount success");
+            }).catch(error => {
+                console.log(error)
+            });
+        })
+    }
+
+    /**
+    * Runs when the props change and updates the component accordingly.
+    * @params {props} prevProps The previous state's props
+     * postcondition: fetchUserInfo()
+     * @exception error caught if fetching info does not work
+     */
+    componentDidUpdate(prevProps) {
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+          this.setState({
+            myUserid: this.props.route.params.myUserid,
+            authString: this.props.route.params.authString,
+            navigation: this.props.route.params.navigation,
+
+            userid: this.props.route.params.userid,
+            username: this.props.route.params.username,
+
+            fileinfo: this.props.route.params.fileinfo,
+            comments: this.props.route.params.fileinfo.getMetadataMap().get("comments"),
+            imageSrc: this.props.route.params.imageSrc,
+            caption: this.props.route.params.fileinfo.getMetadataMap().get("caption"),
+            finishedInit: false,
+            isVideo: false,
+            isMyPost: false,
+          }, () => {
+                this.initPostView().then(response => {
+                  console.log("User page updated");
+                }).catch(error => {
+                  console.log(error)
+                });
+          });
+
+        })
+    }
+
+    /**
+    * Runs before the component is unmounted
+    *
+    */
+    componentWillUnmount() {
+        this._unsubscribe();
     }
 
     /**
@@ -106,34 +159,41 @@ class DetailedPostViewWeb extends React.Component {
             })
         }
 
+        return this.setPostDetails();
+    }
+
+    setPostDetails() {
+
         // Month name strings
         let monthNames = ["January", "February", "March", "April", "May", "June",
           "July", "August", "September", "October", "November", "December"
         ];
 
-        // Extract metadata info
         this.setState({
             filename: this.state.fileinfo.getMetadataMap().get("filename"),
             yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
             monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()],
             dayPosted: this.state.fileinfo.getDatestored().getDay().toString(),
             caption: this.state.fileinfo.getMetadataMap().get("caption"),
-            finishedInit: true,
-        })
+        }, () => {
+                if (this.state.comments.length > 0){
+                    this.setState({
+                        comments: JSON.parse(this.state.fileinfo.getMetadataMap().get("comments")),
+                    }, () => {
+                        if (this.state.fileinfo.getMetadataMap().get("format") == "video") {
+                            this.setState({
+                                isVideo: true
+                            }, () => {
+                                this.setState({
+                                    caption: this.state.fileinfo.getMetadataMap().get("caption"),
+                                })
+                            })
+                        }
+                    })
+                }
+            }
+        )
 
-        // Only parse if there are comments to avoid error
-        if (this.state.comments.length > 0){
-            this.setState({
-                comments: JSON.parse(this.state.fileinfo.getMetadataMap().get("comments")),
-            })
-        }
-
-        //determines if media is video or not
-        if (this.state.fileinfo.getMetadataMap().get("format") == "video") {
-            this.setState({
-                isVideo: true
-            })
-        }
         // Get active user's username
         let cm = new ClientManager();
         let client = cm.createUsersClient();
@@ -151,6 +211,7 @@ class DetailedPostViewWeb extends React.Component {
         let myusername = res.getUser().getUsername();
         this.setState({
             myUsername: myusername,
+            finishedInit: true,
         })
     }
 
@@ -248,14 +309,6 @@ class DetailedPostViewWeb extends React.Component {
         let desiredComments = this.state.comments;
         let desiredCommentsJSON = JSON.stringify(desiredComments);
 
-        // Checks: All IDs logged should match (not undefined)
-        // Check ID from comment object
-        console.log("comment id: " + comment.commentID);
-        // Check ID from state.comments
-        console.log("comment id from state concatenated comment map: " + this.state.comments[0].commentID);
-        // Check ID from desiredComments (metadata used in update request)
-        console.log("Comment id from desiredComments (the metadata in update req): " + desiredComments[0].commentID);
-
         // Set the map to be updated -- we are updating the comments array with the updatedComments array
         let desiredmap = req.getDesiredmetadataMap();
         desiredmap.set("comments", desiredCommentsJSON);
@@ -289,11 +342,11 @@ class DetailedPostViewWeb extends React.Component {
         <FeedHeader navigation={this.props.navigation} />
         <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10, }}>
             {(this.state.finishedInit) ? <View style={styles.container}>
-                {!this.state.isVideo && <Image
+                {(!this.state.isVideo && this.state.finishedInit) ? <Image
                     style={styles.postImage}
                     source = {this.state.imageSrc}
-                    />}
-                {this.state.isVideo && <Video
+                    /> :
+                <Video
                     ref={video}
                     style={styles.postImage}
                     source={
@@ -304,7 +357,7 @@ class DetailedPostViewWeb extends React.Component {
                 />}
                 <View style={styles.detailsAndComments}>
                     {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
-                    <PostDetails
+                    {(this.state.finishedInit) ? <PostDetails
                         myUserid = {this.state.myUserid}
                         navigation = {this.state.navigation}
                         authString = {this.state.authString}
@@ -314,7 +367,7 @@ class DetailedPostViewWeb extends React.Component {
                         monthPosted = {this.state.monthPosted}
                         dayPosted = {this.state.dayPosted}
                         caption = {this.state.caption}
-                    />
+                    /> : <View></View>}
 
                     {/* Only show display button if this is active user's own post */}
                     {(this.state.isMyPost) ? <TouchableOpacity
@@ -322,11 +375,13 @@ class DetailedPostViewWeb extends React.Component {
                             <Text style = {{ textAlign: 'right', fontSize: 10, fontStyle: 'italic', color: '#707070', }} >Delete post</Text>
                     </TouchableOpacity> : <View></View>}
 
-                    <View style={{ height: 200 }}>
+                    {(this.state.comments != null && this.state.finishedInit) ? <View style={{ height: 200 }}>
                         <CommentSection
+                            navigation = {this.state.navigation}
+                            myUserid = {this.state.myUserid}
                             comments = {this.state.comments}
                         />
-                    </View>
+                    </View> : <View></View>}
 
                     <View style={{flexDirection: 'row'}}>
                         <TextInput

@@ -5,52 +5,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-
-/*
-* Mock array of comments
-*/
-const COMMENTS = [
-  {
-    id: '1',
-    commenterUsername: 'One',
-    commentText: 'Comments should be a maximum of 150 characters long. ',
-  },
-  {
-    id: '2',
-    commenterUsername: 'Two',
-    commentText: 'Second comment',
-  },
-  {
-    id: '3',
-    commenterUsername: 'Three',
-    commentText: 'Third comment',
-  },
-  {
-    id: '4',
-    commenterUsername: 'Four',
-    commentText: 'Fourth comment',
-  },
-  {
-    id: '5',
-    commenterUsername: 'Five',
-    commentText: 'Fifth comment',
-  },
-  {
-    id: '6',
-    commenterUsername: 'Six',
-    commentText: 'Sixth comment',
-  },
-];
-
-/**
-* Format individual comment
-*/
-const Comment = ({ commenterUsername, commentText }) => (
-  <View style={styles.comments}>
-    <Text style={styles.textCommenterUsername}>{commenterUsername} says...</Text>
-    <Text style={styles.textComment}>{commentText}</Text>
-  </View>
-);
+import Comment from "./Comment";
 
 /**
 * @class Contains function for rendering the comment section.
@@ -66,22 +21,12 @@ class CommentSection extends React.Component {
         // Define the initial state:
         this.state = {
             // active user's userid
-            myuserid: props.userid,
+            myUserid: props.myUserid,
+            navigation: props.navigation,
+            authString: props.authString,
 
-            // poster's username & userid
-            userid: props.userid,
-            username: props.username,
-            fileinfo: props.fileinfo,
-            comments: props.comments,
         };
 
-    }
-
-    /**
-    * Gets a post's comments to render on the page.
-    */
-    fetchPostComments = () => {
-      // Request post's comments from backend.
     }
 
     /**
@@ -89,11 +34,6 @@ class CommentSection extends React.Component {
     * @returns {CommentSection}
     */
     render() {
-      {/* Function for rendering comments */}
-      const renderItem = ({ item }) => (
-        <Comment commenterUsername={item.commenterUsername} commentText={item.commentText} />
-      );
-
       return (
         <View style={{ flex: 1, alignItems: 'stretch' }}>
             <Text style={styles.commentCounter}>{this.props.comments.length} comments</Text>
@@ -102,7 +42,13 @@ class CommentSection extends React.Component {
             <View style={styles.commentSection}>
                 <FlatList
                     data={this.props.comments}
-                    renderItem={renderItem}
+                    renderItem={({item}) => <Comment
+                        navigation = {this.props.navigation}
+                        authString = {this.props.authString}
+                        myUserid = {this.props.myUserid}
+                        commenterUsername = {item.commenterUsername}
+                        commentText = {item.commentText}
+                    />}
                     keyExtractor={comment => comment.commentID}
                 />
             </View>
@@ -118,16 +64,6 @@ const styles = StyleSheet.create({
     commentSection: {
         flex: 1,
         alignItems: 'stretch',
-    },
-    comments: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#fff',
-        padding: 15,
-        marginTop: 10,
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
-        borderBottomLeftRadius: 25,
     },
     commenterIcon: {
         width: '10%',
