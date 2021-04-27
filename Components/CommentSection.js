@@ -24,7 +24,6 @@ class CommentSection extends React.Component {
             myUserid: props.myUserid,
             navigation: props.navigation,
             authString: props.authString,
-
         };
 
     }
@@ -46,6 +45,11 @@ class CommentSection extends React.Component {
                         navigation = {this.props.navigation}
                         authString = {this.props.authString}
                         myUserid = {this.props.myUserid}
+                        isMyPost = {this.props.isMyPost}
+                        filename = {this.props.filename}
+                        fileinfo = {this.props.fileinfo}
+                        comments = {this.props.comments}
+                        commentID = {item.commentID}
                         commenterUsername = {item.commenterUsername}
                         commentText = {item.commentText}
                     />}

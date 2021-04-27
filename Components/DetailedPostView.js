@@ -449,6 +449,9 @@ class DetailedPostView extends React.Component {
                         navigation = {this.state.navigation}
                         myUserid = {this.state.myUserid}
                         comments = {this.state.comments}
+                        isMyPost = {this.state.isMyPost}
+                        fileinfo = {this.state.fileinfo}
+                        filename = {this.state.filename}
                     />
                 </View> : <View></View>}
 

@@ -7,6 +7,8 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { GetUserByUsernameRequest } from '../gen/proto/users_pb';
 import ClientManager from "../Managers/ClientManager";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { UpdateFilesWithMetadataRequest } from "../gen/proto/media_pb";
 
 /**
 * @class Contains function for rendering a comment.
@@ -28,13 +30,22 @@ class Comment extends React.Component {
             authString: props.authString,
 
             // poster's username & userid
+            filename: props.filename,
+            fileinfo: props.fileinfo,
+            comments: props.comments,
+            commentID: props.commentID,
             commenterUsername: props.commenterUsername,
             commentText: props.commentText,
             commenterUserid: null,
+
+            posterUserid: props.posterUserid,
+            isMyPost: props.isMyPost,
+            isMyComment: false,
+            deleted: false,
         };
 
         this.initComment = this.initComment.bind(this);
-        this.goToUserPage = this.goToUserPage.bind(this);
+        this.handleDeleteComment = this.handleDeleteComment.bind(this);
     }
 
     /**
@@ -103,18 +114,69 @@ class Comment extends React.Component {
     }
 
     /**
+    * An async function that handles adding a comment to a file
+    * @function handleAddComment
+    * @returns {UpdateFilesWithMetadataResponse} res The response object to an UpdateFilesWithMetadataRequest
+     * precondition: randomizesCommentID provides a random comment ID
+     * postCondition: updatesFilesWithMetaData of additional comment
+    */
+    async handleDeleteComment() {
+        let oldComments = this.props.comments;
+        let newComments = oldComments.filter(x => {
+          return x.commentID != this.state.commentID;
+        })
+
+        // Set the state with new comment
+        this.setState({
+            comments: newComments,
+        })
+
+        // Send update file request
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+        let req = new UpdateFilesWithMetadataRequest();
+
+        // Search for this file using its unique filename
+        let filtermap = req.getFiltermetadataMap();
+        filtermap.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
+
+        // Overwrite the previous comments array (since we manually concatenate the new and old comments above)
+        req.setUpdateflag(0);
+
+        let desiredComments = newComments;
+        let desiredCommentsJSON = JSON.stringify(desiredComments);
+
+        // Set the map to be updated -- we are updating the comments array with the updatedComments array
+        let desiredmap = req.getDesiredmetadataMap();
+        desiredmap.set("comments", desiredCommentsJSON);
+        // Send the request and print the # of files updated
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.setState({ deleted: true, }) });
+    }
+
+    /**
     * Renders comments section.
     * @returns {CommentSection}
     */
     render() {
       return (
-        <View style={styles.comment}>
-            <TouchableOpacity
-                onPress = {this.goToUserPage}>
-                <Text style={styles.textCommenterUsername}>{this.props.commenterUsername} says...</Text>
-            </TouchableOpacity>
+        <View style={styles.container}>
+            {(!this.state.deleted) ? <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', }}>
+                <View style={styles.comment}>
+                    <TouchableOpacity
+                        onPress = {this.goToUserPage}>
+                        <Text style={styles.textCommenterUsername}>{this.props.commenterUsername} says...</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.textComment}>{this.props.commentText}</Text>
+                </View>
 
-            <Text style={styles.textComment}>{this.props.commentText}</Text>
+                {(this.state.isMyComment || this.state.isMyPost) ? <TouchableOpacity
+                                                                       style = {{ justifyContent: 'center', marginLeft: 4, marginRight: 4, }}
+                                                                       onPress = {this.handleDeleteComment}>
+                                                                       <Ionicons name="trash-outline" color='#ffff' size={20} />
+                                                                   </TouchableOpacity>
+                : <View></View>}
+
+            </View> : <View></View>}
         </View>
       );
     }
@@ -124,6 +186,11 @@ class Comment extends React.Component {
 * @constant styles creates stylesheet for the Comment Section
 */
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'stretch',
+    },
     comment: {
         flex: 1,
         flexDirection: 'column',
