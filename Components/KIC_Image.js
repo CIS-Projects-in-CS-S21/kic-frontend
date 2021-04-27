@@ -154,45 +154,60 @@ class KIC_Image extends React.Component {
 
             let src1 = this.state.imageSrc;
             let ext = map.get("ext");
-            let finalsrc = '';
-
-            // Rebuilds the header with special characters for images taken from web app ("data:image/png;base64" format)
-            if (!src1.toString().includes("mobile")) {
-                console.log("This image was taken from web");
-
-                finalsrc = byte64;
-            } else { //Rebuild the header for images taken from mobile app
-                console.log("This image was taken from mobile");
-                finalsrc = byte64;
-            }
+            let finalsrc = byte64;
 
             //determines if media is video or not
             if (map.get("format") == "video") {
+
                 this.setState({
                     isVideo: true
                 })
             }
 
-            // Saving image
-
             if (Platform.OS !== 'web') {
-                //iOS or Android
+                // Handle viewing on mobile
                 let locationUri = '';
 
-                this.saveImage(src1).then( (uri) => {locationUri = uri;}).then(() => {
+                if (map.get("origin") == "mobile"){
+                    // Handle viewing mobile-uploaded media on mobile
                     this.setState({
-                        imageSrc: locationUri,
+                        imageSrc: finalsrc,
                         imagefixed: true,
-                        metadata: map
-                    });
-                }).then(() => {console.log("imageSrc = " + this.state.imageSrc)});
+                        metadata: map,
+                    })
+                } else {
+                    // Handle viewing web-uploaded media on mobile
+                    this.saveImage(src1).then( (uri) => {locationUri = uri;}).then(() => {
+                        this.setState({
+                            imageSrc: locationUri,
+                            imagefixed: true,
+                            metadata: map
+                        });
+                    }).then(() => {/*console.log("imageSrc = " + this.state.imageSrc)*/});
+                }
             } else {
-                this.setState({
-                    imageSrc: finalsrc,
-                    imagefixed: true,
-                    metadata: map,
-                })
+                // Handle viewing on web
+                if (map.get("origin") == "mobile"){
+                    // Handle viewing mobile-uploaded media on web
+                    console.log("VIEWING MOBILE IMAGE ON WEB");
+                    let finalsrc = 'data:' + map.get("format") + '/' + map.get('ext') + ';base64,' + byte64;
+                    this.setState({
+                        imageSrc: finalsrc,
+                        imagefixed: true,
+                        metadata: map,
+                    })
+
+                } else {
+                    // Handle web-uploaded media on web
+                    this.setState({
+                        imageSrc: finalsrc,
+                        imagefixed: true,
+                        metadata: map,
+                    })
+                }
             }
+
+            console.log("FILE URI: " + this.state.imageSrc)
             
             // --------
 

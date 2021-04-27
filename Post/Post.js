@@ -125,23 +125,30 @@ export default function Post({ navigation }) {
             allowsEditing: true,
             aspect: [1, 1],
             videoMaxDuration: 3,
-            quality: 1,
+            maxWidth: 450,
+            maxHeight: 450,
+            quality: .9,
             base64: true
         });
         console.log(result);
         if (!result.cancelled) {
             setImage(result.uri);
             if (Platform.OS === "web") {
-                //this is the base 64
+                // If web upload:
                 const extractedFormat = result.uri.split(/[:, /]/);
+
                 if (extractedFormat[1] == "video") {
+                    // If web video upload:
                     setIsVideo(true);
                 }
                 const parsedURI = result.uri.split(/[,]/);
                 setBase64(parsedURI[1]);
             } else {
+                // If mobile upload:
                 setBase64(result.base64);
+
                 if (result.type === 'video') {
+                    // If mobile video upload:
                     setIsVideo(true);
                 }
             }

@@ -70,6 +70,7 @@ export default function PostInfo(props) {
      * @returns tagsParsed array of parsed tags
      */
     const parseTags = (tags) => {
+        console.log("parsing tags");
         let tagsNoCommas = tags.replace(",", " ");
         let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);
         tagsParsed = tagsParsed.filter(e => e !== '');
@@ -84,6 +85,7 @@ export default function PostInfo(props) {
      * precondition: getUserID
      */
     const makeUploadFileRequest = async (userID, authString) => {
+        console.log("making upload request");
        //obtain uri and base64 from Post.js
         let uri = props.route.params.image;
         const base64 = props.route.params.base64;
@@ -103,12 +105,16 @@ export default function PostInfo(props) {
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
         } else {
-            //if platform is mobile
+            //if uploading from mobile, the uri should just be base64
+
+            // Get extension from uri
             const parsedURI = uri.split(/[.]/);
             extension = parsedURI[parsedURI.length-1];
             console.log("mobile ext:" + extension);
+
+            // Detect video
             if (extension == "mp4" || extension == "mov" || extension == "wmv") {
-                uri = _videoTo64URI(uri,extension);
+                uri = _videoTo64URI(base64,extension);
                 format = "video"
                 console.log("video extension detected");
             } else {
@@ -155,10 +161,22 @@ export default function PostInfo(props) {
         date.setYear(String(today.getFullYear()).padStart(2, '0'));
         file.setDatestored(date);
 
-        //convert uri to int 8 Array which is needed for setting File
-        let uri2 = uri + "xx";
-        let your_bytes = Buffer.from(uri2, "base64");
-        req.setFileuri(uri);
+        // Use uri for web uploads, use base64 for mobile uploads
+        let uri2 = '';
+
+        if (Platform.OS === 'web'){
+            //convert uri to int 8 Array which is needed for setting File
+            map.set("origin", "web")
+            console.log("UPLOADING ON WEB: " + uri)
+            req.setFileuri(uri);
+        } else {
+            //console.log("UPLOADING ON MOBILE: " + base64)
+            map.set("origin", "mobile")
+            req.setFileuri(base64);
+        }
+
+        //let your_bytes = Buffer.from(uri2, "base64");
+
         req.setFileinfo(file);
 
 
