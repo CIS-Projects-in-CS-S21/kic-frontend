@@ -203,6 +203,9 @@ class KIC_Image extends React.Component {
 
                 } else {
                     // Handle web-uploaded media on web
+                    if (map.get("format") === 'video' && map.get("extension") !== "mp4"){
+                        let newBytes64 = byte64.replace(map.get("extension"), "mp4");
+                    }
                     this.setState({
                         imageSrc: byte64,
                         imagefixed: true,

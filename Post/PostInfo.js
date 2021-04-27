@@ -104,6 +104,11 @@ export default function PostInfo(props) {
             const extractedExt = uri.match(regex);
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
+
+            if (format === 'video'){
+                extension = "mp4";
+            }
+
         } else {
             //if uploading from mobile, the uri should just be base64
 

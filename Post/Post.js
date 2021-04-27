@@ -138,6 +138,16 @@ export default function Post({ navigation }) {
                 if (extractedFormat[1] == "video") {
                     // If web video upload:
                     setIsVideo(true);
+
+                    // Detect extension and change to mp4
+                    const regex = /\/.*?;base64/g;
+                    const extractedExt = result.uri.match(regex);
+                    let extensionNoBase = extractedExt.toString().replace(";base64", "");
+                    let extension = extensionNoBase.replace("/", "");
+                    if (extension !== 'mp4'){
+                        let mp4uri = result.uri.replace(extension, "mp4");
+                        setImage(mp4uri);
+                    }
                 }
                 const parsedURI = result.uri.split(/[,]/);
                 setBase64(parsedURI[1]);
@@ -147,6 +157,8 @@ export default function Post({ navigation }) {
 
                 if (result.type === 'video') {
                     // If mobile video upload:
+
+
                     setIsVideo(true);
                 }
             }
