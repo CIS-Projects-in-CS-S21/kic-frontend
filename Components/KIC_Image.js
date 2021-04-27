@@ -206,6 +206,7 @@ class KIC_Image extends React.Component {
                         imagefixed: true,
                         metadata: map,
                     })
+                    console.log("URI: " + rebuiltb64.slice(0, 100));
 
                 } else {
                     // Handle web-uploaded media on web
