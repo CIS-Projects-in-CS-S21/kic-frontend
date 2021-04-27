@@ -157,8 +157,6 @@ export default function Post({ navigation }) {
 
                 if (result.type === 'video') {
                     // If mobile video upload:
-
-
                     setIsVideo(true);
                 }
             }
