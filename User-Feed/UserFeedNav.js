@@ -45,6 +45,10 @@ class UserFeedNav extends React.Component {
                         name="DetailedPostViewWeb"
                         component={DetailedPostViewWeb}
                     />
+                    <Stack.Screen
+                        name="FriendsPage"
+                        component={FriendsPage}
+                    />
                 </Stack.Navigator>
         );
     }
