@@ -111,6 +111,7 @@ class KIC_Image extends React.Component {
                 username: this.props.username,
                 navigation: this.props.navigation,
                 authString: this.props.authString,
+                imageFixed: false,
             })
             this.fetchImage();
         }
@@ -206,7 +207,7 @@ class KIC_Image extends React.Component {
                         imagefixed: true,
                         metadata: map,
                     })
-                    console.log("URI: " + rebuiltb64.slice(0, 100));
+                    console.log("URI: " + rebuiltb64.slice(0, 50));
 
                 } else {
                     // Handle web-uploaded media on web
@@ -267,16 +268,16 @@ class KIC_Image extends React.Component {
                     <View>
                         <TouchableOpacity
                             onPress={this.handleViewPost}>
-                            {!this.state.isVideo && <Image
+                            {(!this.state.isVideo && this.state.imagefixed) ? <Image
                                 style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}>
-                            </Image>}
-                            {this.state.isVideo && <Video
+                            </Image> :
+                            (this.state.isVideo && this.state.imagefixed) ? <Video
                                 ref={video}
                                 style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}
                                 resizeMode="contain"
-                            />}
+                            /> : <View></View>}
                         </TouchableOpacity>
                     </View> : <View></View>}
             </View>
