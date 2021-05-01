@@ -34,6 +34,8 @@ class ProfilePicture extends React.Component {
             imageSrc: "",
             iconFetched: true,
             uploading: true,
+            metadata: null,
+            map: null,
         };
 
         this.fetchImage = this.fetchImage.bind(this)
@@ -62,7 +64,8 @@ class ProfilePicture extends React.Component {
               username: this.props.username,
               navigation: this.props.navigation,
               authString: this.props.authString,
-              map: null,
+              image: null,
+              metadata: null,
           })
           this.fetchImage();
       }
@@ -102,7 +105,8 @@ class ProfilePicture extends React.Component {
             req.setFileinfo(imagefile[0]);
 
             this.setState({
-                map: imagefile[0],
+                image: imagefile[0],
+                metadata: imagefile[0].getMetadataMap(),
             })
 
             let byte64 = '';
@@ -141,23 +145,57 @@ class ProfilePicture extends React.Component {
                     finalsrc = byte64;
                 }
 
+                let map = this.state.metadata;
                 // Saving image
                 if (Platform.OS !== 'web') {
-                    //iOS or Android
+                    // Handle viewing on mobile
                     let locationUri = '';
 
-                    this.saveImage(finalsrc).then( (uri) => {locationUri = uri;}).then(() => {
-                        this.setState({
-                            imageSrc: locationUri,
-                            iconFetched: true,
-                        });
-                    }).then(() => { /*console.log("imageSrc = " + this.state.imageSrc)*/ });
+                    if (map.get("origin") == "mobile"){
+                        // Handle viewing mobile-uploaded media on mobile
+                        let rebuiltb64 = 'data:' + map.get("format") + '/' + map.get('ext') + ';base64,' + byte64;
+                        this.saveImage(rebuiltb64).then( (uri) => {locationUri = uri;}).then(() => {
+                            this.setState({
+                                imageSrc: locationUri,
+                                iconFetched: true,
+                                metadata: map
+                            });
+                            console.log("VIEWING MOBILE-UPLOADED ON MOBILE: " + this.state.imageSrc)
+                        }).then(() => {/*console.log("imageSrc = " + this.state.imageSrc)*/});
+                    } else {
+                        // Handle viewing web-uploaded media on mobile
+                        this.saveImage(src1).then( (uri) => {locationUri = uri;}).then(() => {
+                            this.setState({
+                                imageSrc: locationUri,
+                                iconFetched: true,
+                                metadata: map
+                            });
+                            console.log("VIEWING WEB-UPLOADED ON MOBILE: " + this.state.imageSrc)
+                        }).then(() => {/*console.log("imageSrc = " + this.state.imageSrc)*/});
+                    }
                 } else {
-                    this.setState({
-                        imageSrc: finalsrc,
-                        iconFetched: true,
-                    })
+                    // Handle viewing on web
+                    if (map.get("origin") == "mobile"){
+                        // Handle viewing mobile-uploaded media on web
+                        console.log("VIEWING MOBILE IMAGE ON WEB");
+                        let rebuiltb64 = 'data:' + map.get("format") + '/' + map.get('ext') + ';base64,' + byte64;
+                        this.setState({
+                            imageSrc: rebuiltb64,
+                            iconFetched: true,
+                            metadata: map,
+                        })
+                        //console.log("URI: " + rebuiltb64.slice(0, 50));
+
+                    } else {
+                        // Handle web-uploaded media on web
+                        this.setState({
+                            imageSrc: byte64,
+                            iconFetched: true,
+                            metadata: map,
+                        })
+                    }
                 }
+
             }.bind(this)); //binds stream.on function so we can access state
         } else {
             this.setState({
@@ -173,7 +211,7 @@ class ProfilePicture extends React.Component {
         //const base64Data = base64String.replace("data:image/png;base64,","");
         const base64Data = base64String.split(",")[1];
 
-        let map = this.state.map;
+        let map = this.state.metadata;
         let ext = map.get("ext");
 
         let uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
