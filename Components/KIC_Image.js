@@ -276,7 +276,7 @@ class KIC_Image extends React.Component {
                                 ref={video}
                                 style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}
-                                resizeMode="contain"
+                                resizeMode="cover"
                             /> : <View></View>}
                         </TouchableOpacity>
                     </View> : <View></View>}
