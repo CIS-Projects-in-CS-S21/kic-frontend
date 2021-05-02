@@ -111,7 +111,7 @@ class KIC_Image extends React.Component {
                 username: this.props.username,
                 navigation: this.props.navigation,
                 authString: this.props.authString,
-                imageFixed: false,
+                imagefixed: false,
             })
             this.fetchImage();
         }
@@ -193,7 +193,7 @@ class KIC_Image extends React.Component {
                             imagefixed: true,
                             metadata: map
                         });
-                        console.log("VIEWING WEB-UPLOADED ON MOBILE: " + this.state.imageSrc)
+                        console.log("VIEWING WEB-UPLOADED ON MOBILE")
                     }).then(() => {/*console.log("imageSrc = " + this.state.imageSrc)*/});
                 }
             } else {
