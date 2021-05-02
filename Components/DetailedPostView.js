@@ -324,7 +324,7 @@ class DetailedPostView extends React.Component {
         let desiredmap = req.getDesiredmetadataMap();
         desiredmap.set("comments", desiredCommentsJSON);
         // Send the request and print the # of files updated
-        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { /*console.log("Result: " + res)*/ }).catch(error => console.log("Saving comment failed: " + error));
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.textInput.clear() }).catch(error => console.log("Saving comment failed: " + error));
     }
 
     /**
@@ -510,6 +510,7 @@ class DetailedPostView extends React.Component {
                 {/* Comment field */}
                 {(this.state.finishedInit && this.state.commentsAllowed) ? <View style={{flexDirection: 'row'}}>
                     <TextInput
+                        ref={input => { this.textInput = input }}
                         style={KIC_Style.commentInput}
                         textAlign = {'center'}
                         onChange={(e) => this.setCommentText(e.nativeEvent.text)}
