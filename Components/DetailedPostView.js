@@ -63,6 +63,7 @@ class DetailedPostView extends React.Component {
 
             finishedInit: false,
             isMyPost: false,
+            modalVisible: false,
 
             // For comment adding
             comment: {},
@@ -234,7 +235,12 @@ class DetailedPostView extends React.Component {
         //console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
         map.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
 
-        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser(res)});
+        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {
+            this.setState({
+                modalVisible:false,
+            })
+            this.redirectUser(res);
+            });
     }
 
     /**
@@ -358,7 +364,7 @@ class DetailedPostView extends React.Component {
         let desiredmap = req.getDesiredmetadataMap();
         desiredmap.set("commentsAllowed", 'false');
 
-        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.setState({ commentsAllowed: false, }) });
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.setState({ modalVisible: false, commentsAllowed: false, }) });
     }
 
     /**
@@ -383,7 +389,7 @@ class DetailedPostView extends React.Component {
         let desiredmap = req.getDesiredmetadataMap();
         desiredmap.set("commentsAllowed", 'true');
 
-        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.setState({ commentsAllowed: true, }) });
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.setState({ modalVisible: false, commentsAllowed: true, }) });
     }
 
   /**
@@ -396,6 +402,7 @@ class DetailedPostView extends React.Component {
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={{ justifyContent: 'flex-start', alignItems: 'center', flex: 1, }}>
+            {/* Post image/video */}
             {(this.state.finishedInit) ? <View style={styles.container}>
                 {(!this.state.isVideo && this.state.finishedInit) ? <Image
                     style={styles.postImage}
@@ -409,35 +416,86 @@ class DetailedPostView extends React.Component {
                     resizeMode="contain"
                 />}
 
-                {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
-                {(this.state.finishedInit) ? <PostDetails
-                    myUserid = {this.state.myUserid}
-                    navigation = {this.state.navigation}
-                    authString = {this.state.authString}
-                    userid = {this.state.userid}
-                    username = {this.state.username}
-                    yearPosted = {this.state.yearPosted}
-                    monthPosted = {this.state.monthPosted}
-                    dayPosted = {this.state.dayPosted}
-                    caption = {this.state.caption}
-                /> : <View></View>}
+                {/* Post details, settings button, and timestamp */}
+                <View style={{justifyContent: 'flex-start'}}>
+                    {/* Post details & settings button */}
+                    <View style = {{flexDirection: 'row', justifyContent: 'center', }}>
+                    {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
+                    {(this.state.finishedInit) ? <PostDetails
+                        myUserid = {this.state.myUserid}
+                        navigation = {this.state.navigation}
+                        authString = {this.state.authString}
+                        userid = {this.state.userid}
+                        username = {this.state.username}
+                        yearPosted = {this.state.yearPosted}
+                        monthPosted = {this.state.monthPosted}
+                        dayPosted = {this.state.dayPosted}
+                        caption = {this.state.caption}
+                    /> : <View></View>}
 
-                {/* Only display delete button if this is active user's own post */}
-                {(this.state.isMyPost) ? <TouchableOpacity
-                    onPress = {this.handleDelete}>
-                        <Text style = {{ textAlign: 'right', fontSize: 9, fontStyle: 'italic', color: '#707070', }} >Delete post</Text>
-                </TouchableOpacity> : <View></View>}
+                    {/*Post settings button*/}
+                    {(this.state.isMyPost) && <TouchableOpacity
+                        style={{ justifyContent: 'center' }}
+                        onPress={() => {
+                            this.setState({
+                            modalVisible:true,
+                            })
+                        }}>
+                            <Ionicons name="ellipsis-vertical-outline" color='#707070' size={25} />
+                    </TouchableOpacity>}
+                    </View>
 
-                {/* Only display disable/enable comments button if this is active user's own post */}
-                {(this.state.isMyPost && this.state.commentsAllowed) ? <TouchableOpacity
-                    onPress = {this.handleDisableComments.bind(this)}>
-                        <Text style = {{ textAlign: 'right', fontSize: 9, fontStyle: 'italic', color: '#707070', }} >Disable comments</Text>
-                </TouchableOpacity> :
-                (this.state.isMyPost && !this.state.commentsAllowed) ? <TouchableOpacity
-                        onPress = {this.handleEnableComments.bind(this)}>
-                            <Text style = {{ textAlign: 'right', fontSize: 9, fontStyle: 'italic', color: '#707070', }} >Enable comments</Text>
-                    </TouchableOpacity> : <View></View>}
+                {/* Timestamp */}
+                <Text style={styles.postTimestamp}>Posted on {this.state.dayPosted} {this.state.monthPosted} {this.state.yearPosted}</Text>
+                </View>
 
+                {/* Options modal*/}
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    onRequestClose={() =>
+                        this.setState({
+                            modalVisible:false,
+                        }) }
+                    visible={this.state.modalVisible}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            {(this.state.isMyPost) ? <TouchableOpacity
+                                style={KIC_Style.button}
+                                onPress = {this.handleDelete.bind(this)}>
+                                    <Text style={KIC_Style.button_font}>Delete post</Text>
+                            </TouchableOpacity> : <View></View>}
+
+                            {/* Only display disable/enable comments button if this is active user's own post */}
+                            {(this.state.isMyPost && this.state.commentsAllowed) ? <TouchableOpacity
+                                style={KIC_Style.button}
+                                onPress = {this.handleDisableComments.bind(this)}>
+                                    <Text style={KIC_Style.button_font}>Disable comments</Text>
+                            </TouchableOpacity> :
+                            (this.state.isMyPost && !this.state.commentsAllowed) ? <TouchableOpacity
+                                    style={KIC_Style.button}
+                                    onPress = {this.handleEnableComments.bind(this)}>
+                                        <Text style={KIC_Style.button_font}>Enable comments</Text>
+                                </TouchableOpacity>  : <View></View>}
+
+                            {/*Close button*/}
+                            <TouchableOpacity
+                                style={KIC_Style.button}
+                                onPress={() => {
+                                      this.setState({
+                                          modalVisible: false,
+                                      })
+                                  }}>
+                                    <Text style={KIC_Style.button_font}>Close</Text>
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>
+
+                </Modal>
+
+                {/* Comments section */}
                 {(this.state.comments != null && this.state.finishedInit && this.state.commentsAllowed) ? <View style={{ flex: 1, alignItems: 'stretch', }}>
                     <CommentSection
                         navigation = {this.state.navigation}
@@ -449,6 +507,7 @@ class DetailedPostView extends React.Component {
                     />
                 </View> : <View></View>}
 
+                {/* Comment field */}
                 {(this.state.finishedInit && this.state.commentsAllowed) ? <View style={{flexDirection: 'row'}}>
                     <TextInput
                         style={KIC_Style.commentInput}
@@ -456,6 +515,7 @@ class DetailedPostView extends React.Component {
                         onChange={(e) => this.setCommentText(e.nativeEvent.text)}
                         placeholder="Leave a comment . . ."
                     />
+                    {/* Add comment button */}
                     <TouchableOpacity
                         style={{ justifyContent: 'center', backgroundColor: '#b3d2db', marginRight: 10, }}
                         onPress = {this.handleAddComment}>
@@ -474,34 +534,61 @@ class DetailedPostView extends React.Component {
  * @constant styles creates stylesheet for a DetailedPostView
  */
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'stretch',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    marginLeft: 15,
-    marginRight: 15,
-    height: 'auto',
-    ...Platform.select({
-      ios: {
-        top:30,
-        marginBottom:30,
-      },
-      android: {
-        top:30,
-        marginBottom:30,
-      },
-      default: {
-        top:60,
-        marginBottom: 60,
-      }
-    }),
-  },
-  postImage: {
-    alignSelf: 'center',
-    width: Dimensions.get('window').width / 1.12,
-    height: Dimensions.get('window').width / 1.12,
-  }
+    container: {
+        flex: 1,
+        alignItems: 'stretch',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        marginLeft: 15,
+        marginRight: 15,
+        height: 'auto',
+        ...Platform.select({
+          ios: {
+            top:30,
+            marginBottom:30,
+          },
+          android: {
+            top:30,
+            marginBottom:30,
+          },
+          default: {
+            top:60,
+            marginBottom: 60,
+          }
+        }),
+    },
+    postImage: {
+        alignSelf: 'center',
+        width: Dimensions.get('window').width / 1.12,
+        height: Dimensions.get('window').width / 1.12,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 10,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    postTimestamp: {
+        fontSize: 10,
+        fontStyle: 'italic',
+        color: '#707070',
+        textAlign: 'right',
+    },
 });
 
 export default DetailedPostView;
