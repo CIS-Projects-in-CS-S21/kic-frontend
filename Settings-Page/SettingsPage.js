@@ -32,7 +32,7 @@ class SettingsPage extends React.Component {
             myUserid: '',
             authString: '',
             isPrivate: false,
-            triggerString: ''
+            triggerString: '//'
         };
         this.toggleSwitch = this.toggleSwitch.bind(this);
         this.setTriggers = this.setTriggers.bind(this);
@@ -172,6 +172,9 @@ class SettingsPage extends React.Component {
      *@param {String} triggerString input in // format
      */
     setTriggers(triggerString) {
+        if (triggerString == "") {
+            triggerString = "//";
+        }
         this.setState({
             triggerString: triggerString
         })
