@@ -14,7 +14,7 @@ import ClientManager from '../Managers/ClientManager';
 import UserManager from '../Managers/UserManager';
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
-import { Text, TouchableOpacity, Image, View, TextInput } from "react-native";
+import { Text, TouchableOpacity, Image, TextInput } from "react-native";
 import { DatePickerModal } from 'react-native-paper-dates';
 
 
@@ -59,6 +59,7 @@ export default function signUp() {
     */
     const handleSubmit = evt => {
         evt.preventDefault();
+        const today = Date();
         if (password1 !== password2) {
             alert('Error: Passwords must be equal.');
         } else if (username == null || username == "") {
@@ -79,6 +80,8 @@ export default function signUp() {
             alert('Must input city.');
         } else if (birthday == null || birthday == "") {
             alert('Must input birthday.');
+        } else if (birthday > today) {
+            alert('Birthday cannot be in future.');
         } else {
             makeRequest();
         }
@@ -288,7 +291,11 @@ export default function signUp() {
                     label="Pick A Date"
                     animationType="slide"
                     mode={"single"}
-                    maxDate={new Date().getDate()}/>
+                    validRange={{
+                        startDate: new Date(1900, 1, 1),
+                        endDate: new Date()
+                    }}
+                    />
                 <TouchableOpacity
                     style={KIC_Style.button}
                     onPress={() =>
