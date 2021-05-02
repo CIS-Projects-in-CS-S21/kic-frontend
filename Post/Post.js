@@ -11,8 +11,7 @@ import {Platform} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import exampleImage from '../assets/kic.png';
 import FeedHeader from '../Components/FeedHeader';
-
-
+import * as FileSystem from 'expo-file-system';
 
 /**
  * @param navigation The navigation prop used to navigate between page
@@ -125,23 +124,44 @@ export default function Post({ navigation }) {
             allowsEditing: true,
             aspect: [1, 1],
             videoMaxDuration: 3,
-            quality: 1,
+            maxWidth: 450,
+            maxHeight: 450,
+            quality: .9,
             base64: true
         });
         console.log(result);
         if (!result.cancelled) {
             setImage(result.uri);
             if (Platform.OS === "web") {
-                //this is the base 64
+                // If web upload:
                 const extractedFormat = result.uri.split(/[:, /]/);
+
                 if (extractedFormat[1] == "video") {
+                    // If web video upload:
                     setIsVideo(true);
+
+                    // Detect extension and change to mp4
+                    const regex = /\/.*?;base64/g;
+                    const extractedExt = result.uri.match(regex);
+                    let extensionNoBase = extractedExt.toString().replace(";base64", "");
+                    let extension = extensionNoBase.replace("/", "");
+                    if (extension !== 'mp4'){
+                        let mp4uri = result.uri.replace(extension, "mp4");
+                        setImage(mp4uri);
+                    }
                 }
                 const parsedURI = result.uri.split(/[,]/);
                 setBase64(parsedURI[1]);
             } else {
+                // If mobile upload:
                 setBase64(result.base64);
+
                 if (result.type === 'video') {
+                    // If mobile video upload:
+                    let newb64 = getBase64(result.uri).then(res => {
+                        console.log("res: " + res.slice(0, 200));
+                        setBase64(res);
+                    });
                     setIsVideo(true);
                 }
             }
@@ -151,8 +171,8 @@ export default function Post({ navigation }) {
         }
     };
 
-    //if no camera possible (web) or no gallery permission, say sorry! no access to gallery or camera
-    if (hasCameraPermission === null || hasGalleryPermission === false) {
+    //if no camera possible/denied and no gallery permission, say sorry! no access to gallery or camera
+    if ((hasCameraPermission === null && hasGalleryPermission === false) || (hasCameraPermission === false && hasGalleryPermission === false)) {
         return (
             <SafeAreaView style={KIC_Style.outContainer}>
                 <FeedHeader navigation={navigation} />
@@ -162,7 +182,7 @@ export default function Post({ navigation }) {
                         source={require('../assets/kic.png')}
                     />
                     <Text>
-                        Sorry! No access to gallery or camera. This feature is only available on mobile!
+                        Sorry! No access to gallery or camera. Please make sure you have given KiC access!
                     </Text>
                     <TouchableOpacity
                         style={KIC_Style.button}
@@ -174,6 +194,44 @@ export default function Post({ navigation }) {
 
         )
     };
+
+    //if no camera possible (firefox or denied) but yes gallery permission, say only show options for gallery
+    if ((hasCameraPermission === null && hasGalleryPermission === true) || (hasCameraPermission === false && hasGalleryPermission === true && notWeb) ) {
+        return (
+            <SafeAreaView style={KIC_Style.outContainer}>
+                <FeedHeader navigation={navigation} />
+                <SafeAreaView style={KIC_Style.innerContainer}>
+                    <Image
+                        style={{ marginTop: 100, width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+                        source={require('../assets/kic.png')}
+                    />
+                    <Text style = {KIC_Style.titlePost}> Only gallery permissions have been granted. Select an image or video! </Text>
+                    <TouchableOpacity
+                        style={KIC_Style.button_post}
+                        onPress={() => pickImage()}>
+                        <Text style={KIC_Style.button_font}>Select Image from Gallery</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={KIC_Style.button_post}
+                        onPress={() => navigation.navigate('PostInfo', { image, base64, isVideo })}>
+                        <Text style={KIC_Style.button_font}>Save</Text>
+                    </TouchableOpacity>
+                </SafeAreaView>
+            </SafeAreaView>
+
+        )
+    }
+
+
+    const getBase64 = async(uri) => {
+        try {
+            let newb64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+            return newb64;
+        } catch (e) {
+            console.log('*Error*')
+            console.log(e)
+      }
+    }
 
    /**
     * Renders Post components.
