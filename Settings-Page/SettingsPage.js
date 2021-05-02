@@ -13,7 +13,6 @@ import ClientManager from "../Managers/ClientManager";
 import {GetUserByIDRequest, UpdateUserInfoRequest} from "../gen/proto/users_pb";
 
 
-
 /**
  * @class Contains function for rendering SettingsPage screen.
  */
@@ -31,8 +30,9 @@ class SettingsPage extends React.Component {
             myUser: null,
             myUserid: '',
             authString: '',
-            isPrivate: false,
-            triggerString: '//'
+            isPrivate: null,
+            triggerString: '//',
+            fetchedPriv: false,
         };
         this.toggleSwitch = this.toggleSwitch.bind(this);
         this.setTriggers = this.setTriggers.bind(this);
@@ -45,7 +45,7 @@ class SettingsPage extends React.Component {
     async componentDidMount() {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
             this.setState({
-                finishedLoading: false,
+                fetchedPriv: false,
             })
             this.fetchUserInfo().then(response => {
                 console.log("Mounted setting page success");
@@ -54,6 +54,7 @@ class SettingsPage extends React.Component {
             });
         })
     }
+
 
     /**
      * Runs before the component is unmounted
@@ -124,13 +125,15 @@ class SettingsPage extends React.Component {
         if (isPrivate == "1") {
             boolPriv = true;
         }
+        console.log("User Info has been set!")
         let ogTriggers = res.getUser().getTriggers()
         //let myusername = user.getUsername();
         this.setState({
             myUserid: userID,
             myUser: user,
             isPrivate: boolPriv,
-            triggerString: ogTriggers
+            triggerString: ogTriggers,
+            fetchedPriv: true,
         })
     }
     /**
@@ -221,14 +224,14 @@ class SettingsPage extends React.Component {
                 />
                 <Text>Keeping It Casual Explore Page!</Text>
                 <Text style = {{margin: 30}}>Set Account as Private</Text>
-                <Switch
+                {this.state.fetchedPriv  ? <Switch
                     style = {{marginTop: 30}}
                     trackColor={{ false: "#b3d2db", true: "#7ab7dd" }}
-                    thumbColor={this.state.isPrivate ? "#ffff" : "#b3d2db"}
+                    thumbColor={!this.state.isPrivate ? "#ffff" : "#b3d2db"}
                     ios_backgroundColor="#ffff"
                     onValueChange={this.toggleSwitch}
-                    value={this.state.isPrivate}
-                />
+                    value={!this.state.isPrivate}
+                />: <View></View>}
                 <Text style = {{marginTop: 30}}> Current Triggers: {this.state.triggerString} </Text>
                 <TextInput
                     style={KIC_Style.postInput}
