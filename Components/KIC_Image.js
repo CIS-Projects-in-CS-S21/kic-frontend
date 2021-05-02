@@ -47,6 +47,7 @@ class KIC_Image extends React.Component {
             imagefixed: false,
             metadata: [],
             isVideo: false, //by default, assumes that this is an image
+            imageWidth: 0,
         };
 
         this.fetchImage = this.fetchImage.bind(this)
@@ -123,6 +124,20 @@ class KIC_Image extends React.Component {
      * postcondition: bind downloaded file to this
      */
     fetchImage() {
+        // Determine image size using screen width:
+        let windowWidth = Dimensions.get('window').width;
+
+        if (windowWidth < 400 ){
+            this.setState({
+                imageWidth: windowWidth - 40,
+            })
+        } else {
+            this.setState({
+                imageWidth: 250,
+            })
+        }
+
+
         let cm = new ClientManager();
         let client = cm.createMediaClient();
         let req = new DownloadFileRequest();
@@ -269,12 +284,12 @@ class KIC_Image extends React.Component {
                         <TouchableOpacity
                             onPress={this.handleViewPost}>
                             {(!this.state.isVideo && this.state.imagefixed) ? <Image
-                                style={{width: 170, height: 170, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
+                                style={{width: this.state.imageWidth, height: this.state.imageWidth, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}>
                             </Image> :
                             (this.state.isVideo && this.state.imagefixed) ? <Video
                                 ref={video}
-                                style={{width: 170, height: 170, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
+                                style={{width: this.state.imageWidth, height: this.state.imageWidth, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}
                                 resizeMode="cover"
                             /> : <View></View>}
