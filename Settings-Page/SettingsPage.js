@@ -33,6 +33,7 @@ class SettingsPage extends React.Component {
             isPrivate: null,
             triggerString: '//',
             fetchedPriv: false,
+            newBio: ''
         };
         this.toggleSwitch = this.toggleSwitch.bind(this);
         this.setTriggers = this.setTriggers.bind(this);
@@ -213,6 +214,40 @@ class SettingsPage extends React.Component {
 
     }
 
+
+    /**
+     * Set bio on change
+     */
+
+    setNewBio(bio) {
+        this.setState({
+            newBio : bio
+        });
+    }
+
+
+    changeBio() {
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        let req = new UpdateUserInfoRequest();
+        req.setBio(this.state.newBio);
+        req.setUserid(this.state.myUserid);
+        req.setEmail(this.state.myUser.getEmail());
+        req.setBirthday(this.state.myUser.getBirthday());
+        req.setDesiredusername(this.state.myUser.getUsername());
+        req.setCity(this.state.myUser.getCity());
+        req.setTriggers(this.state.myUser.getTriggers());
+
+        return client.updateUserInfo(req, { 'Authorization': this.state.authString }).then(res =>
+            console.log(res)
+        ).catch(error => {
+            console.log("There was an error.");
+            console.log(error)
+        });
+    }
+
+    
     render() {
         /**
          * Renders setting screen components.
@@ -247,6 +282,17 @@ class SettingsPage extends React.Component {
                     style={KIC_Style.button2}
                     onPress={() => this.storeTriggers()}>
                     <Text style={KIC_Style.button_font}> Store Triggers </Text>
+                </TouchableOpacity>
+                <TextInput
+                    style={KIC_Style.postInput}
+                    textAlign = {'center'}
+                    onChange={(e) => this.setNewBio(e.nativeEvent.text)}
+                    placeholder="Change bio..."
+                />
+                <TouchableOpacity
+                    style={KIC_Style.button2}
+                    onPress={() => this.changeBio()}>
+                    <Text style={KIC_Style.button_font}> Change Bio </Text>
                 </TouchableOpacity>
                 <StatusBar style="auto" />
                 </SafeAreaView>
