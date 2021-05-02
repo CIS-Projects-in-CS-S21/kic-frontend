@@ -50,6 +50,8 @@ class ProfilePost extends React.Component {
             caption: "Caption",
 
             filename: props.filename,
+
+            finishedFetching: false,
         };
 
         this.parseFileinfo = this.parseFileinfo.bind(this)
@@ -105,6 +107,7 @@ class ProfilePost extends React.Component {
 
         this.setState({
             posterusername: posterusername,
+            finishedFetching: true,
         })
     }
 
@@ -115,6 +118,7 @@ class ProfilePost extends React.Component {
     render() {
       return (
         <View>
+        {(this.state.finishedFetching) ? <View>
             <KIC_Image
               navigation = {this.props.navigation}
               authString = {this.props.authString}
@@ -123,6 +127,7 @@ class ProfilePost extends React.Component {
               username = {this.state.posterusername}
               fileInfo = {this.props.file}
             />
+        </View> : <View></View>}
         </View>
       );
     }

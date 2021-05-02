@@ -146,7 +146,7 @@ class PostsGrid extends React.Component {
 
         let myfiles = res.getFileinfosList();
 
-        let imgWidth = 180;
+        let imgWidth = 170;
         let screenWidth = Dimensions.get('window').width;
         let numColumns = Math.floor(screenWidth / imgWidth);
 
@@ -154,12 +154,10 @@ class PostsGrid extends React.Component {
 
         this.setState({
             myFiles: myfiles,
-            finishedFetching: true,
             numColumns: numColumns,
+            finishedFetching: true,
         })
 
-        //console.log("FILES FOR " + this.state.userid + ": " + myfiles);
-        //console.log("FILES FOR " + this.state.userid + ": " + this.state.myFiles);
     }
 
     /**

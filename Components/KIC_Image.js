@@ -43,7 +43,7 @@ class KIC_Image extends React.Component {
             navigation: props.navigation,
             authString: props.authString,
             fileInfo: props.fileInfo,
-            imageSrc: "",
+            imageSrc: null,
             imagefixed: false,
             metadata: [],
             isVideo: false, //by default, assumes that this is an image
@@ -269,12 +269,12 @@ class KIC_Image extends React.Component {
                         <TouchableOpacity
                             onPress={this.handleViewPost}>
                             {(!this.state.isVideo && this.state.imagefixed) ? <Image
-                                style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
+                                style={{width: 170, height: 170, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}>
                             </Image> :
                             (this.state.isVideo && this.state.imagefixed) ? <Video
                                 ref={video}
-                                style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
+                                style={{width: 170, height: 170, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}
                                 resizeMode="cover"
                             /> : <View></View>}
