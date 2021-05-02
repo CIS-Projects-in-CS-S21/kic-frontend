@@ -62,6 +62,10 @@ class KIC_Image extends React.Component {
         let map = this.props.fileInfo.getMetadataMap();
         let ext = map.get("ext");
 
+        if (map.get("format") === "video" && ext !== "mp4"){
+            ext = "mp4";
+        }
+
         let uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
         
         try {
@@ -107,6 +111,7 @@ class KIC_Image extends React.Component {
                 username: this.props.username,
                 navigation: this.props.navigation,
                 authString: this.props.authString,
+                imageFixed: false,
             })
             this.fetchImage();
         }
@@ -154,45 +159,67 @@ class KIC_Image extends React.Component {
 
             let src1 = this.state.imageSrc;
             let ext = map.get("ext");
-            let finalsrc = '';
-
-            // Rebuilds the header with special characters for images taken from web app ("data:image/png;base64" format)
-            if (!src1.toString().includes("mobile")) {
-                console.log("This image was taken from web");
-
-                finalsrc = byte64;
-            } else { //Rebuild the header for images taken from mobile app
-                console.log("This image was taken from mobile");
-                finalsrc = byte64;
-            }
 
             //determines if media is video or not
-            if (map.get("format") == "video") {
+            if (map.get("format") === "video") {
+                if (map.get("ext") !== "mp4"){
+                    map.set("ext", "mp4");
+                }
                 this.setState({
                     isVideo: true
                 })
             }
 
-            // Saving image
-
             if (Platform.OS !== 'web') {
-                //iOS or Android
+                // Handle viewing on mobile
                 let locationUri = '';
 
-                this.saveImage(src1).then( (uri) => {locationUri = uri;}).then(() => {
-                    this.setState({
-                        imageSrc: locationUri,
-                        imagefixed: true,
-                        metadata: map
-                    });
-                }).then(() => {console.log("imageSrc = " + this.state.imageSrc)});
+                if (map.get("origin") == "mobile"){
+                    // Handle viewing mobile-uploaded media on mobile
+                    let rebuiltb64 = 'data:' + map.get("format") + '/' + map.get('ext') + ';base64,' + byte64;
+                    this.saveImage(rebuiltb64).then( (uri) => {locationUri = uri;}).then(() => {
+                        this.setState({
+                            imageSrc: locationUri,
+                            imagefixed: true,
+                            metadata: map
+                        });
+                        console.log("VIEWING MOBILE-UPLOADED ON MOBILE: " + this.state.imageSrc)
+                    }).then(() => {/*console.log("imageSrc = " + this.state.imageSrc)*/});
+                } else {
+                    // Handle viewing web-uploaded media on mobile
+                    this.saveImage(src1).then( (uri) => {locationUri = uri;}).then(() => {
+                        this.setState({
+                            imageSrc: locationUri,
+                            imagefixed: true,
+                            metadata: map
+                        });
+                        console.log("VIEWING WEB-UPLOADED ON MOBILE: " + this.state.imageSrc)
+                    }).then(() => {/*console.log("imageSrc = " + this.state.imageSrc)*/});
+                }
             } else {
-                this.setState({
-                    imageSrc: finalsrc,
-                    imagefixed: true,
-                    metadata: map,
-                })
+                // Handle viewing on web
+                if (map.get("origin") == "mobile"){
+                    // Handle viewing mobile-uploaded media on web
+                    console.log("VIEWING MOBILE IMAGE ON WEB");
+                    let rebuiltb64 = 'data:' + map.get("format") + '/' + map.get('ext') + ';base64,' + byte64;
+                    this.setState({
+                        imageSrc: rebuiltb64,
+                        imagefixed: true,
+                        metadata: map,
+                    })
+                    console.log("URI: " + rebuiltb64.slice(0, 50));
+
+                } else {
+                    // Handle web-uploaded media on web
+                    this.setState({
+                        imageSrc: byte64,
+                        imagefixed: true,
+                        metadata: map,
+                    })
+                }
             }
+
+            //console.log("FILE URI: " + this.state.imageSrc)
             
             // --------
 
@@ -241,16 +268,16 @@ class KIC_Image extends React.Component {
                     <View>
                         <TouchableOpacity
                             onPress={this.handleViewPost}>
-                            {!this.state.isVideo && <Image
+                            {(!this.state.isVideo && this.state.imagefixed) ? <Image
                                 style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}>
-                            </Image>}
-                            {this.state.isVideo && <Video
+                            </Image> :
+                            (this.state.isVideo && this.state.imagefixed) ? <Video
                                 ref={video}
                                 style={{width: 180, height: 180, alignSelf: 'center', marginLeft: 3, marginRight: 3, }}
                                 source={{uri: this.state.imageSrc}}
                                 resizeMode="contain"
-                            />}
+                            /> : <View></View>}
                         </TouchableOpacity>
                     </View> : <View></View>}
             </View>
