@@ -11,8 +11,7 @@ import {Platform} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import exampleImage from '../assets/kic.png';
 import FeedHeader from '../Components/FeedHeader';
-
-
+import * as FileSystem from 'expo-file-system';
 
 /**
  * @param navigation The navigation prop used to navigate between page
@@ -125,23 +124,44 @@ export default function Post({ navigation }) {
             allowsEditing: true,
             aspect: [1, 1],
             videoMaxDuration: 3,
-            quality: 1,
+            maxWidth: 450,
+            maxHeight: 450,
+            quality: .9,
             base64: true
         });
         console.log(result);
         if (!result.cancelled) {
             setImage(result.uri);
             if (Platform.OS === "web") {
-                //this is the base 64
+                // If web upload:
                 const extractedFormat = result.uri.split(/[:, /]/);
+
                 if (extractedFormat[1] == "video") {
+                    // If web video upload:
                     setIsVideo(true);
+
+                    // Detect extension and change to mp4
+                    const regex = /\/.*?;base64/g;
+                    const extractedExt = result.uri.match(regex);
+                    let extensionNoBase = extractedExt.toString().replace(";base64", "");
+                    let extension = extensionNoBase.replace("/", "");
+                    if (extension !== 'mp4'){
+                        let mp4uri = result.uri.replace(extension, "mp4");
+                        setImage(mp4uri);
+                    }
                 }
                 const parsedURI = result.uri.split(/[,]/);
                 setBase64(parsedURI[1]);
             } else {
+                // If mobile upload:
                 setBase64(result.base64);
+
                 if (result.type === 'video') {
+                    // If mobile video upload:
+                    let newb64 = getBase64(result.uri).then(res => {
+                        console.log("res: " + res.slice(0, 200));
+                        setBase64(res);
+                    });
                     setIsVideo(true);
                 }
             }
@@ -174,6 +194,16 @@ export default function Post({ navigation }) {
 
         )
     };
+
+    const getBase64 = async(uri) => {
+        try {
+            let newb64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+            return newb64;
+        } catch (e) {
+            console.log('*Error*')
+            console.log(e)
+      }
+    }
 
    /**
     * Renders Post components.

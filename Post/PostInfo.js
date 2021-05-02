@@ -70,6 +70,7 @@ export default function PostInfo(props) {
      * @returns tagsParsed array of parsed tags
      */
     const parseTags = (tags) => {
+        console.log("parsing tags");
         let tagsNoCommas = tags.replace(",", " ");
         let tagsParsed = tagsNoCommas.split(/[' ',',',#]/);
         tagsParsed = tagsParsed.filter(e => e !== '');
@@ -84,6 +85,7 @@ export default function PostInfo(props) {
      * precondition: getUserID
      */
     const makeUploadFileRequest = async (userID, authString) => {
+        console.log("making upload request");
        //obtain uri and base64 from Post.js
         let uri = props.route.params.image;
         const base64 = props.route.params.base64;
@@ -102,15 +104,25 @@ export default function PostInfo(props) {
             const extractedExt = uri.match(regex);
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
+
+            if (format === 'video'){
+                extension = "mp4";
+            }
+
         } else {
-            //if platform is mobile
+            //if uploading from mobile, the uri should just be base64
+
+            // Get extension from uri
             const parsedURI = uri.split(/[.]/);
             extension = parsedURI[parsedURI.length-1];
             console.log("mobile ext:" + extension);
+
+            // Detect video
             if (extension == "mp4" || extension == "mov" || extension == "wmv") {
-                uri = _videoTo64URI(uri,extension);
-                format = "video"
-                console.log("video extension detected");
+                uri = await convertToMP4(uri, extension);
+                extension = 'mp4';
+                format = "video";
+                //console.log("video extension detected: " + uri);
             } else {
                 format = "image"
             }
@@ -155,10 +167,19 @@ export default function PostInfo(props) {
         date.setYear(String(today.getFullYear()).padStart(2, '0'));
         file.setDatestored(date);
 
-        //convert uri to int 8 Array which is needed for setting File
-        let uri2 = uri + "xx";
-        let your_bytes = Buffer.from(uri2, "base64");
-        req.setFileuri(uri);
+        // Use uri for web uploads, use base64 for mobile uploads
+        if (Platform.OS === 'web'){
+            map.set("origin", "web")
+            console.log("UPLOADING ON WEB: " + uri)
+            req.setFileuri(uri);
+        } else {
+            //console.log("UPLOADING ON MOBILE: " + base64)
+            map.set("origin", "mobile")
+            req.setFileuri(base64);
+        }
+
+        //let your_bytes = Buffer.from(uri2, "base64");
+
         req.setFileinfo(file);
 
 
@@ -183,6 +204,33 @@ export default function PostInfo(props) {
             });
     }
 
+    /*
+    * Converts video uri to mp4 using this method: https://github.com/taltultc/react-native-mov-to-mp4/issues/23
+    */
+    const convertToMP4 = async (videoURI, extension) => {
+        // This is the original video uri
+        console.log("MOBILE VIDEO ORIGINAL URI: " + videoURI)
+
+        // Generate filename
+        const filename = Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+        let toreplace = "." + extension;
+        // Just returns the videoURI
+        let vid = videoURI.replace(toreplace, ".mp4");
+
+        // Convert video data to mp4 - MovToMp4 is not supported for expo projects
+        /*
+        console.log("Beginning conversion...");
+        //let converted = await MovToMp4.convertMovToMp4(videoURI, filename).then(res => {console.log("Successful conversion")}).catch(error => {console.log("err: " + error)});
+
+        // Rebuild prepending string -- use "mp4" because it will have ideally been converted to mp4
+        vid = "data:video/" +  'mp4' + ";base64,"+ converted;
+        */
+
+
+        console.log("RESULTING MOBILE VIDEO URI: " + vid);
+        return vid;
+    };
 
     /**
      * @constant randomizeFileName For generating file name
@@ -194,15 +242,6 @@ export default function PostInfo(props) {
         return v.toString(16);
       });
     }
-
-
-    const _videoTo64URI = async (videoURI, extension) => {
-        const options = { encoding: FileSystem.EncodingType.Base64 };
-        const data = await FileSystem.readAsStringAsync(videoURI, options);
-        let vids = "data:video/" +  extension + ";base64,"+ data;
-        return vids;
-    };
-
 
     /**
      * @constant caption store caption from user input
