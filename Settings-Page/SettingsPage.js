@@ -36,6 +36,7 @@ class SettingsPage extends React.Component {
         };
         this.toggleSwitch = this.toggleSwitch.bind(this);
         this.setTriggers = this.setTriggers.bind(this);
+        this.fetchUserInfo = this.fetchUserInfo.bind(this);
     }
 
     /**
@@ -122,8 +123,11 @@ class SettingsPage extends React.Component {
         let user = res.getUser();
         let isPrivate = res.getUser().getIsprivate();
         let boolPriv = false;
-        if (isPrivate == "1") {
+        if (isPrivate === "1") {
+            console.log("User is PRIVATE");
             boolPriv = true;
+        } else {
+            console.log("User is PUBLIC");
         }
         console.log("User Info has been set!")
         let ogTriggers = res.getUser().getTriggers()
@@ -149,9 +153,9 @@ class SettingsPage extends React.Component {
 
         let req = new UpdateUserInfoRequest();
         if (this.state.isPrivate == true) {
-            req.setIsprivate("1");
-        } else {
             req.setIsprivate("0");
+        } else {
+            req.setIsprivate("1");
         }
         req.setBio(this.state.myUser.getBio());
         req.setUserid(this.state.myUserid);
@@ -230,7 +234,7 @@ class SettingsPage extends React.Component {
                     thumbColor={!this.state.isPrivate ? "#ffff" : "#b3d2db"}
                     ios_backgroundColor="#ffff"
                     onValueChange={this.toggleSwitch}
-                    value={!this.state.isPrivate}
+                    value={this.state.isPrivate}
                 />: <View></View>}
                 <Text style = {{marginTop: 30}}> Current Triggers: {this.state.triggerString} </Text>
                 <TextInput
