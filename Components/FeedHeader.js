@@ -99,6 +99,16 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 100,
         marginBottom: 90,
+        ...Platform.select({
+            ios: {
+                height:75,
+            },
+            android: {
+              height:65,
+            },
+            default: {
+            }
+          }),
     },
     logo: {
         width: 35,
