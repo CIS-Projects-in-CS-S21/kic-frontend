@@ -180,9 +180,9 @@ const styles = StyleSheet.create({
   headerHandle: {
     alignSelf: 'auto',
     fontSize: 20,
+    paddingBottom: 4,
     ...Platform.select({
       ios: {
-        paddingBottom: 4,
         width: '100%',
         textAlign: 'left', 
         fontFamily: 'AppleSDGothicNeo-SemiBold'
@@ -210,20 +210,19 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     resizeMode: 'contain',
+    paddingTop: 4,
   },
   bottomText: {
     fontSize: 15, 
     alignSelf: 'auto',
     ...Platform.select({
       ios: {
-        paddingTop: 4, 
         width: '100%',
         textAlign: 'left', 
         fontFamily: 'AppleSDGothicNeo-Regular'
 
       },
       android: {
-        paddingTop: 4, 
         width: '100%',
         textAlign: 'left', 
         fontFamily: 'Roboto',

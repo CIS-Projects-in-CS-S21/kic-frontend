@@ -553,9 +553,9 @@ class DetailedPostView extends React.Component {
                     />
                     {/* Add comment button */}
                     <TouchableOpacity
-                        style={{ justifyContent: 'center', backgroundColor: '#b3d2db', marginRight: 10, }}
+                        style={{ justifyContent: 'center', backgroundColor: '#b3d2db', marginRight:12}}
                         onPress = {this.handleAddComment}>
-                        <Ionicons name="chatbubble-ellipses-outline" color='#ffff' size={25} />
+                        <Ionicons name="chatbubble-ellipses-outline" color='#ffff' size={28} />
                     </TouchableOpacity>
                 </View> : <View></View>}
                 <StatusBar style="auto" />

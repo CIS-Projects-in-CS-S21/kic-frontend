@@ -45,17 +45,29 @@ const KIC_Style = StyleSheet.create({
 
     title: {
         color: '#b3d2db',
-        fontFamily: 'OpenSans-SemiBoldItalic',
         fontSize: 30,
         fontWeight: "bold",
         paddingBottom: 5,
         textAlign: "center",
         marginTop:3,
-        marginHorizontal:3
+        marginHorizontal:3,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Bold'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+              fontWeight: 'bold',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Bold'
+            }
+          }),
     },
     titlePost: {
         color: '#b3d2db',
-        fontFamily: 'AppleSDGothicNeo-Regular',
         fontSize: 30,
         alignSelf: 'center',
         flex: 1,
@@ -73,6 +85,19 @@ const KIC_Style = StyleSheet.create({
         backgroundColor: "#7ab7dd",
         marginTop: 7,
         padding: 10,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     button2: {
         width: "80%",
@@ -84,6 +109,7 @@ const KIC_Style = StyleSheet.create({
         marginTop: 7,
         marginBottom: 7,
         padding: 10,
+
     },
     button_post: {
         width: "100%",
@@ -100,24 +126,42 @@ const KIC_Style = StyleSheet.create({
     input: {
         borderWidth: .2,
         borderColor: '#CDCDCD',
-        padding: 1
+        padding: 1,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     
     authInput: {
         borderWidth: 1,
         borderColor: '#CDCDCD',
-        borderRadius: 10, 
+        borderRadius: 5, 
         padding: 1,
         margin: 3,
         alignSelf: 'center',
+        
         ...Platform.select({
             ios: {
+                fontFamily: 'AppleSDGothicNeo-Regular',
                 width: 200,
             },
             android: {
                 width: 200,
+                fontFamily: 'Roboto',
+
             },
             default: {
+                fontFamily: 'AppleSDGothicNeo-Regular',
                 width: '80%'
             }
           }),
@@ -135,14 +179,18 @@ const KIC_Style = StyleSheet.create({
         ...Platform.select({
             ios: {
                 width: 200,
-                height: 50
+                height: 50,
+                fontFamily: 'AppleSDGothicNeo-Regular',
+
             },
             android: {
                 width: 200,
                 height: 50,
             },
             default: {
-                width: '80%'
+                width: '80%',
+                fontFamily: 'AppleSDGothicNeo-Regular',
+
             }
           }),
     },
@@ -169,19 +217,17 @@ const KIC_Style = StyleSheet.create({
     commentInput: {
         alignSelf: 'center',
         backgroundColor: '#ffff',
-        //fontColor: '#0000',
         borderWidth: .2,
         borderColor: '#b3d2db',
         borderRadius: 20,
-        padding: 10,
+        padding:10,
         minHeight: 10,
         width: "90%",
-        margin: 10
+        margin: 10,
     },
     searchInput: {
         alignSelf: 'center',
         backgroundColor: '#ffff',
-        //fontColor: '#0000',
         borderWidth: .2,
         borderColor: '#b3d2db',
         borderRadius: 20,
@@ -193,7 +239,6 @@ const KIC_Style = StyleSheet.create({
     findHelpInput: {
         alignSelf: 'center',
         backgroundColor: '#ffff',
-        //fontColor: '#0000',
         marginTop: 30,
         borderWidth: .2,
         borderColor: '#b3d2db',
