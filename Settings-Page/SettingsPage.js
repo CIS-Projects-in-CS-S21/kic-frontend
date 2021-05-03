@@ -240,21 +240,27 @@ class SettingsPage extends React.Component {
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
-        let req = new UpdateUserInfoRequest();
-        req.setBio(this.state.newBio);
-        req.setUserid(this.state.myUserid);
-        req.setEmail(this.state.myUser.getEmail());
-        req.setBirthday(this.state.myUser.getBirthday());
-        req.setDesiredusername(this.state.myUser.getUsername());
-        req.setCity(this.state.myUser.getCity());
-        req.setTriggers(this.state.myUser.getTriggers());
+        if (this.state.newBio.length >= 250){
+            alert("Sorry, your bio must be less than 250 characters long!");
+        } else {
+            let req = new UpdateUserInfoRequest();
+            req.setBio(this.state.newBio);
+            req.setUserid(this.state.myUserid);
+            req.setEmail(this.state.myUser.getEmail());
+            req.setBirthday(this.state.myUser.getBirthday());
+            req.setDesiredusername(this.state.myUser.getUsername());
+            req.setCity(this.state.myUser.getCity());
+            req.setTriggers(this.state.myUser.getTriggers());
 
-        return client.updateUserInfo(req, { 'Authorization': this.state.authString }).then(res =>
-            console.log(res)
-        ).catch(error => {
-            console.log("There was an error.");
-            console.log(error)
-        });
+            return client.updateUserInfo(req, { 'Authorization': this.state.authString }).then(res => {
+                //console.log(res);
+                this.textInput.clear();
+                alert("Bio updated!");
+            }).catch(error => {
+                console.log("There was an error.");
+                console.log(error)
+            });
+        }
     }
 
 
@@ -356,7 +362,7 @@ class SettingsPage extends React.Component {
             //isolate format of image/video
             const extractedFormat = uri.split(/[:, /]/);
             format = extractedFormat[1];
-            console.log("Format: " + format);
+            //console.log("Format: " + format);
             const extractedExt = uri.match(regex);
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
@@ -367,15 +373,15 @@ class SettingsPage extends React.Component {
             // Get extension from uri
             const parsedURI = uri.split(/[.]/);
             extension = parsedURI[parsedURI.length - 1];
-            console.log("mobile ext:" + extension);
+            //console.log("mobile ext:" + extension);
             format = "image"
         }
 
 
         //start new file request
-        console.log("Started Upload File Request");
+        //console.log("Started Upload File Request");
         let req = new UploadFileRequest();
-        console.log("Auth: " + authString);
+        //console.log("Auth: " + authString);
 
         //create file and add to its metadata map
         let file = new File();
@@ -503,6 +509,7 @@ class SettingsPage extends React.Component {
                         <Text style={KIC_Style.button_font}> Store Triggers </Text>
                     </TouchableOpacity>
                     <TextInput
+                        ref={input => { this.textInput = input }}
                         style={KIC_Style.postInput}
                         textAlign={'center'}
                         onChange={(e) => this.setNewBio(e.nativeEvent.text)}
