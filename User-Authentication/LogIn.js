@@ -20,7 +20,7 @@ export default function logIn() {
   const IMAGE_HEIGHT_SMALL = (100);
   const imageHeight = new Animated.Value(IMAGE_HEIGHT);
   const TITLE_SIZE = 30;
-  const TITLE_SIZE_SMALL = 12;
+  const TITLE_SIZE_SMALL = 20;
   const titleSize = new Animated.Value(TITLE_SIZE);
   const navigation = useNavigation();
   useEffect(() => {
@@ -36,10 +36,12 @@ export default function logIn() {
     Animated.timing(imageHeight, {
       duration: event.duration,
       toValue: IMAGE_HEIGHT_SMALL,
+      useNativeDriver:false
     }).start();
     Animated.timing(titleSize, {
       duration: event.duration,
       toValue: TITLE_SIZE_SMALL,
+      useNativeDriver:false
     }).start();
   };
 
@@ -47,11 +49,12 @@ export default function logIn() {
     Animated.timing(imageHeight, {
       duration: event.duration,
       toValue: IMAGE_HEIGHT,
+      useNativeDriver:false
     }).start();
-
     Animated.timing(titleSize, {
       duration: event.duration,
       toValue: TITLE_SIZE,
+      useNativeDriver:false
     }).start();
   };
 
@@ -125,14 +128,14 @@ export default function logIn() {
           source={require('../assets/kic.png')}
         />
         <TextInput
-          style={KIC_Style.input}
+          style={KIC_Style.authInput}
           value={username}
           onChange={(e) => setUsername(e.nativeEvent.text)}
           placeholder=" Username"
           required="required"
         />
         <TextInput
-          style={KIC_Style.input}
+          style={KIC_Style.authInput}
           value={password}
           onChange={(e) => setPassword(e.nativeEvent.text)}
           placeholder=" Password"
@@ -141,12 +144,12 @@ export default function logIn() {
           onSubmitEditing={handleSubmit}
         />
         <TouchableOpacity
-          style={KIC_Style.button}
+          style={KIC_Style.authButton}
           onPress={handleSubmit}>
           <Text style={KIC_Style.button_font}>Log In</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={KIC_Style.button}
+          style={KIC_Style.authButton}
           onPress={() => navigation.navigate('SignUp')}>
           <Text style={KIC_Style.button_font}>Sign Up</Text>
         </TouchableOpacity>

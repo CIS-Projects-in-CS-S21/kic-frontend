@@ -26,8 +26,8 @@ export default function signUp() {
     const IMAGE_HEIGHT = 180;
     const IMAGE_HEIGHT_SMALL = (100);
     const imageHeight = new Animated.Value(IMAGE_HEIGHT);
-    const TITLE_SIZE = 30; 
-    const TITLE_SIZE_SMALL = 12; 
+    const TITLE_SIZE = 30;
+    const TITLE_SIZE_SMALL = 12;
     const titleSize = new Animated.Value(TITLE_SIZE);
     const navigation = useNavigation();
 
@@ -42,6 +42,7 @@ export default function signUp() {
     const [birthday, setBirthday] = useState("");
     const [city, setCity] = useState("");
     const [visible, setVisible] = useState(false);
+    const [convertedBday, setConvertedBday] = useState(" Choose Birthday"); 
 
     /**
      * @constant onDismiss represents setting visible to false when dismissed
@@ -57,6 +58,14 @@ export default function signUp() {
     const onChange = React.useCallback(({ date }) => {
         setVisible(false);
         setBirthday(date);
+        let monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+        ];
+        let month = monthNames[date.getMonth()];
+        let day = (date.getDay()+2).toString(); 
+        let year = date.getFullYear().toString(); 
+        let convertString = " "+ month+ " " +day+ ", "+ year; 
+        setConvertedBday(convertString);
         console.log({ date });
     }, []);
 
@@ -73,10 +82,12 @@ export default function signUp() {
         Animated.timing(imageHeight, {
             duration: event.duration,
             toValue: IMAGE_HEIGHT_SMALL,
+            useNativeDriver:false
         }).start();
         Animated.timing(titleSize, {
             duration: event.duration,
             toValue: TITLE_SIZE_SMALL,
+            useNativeDriver:false
         }).start();
     };
 
@@ -84,11 +95,13 @@ export default function signUp() {
         Animated.timing(imageHeight, {
             duration: event.duration,
             toValue: IMAGE_HEIGHT,
+            useNativeDriver:false
         }).start();
-        
+
         Animated.timing(titleSize, {
             duration: event.duration,
             toValue: TITLE_SIZE,
+            useNativeDriver:false
         }).start();
     };
 
@@ -329,50 +342,50 @@ export default function signUp() {
                     style={{ width: 180, height: imageHeight, alignItems: "center", resizeMode: 'contain' }}
                     source={require('../assets/kic.png')} />
                 <TextInput
-                    style={KIC_Style.input}
+                    style={KIC_Style.authInput}
                     value={firstName}
                     onChange={e => setFirstName(e.nativeEvent.text)}
                     placeholder=" First name"
                     required="required" />
                 <TextInput
-                    style={KIC_Style.input}
+                    style={KIC_Style.authInput}
                     value={lastName}
                     onChange={e => setLastName(e.nativeEvent.text)}
                     placeholder=" Last name"
                     required="required" />
                 <TextInput
-                    style={KIC_Style.input}
+                    style={KIC_Style.authInput}
                     value={username}
                     onChange={e => setUserName(e.nativeEvent.text)}
                     placeholder=" Username"
                     required="required" />
                 <TextInput
-                    style={KIC_Style.input}
+                    style={KIC_Style.authInput}
                     value={email}
                     onChange={e => setEmail(e.nativeEvent.text)}
                     placeholder=" Email"
                     required="required" />
                 <TextInput
-                    style={KIC_Style.input}
+                    style={KIC_Style.authInput}
                     value={password1}
                     onChange={e => setPassword1(e.nativeEvent.text)}
                     placeholder=" Password"
                     required="required"
                     secureTextEntry={true} />
                 <TextInput
-                    style={KIC_Style.input}
+                    style={KIC_Style.authInput}
                     value={password2}
                     onChange={e => setPassword2(e.nativeEvent.text)}
                     placeholder=" Retype password"
                     required="required"
                     secureTextEntry={true} />
                 <TextInput
-                    style={KIC_Style.input}
+                    style={KIC_Style.authInput}
                     value={bio}
                     onChange={e => setBio(e.nativeEvent.text)}
                     placeholder=" Bio (max. 250 characters)" />
                 <TextInput
-                    style={KIC_Style.input}
+                    style={KIC_Style.authInput}
                     value={city}
                     onChange={e => setCity(e.nativeEvent.text)}
                     placeholder=" City"
@@ -389,19 +402,19 @@ export default function signUp() {
                     onSubmitEditing={handleSubmit}
                 />
                 <TouchableOpacity
-                    style={KIC_Style.button}
+                    style={[KIC_Style.authInput, {backgroundColor: '#b3d3dc'}]}
                     onPress={() =>
                         setVisible(true)
                     }>
-                    <Text style={KIC_Style.button_font}> Choose Birthday </Text>
+                    <Text style={{color: "white"}}>{convertedBday}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={KIC_Style.button}
+                    style={KIC_Style.authButton}
                     onPress={handleSubmit}>
                     <Text style={KIC_Style.button_font}>Register</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={KIC_Style.button}
+                    style={KIC_Style.authButton}
                     onPress={() => navigation.navigate('LogIn')}>
                     <Text style={KIC_Style.button_font}>Log In</Text>
                 </TouchableOpacity>

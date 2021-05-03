@@ -9,12 +9,12 @@ import { StyleSheet, Platform } from 'react-native';
 const KIC_Style = StyleSheet.create({
     outContainer: {
         flex:1,
-        fontFamily: 'OpenSans-Regular',
+        fontFamily: 'AppleSDGothicNeo-Regular',
         flexDirection: 'column',
     },
     container: {
         flex: 1,
-        fontFamily: 'OpenSans-Regular',
+        fontFamily: 'AppleSDGothicNeo-Regular',
         backgroundColor: '#ffff',
         alignItems: 'center',
         justifyContent: 'center',
@@ -22,7 +22,7 @@ const KIC_Style = StyleSheet.create({
     },
     innerContainer: {
         flex: 1,
-        fontFamily: 'OpenSans-Regular',
+        fontFamily: 'AppleSDGothicNeo-Regular',
         backgroundColor: '#ffff',
         alignItems: 'center',
         justifyContent: 'center',
@@ -45,7 +45,7 @@ const KIC_Style = StyleSheet.create({
 
     title: {
         color: '#b3d2db',
-        fontFamily: 'OpenSans-ExtraBoldItalic',
+        fontFamily: 'OpenSans-SemiBoldItalic',
         fontSize: 30,
         fontWeight: "bold",
         paddingBottom: 5,
@@ -55,7 +55,7 @@ const KIC_Style = StyleSheet.create({
     },
     titlePost: {
         color: '#b3d2db',
-        fontFamily: 'OpenSans-Regular',
+        fontFamily: 'AppleSDGothicNeo-Regular',
         fontSize: 30,
         alignSelf: 'center',
         flex: 1,
@@ -102,6 +102,51 @@ const KIC_Style = StyleSheet.create({
         borderColor: '#CDCDCD',
         padding: 1
     },
+    
+    authInput: {
+        borderWidth: 1,
+        borderColor: '#CDCDCD',
+        borderRadius: 10, 
+        padding: 1,
+        margin: 3,
+        alignSelf: 'center',
+        ...Platform.select({
+            ios: {
+                width: 200,
+            },
+            android: {
+                width: 200,
+            },
+            default: {
+                width: '80%'
+            }
+          }),
+        
+    },
+
+    authButton: {
+        borderRadius: 25,
+        alignItems: "center",
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 7,
+        padding: 10,
+        ...Platform.select({
+            ios: {
+                width: 200,
+                height: 50
+            },
+            android: {
+                width: 200,
+                height: 50,
+            },
+            default: {
+                width: '80%'
+            }
+          }),
+    },
+
     postInput: {
         alignSelf: 'center',
         backgroundColor: '#b3d2db',

@@ -3,12 +3,10 @@
  */
 
  import React from 'react';
- import Icon from 'react-native-vector-icons/Ionicons';
  import KIC_Style from '../Components/Style'; 
- import { NavigationContainer, useNavigation } from '@react-navigation/native';
  import AppIntroSlider from 'react-native-app-intro-slider';
  import { SafeAreaView } from 'react-native-safe-area-context';
- import { Platform, StyleSheet, Text, View, Image, Button } from 'react-native';
+ import { StyleSheet, Text } from 'react-native';
  
 
  /**
@@ -112,7 +110,7 @@
      flex:1,
      alignItems: 'center',
      justifyContent: 'center',
-     backgroundColor: 'blue'
+     backgroundColor: 'blue',
    },
  });
  

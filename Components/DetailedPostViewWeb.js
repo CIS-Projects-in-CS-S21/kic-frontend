@@ -172,7 +172,7 @@ class DetailedPostViewWeb extends React.Component {
         this.setState({
                     filename: this.state.fileinfo.getMetadataMap().get("filename"),
                     yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
-                    monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()],
+                    monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()-1],
                     dayPosted: this.state.fileinfo.getDatestored().getDay().toString(),
                     caption: this.state.fileinfo.getMetadataMap().get("caption"),
                 })

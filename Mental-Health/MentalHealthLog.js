@@ -163,7 +163,7 @@ export default function MentalHealthLog({ navigation }) {
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation} />
-            <KeyboardAvoidingView behavior="padding" style={[KIC_Style.innerContainer, {marginTop:30}]}>
+            <KeyboardAvoidingView behavior="padding" style={[KIC_Style.innerContainer]}>
                <ScrollView style = {{justifyContent: 'center', alignSelf: 'center'}}>
                 <Image
                     style={{ width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center' }}
