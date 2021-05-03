@@ -14,7 +14,9 @@ import ClientManager from '../Managers/ClientManager';
 import UserManager from '../Managers/UserManager';
 import { Date } from "../gen/proto/common_pb";
 import KIC_Style from "../Components/Style";
-import { Text, TouchableOpacity, Image, View, TextInput } from "react-native";
+import { Text, TouchableOpacity, Image, TextInput } from "react-native";
+import { DatePickerModal } from 'react-native-paper-dates';
+
 
 /**
  * @class Contains function for rendering the signup page
@@ -31,12 +33,33 @@ export default function signUp() {
     const [password2, setPassword2] = useState("");
     const [bio, setBio] = useState("");
     const [myUser, setMyUser] = useState("");
+    const [birthday, setBirthday] = useState("");
+    const [city, setCity] = useState("");
+    const [visible, setVisible] = useState(false);
+
+    /**
+     * @constant onDismiss represents setting visible to false when dismissed
+     */
+    const onDismiss = React.useCallback(() => {
+        setVisible(false);
+    }, [setVisible]);
+
+    /**
+     * @constant onChange  represents setting visible to false when there is change
+     * @callback date takes in particular date for calendar
+     */
+    const onChange = React.useCallback(({ date }) => {
+        setVisible(false);
+        setBirthday(date);
+        console.log({ date });
+    }, []);
 
     /**
     * Handles submitting a signup form
     */
     const handleSubmit = evt => {
         evt.preventDefault();
+        const today = Date();
         if (password1 !== password2) {
             alert('Error: Passwords must be equal.');
         } else if (username == null || username == "") {
@@ -53,6 +76,12 @@ export default function signUp() {
             alert('Missing first or last name entries.');
         } else if (bio.length >= 250) {
             alert('Sorry, your bio must be less than 250 characters long!');
+        } else if (city == null || city == "") {
+            alert('Must input city.');
+        } else if (birthday == null || birthday == "") {
+            alert('Must input birthday.');
+        } else if (birthday > today) {
+            alert('Birthday cannot be in future.');
         } else {
             makeRequest();
         }
@@ -68,9 +97,8 @@ export default function signUp() {
       }).catch(error => {
         console.log(error);
         if(error.message == 'User already exists') {
-            alert('Error: Username already exists.');
-        }
-      });
+            alert('Error: Username or email taken. Please try again.');
+      }});
     }
 
     /**
@@ -82,13 +110,13 @@ export default function signUp() {
         let client = cm.createUsersClient();
 
         let req = new AddUserRequest();
-        let date = new Date();
-        date.setYear(1998);
-        date.setMonth(8);
-        date.setDay(21);
+        let date = new Date(); 
+        date.setDay(birthday.getDay());
+        date.setMonth(birthday.getMonth());
+        date.setYear(birthday.getFullYear());
         req.setEmail(email);
         req.setBirthday(date);
-        req.setCity("city");
+        req.setCity(city);
         req.setDesiredusername(username);
         req.setDesiredpassword(password1);
 
@@ -249,6 +277,32 @@ export default function signUp() {
                 value={bio}
                 onChange={e => setBio(e.nativeEvent.text)}
                 placeholder=" Bio (max. 250 characters)" />
+            <TextInput
+                style={KIC_Style.input}
+                value={city}
+                onChange={e => setCity(e.nativeEvent.text)}
+                placeholder=" City"
+                required="required" />
+            <DatePickerModal
+                    visible={visible}
+                    onDismiss={onDismiss}
+                    date={birthday}
+                    onConfirm={onChange}
+                    label="Pick A Date"
+                    animationType="slide"
+                    mode={"single"}
+                    validRange={{
+                        startDate: new Date(1900, 1, 1),
+                        endDate: new Date()
+                    }}
+                    />
+                <TouchableOpacity
+                    style={KIC_Style.button}
+                    onPress={() =>
+                        setVisible(true)
+                    }>
+                    <Text style={KIC_Style.button_font}> Choose Birthday </Text>
+                </TouchableOpacity>
             <TouchableOpacity
                 style={KIC_Style.button}
                 onPress={handleSubmit}>

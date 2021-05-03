@@ -171,8 +171,8 @@ export default function Post({ navigation }) {
         }
     };
 
-    //if no camera possible (web) or no gallery permission, say sorry! no access to gallery or camera
-    if (hasCameraPermission === null || hasGalleryPermission === false) {
+    //if no camera possible/denied and no gallery permission, say sorry! no access to gallery or camera
+    if ((hasCameraPermission === null && hasGalleryPermission === false) || (hasCameraPermission === false && hasGalleryPermission === false)) {
         return (
             <SafeAreaView style={KIC_Style.outContainer}>
                 <FeedHeader navigation={navigation} />
@@ -182,7 +182,7 @@ export default function Post({ navigation }) {
                         source={require('../assets/kic.png')}
                     />
                     <Text>
-                        Sorry! No access to gallery or camera. This feature is only available on mobile!
+                        Sorry! No access to gallery or camera. Please make sure you have given KiC access!
                     </Text>
                     <TouchableOpacity
                         style={KIC_Style.button}
@@ -194,6 +194,34 @@ export default function Post({ navigation }) {
 
         )
     };
+
+    //if no camera possible (firefox or denied) but yes gallery permission, say only show options for gallery
+    if ((hasCameraPermission === null && hasGalleryPermission === true) || (hasCameraPermission === false && hasGalleryPermission === true && notWeb) ) {
+        return (
+            <SafeAreaView style={KIC_Style.outContainer}>
+                <FeedHeader navigation={navigation} />
+                <SafeAreaView style={KIC_Style.innerContainer}>
+                    <Image
+                        style={{ marginTop: 100, width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+                        source={require('../assets/kic.png')}
+                    />
+                    <Text style = {KIC_Style.titlePost}> Only gallery permissions have been granted. Select an image or video! </Text>
+                    <TouchableOpacity
+                        style={KIC_Style.button_post}
+                        onPress={() => pickImage()}>
+                        <Text style={KIC_Style.button_font}>Select Image from Gallery</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={KIC_Style.button_post}
+                        onPress={() => navigation.navigate('PostInfo', { image, base64, isVideo })}>
+                        <Text style={KIC_Style.button_font}>Save</Text>
+                    </TouchableOpacity>
+                </SafeAreaView>
+            </SafeAreaView>
+
+        )
+    }
+
 
     const getBase64 = async(uri) => {
         try {

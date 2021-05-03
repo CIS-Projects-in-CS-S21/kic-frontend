@@ -220,7 +220,7 @@ class UserPage extends React.Component {
 
 
             {/* Show posts if non-private account or private but friends */}
-            {(this.state.isPrivate == "1") && <Text> Account is Private! Add as Friend to View Posts. </Text>}
+            {(this.state.isPrivate == "1") && <Text style = {{alignSelf: "center"}}> Account is Private! Add as Friend to View Posts. </Text>}
             {(this.state.finishedLoading && (this.state.isPrivate != "1")) ? <PostsGrid
                 myUserid = {this.state.myUserid}
                 navigation = {this.props.navigation}
