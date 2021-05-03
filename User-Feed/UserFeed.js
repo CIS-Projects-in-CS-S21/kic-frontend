@@ -211,8 +211,8 @@ class UserFeed extends React.Component {
     return (
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
-        <SafeAreaView style={styles.container}>
-          {(this.state.finishedLoading) ? <ScrollView>
+        <SafeAreaView style={KIC_Style.innerContainer}>
+          {(this.state.finishedLoading) ? <ScrollView style={{width:'100%'}}>
             {/* FlatList that renders a FeedPost per post in feed */}
             <FlatList
               style={styles.listcontainer}
