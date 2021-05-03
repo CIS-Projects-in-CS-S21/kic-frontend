@@ -51,7 +51,7 @@ class UserFeed extends React.Component {
         finishedLoading: false,
       })
       this.fetchUserInfo().then(response => {
-        console.log("Mounted userfeed success");
+        //console.log("Mounted userfeed success");
       }).catch(error => {
         console.log(error)
       });
@@ -144,31 +144,31 @@ class UserFeed extends React.Component {
 
       let file = response.getFileinfo();
       let files = this.state.feedFiles;
-      console.log("Files: " + file);
+      //console.log("Files: " + file);
       let fileTriggers = file.getMetadataMap().get('trigger');
       let triggersNoCommas = fileTriggers.replace(",", " ");
       let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
       triggersParsed = triggersParsed.filter(e => e !== '');
       fileTriggers = triggersParsed; 
-      console.log("Got triggers: " + fileTriggers);
+      //console.log("Got triggers: " + fileTriggers);
       if (fileTriggers == '' || fileTriggers == null) {
-        console.log("A file has no triggers, adding to feed");
+        //console.log("A file has no triggers, adding to feed");
         let combinedfiles = files.concat(file);
         this.setState({
           feedFiles: combinedfiles,
         })
       } else {
-        console.log("This file has triggers, lets check if they match")
+        //console.log("This file has triggers, lets check if they match")
         fileTriggers.forEach(trigger => {
-          console.log("Do our triggers, " + this.state.triggers + "match this trigger: " + trigger);
+          //console.log("Do our triggers, " + this.state.triggers + " match this trigger: " + trigger);
           if (!this.state.triggers.includes(trigger)) {
-            console.log("It doesnt include it! Adding to feed");
+            //console.log("It doesnt include it! Adding to feed");
             let combinedfiles = files.concat(file);
             this.setState({
               feedFiles: combinedfiles,
             })
           } else {
-            console.log("A file had " + fileTriggers + ", not adding to feed");
+            //console.log("A file had " + fileTriggers + ", not adding to feed");
           }
         });
       }
