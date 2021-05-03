@@ -100,6 +100,7 @@ export default function logIn() {
         placeholder=" Password"
         required="required"
         secureTextEntry={true}
+        onSubmitEditing={handleSubmit}
       />
       <TouchableOpacity
         style={KIC_Style.button}

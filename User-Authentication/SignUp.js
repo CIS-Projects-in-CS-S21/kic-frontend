@@ -282,7 +282,8 @@ export default function signUp() {
                 value={city}
                 onChange={e => setCity(e.nativeEvent.text)}
                 placeholder=" City"
-                required="required" />
+                required="required" 
+                onSubmitEditing={handleSubmit}/>
             <DatePickerModal
                     visible={visible}
                     onDismiss={onDismiss}
@@ -291,6 +292,7 @@ export default function signUp() {
                     label="Pick A Date"
                     animationType="slide"
                     mode={"single"}
+                    onSubmitEditing={handleSubmit}
                     validRange={{
                         startDate: new Date(1900, 1, 1),
                         endDate: new Date()

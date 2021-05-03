@@ -501,6 +501,7 @@ class SettingsPage extends React.Component {
                         style={KIC_Style.postInput}
                         textAlign={'center'}
                         onChange={(e) => this.setTriggers(e.nativeEvent.text)}
+                        onSubmitEditing={()=> this.storeTriggers()}
                         placeholder="Write any triggers in // format . . ."
                     />
                     <TouchableOpacity
@@ -513,6 +514,7 @@ class SettingsPage extends React.Component {
                         style={KIC_Style.postInput}
                         textAlign={'center'}
                         onChange={(e) => this.setNewBio(e.nativeEvent.text)}
+                        onSubmitEditing={()=>this.changeBio()}
                         placeholder="Change bio..."
                     />
                     <TouchableOpacity

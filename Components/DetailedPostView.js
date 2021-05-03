@@ -515,6 +515,7 @@ class DetailedPostView extends React.Component {
                         textAlign = {'center'}
                         onChange={(e) => this.setCommentText(e.nativeEvent.text)}
                         placeholder="Leave a comment . . ."
+                        onSubmitEditing={this.handleAddComment}
                     />
                     {/* Add comment button */}
                     <TouchableOpacity

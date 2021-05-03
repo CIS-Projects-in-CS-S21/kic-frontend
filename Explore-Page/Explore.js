@@ -273,6 +273,7 @@ class Explore extends React.Component {
                         textAlign = {'center'}
                         onChange={(e) => this.setSearchString(e.nativeEvent.text)}
                         placeholder="Search for a user . . ."
+                        onSubmitEditing={()=>this.handleSearch()}
                     />
                     <TouchableOpacity
                         style={{ backgroundColor: '#b3d2db', borderRadius: 10, height: 30, justifyContent: 'center' }}
