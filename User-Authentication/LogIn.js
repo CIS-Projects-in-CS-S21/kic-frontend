@@ -122,11 +122,11 @@ export default function logIn() {
       <KeyboardAvoidingView
         style= {KIC_Style.container}
         behavior={"padding"}>
-        <Animated.Text style={[KIC_Style.title, {fontSize: titleSize}]}>Keeping It Casual: Log In Page</Animated.Text>
         <Animated.Image
           style={{ width: 180, height: imageHeight, alignItems: "center", resizeMode: 'contain' }}
           source={require('../assets/kic.png')}
         />
+        <Animated.Text style={[KIC_Style.title, {fontSize: titleSize}]}>Log In</Animated.Text>
         <TextInput
           style={KIC_Style.authInput}
           value={username}

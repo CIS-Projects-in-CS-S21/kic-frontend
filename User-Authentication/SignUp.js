@@ -337,10 +337,10 @@ export default function signUp() {
             <KeyboardAvoidingView
                 behavior={"padding"}
                 style={KIC_Style.container}>
-                <Animated.Text style={[KIC_Style.title, { fontSize: titleSize }]}>Keeping It Casual: Sign Up Page</Animated.Text>
                 <Animated.Image
                     style={{ width: 180, height: imageHeight, alignItems: "center", resizeMode: 'contain' }}
                     source={require('../assets/kic.png')} />
+                <Animated.Text style={[KIC_Style.title, { fontSize: titleSize }]}>Sign Up</Animated.Text>
                 <TextInput
                     style={KIC_Style.authInput}
                     value={firstName}
