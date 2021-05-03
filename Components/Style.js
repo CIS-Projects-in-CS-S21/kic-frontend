@@ -9,34 +9,61 @@ import { StyleSheet, Platform } from 'react-native';
 const KIC_Style = StyleSheet.create({
     outContainer: {
         flex:1,
-        fontFamily: 'AppleSDGothicNeo-Regular',
         flexDirection: 'column',
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     container: {
         flex: 1,
-        fontFamily: 'AppleSDGothicNeo-Regular',
-        backgroundColor: '#ffff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#7ab7dd',
-    },
-    innerContainer: {
-        flex: 1,
-        fontFamily: 'AppleSDGothicNeo-Regular',
         backgroundColor: '#ffff',
         alignItems: 'center',
         justifyContent: 'center',
         color: '#7ab7dd',
         ...Platform.select({
             ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
+    },
+    innerContainer: {
+        flex: 1,
+        backgroundColor: '#ffff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#7ab7dd',
+        ...Platform.select({
+            ios: {
+                fontFamily: 'AppleSDGothicNeo-Regular',
               top:30,
               marginBottom:30,
             },
             android: {
+                fontFamily: 'Roboto',
               top:30,
               marginBottom:30,
             },
             default: {
+                fontFamily: 'AppleSDGothicNeo-Regular',
+
               top:60,
               marginBottom: 60,
             }
@@ -119,9 +146,35 @@ const KIC_Style = StyleSheet.create({
         backgroundColor: "#7ab7dd",
         marginTop: 1,
         padding: 10,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     button_font: {
-        color: '#ffff'
+        color: '#ffff',
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     input: {
         borderWidth: .2,
@@ -184,6 +237,7 @@ const KIC_Style = StyleSheet.create({
 
             },
             android: {
+                fontFamily: 'Roboto',
                 width: 200,
                 height: 50,
             },
@@ -205,7 +259,20 @@ const KIC_Style = StyleSheet.create({
         padding: 10,
         minHeight: 10,
         width: "90%",
-        margin: 10
+        margin: 10,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     journalInput: {
         borderWidth: .2,
@@ -213,6 +280,20 @@ const KIC_Style = StyleSheet.create({
         padding: 1,
         minHeight: 50,
         width: "70%",
+        marginBottom: 10,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     commentInput: {
         alignSelf: 'center',
@@ -224,6 +305,19 @@ const KIC_Style = StyleSheet.create({
         minHeight: 10,
         width: "90%",
         margin: 10,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     searchInput: {
         alignSelf: 'center',
@@ -234,7 +328,20 @@ const KIC_Style = StyleSheet.create({
         padding: 10,
         minHeight: 10,
         width: "90%",
-        margin: 10
+        margin: 10,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
     findHelpInput: {
         alignSelf: 'center',
@@ -246,7 +353,20 @@ const KIC_Style = StyleSheet.create({
         padding: 10,
         minHeight: 10,
         width: "90%",
-        margin: 10
+        margin: 10,
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
     },
 });
 

@@ -218,7 +218,7 @@ class SettingsPage extends React.Component {
         req.setTriggers(this.state.triggerString);
 
         return client.updateUserInfo(req, { 'Authorization': this.state.authString }).then(res =>
-            console.log(res)
+            alert("Triggers stored!")
         ).catch(error => {
             console.log("There was an error.");
             console.log(error)
@@ -244,6 +244,8 @@ class SettingsPage extends React.Component {
 
         if (this.state.newBio.length >= 250) {
             alert("Sorry, your bio must be less than 250 characters long!");
+        } else if (this.state.newBio.length = 0 || this.state.newBio == ''){
+            alert("You must enter a bio!")
         } else {
             let req = new UpdateUserInfoRequest();
             req.setBio(this.state.newBio);
@@ -494,7 +496,7 @@ class SettingsPage extends React.Component {
                         onPress={() => this.deletePreviousPics()}>
                         <Text style={KIC_Style.button_font}> Upload profile picture </Text>
                     </TouchableOpacity>
-                    <Text style={{ margin: 10 }}>Set Account as Private</Text>
+                    <Text style={[styles.text, { margin: 10 }]}>Set Account as Private</Text>
                     {this.state.fetchedPriv ? <Switch
                         style={{ marginTop: 30 }}
                         trackColor={{ false: "#b3d2db", true: "#7ab7dd" }}
@@ -503,7 +505,7 @@ class SettingsPage extends React.Component {
                         onValueChange={this.toggleSwitch}
                         value={this.state.isPrivate}
                     /> : <View></View>}
-                    <Text style={{ marginTop: 30 }}> Current Triggers: {this.state.triggerString} </Text>
+                    <Text style={[styles.text, { marginTop: 30 }]}> Current Triggers: {this.state.triggerString} </Text>
                     <TextInput
                         style={KIC_Style.postInput}
                         textAlign={'center'}
@@ -546,6 +548,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    text: {
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
+    }
 });
 
 export default SettingsPage;
