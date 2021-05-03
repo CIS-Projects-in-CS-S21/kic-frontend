@@ -181,7 +181,7 @@ export default function MentalHealthLog({ navigation }) {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <Text style={{textAlign: 'center', marginTop: 10}}>  Write a journal entry expanding on your mood.
                     How are you feeling?
-          Why do you think you're feeling this way? </Text>
+          Why do you think you're feeling this way? These entries will only be visible to you.</Text>
                 </TouchableWithoutFeedback>
                 <TextInput
                     multiline={true}
