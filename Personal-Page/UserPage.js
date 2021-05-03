@@ -227,6 +227,12 @@ class UserPage extends React.Component {
                 username = {this.state.username}
                 userid = {this.state.userid}
                 /> : <View></View>}
+            {(this.state.myUserid == this.state.userid) &&
+            <TouchableOpacity
+                style={KIC_Style.button}
+                onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
+                <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
+            </TouchableOpacity>}
             <StatusBar style="auto" />
           </ScrollView></SafeAreaView>
       </SafeAreaView>
