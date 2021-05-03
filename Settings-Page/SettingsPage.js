@@ -11,7 +11,7 @@ import FeedHeader from "../Components/FeedHeader";
 import UserManager from "../Managers/UserManager";
 import ClientManager from "../Managers/ClientManager";
 import { GetUserByIDRequest, UpdateUserInfoRequest } from "../gen/proto/users_pb";
-import { UploadFileRequest } from "../gen/proto/media_pb";
+import { DeleteFilesWithMetaDataRequest, UploadFileRequest } from "../gen/proto/media_pb";
 import { File, Date as CommonDate } from "../gen/proto/common_pb";
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
@@ -292,8 +292,19 @@ class SettingsPage extends React.Component {
         return this.pickImage;
     }
 
+    deletePreviousPics() {
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+
+        let req = new DeleteFilesWithMetaDataRequest();
+        let map = req.getMetadataMap();
+        map.set("pfpUserID", this.state.myUserid.toString());
+
+        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.pickImage(client)})
+    }
+
     //Allow user to pick image for pfp
-    pickImage = async () => {
+    pickImage = async (client) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,//allows access to images only
             allowsEditing: true,
@@ -324,12 +335,12 @@ class SettingsPage extends React.Component {
         }
 
         //start upload
-        return this.makeUploadFileRequest(this.state.myUserid, this.state.authString);
+        return this.makeUploadFileRequest(this.state.myUserid, this.state.authString, client);
     };
 
-    makeUploadFileRequest = async (userID, authString) => {
-        let cm = new ClientManager();
-        let client = cm.createMediaClient();
+
+    makeUploadFileRequest = async (userID, authString, client) => {
+
         console.log("making upload request");
         //obtain uri and base64 from Post.js
         let uri = this.state.image;
@@ -509,7 +520,7 @@ class SettingsPage extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={KIC_Style.button2}
-                        onPress={() => this.pickImage()}>
+                        onPress={() => this.deletePreviousPics()}>
                         <Text style={KIC_Style.button_font}> Upload profile picture </Text>
                     </TouchableOpacity>
                     <StatusBar style="auto" />
