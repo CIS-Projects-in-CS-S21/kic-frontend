@@ -481,11 +481,6 @@ class SettingsPage extends React.Component {
             <SafeAreaView style={KIC_Style.outContainer}>
                 <FeedHeader navigation={this.props.navigation} />
                 <SafeAreaView style={[KIC_Style.innerContainer, { marginTop: 30 }]}>
-                    <Image
-                        style={{ width: 180, height: 180, resizeMode: 'contain' }}
-                        source={require('../assets/kic.png')}
-                    />
-                    <Text>Keeping It Casual Explore Page!</Text>
                     <Text style={{ margin: 30 }}>Set Account as Private</Text>
                     {this.state.fetchedPriv ? <Switch
                         style={{ marginTop: 30 }}
