@@ -35,7 +35,11 @@ export default function PostInfo(props) {
      * @constant uploadImage starts chain of functions to upload image
      */
     const uploadImage = async () => {
-        return callGetAuthString();
+        if (caption.length >= 250){
+            alert("Sorry, your caption must be less than 250 characters long!");
+        } else {
+            return callGetAuthString();
+        }
     }
 
 
