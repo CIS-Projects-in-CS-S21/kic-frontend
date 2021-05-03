@@ -489,7 +489,12 @@ class SettingsPage extends React.Component {
             <SafeAreaView style={KIC_Style.outContainer}>
                 <FeedHeader navigation={this.props.navigation} />
                 <KeyboardAvoidingView style={KIC_Style.innerContainer} behavior="padding">
-                    <Text style={{ margin: 30 }}>Set Account as Private</Text>
+                <TouchableOpacity
+                        style={KIC_Style.button2}
+                        onPress={() => this.deletePreviousPics()}>
+                        <Text style={KIC_Style.button_font}> Upload profile picture </Text>
+                    </TouchableOpacity>
+                    <Text style={{ margin: 10 }}>Set Account as Private</Text>
                     {this.state.fetchedPriv ? <Switch
                         style={{ marginTop: 30 }}
                         trackColor={{ false: "#b3d2db", true: "#7ab7dd" }}
@@ -523,11 +528,6 @@ class SettingsPage extends React.Component {
                         style={KIC_Style.button2}
                         onPress={() => this.changeBio()}>
                         <Text style={KIC_Style.button_font}> Change Bio </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={KIC_Style.button2}
-                        onPress={() => this.deletePreviousPics()}>
-                        <Text style={KIC_Style.button_font}> Upload profile picture </Text>
                     </TouchableOpacity>
                     <StatusBar style="auto" />
                 </KeyboardAvoidingView>

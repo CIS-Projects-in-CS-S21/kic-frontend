@@ -164,14 +164,9 @@ export default function MentalHealthLog({ navigation }) {
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation} />
             <KeyboardAvoidingView behavior="padding" style={[KIC_Style.innerContainer]}>
-               <ScrollView style = {{justifyContent: 'center', alignSelf: 'center'}}>
-                <Image
-                    style={{ width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center' }}
-                    source={require('../assets/kic.png')}
-                />
                 <Text style={KIC_Style.title}> Mental Health Tracker</Text>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <Text>
+                    <Text style={{textAlign: 'center', marginBottom: 10}}>
                         Rate your mental health on a scale from -5 (extremely poor) to 5 (extremely good).
                     </Text>
                 </TouchableWithoutFeedback>
@@ -185,7 +180,7 @@ export default function MentalHealthLog({ navigation }) {
                     selectedBackground='#7ab7dd'
                 />
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <Text>  Write a journal entry expanding on your mood.
+                    <Text style={{textAlign: 'center', marginTop: 10}}>  Write a journal entry expanding on your mood.
                     How are you feeling?
           Why do you think you're feeling this way? </Text>
                 </TouchableWithoutFeedback>
@@ -234,14 +229,7 @@ export default function MentalHealthLog({ navigation }) {
                         navigation.navigate('MoodHistory')}>
                     <Text style={KIC_Style.button_font}> View Your Mood History </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={KIC_Style.button}
-                    onPress={() =>
-                        navigation.navigate('Profile')}>
-                    <Text style={KIC_Style.button_font}> Back to Personal Page </Text>
-                </TouchableOpacity>
                 <StatusBar style="auto" />
-                </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );

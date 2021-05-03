@@ -10,13 +10,11 @@ import {
     TouchableOpacity,
     StyleSheet,
     ScrollView,
-    View, FlatList,
+    FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Modal } from 'react-native';
 import KIC_Style from "../Components/Style";
 import FeedHeader from '../Components/FeedHeader';
-import { Date as CommonDate } from "../gen/proto/common_pb";
 import { useNavigation } from '@react-navigation/native';
 import ClientManager from "../Managers/ClientManager";
 import {GetHealthDataForUserRequest} from "../gen/proto/health_pb";
@@ -132,12 +130,8 @@ export default function MoodHistory() {
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation}/>
-            <SafeAreaView style={[KIC_Style.innerContainer, {marginTop: 30}]}>
+            <SafeAreaView style={[KIC_Style.innerContainer, {width: '90%'}]}>
                 <ScrollView>
-                    <Image
-                        style={{width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center'}}
-                        source={require('../assets/kic.png')}
-                    />
                     <Text style={KIC_Style.title}> Mood History Tracker </Text>
                     {/*FlatList that renders a mental health entry log per entry in health data list*/}
                     <FlatList
@@ -157,14 +151,6 @@ export default function MoodHistory() {
                             keyExtractor={item=> String(item.getLogdate())}
 
                     />
-
-
-                    <TouchableOpacity
-                        style={KIC_Style.button}
-                        onPress={() =>
-                            navigation.navigate('MentalHealthLog')}>
-                        <Text style={KIC_Style.button_font}>Log Mental Health!</Text>
-                    </TouchableOpacity>
                     <StatusBar style="auto"/>
                 </ScrollView>
             </SafeAreaView>
