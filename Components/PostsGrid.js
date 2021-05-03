@@ -146,20 +146,22 @@ class PostsGrid extends React.Component {
 
         let myfiles = res.getFileinfosList();
 
-        let imgWidth = 180;
+        let imgWidth = 255;
         let screenWidth = Dimensions.get('window').width;
         let numColumns = Math.floor(screenWidth / imgWidth);
+
+        if (screenWidth <= imgWidth/2){
+            numColumns = 1;
+        }
 
         console.log("screen is: " + screenWidth + " // num columns: " + numColumns);
 
         this.setState({
             myFiles: myfiles,
-            finishedFetching: true,
             numColumns: numColumns,
+            finishedFetching: true,
         })
 
-        //console.log("FILES FOR " + this.state.userid + ": " + myfiles);
-        //console.log("FILES FOR " + this.state.userid + ": " + this.state.myFiles);
     }
 
     /**
@@ -179,7 +181,7 @@ class PostsGrid extends React.Component {
         );
         return (
             <View style ={styles.postGrid}>
-                {(this.state.finishedFetching && (this.state.myFiles.length > 0)) ? <View style={{ alignItems: 'center' }}><FlatList
+                {(this.state.finishedFetching && (this.state.myFiles.length > 0) && this.state.numColumns > 1) ? <View style={{ alignItems: 'center' }}><FlatList
                     data={this.state.myFiles}
                     renderItem={renderItem}
                     keyExtractor={file => file.filename}
@@ -187,6 +189,15 @@ class PostsGrid extends React.Component {
                     columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 5, }}
                     ItemSeparatorComponent={
                                 () => <View style={{ width: 5, }}/>
+                            }
+                /></View> :
+                (this.state.finishedFetching && (this.state.myFiles.length > 0)) ? <View style={{ alignItems: 'center', paddingBottom: 5, }}><FlatList
+                    data={this.state.myFiles}
+                    renderItem={renderItem}
+                    keyExtractor={file => file.filename}
+                    numColumns={this.state.numColumns}
+                    ItemSeparatorComponent={
+                                () => <View style={{ width: 5, paddingBottom: 5, }}/>
                             }
                 /></View> : <View><Text style = {{fontStyle: 'italic'}}>No posts to show.</Text></View>}
             </View>

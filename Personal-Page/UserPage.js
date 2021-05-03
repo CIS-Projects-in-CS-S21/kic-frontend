@@ -220,13 +220,19 @@ class UserPage extends React.Component {
 
 
             {/* Show posts if non-private account or private but friends */}
-            {(this.state.isPrivate == "1") && <Text style = {{alignSelf: "center"}}> Account is Private! Add as Friend to View Posts. </Text>}
-            {(this.state.finishedLoading && (this.state.isPrivate != "1")) ? <PostsGrid
+            {(this.state.isPrivate == "1" && this.state.myUserid != this.state.userid) && <Text> Account is Private! Add as Friend to View Posts. </Text>}
+            {((this.state.finishedLoading && (this.state.isPrivate != "1")) || this.state.myUserid == this.state.userid) ? <PostsGrid
                 myUserid = {this.state.myUserid}
                 navigation = {this.props.navigation}
                 username = {this.state.username}
                 userid = {this.state.userid}
                 /> : <View></View>}
+            {(this.state.myUserid == this.state.userid) &&
+            <TouchableOpacity
+                style={KIC_Style.button}
+                onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
+                <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
+            </TouchableOpacity>}
             <StatusBar style="auto" />
           </ScrollView></SafeAreaView>
       </SafeAreaView>

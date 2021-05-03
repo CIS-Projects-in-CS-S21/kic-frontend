@@ -2,20 +2,18 @@
  * @fileoverview Explore page - allows users to discover friends and search for users.
  */
 
-import { setStatusBarNetworkActivityIndicatorVisible, StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import FeedHeader from '../Components/FeedHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList, StyleSheet, Text, TextInput, View, ScrollView, Image, Button, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity } from 'react-native';
 import KIC_Style from '../Components/Style';
 import UserBlurb from "../Components/UserBlurb";
-import TokenManager from "../Managers/TokenManager";
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
-import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import { GetUserByIDRequest, GetUserByUsernameRequest } from '../gen/proto/users_pb';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { GetRecommendationsForUserRequest, } from '../gen/proto/friends_pb';
-import { UsersClient } from '../gen/proto/users_grpc_web_pb';
 
 
 /**
@@ -42,56 +40,57 @@ class Explore extends React.Component {
      * @param {Array} foundSearch is an array of users that are found from searching
      * @param {String} status default set to empty string, indicates if friend status is accepted, pending, or denied
      */
-  constructor(props) {
-    super();
+    constructor(props) {
+        super();
 
-    // Define the initial state:
-    this.state = {
-      userid: "0",
-      username: "default",
-      bio: "bio",
-      birthDay: 0,
-      birthMonth: 0,
-      birthYear: 0,
-      searchString: '',
-      finishedLoading: false,
-      authString : '',
-      foundFriends: [],
-      foundSearch : [],
-      showSearch : false,
-      showSuggestions : true
-    };
+        // Define the initial state:
+        this.state = {
+            userid: "0",
+            username: "default",
+            bio: "bio",
+            birthDay: 0,
+            birthMonth: 0,
+            birthYear: 0,
+            searchString: '',
+            finishedLoading: false,
+            authString: '',
+            foundFriends: [],
+            foundSearch: [],
+            showSearch: false,
+            showSuggestions: true,
+            foundUser: '',
+        };
 
-    this.callGetAuthString = this.callGetAuthString.bind(this)
+        this.callGetAuthString = this.callGetAuthString.bind(this)
 
-  }
-  /**
-   * Runs when component first loads
-   * postcondition: fetchUserInfo()
-   * @exception error if fetchuserinfo is not able to perform its function
-   */
-  componentDidMount() {
-    //this.fetchUserInfo()
-    this.fetchUserInfo().then(response => {
-      console.log("Success");
-    }).catch(error => {
-      console.log(error)
-    });
-  }
+    }
+    /**
+     * Runs when component first loads
+     * postcondition: fetchUserInfo()
+     * @exception error if fetchuserinfo is not able to perform its function
+     */
+    componentDidMount() {
+        //this.fetchUserInfo()
+        this.fetchUserInfo().then(response => {
+            console.log("Success");
+        }).catch(error => {
+            console.log(error)
+        });
+    }
     /**
      * Ensure that the props were updated.
      * @param {props} prevProps The previous states props
      * @exception error logs error from fetchUserInfo()
      */
     componentDidUpdate(prevProps) {
-      // Typical usage (don't forget to compare props):
-      if (this.props.userid !== prevProps.userid) {
-        this.fetchUserInfo().then(response => {
-            console.log("Success");
-        }).catch(error => {
-            console.log(error)
-        });
-      }
+        // Typical usage (don't forget to compare props):
+        if (this.props.userid !== prevProps.userid) {
+            this.fetchUserInfo().then(response => {
+                console.log("Success");
+            }).catch(error => {
+                console.log(error)
+            });
+        }
     }
 
     /**
@@ -108,9 +107,9 @@ class Explore extends React.Component {
      * preconditon: fetchUserInfo()
      * postcondition: callGetUserID()
      */
-    callGetAuthString(){
+    callGetAuthString() {
         let um = new UserManager();
-        return um.getAuthString().then(authString => {this.callGetUserID(um, authString)});
+        return um.getAuthString().then(authString => { this.callGetUserID(um, authString) });
     }
 
     /**
@@ -121,11 +120,11 @@ class Explore extends React.Component {
      * precondition: callGetAuthString()
      * postcondition: callGetUserByUserID()
      */
-    callGetUserID(um, authString){
+    callGetUserID(um, authString) {
         this.setState({
             authString: authString,
         })
-        return um.getMyUserID().then(userID => {this.callGetUserByUserID(authString, userID)});
+        return um.getMyUserID().then(userID => { this.callGetUserByUserID(authString, userID) });
     }
 
     /**
@@ -136,14 +135,14 @@ class Explore extends React.Component {
      * precondition: callGetUserID()
      * postcondition: callGetRecommendationsForUser()
      */
-    callGetUserByUserID(authString, userID){
+    callGetUserByUserID(authString, userID) {
 
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
         let req = new GetUserByIDRequest();
         req.setUserid(userID);
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.callGetRecommendationsForUser(res, userID, authString, cm)})
+        return client.getUserByID(req, { 'Authorization': authString }).then(res => { this.callGetRecommendationsForUser(res, userID, authString, cm) })
     }
 
     /**
@@ -156,8 +155,8 @@ class Explore extends React.Component {
      * precondition: callGetUserByUserID()
      * postcondition: showRecommendationsForUser()
      */
-    callGetRecommendationsForUser(res, userID, authString, cm){
-        {/* Store user information */}
+    callGetRecommendationsForUser(res, userID, authString, cm) {
+        {/* Store user information */ }
         let myusername = res.getUser().getUsername();
         let bday = res.getUser().getBirthday().toString();
         let mybirthyear = bday.split(",")[0];
@@ -174,16 +173,16 @@ class Explore extends React.Component {
             birthMonth: mybirthmonth,
             birthYear: mybirthyear,
             userid: userID,
-            clientManager : cm
+            clientManager: cm
         })
 
         let client = cm.createFriendsClient();
 
         let req = new GetRecommendationsForUserRequest();
         req.setUser(res.getUser());
-        req.setNumberrecommendations(10); 
+        req.setNumberrecommendations(10);
 
-        return client.getRecommendationsForUser(req, {'Authorization': authString}).then(response => {this.storeRecommendationsForUser(response, res)})
+        return client.getRecommendationsForUser(req, { 'Authorization': authString }).then(response => { this.storeRecommendationsForUser(response, res) })
     }
 
     /**
@@ -194,14 +193,14 @@ class Explore extends React.Component {
      */
 
     storeRecommendationsForUser(res) {
-        console.log("Found " + res.getRecommendationsList().length + " friends."); 
-        console.log(res.getRecommendationsList()); 
-        let rec = res.getRecommendationsList(); 
+        console.log("Found " + res.getRecommendationsList().length + " friends.");
+        console.log(res.getRecommendationsList());
+        let rec = res.getRecommendationsList();
 
         this.setState({
-            foundFriends : rec, 
-            finishedLoading : true
-        }); 
+            foundFriends: rec,
+            finishedLoading: true
+        });
     }
 
     /**
@@ -210,10 +209,10 @@ class Explore extends React.Component {
      */
     setSearchString = (text) => {
         this.setState({ searchString: text });
-        if(text === '') {
+        if (text === '') {
             this.setState({
-                showSearch : false,
-                showSuggestions : true
+                showSearch: false,
+                showSuggestions: true
             })
         }
     }
@@ -226,16 +225,17 @@ class Explore extends React.Component {
     handleSearch() {
         console.log("Searching for " + this.state.searchString + "...");
         this.setState({
-            showSearch : false,
+            foundUser: '',
+            showSearch: false,
         })
-        
+
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
         let req = new GetUserByUsernameRequest();
-        req.setUsername(this.state.searchString); 
-        
-        return client.getUserByUsername(req, {'Authorization' : this.state.authString}).then(res => {this.showSearchResults(res)})
+        req.setUsername(this.state.searchString);
+
+        return client.getUserByUsername(req, { 'Authorization': this.state.authString }).then(res => { this.showSearchResults(res) }, res=> {this.checkSuccess(res)})
     }
 
     /**
@@ -244,17 +244,19 @@ class Explore extends React.Component {
      * preconditions: handleSearch()
      */
     showSearchResults(res) {
-        if(res.getSuccess() === true && res.hasUser() === true) {
+        if (res.getSuccess() === true && res.hasUser() === true) {
             let foundUser = res.getUser().getUserid();
-            console.log("Found user with user id: " +foundUser); 
+            console.log("Found user with user id: " + foundUser);
             this.setState({
                 foundUser: foundUser,
-                showSearch : true,
-                showSuggestions : false
+                showSearch: true,
+                showSuggestions: false
             });
-        } else {
-            console.log("Couldn't find user from search string: " + this.state.searchString); 
         }
+    }
+
+    checkSuccess() {
+        alert("Couldn't find user @" + this.state.searchString);
     }
 
 
@@ -262,59 +264,60 @@ class Explore extends React.Component {
      * Renders Explore screen components.
      * @returns {Component}
      */
-  render() {
-    return (
-        <SafeAreaView style={KIC_Style.outContainer}>
-            <FeedHeader navigation={this.props.navigation} />
-            <SafeAreaView style={KIC_Style.innerContainer}>
-                <View style={{flexDirection: 'row', marginTop: 30, justifyContent: 'center' }}>
-                    <TextInput
-                        style={KIC_Style.searchInput}
-                        textAlign = {'center'}
-                        onChange={(e) => this.setSearchString(e.nativeEvent.text)}
-                        placeholder="Search for a user . . ."
-                    />
-                    <TouchableOpacity
-                        style={{ backgroundColor: '#b3d2db', borderRadius: 10, height: 30, justifyContent: 'center' }}
-                        onPress = {() => this.handleSearch()}>
-                        <Ionicons name="search-circle-outline" color='#ffff' size={25} />
-                    </TouchableOpacity>
-                </View>
+    render() {
+        return (
+            <SafeAreaView style={KIC_Style.outContainer}>
+                <FeedHeader navigation={this.props.navigation} />
+                <SafeAreaView style={KIC_Style.innerContainer}>
+                    <View style={{ flexDirection: 'row', marginTop: 30, justifyContent: 'center' }}>
+                        <TextInput
+                            style={KIC_Style.authInput}
+                            textAlign={'center'}
+                            onChange={(e) => this.setSearchString(e.nativeEvent.text)}
+                            placeholder="Search for a user . . ."
+                            onSubmitEditing={() => this.handleSearch()}
+                        />
+                        <TouchableOpacity
+                            style={{ backgroundColor: '#b3d2db', borderRadius: 10, height: 30, justifyContent: 'center' }}
+                            onPress={() => this.handleSearch()}>
+                            <Ionicons name="search-circle-outline" color='#ffff' size={25} />
+                        </TouchableOpacity>
+                    </View>
 
-                <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
-                
-                {(this.state.finishedLoading)  ? <ScrollView style = {styles.blurb}>
-                    {(this.state.showSearch) ? <View>
-                    <UserBlurb
-                        navigation = {this.props.navigation}
-                        authString = {this.state.authString}
-                        myUsername = {this.state.username}
-                        myUserid = {this.state.userid}
-                        userid = {this.state.userid} // This page belongs to the active user
-                        blurbUserid = {this.state.foundUser}
-                    />
-                </View> : <View></View>}
-                    {this.state.showSuggestions ? <View>
-                    <FlatList
-                        data = {this.state.foundFriends}
-                        renderItem = {({item}) => 
-                        <UserBlurb
-                        navigation = {this.props.navigation}
-                        authString = {this.state.authString}
-                        myUsername = {this.state.username}
-                        myUserid = {this.state.userid}
-                        userid = {this.state.userid}
-                        blurbUserid = {item.getUserid()}
-                        />}
-                        keyExtractor = {friend => friend.userid}
-                    />
-                     </View> : <View></View>}
-                    <StatusBar style="auto" />
-                </ScrollView> : <View></View>}
+                    <Text style={styles.toptext}>Displaying friend recommendations for @{this.state.username}</Text>
+
+                    {(this.state.finishedLoading) ? <ScrollView style={styles.blurb}>
+                        {(this.state.showSearch) ? <View>
+                            <UserBlurb
+                                navigation={this.props.navigation}
+                                authString={this.state.authString}
+                                myUsername={this.state.username}
+                                myUserid={this.state.userid}
+                                userid={this.state.userid} // This page belongs to the active user
+                                blurbUserid={this.state.foundUser}
+                            />
+                        </View> : <View></View>}
+                        {this.state.showSuggestions ? <View>
+                            <FlatList
+                                data={this.state.foundFriends}
+                                renderItem={({ item }) =>
+                                    <UserBlurb
+                                        navigation={this.props.navigation}
+                                        authString={this.state.authString}
+                                        myUsername={this.state.username}
+                                        myUserid={this.state.userid}
+                                        userid={this.state.userid}
+                                        blurbUserid={item.getUserid()}
+                                    />}
+                                keyExtractor={friend => friend.userid}
+                            />
+                        </View> : <View></View>}
+                        <StatusBar style="auto" />
+                    </ScrollView> : <View></View>}
+                </SafeAreaView>
             </SafeAreaView>
-        </SafeAreaView>
-    );
-  }
+        );
+    }
 }
 
 /**
@@ -336,8 +339,8 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         textAlign: 'center',
     },
-    blurb: { 
-        width : '85%'
+    blurb: {
+        width: '85%'
     }
 });
 

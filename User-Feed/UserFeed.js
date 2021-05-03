@@ -12,7 +12,6 @@ import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } f
 import { GenerateFeedForUserRequest } from "../gen/proto/feed_pb"
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
-import { parse } from '@babel/core';
 
 
 /**
@@ -212,9 +211,9 @@ class UserFeed extends React.Component {
     return (
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
-        <SafeAreaView style={styles.container}>
-          {(this.state.finishedLoading) ? <ScrollView>
-            {/* FlatList that renders a UserBlurb per user in the friend list */}
+        <SafeAreaView style={KIC_Style.innerContainer}>
+          {(this.state.finishedLoading) ? <ScrollView style={{width:'100%'}}>
+            {/* FlatList that renders a FeedPost per post in feed */}
             <FlatList
               style={styles.listcontainer}
               data={this.state.feedFiles}
@@ -227,7 +226,6 @@ class UserFeed extends React.Component {
               />}
               keyExtractor={friend => friend.userid}
             />
-            <Text>End of feed!</Text>
             <StatusBar style="auto" />
           </ScrollView> : <View></View>}
         </SafeAreaView>

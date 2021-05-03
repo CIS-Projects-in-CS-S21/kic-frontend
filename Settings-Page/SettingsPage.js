@@ -3,9 +3,9 @@
  */
 
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, Switch, View, Image, Platform, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Switch, View, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import KIC_Style from "../Components/Style";
 import FeedHeader from "../Components/FeedHeader";
 import UserManager from "../Managers/UserManager";
@@ -75,6 +75,8 @@ class SettingsPage extends React.Component {
         this._unsubscribe();
     }
 
+  
+    
     /**
      * Calls callGetAuthString. Starts the process of fetching active user info.
      *
@@ -216,7 +218,7 @@ class SettingsPage extends React.Component {
         req.setTriggers(this.state.triggerString);
 
         return client.updateUserInfo(req, { 'Authorization': this.state.authString }).then(res =>
-            console.log(res)
+            alert("Triggers stored!")
         ).catch(error => {
             console.log("There was an error.");
             console.log(error)
@@ -240,8 +242,10 @@ class SettingsPage extends React.Component {
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
-        if (this.state.newBio.length >= 250){
+        if (this.state.newBio.length >= 250) {
             alert("Sorry, your bio must be less than 250 characters long!");
+        } else if (this.state.newBio.length = 0 || this.state.newBio == ''){
+            alert("You must enter a bio!")
         } else {
             let req = new UpdateUserInfoRequest();
             req.setBio(this.state.newBio);
@@ -306,7 +310,7 @@ class SettingsPage extends React.Component {
         let map = req.getMetadataMap();
         map.set("pfpUserID", this.state.myUserid.toString());
 
-        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.pickImage(client)})
+        return client.deleteFilesWithMetaData(req, { 'Authorization': this.state.authString }).then(res => { this.pickImage(client) })
     }
 
     //Allow user to pick image for pfp
@@ -460,12 +464,12 @@ class SettingsPage extends React.Component {
         }
     }
 
-    randomizeFileName = async() => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
+    randomizeFileName = async () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
         });
-      }
+    }
     /**
      * @constant randomizeFileName For generating file name
      * @returns {String} v of random file name
@@ -486,8 +490,13 @@ class SettingsPage extends React.Component {
         return (
             <SafeAreaView style={KIC_Style.outContainer}>
                 <FeedHeader navigation={this.props.navigation} />
-                <SafeAreaView style={[KIC_Style.innerContainer, { marginTop: 30 }]}>
-                    <Text style={{ margin: 30 }}>Set Account as Private</Text>
+                <KeyboardAvoidingView style={KIC_Style.innerContainer} behavior="padding">
+                <TouchableOpacity
+                        style={KIC_Style.button2}
+                        onPress={() => this.deletePreviousPics()}>
+                        <Text style={KIC_Style.button_font}> Upload profile picture </Text>
+                    </TouchableOpacity>
+                    <Text style={[styles.text, { margin: 10 }]}>Set Account as Private</Text>
                     {this.state.fetchedPriv ? <Switch
                         style={{ marginTop: 30 }}
                         trackColor={{ false: "#b3d2db", true: "#7ab7dd" }}
@@ -496,11 +505,12 @@ class SettingsPage extends React.Component {
                         onValueChange={this.toggleSwitch}
                         value={this.state.isPrivate}
                     /> : <View></View>}
-                    <Text style={{ marginTop: 30 }}> Current Triggers: {this.state.triggerString} </Text>
+                    <Text style={[styles.text, { marginTop: 30 }]}> Current Triggers: {this.state.triggerString} </Text>
                     <TextInput
                         style={KIC_Style.postInput}
                         textAlign={'center'}
                         onChange={(e) => this.setTriggers(e.nativeEvent.text)}
+                        onSubmitEditing={() => this.storeTriggers()}
                         placeholder="Write any triggers in // format . . ."
                     />
                     <TouchableOpacity
@@ -513,6 +523,7 @@ class SettingsPage extends React.Component {
                         style={KIC_Style.postInput}
                         textAlign={'center'}
                         onChange={(e) => this.setNewBio(e.nativeEvent.text)}
+                        onSubmitEditing={() => this.changeBio()}
                         placeholder="Change bio..."
                     />
                     <TouchableOpacity
@@ -520,13 +531,8 @@ class SettingsPage extends React.Component {
                         onPress={() => this.changeBio()}>
                         <Text style={KIC_Style.button_font}> Change Bio </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={KIC_Style.button2}
-                        onPress={() => this.deletePreviousPics()}>
-                        <Text style={KIC_Style.button_font}> Upload profile picture </Text>
-                    </TouchableOpacity>
                     <StatusBar style="auto" />
-                </SafeAreaView>
+                </KeyboardAvoidingView>
             </SafeAreaView>
         );
     }
@@ -542,6 +548,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    text: {
+        ...Platform.select({
+            ios: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+      
+            },
+            android: {
+              fontFamily: 'Roboto',
+      
+            },
+            default: {
+              fontFamily: 'AppleSDGothicNeo-Regular'
+            }
+          }),
+    }
 });
 
 export default SettingsPage;

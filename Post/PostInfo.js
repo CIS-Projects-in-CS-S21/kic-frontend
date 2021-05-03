@@ -2,25 +2,60 @@
  * @fileoverview The screen for user posting info, where user can choose to add captions + triggers to post + actually share their post
  */
 
-import React, { useState } from 'react'
-import {Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Platform, KeyboardAvoidingView, TextInput, Dimensions, Animated, Keyboard, Text, TouchableOpacity } from 'react-native'
 import KIC_Style from "../Components/Style";
 import ClientManager from '../Managers/ClientManager';
 import UserManager from "../Managers/UserManager";
-import { UploadFileRequest, CheckForFileRequest } from "../gen/proto/media_pb";
-import { Buffer } from "buffer";
+import { UploadFileRequest } from "../gen/proto/media_pb";
 import { File, Date as CommonDate } from "../gen/proto/common_pb";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Video, AVPlaybackStatus } from 'expo-av';
-import * as FileSystem from "expo-file-system";
+import { Video } from 'expo-av';
+import FeedHeader from '../Components/FeedHeader';
 
 /**
  * @class Contains function for rendering the Post Info page
  */
 export default function PostInfo(props) {
+    const IMAGE_HEIGHT = Dimensions.get('window').width / 1.12;
+    const IMAGE_HEIGHT_SMALL = Dimensions.get('window').width / 2;
+    const imageHeight = new Animated.Value(IMAGE_HEIGHT);
+    const VIEW_SCALE = 1; 
+    const VIEW_SCALE_SMALL = 0.5;
+    const viewScale = new Animated.Value(VIEW_SCALE); 
 
-    {/* Create UsersClientManager & create a UsersClient */}
+    useEffect(() => {
+        Keyboard.addListener('keyboardWillShow', keyboardWillShow);
+        Keyboard.addListener('keyboardWillHide', keyboardWillHide);
+        return () => {
+            Keyboard.removeListener('keyboardWillShow');
+            Keyboard.removeListener('keyboardWillHide');
+        }
+    }, [])
+
+    const keyboardWillShow = (event) => {
+        Animated.timing(imageHeight, {
+            duration: event.duration,
+            toValue: IMAGE_HEIGHT_SMALL,
+        }).start();
+        Animated.timing(viewScale, {
+            duration: event.duration,
+            toValue: VIEW_SCALE_SMALL,
+        }).start();
+    };
+
+    const keyboardWillHide = (event) => {
+        Animated.timing(imageHeight, {
+            duration: event.duration,
+            toValue: IMAGE_HEIGHT,
+        }).start();
+        Animated.timing(viewScale, {
+            duration: event.duration,
+            toValue: VIEW_SCALE,
+        }).start();
+    };
+    {/* Create UsersClientManager & create a UsersClient */ }
     let cm = new ClientManager();
     let client = cm.createMediaClient();
 
@@ -35,7 +70,11 @@ export default function PostInfo(props) {
      * @constant uploadImage starts chain of functions to upload image
      */
     const uploadImage = async () => {
-        return callGetAuthString();
+        if (caption.length >= 250) {
+            alert("Sorry, your caption must be less than 250 characters long!");
+        } else {
+            return callGetAuthString();
+        }
     }
 
 
@@ -48,7 +87,7 @@ export default function PostInfo(props) {
     const callGetAuthString = async () => {
         let um = new UserManager();
         console.log("Obtained authorization string");
-        return um.getAuthString().then(authString  => {getUserID(authString, um)});
+        return um.getAuthString().then(authString => { getUserID(authString, um) });
     }
 
     /**
@@ -59,8 +98,8 @@ export default function PostInfo(props) {
      * precondition: callGetAuthString
      * postcondition: makeUploadFileRequest
      */
-    const getUserID = async(authString, um) => {
-        um.getMyUserID().then(userID  => makeUploadFileRequest(userID, authString));
+    const getUserID = async (authString, um) => {
+        um.getMyUserID().then(userID => makeUploadFileRequest(userID, authString));
     }
 
 
@@ -86,7 +125,7 @@ export default function PostInfo(props) {
      */
     const makeUploadFileRequest = async (userID, authString) => {
         console.log("making upload request");
-       //obtain uri and base64 from Post.js
+        //obtain uri and base64 from Post.js
         let uri = props.route.params.image;
         const base64 = props.route.params.base64;
 
@@ -105,7 +144,7 @@ export default function PostInfo(props) {
             let extensionNoBase = extractedExt.toString().replace(";base64", "");
             extension = extensionNoBase.replace("/", "");
 
-            if (format === 'video'){
+            if (format === 'video') {
                 extension = "mp4";
             }
 
@@ -114,7 +153,7 @@ export default function PostInfo(props) {
 
             // Get extension from uri
             const parsedURI = uri.split(/[.]/);
-            extension = parsedURI[parsedURI.length-1];
+            extension = parsedURI[parsedURI.length - 1];
             console.log("mobile ext:" + extension);
 
             // Detect video
@@ -144,13 +183,13 @@ export default function PostInfo(props) {
 
 
         console.log("Metadata before set: ");
-        file.getMetadataMap().forEach(function(v, k) {
+        file.getMetadataMap().forEach(function (v, k) {
             console.log(k, v);
         });
         let comments = []; //create empty array for comments
 
         //each image is associated with a userID, array of captions, triggers, comments, and tags, its uri, extension of the image, and the format of the image
-        map.set("userID", userID.toString()) ;
+        map.set("userID", userID.toString());
         map.set("filename", filename);
         map.set("caption", caption);
         map.set("trigger", triggerString);
@@ -168,7 +207,7 @@ export default function PostInfo(props) {
         file.setDatestored(date);
 
         // Use uri for web uploads, use base64 for mobile uploads
-        if (Platform.OS === 'web'){
+        if (Platform.OS === 'web') {
             map.set("origin", "web")
             console.log("UPLOADING ON WEB: " + uri)
             req.setFileuri(uri);
@@ -185,22 +224,22 @@ export default function PostInfo(props) {
 
         //set metadata and check that it is set correctly
         console.log("Metadata after set: ");
-        file.getMetadataMap().forEach(function(v, k) {
+        file.getMetadataMap().forEach(function (v, k) {
             console.log(k, v);
         });
 
 
-        return client.uploadFile(req,{'Authorization': authString}).then(
+        return client.uploadFile(req, { 'Authorization': authString }).then(
             res => {
-               console.log("file id:" + res.getFileid());
-               console.log("bytesRead:" + res.getBytesread());
-               
-               console.log(res);
-               navigation.navigate('Profile')
+                console.log("file id:" + res.getFileid());
+                console.log("bytesRead:" + res.getBytesread());
+
+                console.log(res);
+                navigation.navigate('Profile')
             })
-            .catch(error =>{
-               console.log("There is an error :(");
-               console.log(error);
+            .catch(error => {
+                console.log("There is an error :(");
+                console.log(error);
             });
     }
 
@@ -236,11 +275,11 @@ export default function PostInfo(props) {
      * @constant randomizeFileName For generating file name
      * @returns {String} v of random file name
      */
-    const randomizeFileName = async() => {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
+    const randomizeFileName = async () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 
     /**
@@ -264,39 +303,40 @@ export default function PostInfo(props) {
      */
 
     return (
-        <SafeAreaView style={{
-            flex: 1,
-            backgroundColor: '#ffff'
-           }}>
-            {!props.route.params.isVideo && <Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1}}/>}
-            {props.route.params.isVideo && <Video
+        <SafeAreaView style={KIC_Style.outContainer}>
+            <FeedHeader navigation={navigation} />
+            <KeyboardAvoidingView behavior="padding" style={{ justifyContent: 'flex-start', alignItems: 'center', flex: 1, }}>
+            {!props.route.params.isVideo && <Animated.Image source={{ uri: props.route.params.image }} style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', width: imageHeight, height: imageHeight, padding: 10, margin: 10, aspectRatio: 1 }} />}
+            {props.route.params.isVideo && 
+            <Animated.View style={{height: imageHeight, transform: [{scaleX: viewScale}, {scaleY: viewScale}]}}>
+                <Video
                 ref={video}
                 style={{
                     flex: 1,
-                     alignSelf: 'center', width: '50%',padding: 10, margin: 10, aspectRatio: 1,
-                   }}
+                    alignSelf: 'center', width: '50%', padding: 10, margin: 10, aspectRatio: 1,
+                }}
                 source={{
                     uri: props.route.params.image,
                 }}
-                useNativeControls = {true}
+                useNativeControls={true}
                 resizeMode="contain"
-            />}
+            /></Animated.View>}
             <TextInput
                 style={KIC_Style.postInput}
-                textAlign = {'center'}
+                textAlign={'center'}
                 value={caption}
                 onChange={(e) => setCaption(e.nativeEvent.text)}
                 placeholder="Write a Caption . . ."
             />
             <TextInput
                 style={KIC_Style.postInput}
-                textAlign = {'center'}
+                textAlign={'center'}
                 onChange={(e) => setTagString(e.nativeEvent.text)}
                 placeholder="Write any tags in # format . . ."
             />
             <TextInput
                 style={KIC_Style.postInput}
-                textAlign = {'center'}
+                textAlign={'center'}
                 onChange={(e) => setTriggerString(e.nativeEvent.text)}
                 placeholder="Write any triggers in // format . . ."
             />
@@ -305,6 +345,7 @@ export default function PostInfo(props) {
                 onPress={() => uploadImage()}>
                 <Text style={KIC_Style.button_font}> Upload </Text>
             </TouchableOpacity>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }

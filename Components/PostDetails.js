@@ -74,8 +74,6 @@ class PostDetails extends React.Component {
             </ScrollView>
             </View>
 
-            <Text style={styles.postTimestamp}>Posted on {this.state.day} {this.state.month} {this.state.year}</Text>
-
         </SafeAreaView>
       );
     }
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
         flexGrow: 0,
     },
     captionText: {
-        fontSize: 13,
+        fontSize: 12,
     },
     postTimestamp: {
         fontSize: 10,
@@ -116,12 +114,12 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
     icon: {
-        width: 36,
-        height: 36,
-        borderTopRightRadius: 18,
-        borderTopLeftRadius: 18,
-        borderBottomRightRadius: 18,
-        borderBottomLeftRadius: 18,
+        width: 30,
+        height: 30,
+        borderTopRightRadius: 15,
+        borderTopLeftRadius: 15,
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
     },
     textUsername: {
         textAlign: 'left',

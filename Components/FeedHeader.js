@@ -58,7 +58,7 @@ class FeedHeader extends React.Component {
         <SafeAreaView style={styles.feedHeaderContainer}>
             <Icon.Button 
                 name="arrow-back-circle-outline" 
-                size={30} 
+                size={20}
                 backgroundColor='#b3d2db'
                 borderRadius={0}
                 onPress={()=>
@@ -70,7 +70,7 @@ class FeedHeader extends React.Component {
             />
             <Icon.Button 
                 name="log-out-outline" 
-                size={30} 
+                size={20}
                 backgroundColor='#b3d2db'
                 borderRadius={0}
                 onPress={() => 
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
         flex: 1, 
         flexDirection: 'row',
         width: '100%',
-        height: 80,
+        height: 60,
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#b3d2db',
@@ -99,12 +99,22 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 100,
         marginBottom: 90,
+        ...Platform.select({
+            ios: {
+                height:75,
+            },
+            android: {
+              height:65,
+            },
+            default: {
+            }
+          }),
     },
     logo: {
-        width: 50,
-        height: 50,
+        width: 35,
+        height: 35,
         top:0,
-        bottom:0
+        bottom:10,
     },
     icon: {
         backgroundColor: '#b3d2db',

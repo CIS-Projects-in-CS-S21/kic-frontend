@@ -31,8 +31,8 @@ class ProfilePicture extends React.Component {
             userid: props.userid,
 
             authString: props.authString,
-            imageSrc: "",
-            iconFetched: true,
+            imageSrc: undefined,
+            iconFetched: false,
             uploading: true,
             metadata: null,
             map: null,
@@ -64,6 +64,7 @@ class ProfilePicture extends React.Component {
               username: this.props.username,
               navigation: this.props.navigation,
               authString: this.props.authString,
+              iconFetched: false,
               image: null,
               metadata: null,
           })

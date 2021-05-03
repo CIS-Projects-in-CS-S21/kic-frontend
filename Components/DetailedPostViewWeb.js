@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Platform, StyleSheet, Text, TextInput, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import PostDetails from "./PostDetails";
@@ -172,7 +172,7 @@ class DetailedPostViewWeb extends React.Component {
         this.setState({
                     filename: this.state.fileinfo.getMetadataMap().get("filename"),
                     yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
-                    monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()],
+                    monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()-1],
                     dayPosted: this.state.fileinfo.getDatestored().getDay().toString(),
                     caption: this.state.fileinfo.getMetadataMap().get("caption"),
                 })
@@ -318,7 +318,7 @@ class DetailedPostViewWeb extends React.Component {
         let desiredmap = req.getDesiredmetadataMap();
         desiredmap.set("comments", desiredCommentsJSON);
         // Send the request and print the # of files updated
-        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { /*console.log("Result: " + res)*/ }).catch(error => console.log("Saving comment failed: " + error));
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => { this.textInput.clear() }).catch(error => console.log("Saving comment failed: " + error));
     }
 
     /**
@@ -453,10 +453,12 @@ class DetailedPostViewWeb extends React.Component {
 
                     {(this.state.finishedInit && this.state.commentsAllowed) ? <View style={{flexDirection: 'row'}}>
                         <TextInput
+                            ref={input => { this.textInput = input }}
                             style={KIC_Style.commentInput}
                             textAlign = {'center'}
                             onChange={(e) => this.setCommentText(e.nativeEvent.text)}
                             placeholder="Leave a comment . . ."
+                            onSubmitEditing={this.handleAddComment}
                         />
                         <TouchableOpacity
                             style={{ justifyContent: 'center' }}

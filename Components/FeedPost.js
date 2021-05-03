@@ -3,9 +3,8 @@
 This includes a user handle at top, image in middle, and user handle and caption at the bottom. 
 */
 
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image} from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import KIC_Image from "./KIC_Image";
 import { GetUserByIDRequest } from '../gen/proto/users_pb';
 import ClientManager from "../Managers/ClientManager";
@@ -14,145 +13,149 @@ import ClientManager from "../Managers/ClientManager";
 * @class Contains function for rendering a post
 */
 class FeedPost extends React.Component {
-    /*
-    * Class constructor
-    */
-     constructor(props) {
-      super();
+  /*
+  * Class constructor
+  */
+  constructor(props) {
+    super();
 
-      // Define the initial state
-      this.state = {
-          // ID of the current active user
-          myUserid: props.myUserid,
+    // Define the initial state
+    this.state = {
+      // ID of the current active user
+      myUserid: props.myUserid,
 
-          // ID of the poster
-          posterid: 0,
+      // ID of the poster
+      posterid: 0,
 
-          // Username of the poster
-          posterusername: "default",
+      // Username of the poster
+      posterusername: "default",
 
-          // Authstring
-          authString: props.authString,
+      // Authstring
+      authString: props.authString,
 
-          // The File object to be displayed
-          file: props.file,
+      // The File object to be displayed
+      file: props.file,
 
-          // The image caption
-          caption: "Caption",
+      // The image caption
+      caption: "Caption",
 
-          //account triggers
-          accountTriggers: props.accountTriggers,
+      //account triggers
+      accountTriggers: props.accountTriggers,
 
-          //assume does not have banned triggers
-          hasBannedTriggers: false,
+      //assume does not have banned triggers
+      hasBannedTriggers: false,
 
-          //triggers
-          triggers: [],
+      //triggers
+      triggers: [],
 
-          //triggerstring
-          triggerString: "",
+      //triggerstring
+      triggerString: "none",
 
-          finishedUpdating: false,
-      };
+      finishedUpdating: false,
+    };
 
-      this.parseFileinfo = this.parseFileinfo.bind(this)
+    this.parseFileinfo = this.parseFileinfo.bind(this)
   }
 
-    /**
-    * Runs when component first loads
-    *
-    */
-  componentDidMount(){
+  /**
+  * Runs when component first loads
+  *
+  */
+  componentDidMount() {
     this.parseFileinfo().then(response => {
-        console.log("Success");
+      console.log("Success");
     }).catch(error => {
-        console.log(error)
+      console.log(error)
     });
   }
 
-    /**
-    * Parses the File to be displayed by this component
-    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
-     * post condition: updateState of reponse
-    */
-  parseFileinfo(){
-      //console.log("My name is " + this.state.file)
-      let map = this.state.file.getMetadataMap();
-      let posterid = map.get("userID");
-      let caption = map.get("caption");
+  /**
+  * Parses the File to be displayed by this component
+  * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+   * post condition: updateState of reponse
+  */
+  parseFileinfo() {
+    //console.log("My name is " + this.state.file)
+    let map = this.state.file.getMetadataMap();
+    let posterid = map.get("userID");
+    let caption = map.get("caption");
 
-      //get triggers associated with image
-      let triggerString = map.get("trigger");
-      let triggersNoCommas = triggerString.replace(",", " ");
-      let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
-      triggersParsed = triggersParsed.filter(e => e !== '');
-
-
-      if (triggersParsed.some(v => this.state.accountTriggers.includes(v))) {
-          this.setState({
-            hasBannedTriggers: true
-          })
-      }
-
+    //get triggers associated with image
+    let triggerStrings = map.get("trigger");
+    let triggersNoCommas = triggerStrings.replace(",", " ");
+    let triggersParsed = triggersNoCommas.split(/[' ',',',//]/);
+    triggersParsed = triggersParsed.filter(e => e !== '');
+    if (triggerStrings.length != 0) {
       this.setState({
-          caption: caption,
-          posterid: posterid,
-          metadata: map,
-          triggers: triggersParsed,
-          triggerString: triggerString
+        triggerString: triggerStrings
       })
-
-      let cm = new ClientManager();
-      let client = cm.createUsersClient();
-
-      let req = new GetUserByIDRequest();
-      req.setUserid(posterid);
-
-      return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.updateState(res)});
-  }
-
-    /**
-    * Updates the state with the parsed information
-    * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
-     * precondition: parseFileInfo
-    */
-  updateState(res){
-      console.log("1");
-      let poster = res.getUser();
-      let posterusername = poster.getUsername();
-
-      console.log("Username: " + posterusername + " and user: " + poster);
-
-      this.setState({
-          posterusername: posterusername,
-          finishedUpdating: true,
-      })
-  }
-
-    /**
-    * Renders a user's post
-    * @returns {FeedPost}
-    */
-    render() {
-      return (
-        <View style ={styles.feedPost}>
-          {/* Handle of user who posted image */}
-            {!this.state.hasBannedTriggers && <Text style = {styles.headerHandle}>@{this.state.posterusername}</Text>}
-            {/* Image of post */}
-            { (this.state.finishedUpdating && !this.state.hasBannedTriggers) ? <KIC_Image
-              authString = {this.props.authString}
-              navigation = {this.props.navigation}
-              fileInfo = {this.props.file}
-              userid = {this.state.posterid}
-              username = {this.state.posterusername}
-              myUserid = {this.props.myUserid}
-            /> : <View></View>}
-            {/* Handle of user who posted image and caption */}
-            {!this.state.hasBannedTriggers && <Text style = {styles.bottomText}>@{this.state.posterusername}: {this.state.caption}</Text>}
-            {!this.state.hasBannedTriggers && <Text style={styles.bottomText}> triggers: {this.state.triggerString}</Text>}
-        </View>
-      );
     }
+
+
+    if (triggersParsed.some(v => this.state.accountTriggers.includes(v))) {
+      this.setState({
+        hasBannedTriggers: true
+      })
+    }
+
+    this.setState({
+      caption: caption,
+      posterid: posterid,
+      metadata: map,
+      triggers: triggersParsed,
+    })
+
+    let cm = new ClientManager();
+    let client = cm.createUsersClient();
+
+    let req = new GetUserByIDRequest();
+    req.setUserid(posterid);
+
+    return client.getUserByID(req, { 'Authorization': this.state.authString }).then(res => { this.updateState(res) });
+  }
+
+  /**
+  * Updates the state with the parsed information
+  * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+   * precondition: parseFileInfo
+  */
+  updateState(res) {
+    console.log("1");
+    let poster = res.getUser();
+    let posterusername = poster.getUsername();
+
+    console.log("Username: " + posterusername + " and user: " + poster);
+
+    this.setState({
+      posterusername: posterusername,
+      finishedUpdating: true,
+    })
+  }
+
+  /**
+  * Renders a user's post
+  * @returns {FeedPost}
+  */
+  render() {
+    return (
+      <View style={styles.feedPost}>
+        {/* Handle of user who posted image */}
+        {!this.state.hasBannedTriggers && <Text style={styles.headerHandle}>@{this.state.posterusername}:</Text>}
+        {/* Image of post */}
+        { (this.state.finishedUpdating && !this.state.hasBannedTriggers) ? <KIC_Image
+          authString={this.props.authString}
+          navigation={this.props.navigation}
+          fileInfo={this.props.file}
+          userid={this.state.posterid}
+          username={this.state.posterusername}
+          myUserid={this.props.myUserid}
+        /> : <View></View>}
+        {/* Handle of user who posted image and caption */}
+        {!this.state.hasBannedTriggers && <Text style={styles.bottomText}>@{this.state.posterusername}: {this.state.caption}</Text>}
+        {!this.state.hasBannedTriggers && <Text style={styles.triggerText}> triggers: {this.state.triggerString}</Text>}
+      </View>
+    );
+  }
 }
 
 /**
@@ -172,13 +175,34 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingLeft: 10,
     paddingRight: 10,
+
   },
   headerHandle: {
-    alignSelf: 'auto'
+    alignSelf: 'auto',
+    fontSize: 20,
+    paddingBottom: 4,
+    ...Platform.select({
+      ios: {
+        width: '100%',
+        textAlign: 'left', 
+        fontFamily: 'AppleSDGothicNeo-SemiBold'
+
+      },
+      android: {
+        paddingBottom: 4,
+        width: '100%',
+        textAlign: 'left', 
+        fontWeight: 'bold',
+        fontFamily: 'Roboto'
+      },
+      default: {
+        fontFamily: 'AppleSDGothicNeo-SemiBold'
+      }
+    }),
   },
   postImage: {
-    borderWidth: 5, 
-    borderColor: 'black', 
+    borderWidth: 5,
+    borderColor: 'black',
     width: 350,
     height: 350,
     marginLeft: 5,
@@ -186,9 +210,52 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     resizeMode: 'contain',
+    paddingTop: 4,
   },
   bottomText: {
-    alignSelf: 'auto'
+    fontSize: 15, 
+    alignSelf: 'auto',
+    ...Platform.select({
+      ios: {
+        width: '100%',
+        textAlign: 'left', 
+        fontFamily: 'AppleSDGothicNeo-Regular'
+
+      },
+      android: {
+        width: '100%',
+        textAlign: 'left', 
+        fontFamily: 'Roboto',
+
+      },
+      default: {
+        fontFamily: 'AppleSDGothicNeo-Regular'
+      }
+    }),
+  },
+  triggerText: {
+
+    fontSize: 12,
+    color: 'gray',
+    alignSelf: 'auto',
+    
+    ...Platform.select({
+      ios: {
+        width: '100%',
+        textAlign: 'left', 
+        fontFamily: 'AppleSDGothicNeo-Thin'
+
+      },
+      android: {
+        width: '100%',
+        textAlign: 'left', 
+        fontFamily: 'Roboto',
+      },
+      default: {
+        
+        fontFamily: 'AppleSDGothicNeo-Thin'
+      }
+    }),
   },
 });
 
