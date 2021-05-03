@@ -68,8 +68,8 @@ class HealthLogBlurb extends React.Component {
      * Parses logDate into string with correct view.
      */
     initLog() {
-        console.log("Date: "+this.props.logDate)
-        console.log("init log");
+        //console.log("Date: "+this.props.logDate)
+        //console.log("init log");
         let stringDate = this.state.logDate;
         let dateParsed = stringDate.split(/[',']/);
         let date = new CommonDate();
@@ -125,8 +125,8 @@ class HealthLogBlurb extends React.Component {
         })
         console.log("Sent request to delete health data");
         return client.deleteHealthDataForUser(req, {'Authorization': this.props.authString}).then(res => {
-            console.log("Delete health data response" + res)
-            console.log("Entries deleted:" + res.getEntriesdeleted())
+            //console.log("Delete health data response" + res)
+            //console.log("Entries deleted:" + res.getEntriesdeleted())
             alert("Entry removed!")
             this.handleRemovedEntry();
         }).catch(error => {
@@ -190,6 +190,11 @@ class HealthLogBlurb extends React.Component {
 
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
+                                <View style={{ marginBottom: 6, }}>
+                                    <Text style={styles.modalTitle}>Date: {this.state.dateString} </Text>
+                                    <Text style={styles.modalTitle}>Score: {this.state.score}</Text>
+                                </View>
+                                <Text style={styles.modalTitle}>Entry:</Text>
                                 <Text style={styles.modalText}>{this.state.entry}</Text>
                                 <TouchableOpacity
                                     style={[styles.button, styles.buttonClose]}
@@ -261,11 +266,19 @@ const styles = StyleSheet.create({
         marginTop: 22
     },
     buttonClose: {
-        backgroundColor: "#7ab7dd"
+        backgroundColor: "#7ab7dd",
+        alignSelf: "center",
+    },
+    modalTitle: {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginBottom: 2,
+        textAlign: "left"
     },
     modalText: {
+        fontSize: 12,
         marginBottom: 15,
-        textAlign: "center"
+        textAlign: "left"
     },
     textBio: {
         fontSize: 13,
@@ -274,8 +287,8 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 10,
-        alignItems: "center",
+        padding: 20,
+        alignItems: "left",
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -283,7 +296,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: 5,
     },
     disabledButton: {
         width: "80%",
