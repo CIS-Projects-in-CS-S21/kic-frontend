@@ -4,11 +4,10 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import {ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FeedHeader from '../Components/FeedHeader';
 import KIC_Style from "../Components/Style";
-import { useNavigation } from "@react-navigation/native";
 import { DatePickerModal } from 'react-native-paper-dates';
 import NumberSlider from 'react-native-number-slider'
 import { Date as CommonDate } from "../gen/proto/common_pb";

@@ -5,7 +5,7 @@
  import React from 'react';
  import KIC_Style from '../Components/Style'; 
  import { SafeAreaView } from 'react-native-safe-area-context';
- import { TouchableOpacity, StyleSheet, Text, View, Image, Button } from 'react-native';
+ import { TouchableOpacity, StyleSheet, Text, Platform } from 'react-native';
 
  /**
   * @class Contains function for rendering Home screen.
@@ -21,9 +21,9 @@
         return (
             <SafeAreaView style={KIC_Style.container}>
                 <Text style={KIC_Style.title}>Keeping It Casual</Text>
-                <Text>Stay connected to friends and family while fostering a healthy mindset!</Text>
-                <Text>With a profile curated by you, feed of friends, with a mental health page dedicated to journaling your days and getting connected to professionals </Text>
-                <Text>Join the movement today!</Text>
+                <Text style={styles.text}>Stay connected to friends and family while fostering a healthy mindset!</Text>
+                <Text style={styles.text}>With a profile curated by you, feed of friends, with a mental health page dedicated to journaling your days and getting connected to professionals </Text>
+                <Text style={styles.text}>Join the movement today!</Text>
                 <TouchableOpacity 
                     style={KIC_Style.button} 
                     onPress={()=>this.props.navigation.navigate("SignUp")}>
@@ -65,6 +65,22 @@
      justifyContent: 'center',
      backgroundColor: 'blue'
    },
+   text: {
+     fontSize: 20,  
+    ...Platform.select({
+      ios: {
+        fontFamily: 'AppleSDGothicNeo-Regular'
+
+      },
+      android: {
+        fontFamily: 'Roboto',
+
+      },
+      default: {
+        fontFamily: 'AppleSDGothicNeo-Regular'
+      }
+    }),
+   }
  });
  
  export default HomePageWeb;

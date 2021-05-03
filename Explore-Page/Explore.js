@@ -57,7 +57,8 @@ class Explore extends React.Component {
             foundFriends: [],
             foundSearch: [],
             showSearch: false,
-            showSuggestions: true
+            showSuggestions: true,
+            foundUser: '',
         };
 
         this.callGetAuthString = this.callGetAuthString.bind(this)
@@ -224,6 +225,7 @@ class Explore extends React.Component {
     handleSearch() {
         console.log("Searching for " + this.state.searchString + "...");
         this.setState({
+            foundUser: '',
             showSearch: false,
         })
 
@@ -233,7 +235,7 @@ class Explore extends React.Component {
         let req = new GetUserByUsernameRequest();
         req.setUsername(this.state.searchString);
 
-        return client.getUserByUsername(req, { 'Authorization': this.state.authString }).then(res => { this.showSearchResults(res) }, this.checkSuccess())
+        return client.getUserByUsername(req, { 'Authorization': this.state.authString }).then(res => { this.showSearchResults(res) }, res=> {this.checkSuccess(res)})
     }
 
     /**
