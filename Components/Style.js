@@ -58,7 +58,7 @@ const KIC_Style = StyleSheet.create({
             },
             android: {
                 fontFamily: 'Roboto',
-              top:30,
+              top:35,
               marginBottom:30,
             },
             default: {
