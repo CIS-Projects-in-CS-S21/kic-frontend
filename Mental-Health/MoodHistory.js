@@ -130,7 +130,7 @@ export default function MoodHistory() {
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation}/>
-            <SafeAreaView style={[KIC_Style.innerContainer, {width: '90%'}]}>
+            <SafeAreaView style={[KIC_Style.innerContainer]}>
                 <ScrollView>
                     <Text style={KIC_Style.title}> Mood History Tracker </Text>
                     {/*FlatList that renders a mental health entry log per entry in health data list*/}
