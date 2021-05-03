@@ -37,6 +37,9 @@ class DetailedPostView extends React.Component {
         super();
         this.IMAGE_HEIGHT = Dimensions.get('window').width / 1.12; 
         this.IMAGE_HEIGHT_SMALL = Dimensions.get('window').width / 2; 
+        this.VIEW_SCALE = 1; 
+        this.VIEW_SCALE_SMALL = 0.5; 
+        this.viewScale = new Animated.Value(this.VIEW_SCALE);
         this.imageHeight = new Animated.Value(this.IMAGE_HEIGHT);
 
         // Define the initial state:
@@ -107,6 +110,10 @@ class DetailedPostView extends React.Component {
           duration: event.duration,
           toValue: this.IMAGE_HEIGHT_SMALL,
         }).start();
+        Animated.timing(this.viewScale, {
+            duration: event.duration,
+            toValue: this.VIEW_SCALE_SMALL,
+          }).start();
       };
     
       keyboardWillHide = (event) => {
@@ -114,6 +121,10 @@ class DetailedPostView extends React.Component {
           duration: event.duration,
           toValue: this.IMAGE_HEIGHT,
         }).start();
+        Animated.timing(this.viewScale, {
+            duration: event.duration,
+            toValue: this.VIEW_SCALE,
+          }).start();
       };
     
 
@@ -430,13 +441,14 @@ class DetailedPostView extends React.Component {
                     style={[styles.postImage, {height:this.imageHeight, width: this.imageHeight}]}
                     source={{uri: this.state.imageSrc}}
                 /> :
-                <Animated.Video
+                <Animated.View style={{height: this.imageHeight, transform: [{scaleX: this.viewScale}, {scaleY: this.viewScale}]}}>
+                <Video
                     ref={video}
-                    style={[styles.postImage, {height:this.imageHeight}]}
+                    style={styles.postImage}
                     source={{uri: this.state.imageSrc}}
                     useNativeControls = {true}
                     resizeMode="contain"
-                />}
+                /></Animated.View>}
 
                 {/* Post details, settings button, and timestamp */}
                 <View style={{justifyContent: 'flex-start'}}>
