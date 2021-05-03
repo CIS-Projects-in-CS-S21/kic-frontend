@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Platform, Dimensions, StyleSheet, Text, TextInput, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, Dimensions, StyleSheet, Text, TextInput, View, Modal, KeyboardAvoidingView, Keyboard, Animated, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import PostDetails from "./PostDetails";
@@ -35,6 +35,9 @@ class DetailedPostView extends React.Component {
    */
     constructor(props) {
         super();
+        this.IMAGE_HEIGHT = Dimensions.get('window').width / 1.12; 
+        this.IMAGE_HEIGHT_SMALL = Dimensions.get('window').width / 2; 
+        this.imageHeight = new Animated.Value(this.IMAGE_HEIGHT);
 
         // Define the initial state:
         this.state = {
@@ -83,6 +86,8 @@ class DetailedPostView extends React.Component {
      * precondition: initPostView waits for init post view to start
     */
     componentDidMount() {
+        this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+        this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
             this.setState({
                 finishedInit : false,
@@ -96,6 +101,21 @@ class DetailedPostView extends React.Component {
             });
         })
     }
+
+    keyboardWillShow = (event) => {
+        Animated.timing(this.imageHeight, {
+          duration: event.duration,
+          toValue: this.IMAGE_HEIGHT_SMALL,
+        }).start();
+      };
+    
+      keyboardWillHide = (event) => {
+        Animated.timing(this.imageHeight, {
+          duration: event.duration,
+          toValue: this.IMAGE_HEIGHT,
+        }).start();
+      };
+    
 
     /**
     * Runs when the props change and updates the component accordingly.
@@ -137,6 +157,8 @@ class DetailedPostView extends React.Component {
     *
     */
     componentWillUnmount() {
+        this.keyboardWillShowSub.remove();
+        this.keyboardWillHideSub.remove();
         this._unsubscribe();
     }
 
@@ -401,16 +423,16 @@ class DetailedPostView extends React.Component {
     return (
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.props.navigation} />
-        <SafeAreaView style={{ justifyContent: 'flex-start', alignItems: 'center', flex: 1, }}>
+        <KeyboardAvoidingView behavior="padding" style={{ justifyContent: 'flex-start', alignItems: 'center', flex: 1, }}>
             {/* Post image/video */}
             {(this.state.finishedInit) ? <View style={styles.container}>
-                {(!this.state.isVideo && this.state.finishedInit) ? <Image
-                    style={styles.postImage}
+                {(!this.state.isVideo && this.state.finishedInit) ? <Animated.Image
+                    style={[styles.postImage, {height:this.imageHeight, width: this.imageHeight}]}
                     source={{uri: this.state.imageSrc}}
                 /> :
-                <Video
+                <Animated.Video
                     ref={video}
-                    style={styles.postImage}
+                    style={[styles.postImage, {height:this.imageHeight}]}
                     source={{uri: this.state.imageSrc}}
                     useNativeControls = {true}
                     resizeMode="contain"
@@ -526,7 +548,7 @@ class DetailedPostView extends React.Component {
                 </View> : <View></View>}
                 <StatusBar style="auto" />
             </View> : <View></View>}
-        </SafeAreaView>
+            </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }

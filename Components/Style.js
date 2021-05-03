@@ -9,12 +9,12 @@ import { StyleSheet, Platform } from 'react-native';
 const KIC_Style = StyleSheet.create({
     outContainer: {
         flex:1,
-        fontFamily: 'Open Sans',
+        fontFamily: 'OpenSans-Regular',
         flexDirection: 'column',
     },
     container: {
         flex: 1,
-        fontFamily: 'Open Sans',
+        fontFamily: 'OpenSans-Regular',
         backgroundColor: '#ffff',
         alignItems: 'center',
         justifyContent: 'center',
@@ -22,7 +22,7 @@ const KIC_Style = StyleSheet.create({
     },
     innerContainer: {
         flex: 1,
-        fontFamily: 'Open Sans',
+        fontFamily: 'OpenSans-Regular',
         backgroundColor: '#ffff',
         alignItems: 'center',
         justifyContent: 'center',
@@ -45,7 +45,7 @@ const KIC_Style = StyleSheet.create({
 
     title: {
         color: '#b3d2db',
-        fontFamily: 'Open Sans Extra Bold Italic',
+        fontFamily: 'OpenSans-ExtraBoldItalic',
         fontSize: 30,
         fontWeight: "bold",
         paddingBottom: 5,
