@@ -213,7 +213,7 @@ class UserFeed extends React.Component {
         <FeedHeader navigation={this.props.navigation} />
         <SafeAreaView style={styles.container}>
           {(this.state.finishedLoading) ? <ScrollView>
-            {/* FlatList that renders a UserBlurb per user in the friend list */}
+            {/* FlatList that renders a FeedPost per post in feed */}
             <FlatList
               style={styles.listcontainer}
               data={this.state.feedFiles}
@@ -226,7 +226,6 @@ class UserFeed extends React.Component {
               />}
               keyExtractor={friend => friend.userid}
             />
-            <Text>End of feed!</Text>
             <StatusBar style="auto" />
           </ScrollView> : <View></View>}
         </SafeAreaView>
