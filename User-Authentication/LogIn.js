@@ -3,33 +3,68 @@
  */
 
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
-import { TextInput, Image } from 'react-native';
+import { TextInput, Keyboard, Animated, TouchableOpacity, KeyboardAvoidingView, Text } from 'react-native';
 import { GetJWTTokenRequest } from '../gen/proto/users_pb';
 import TokenManager from "../Managers/TokenManager";
 import ClientManager from '../Managers/ClientManager';
-import UserManager from '../Managers/UserManager';
-import { TouchableOpacity, View, Text } from "react-native";
 import KIC_Style from "../Components/Style";
 
 
 export default function logIn() {
 
+  const IMAGE_HEIGHT = 180;
+  const IMAGE_HEIGHT_SMALL = (100);
+  const imageHeight = new Animated.Value(IMAGE_HEIGHT);
+  const TITLE_SIZE = 30;
+  const TITLE_SIZE_SMALL = 12;
+  const titleSize = new Animated.Value(TITLE_SIZE);
   const navigation = useNavigation();
+  useEffect(() => {
+    Keyboard.addListener('keyboardWillShow', keyboardWillShow);
+    Keyboard.addListener('keyboardWillHide', keyboardWillHide);
+    return () => {
+      Keyboard.removeListener('keyboardWillShow');
+      Keyboard.removeListener('keyboardWillHide');
+    }
+  }, [])
+
+  const keyboardWillShow = (event) => {
+    Animated.timing(imageHeight, {
+      duration: event.duration,
+      toValue: IMAGE_HEIGHT_SMALL,
+    }).start();
+    Animated.timing(titleSize, {
+      duration: event.duration,
+      toValue: TITLE_SIZE_SMALL,
+    }).start();
+  };
+
+  const keyboardWillHide = (event) => {
+    Animated.timing(imageHeight, {
+      duration: event.duration,
+      toValue: IMAGE_HEIGHT,
+    }).start();
+
+    Animated.timing(titleSize, {
+      duration: event.duration,
+      toValue: TITLE_SIZE,
+    }).start();
+  };
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-    /**
-    * Function that handles submitting a login form
-    */
+  /**
+  * Function that handles submitting a login form
+  */
   const handleSubmit = evt => {
     evt.preventDefault();
 
-    {/* Create UsersClientManager & create a UsersClient */}
+    {/* Create UsersClientManager & create a UsersClient */ }
     let cm = new ClientManager();
     let client = cm.createUsersClient();
 
@@ -54,15 +89,15 @@ export default function logIn() {
         {/* Try to retrieve token and log in console*/ }
         let token = tokenManager.getToken();
         console.log("Retrieved " + token);
-        
-        if(tokenManager.isAuthenticated()) {
+
+        if (tokenManager.isAuthenticated()) {
           console.log("I am authenticated!")
           navigation.navigate('TabNavigation');
         }
         else {
           alert("Invalid account.");
         }
-        
+
       }
       else {
         console.log("No token received!");
@@ -75,43 +110,47 @@ export default function logIn() {
     });
   };
 
-/**
- * Renders the LogIn page
- * @returns {LogIn}
- */
+  /**
+   * Renders the LogIn page
+   * @returns {LogIn}
+   */
   return (
     <SafeAreaView style={KIC_Style.container}>
-      <Text style={KIC_Style.title}>Keeping It Casual: Log In Page</Text>
-      <Image
-        style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
-        source={require('../assets/kic.png')}
-      />
-      <TextInput
-        style={KIC_Style.input}
-        value={username}
-        onChange={(e) => setUsername(e.nativeEvent.text)}
-        placeholder=" Username"
-        required="required"
-      />
-      <TextInput
-        style={KIC_Style.input}
-        value={password}
-        onChange={(e) => setPassword(e.nativeEvent.text)}
-        placeholder=" Password"
-        required="required"
-        secureTextEntry={true}
-        onSubmitEditing={handleSubmit}
-      />
-      <TouchableOpacity
-        style={KIC_Style.button}
-        onPress={handleSubmit}>
-        <Text style={KIC_Style.button_font}>Log In</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={KIC_Style.button}
-        onPress={() => navigation.navigate('SignUp')}>
-        <Text style={KIC_Style.button_font}>Sign Up</Text>
-      </TouchableOpacity>
+      <KeyboardAvoidingView
+        style= {KIC_Style.container}
+        behavior={"padding"}>
+        <Animated.Text style={[KIC_Style.title, {fontSize: titleSize}]}>Keeping It Casual: Log In Page</Animated.Text>
+        <Animated.Image
+          style={{ width: 180, height: imageHeight, alignItems: "center", resizeMode: 'contain' }}
+          source={require('../assets/kic.png')}
+        />
+        <TextInput
+          style={KIC_Style.input}
+          value={username}
+          onChange={(e) => setUsername(e.nativeEvent.text)}
+          placeholder=" Username"
+          required="required"
+        />
+        <TextInput
+          style={KIC_Style.input}
+          value={password}
+          onChange={(e) => setPassword(e.nativeEvent.text)}
+          placeholder=" Password"
+          required="required"
+          secureTextEntry={true}
+          onSubmitEditing={handleSubmit}
+        />
+        <TouchableOpacity
+          style={KIC_Style.button}
+          onPress={handleSubmit}>
+          <Text style={KIC_Style.button_font}>Log In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={KIC_Style.button}
+          onPress={() => navigation.navigate('SignUp')}>
+          <Text style={KIC_Style.button_font}>Sign Up</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

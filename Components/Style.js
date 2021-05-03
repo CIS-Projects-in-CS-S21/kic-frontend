@@ -1,9 +1,7 @@
 /**
  * @fileoverview This contains the KIC_style stylesheet, which is used for styling the entire application.
  */
-import React from 'react';
 import { StyleSheet, Platform } from 'react-native';
-import {StatusBar} from "expo-status-bar";
 
 /**
  * @constant Contains stylesheet for general application views including containers and buttons
@@ -11,10 +9,12 @@ import {StatusBar} from "expo-status-bar";
 const KIC_Style = StyleSheet.create({
     outContainer: {
         flex:1,
+        fontFamily: 'Open Sans',
         flexDirection: 'column',
     },
     container: {
         flex: 1,
+        fontFamily: 'Open Sans',
         backgroundColor: '#ffff',
         alignItems: 'center',
         justifyContent: 'center',
@@ -22,6 +22,7 @@ const KIC_Style = StyleSheet.create({
     },
     innerContainer: {
         flex: 1,
+        fontFamily: 'Open Sans',
         backgroundColor: '#ffff',
         alignItems: 'center',
         justifyContent: 'center',
@@ -44,14 +45,17 @@ const KIC_Style = StyleSheet.create({
 
     title: {
         color: '#b3d2db',
-        //fontFamily: 'sans-serif',
+        fontFamily: 'Open Sans Extra Bold Italic',
         fontSize: 30,
         fontWeight: "bold",
-        paddingBottom: 5
+        paddingBottom: 5,
+        textAlign: "center",
+        marginTop:3,
+        marginHorizontal:3
     },
     titlePost: {
         color: '#b3d2db',
-        //fontFamily: 'sans-serif',
+        fontFamily: 'OpenSans-Regular',
         fontSize: 30,
         alignSelf: 'center',
         flex: 1,
