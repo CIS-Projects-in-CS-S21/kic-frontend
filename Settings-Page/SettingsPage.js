@@ -3,9 +3,9 @@
  */
 
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, Switch, View, Image, Platform, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Switch, View, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import KIC_Style from "../Components/Style";
 import FeedHeader from "../Components/FeedHeader";
 import UserManager from "../Managers/UserManager";
@@ -75,6 +75,8 @@ class SettingsPage extends React.Component {
         this._unsubscribe();
     }
 
+  
+    
     /**
      * Calls callGetAuthString. Starts the process of fetching active user info.
      *
@@ -240,7 +242,7 @@ class SettingsPage extends React.Component {
         let cm = new ClientManager();
         let client = cm.createUsersClient();
 
-        if (this.state.newBio.length >= 250){
+        if (this.state.newBio.length >= 250) {
             alert("Sorry, your bio must be less than 250 characters long!");
         } else {
             let req = new UpdateUserInfoRequest();
@@ -306,7 +308,7 @@ class SettingsPage extends React.Component {
         let map = req.getMetadataMap();
         map.set("pfpUserID", this.state.myUserid.toString());
 
-        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.pickImage(client)})
+        return client.deleteFilesWithMetaData(req, { 'Authorization': this.state.authString }).then(res => { this.pickImage(client) })
     }
 
     //Allow user to pick image for pfp
@@ -460,12 +462,12 @@ class SettingsPage extends React.Component {
         }
     }
 
-    randomizeFileName = async() => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
+    randomizeFileName = async () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
         });
-      }
+    }
     /**
      * @constant randomizeFileName For generating file name
      * @returns {String} v of random file name
@@ -486,7 +488,7 @@ class SettingsPage extends React.Component {
         return (
             <SafeAreaView style={KIC_Style.outContainer}>
                 <FeedHeader navigation={this.props.navigation} />
-                <SafeAreaView style={[KIC_Style.innerContainer, { marginTop: 30 }]}>
+                <KeyboardAvoidingView style={KIC_Style.innerContainer} behavior="padding">
                     <Text style={{ margin: 30 }}>Set Account as Private</Text>
                     {this.state.fetchedPriv ? <Switch
                         style={{ marginTop: 30 }}
@@ -501,7 +503,7 @@ class SettingsPage extends React.Component {
                         style={KIC_Style.postInput}
                         textAlign={'center'}
                         onChange={(e) => this.setTriggers(e.nativeEvent.text)}
-                        onSubmitEditing={()=> this.storeTriggers()}
+                        onSubmitEditing={() => this.storeTriggers()}
                         placeholder="Write any triggers in // format . . ."
                     />
                     <TouchableOpacity
@@ -514,7 +516,7 @@ class SettingsPage extends React.Component {
                         style={KIC_Style.postInput}
                         textAlign={'center'}
                         onChange={(e) => this.setNewBio(e.nativeEvent.text)}
-                        onSubmitEditing={()=>this.changeBio()}
+                        onSubmitEditing={() => this.changeBio()}
                         placeholder="Change bio..."
                     />
                     <TouchableOpacity
@@ -528,7 +530,7 @@ class SettingsPage extends React.Component {
                         <Text style={KIC_Style.button_font}> Upload profile picture </Text>
                     </TouchableOpacity>
                     <StatusBar style="auto" />
-                </SafeAreaView>
+                </KeyboardAvoidingView>
             </SafeAreaView>
         );
     }

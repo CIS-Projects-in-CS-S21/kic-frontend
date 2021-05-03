@@ -4,7 +4,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import {ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import {ScrollView, StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FeedHeader from '../Components/FeedHeader';
 import KIC_Style from "../Components/Style";
@@ -163,7 +163,7 @@ export default function MentalHealthLog({ navigation }) {
     return (
         <SafeAreaView style={KIC_Style.outContainer}>
             <FeedHeader navigation={navigation} />
-            <SafeAreaView style={[KIC_Style.innerContainer, {marginTop:30}]}>
+            <KeyboardAvoidingView behavior="padding" style={[KIC_Style.innerContainer, {marginTop:30}]}>
                <ScrollView style = {{justifyContent: 'center', alignSelf: 'center'}}>
                 <Image
                     style={{ width: 180, height: 180, resizeMode: 'contain', alignSelf: 'center' }}
@@ -242,7 +242,7 @@ export default function MentalHealthLog({ navigation }) {
                 </TouchableOpacity>
                 <StatusBar style="auto" />
                 </ScrollView>
-            </SafeAreaView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 
