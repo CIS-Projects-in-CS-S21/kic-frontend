@@ -5,6 +5,9 @@
 
 import React from 'react';
 import { WebView } from 'react-native-webview';
+import { ScrollView, StatusBar, View } from 'react-native';
+import FeedHeader from '../Components/FeedHeader';
+import KIC_Style from '../Components/Style';
 
 /**
  * @class Contains function for rendering MapView screen.
@@ -45,7 +48,11 @@ class MapView extends React.Component {
     */
     render() {
         return (
-            <WebView source={{ uri: this.state.url}} />
+            <View style={KIC_Style.outContainer}>
+            <FeedHeader navigation={this.props.navigation}/>
+            <WebView style={[KIC_Style.innerContainer, {top:50, transform: [{scaleX:0.95}, {scaleY:0.95}]}]} source={{ uri: this.state.url}} />
+            <StatusBar hidden={true}/>
+            </View>
         );
     }
 
