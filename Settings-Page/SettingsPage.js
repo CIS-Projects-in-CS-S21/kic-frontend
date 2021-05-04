@@ -244,7 +244,7 @@ class SettingsPage extends React.Component {
 
         if (this.state.newBio.length >= 250) {
             alert("Sorry, your bio must be less than 250 characters long!");
-        } else if (this.state.newBio.length = 0 || this.state.newBio == ''){
+        } else if (this.state.newBio.length == 0 || this.state.newBio == ''){
             alert("You must enter a bio!")
         } else {
             let req = new UpdateUserInfoRequest();
@@ -260,9 +260,15 @@ class SettingsPage extends React.Component {
                 //console.log(res);
                 this.textInput.clear();
                 alert("Bio updated!");
+                this.setState({
+                    newBio : ""
+                });
             }).catch(error => {
                 console.log("There was an error.");
-                console.log(error)
+                console.log(error);
+                this.setState({
+                    newBio : ""
+                });
             });
         }
     }

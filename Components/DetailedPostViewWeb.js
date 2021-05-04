@@ -423,6 +423,7 @@ class DetailedPostViewWeb extends React.Component {
                         dayPosted = {this.state.dayPosted}
                         caption = {this.state.caption}
                     /> : <View></View>}
+                <Text style={styles.postTimestamp}>Posted on {this.state.dayPosted} {this.state.monthPosted} {this.state.yearPosted}</Text>
 
                     {/* Only display delete button if this is active user's own post */}
                     {(this.state.isMyPost) ? <TouchableOpacity
@@ -518,7 +519,13 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 40,
     width: 475,
     height: 475,
-  }
+  },
+  postTimestamp: {
+    fontSize: 10,
+    fontStyle: 'italic',
+    color: '#707070',
+    textAlign: 'right',
+},
 });
 
 export default DetailedPostViewWeb;

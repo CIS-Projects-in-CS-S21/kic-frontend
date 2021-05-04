@@ -4,18 +4,16 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Platform, StyleSheet, Text, View, Image, ScrollView, Button, Pressable, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import KIC_Style from "../Components/Style";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileHeader from "../Components/ProfileHeader";
 import PostsGrid from "../Components/PostsGrid";
-import MyUser from "../Components/MyUser";
-import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
-import TokenManager from "../Managers/TokenManager";
+import { GetUserByIDRequest  } from '../gen/proto/users_pb';
 import ClientManager from "../Managers/ClientManager";
 import UserManager from '../Managers/UserManager';
 import FeedHeader from '../Components/FeedHeader';
-import {GetConnectionBetweenUsersRequest, GetFriendsForUserRequest} from "../gen/proto/friends_pb";
+import { GetConnectionBetweenUsersRequest } from "../gen/proto/friends_pb";
 
 /**
  * @class Contains function for rendering the user page.
@@ -58,15 +56,15 @@ class UserPage extends React.Component {
 
   }
 
-    /**
-    * Runs when component first loads
-    * postcondition: fetchUserInfo()
-     * @exception error caught if fetching info does not work
-    */
+  /**
+  * Runs when component first loads
+  * postcondition: fetchUserInfo()
+   * @exception error caught if fetching info does not work
+  */
   componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.setState({
-        finishedLoading : false
+        finishedLoading: false
       });
       this.fetchUserInfo().then(response => {
         console.log("User page mount success");
@@ -76,167 +74,167 @@ class UserPage extends React.Component {
     })
   }
 
-    /**
-    * Runs before the component is unmounted
-    *
-    */
-    componentWillUnmount() {
-        this._unsubscribe();
-    }
+  /**
+  * Runs before the component is unmounted
+  *
+  */
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
 
-    /**
-    * Runs when the props change and updates the component accordingly.
-    * @params {props} prevProps The previous state's props
-     * postcondition: fetchUserInfo()
-     * @exception error caught if fetching info does not work
-     */
-    componentDidUpdate(prevProps) {
-        this._unsubscribe = this.props.navigation.addListener('focus', () => {
-          this.setState({
-            myUserid: this.props.route.params.myUserid,
-            userid: this.props.route.params.userid,
-            username: this.props.route.params.username,
-            finishedLoading: false,
-          });
-          this.fetchUserInfo().then(response => {
-            console.log("User page updated");
-          }).catch(error => {
-            console.log(error)
-          });
-        })
-    }
+  /**
+  * Runs when the props change and updates the component accordingly.
+  * @params {props} prevProps The previous state's props
+   * postcondition: fetchUserInfo()
+   * @exception error caught if fetching info does not work
+   */
+  componentDidUpdate(prevProps) {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.setState({
+        myUserid: this.props.route.params.myUserid,
+        userid: this.props.route.params.userid,
+        username: this.props.route.params.username,
+        finishedLoading: false,
+      });
+      this.fetchUserInfo().then(response => {
+        console.log("User page updated");
+      }).catch(error => {
+        console.log(error)
+      });
+    })
+  }
 
-    /**
-    * Calls callGetAuthString
-    * postcondition: callGetAuthString()
-    */
-    fetchUserInfo() {
-        return this.callGetAuthString();
-    }
+  /**
+  * Calls callGetAuthString
+  * postcondition: callGetAuthString()
+  */
+  fetchUserInfo() {
+    return this.callGetAuthString();
+  }
 
-    /**
-    * Creates a UserManager to fetch the authString, then calls callGetUserID
-    * precondition: fetchUserInfo()
-     * postconditon: callGetUserByUserID()
-    * @returns {String} authString The authorization string to be used for requests
-    */
-    callGetAuthString(){
-        let um = new UserManager();
-        return um.getAuthString().then(authString => {this.callGetUserByUserID(authString)});
-    }
+  /**
+  * Creates a UserManager to fetch the authString, then calls callGetUserID
+  * precondition: fetchUserInfo()
+   * postconditon: callGetUserByUserID()
+  * @returns {String} authString The authorization string to be used for requests
+  */
+  callGetAuthString() {
+    let um = new UserManager();
+    return um.getAuthString().then(authString => { this.callGetUserByUserID(authString) });
+  }
 
-    /**
-    * Gets a user by their user ID via a GetUserByIDRequest
-    *
-    * @params {String} authString The authorization string to be used for requests
-    * @params {String} userID A string of the active user's ID
-    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
-     * precondition: callGetAuthString()
-     * postcondition: setUserInfo()
-    */
-    callGetUserByUserID(authString){
-        this.setState({
-            authString: authString,
-        })
+  /**
+  * Gets a user by their user ID via a GetUserByIDRequest
+  *
+  * @params {String} authString The authorization string to be used for requests
+  * @params {String} userID A string of the active user's ID
+  * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+   * precondition: callGetAuthString()
+   * postcondition: setUserInfo()
+  */
+  callGetUserByUserID(authString) {
+    this.setState({
+      authString: authString,
+    })
 
-        let cm = new ClientManager();
-        let client = cm.createUsersClient();
+    let cm = new ClientManager();
+    let client = cm.createUsersClient();
 
-        let req = new GetUserByIDRequest();
-        req.setUserid(this.state.userid);
-        return client.getUserByID(req, {'Authorization': authString}).then(res => {this.setUserInfo(res, cm, authString)})
-    }
+    let req = new GetUserByIDRequest();
+    req.setUserid(this.state.userid);
+    return client.getUserByID(req, { 'Authorization': authString }).then(res => { this.setUserInfo(res, cm, authString) })
+  }
 
-    /**
-    * Parses a user's information from the user found in the GetUserByIDResponse
-    * @param res GetUserByIDResponse response
-     * @param  cm Client Manager
-     * @param {String} authString The authorization string to be used for requests
-    *
-    */
-    setUserInfo(res,cm, authString){
-        {/* Store user information */}
-        let myusername = res.getUser().getUsername();
-        let bday = res.getUser().getBirthday().toString();
-        let mybirthyear = bday.split(",")[0];
-        let mybirthmonth = bday.split(",")[1];
-        let mybirthday = bday.split(",")[2]
-        let mycity = res.getUser().getCity();
-        let mybio = res.getUser().getBio();
-        let myPrivacy = res.getUser().getIsprivate();
+  /**
+  * Parses a user's information from the user found in the GetUserByIDResponse
+  * @param res GetUserByIDResponse response
+   * @param  cm Client Manager
+   * @param {String} authString The authorization string to be used for requests
+  *
+  */
+  setUserInfo(res, cm, authString) {
+    {/* Store user information */ }
+    let myusername = res.getUser().getUsername();
+    let bday = res.getUser().getBirthday().toString();
+    let mybirthyear = bday.split(",")[0];
+    let mybirthmonth = bday.split(",")[1];
+    let mybirthday = bday.split(",")[2]
+    let mycity = res.getUser().getCity();
+    let mybio = res.getUser().getBio();
+    let myPrivacy = res.getUser().getIsprivate();
 
-        this.setState({
-            username: myusername,
-            bio: mybio,
-            city: mycity,
-            birthDay: mybirthday,
-            birthMonth: mybirthmonth,
-            birthYear: mybirthyear,
-            finishedLoading: true,
-            isPrivate: myPrivacy,
-        })
+    this.setState({
+      username: myusername,
+      bio: mybio,
+      city: mycity,
+      birthDay: mybirthday,
+      birthMonth: mybirthmonth,
+      birthYear: mybirthyear,
+      finishedLoading: true,
+      isPrivate: myPrivacy,
+    })
 
-        // Create a FriendsClient
-        let client = cm.createFriendsClient();
+    // Create a FriendsClient
+    let client = cm.createFriendsClient();
 
-        //check for friendship. if user is friends with active user,
-        let req = new  GetConnectionBetweenUsersRequest();
-        req.setFirstuserid(this.state.myUserid);
-        req.setSeconduserid(this.state.userid);
+    //check for friendship. if user is friends with active user,
+    let req = new GetConnectionBetweenUsersRequest();
+    req.setFirstuserid(this.state.myUserid);
+    req.setSeconduserid(this.state.userid);
 
-        return client.getConnectionBetweenUsers(req, {'Authorization': authString}).then(res => {
-            console.log(res);
-            //set state as private to false if friends
-            this.setState({
-                isPrivate: "0"
-            });
-        }).catch(error => {
-            console.log(error);
-            console.log("There was an error detecting connection between users");
-        })
-    }
+    return client.getConnectionBetweenUsers(req, { 'Authorization': authString }).then(res => {
+      console.log(res);
+      //set state as private to false if friends
+      this.setState({
+        isPrivate: "0"
+      });
+    }).catch(error => {
+      console.log(error);
+      console.log("There was an error detecting connection between users");
+    })
+  }
 
 
   /**
    * Renders user page components.
    */
   render() {
-      return (
+    return (
       <SafeAreaView style={KIC_Style.outContainer}>
         <FeedHeader navigation={this.state.navigation} />
         <SafeAreaView style={styles.container}><ScrollView>
-            {/* Display profile header with state information */}
-            {(this.state.finishedLoading) ? <ProfileHeader
-                authString = {this.state.authString}
-                navigation = {this.state.navigation}
-                myUserid = {this.state.myUserid}
-                username = {this.state.username}
-                userid = {this.state.userid}
-                bio = {this.state.bio}
-                birthDay = {this.state.birthDay}
-                birthMonth = {this.state.birthMonth}
-                birthYear = {this.state.birthYear}
-                /> : <View></View>}
+          {/* Display profile header with state information */}
+          {(this.state.finishedLoading) ? <ProfileHeader
+            authString={this.state.authString}
+            navigation={this.state.navigation}
+            myUserid={this.state.myUserid}
+            username={this.state.username}
+            userid={this.state.userid}
+            bio={this.state.bio}
+            birthDay={this.state.birthDay}
+            birthMonth={this.state.birthMonth}
+            birthYear={this.state.birthYear}
+          /> : <View></View>}
 
 
-            {/* Show posts if non-private account or private but friends */}
-            {(this.state.isPrivate == "1" && this.state.myUserid != this.state.userid) && <Text> Account is Private! Add as Friend to View Posts. </Text>}
-            {((this.state.finishedLoading && (this.state.isPrivate != "1")) || this.state.myUserid == this.state.userid) ? <PostsGrid
-                myUserid = {this.state.myUserid}
-                navigation = {this.props.navigation}
-                username = {this.state.username}
-                userid = {this.state.userid}
-                /> : <View></View>}
-            {(this.state.myUserid == this.state.userid) &&
+          {/* Show posts if non-private account or private but friends */}
+          {(this.state.isPrivate == "1" && this.state.myUserid != this.state.userid) && <Text style={styles.text}> Account is Private! Add as Friend to View Posts. </Text>}
+          {((this.state.finishedLoading && (this.state.isPrivate != "1")) || this.state.myUserid == this.state.userid) ? <PostsGrid
+            myUserid={this.state.myUserid}
+            navigation={this.props.navigation}
+            username={this.state.username}
+            userid={this.state.userid}
+          /> : <View></View>}
+          {(this.state.myUserid == this.state.userid) &&
             <TouchableOpacity
-                style={KIC_Style.button}
-                onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
-                <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
+              style={KIC_Style.button}
+              onPress={() => this.props.navigation.navigate('MentalHealthLog')}>
+              <Text style={KIC_Style.button_font}>Mental Health Tracker</Text>
             </TouchableOpacity>}
-            <StatusBar style="auto" />
-          </ScrollView></SafeAreaView>
+          <StatusBar style="auto" />
+        </ScrollView></SafeAreaView>
       </SafeAreaView>
-      );
+    );
   }
 }
 
@@ -247,15 +245,15 @@ const styles = StyleSheet.create({
   container: {
     ...Platform.select({
       ios: {
-        top:30,
-        marginBottom:30,
+        top: 30,
+        marginBottom: 30,
       },
       android: {
-        top:30,
-        marginBottom:30,
+        top: 30,
+        marginBottom: 30,
       },
       default: {
-        top:60,
+        top: 60,
         marginBottom: 60,
       }
     }),
@@ -265,6 +263,33 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
   },
+  text: {
+    fontSize: 20,
+    textAlign: 'center',
+    borderRadius: 25,
+    color: 'white',
+    alignItems: "center",
+    alignSelf: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#7ab7dd",
+    marginTop: 7,
+    padding: 10,
+    width: '80%',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'AppleSDGothicNeo-Bold'
+
+      },
+      android: {
+        fontFamily: 'Roboto',
+        fontWeight: 'bold',
+
+      },
+      default: {
+        fontFamily: 'AppleSDGothicNeo-Bold'
+      }
+    }),
+  }
 });
 
 export default UserPage;
