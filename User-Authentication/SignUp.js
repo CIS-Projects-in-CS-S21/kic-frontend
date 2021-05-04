@@ -214,7 +214,7 @@ export default function signUp() {
         let client = cm.createUsersClient();
 
         let req = new AddUserRequest();
-        let date = new Date();
+        let date = new CommonDate();
         date.setDay(birthday.getDay());
         date.setMonth(birthday.getMonth());
         date.setYear(birthday.getFullYear());

@@ -101,12 +101,13 @@ const styles = StyleSheet.create({
         marginBottom: 90,
         ...Platform.select({
             ios: {
-                height:75,
+                height:60,
             },
             android: {
               height:65,
             },
             default: {
+                height:60,
             }
           }),
     },
