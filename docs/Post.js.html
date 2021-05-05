@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Post.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Post.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* @fileoverview The screen for user posting, where user can choose to post video or picture with caption
+*/
+import React, { useState, useEffect } from 'react';
+import {StyleSheet, Text, View, Button, Image, TouchableOpacity, StatusBar} from 'react-native';
+import { Camera } from 'expo-camera';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
+import KIC_Style from '../Components/Style';
+import {Platform} from 'react-native';
+import * as Permissions from 'expo-permissions';
+import exampleImage from '../assets/kic.png';
+import FeedHeader from '../Components/FeedHeader';
+
+
+
+/**
+ * @param navigation The navigation prop used to navigate between page
+ *  @returns a {Post}
+ */
+export default function Post({ navigation }) {
+
+    /**
+     * @constant hasGalleryPermission allows for permission to use image library
+     */
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+    /**
+     * @constant hasCameraPermission allows for permission to use camera on device
+     */
+    const [hasCameraPermission, setHasCameraPermission] = useState(null);
+
+    /**
+     * @constant camera sets variable that represents camera as default to null
+     */
+    const [camera, setCamera] = useState(null);
+
+    const [image, setImage] = useState(null);
+    /**
+     * @constant type sets variable that represents type of camera as default to front camera
+     */
+    const [type, setType] = useState(Camera.Constants.Type.front);
+    /**
+     * @constant base64 sets variable that represents base64 representation of image as default to null
+     */
+    const[base64, setBase64] = useState(null);
+
+    /**
+     * @constant notWeb sets variable that indicates if device is not web to null
+     */
+    const [notWeb, setNotWeb] = useState(null);
+
+    /**
+     * @constant permission sets variable that represents camera permissions
+     */
+    const [permission, askPermission] = Permissions.usePermissions(
+        Permissions.CAMERA,
+    );
+
+
+    /**
+    * If we are on web, use permissions to get camera permissions. Otherwise, use requestPermissionsAsync() function
+    */
+    useEffect(() => {
+        (async () => {
+           if (Platform.OS !== 'web') {
+               //iOS or Android
+               setNotWeb(true);
+               const cameraStatus = await Camera.requestPermissionsAsync();
+               setHasCameraPermission(cameraStatus.status === 'granted');
+           } else {
+               setNotWeb(false);
+               if (permission?.permissions?.camera?.granted) {
+                   setHasCameraPermission(permission?.permissions?.camera?.granted === 'granted')
+               } else {
+                   await askPermission();
+               }
+           }
+
+            //request permission for media library
+            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasGalleryPermission(galleryStatus.status === 'granted');
+
+
+
+
+        })();
+    }, [permission?.permissions?.camera, askPermission]);
+
+    /**
+     * @constant takePicture take picture if camera access is granted and set image and base64
+     */
+    const takePicture = async () => {
+        if (camera) {
+            const data = await camera.takePictureAsync({
+                base64: true,
+               // quality: 0.5
+                quality:0,
+                ratio: "1:1",
+
+            });
+            setImage(data.uri);
+            if (Platform.OS === "web") {
+                //this is the base 64
+                const parsedURI = data.uri.split(/[,]/);
+                setBase64(parsedURI[1]);
+            } else {
+                setBase64(data.base64);
+            }
+            console.log(data.base64.slice(0,1000));
+            alert("Picture taken!");
+        }
+    }
+
+    /**
+     * @constant pickImage pick image from image library and set image and base64
+     */
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,//allows access to images and videos
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+            base64: true
+        });
+        console.log(result);
+        if (!result.cancelled) {
+            setImage(result.uri);
+            if (Platform.OS === "web") {
+                //this is the base 64
+                const parsedURI = result.uri.split(/[,]/);
+                setBase64(parsedURI[1]);
+            } else {
+                setBase64(result.base64);
+            }
+
+            alert("Picture selected!");
+        }
+    };
+
+    //if no camera possible (web) or no gallery permission, say sorry! no access to gallery or camera
+    if (hasCameraPermission === null || hasGalleryPermission === false) {
+        return (
+            &lt;SafeAreaView style={KIC_Style.outContainer}>
+                &lt;FeedHeader navigation={navigation} />
+                &lt;SafeAreaView style={KIC_Style.innerContainer}>
+                    &lt;Image
+                        style={{ width: 180, height: 180, alignItems: "center", resizeMode: 'contain' }}
+                        source={require('../assets/kic.png')}
+                    />
+                    &lt;Text>
+                        Sorry! No access to gallery or camera. This feature is only available on mobile!
+            &lt;/Text>
+                    &lt;TouchableOpacity
+                        style={KIC_Style.button}
+                        onPress={() => navigation.navigate('Profile')}>
+                        &lt;Text style={KIC_Style.button_font}>Personal Page&lt;/Text>
+                    &lt;/TouchableOpacity>
+                &lt;/SafeAreaView>
+            &lt;/SafeAreaView>
+
+        )
+    };
+
+   /**
+    * Renders Post components.
+    * @returns {Post}
+    */
+    return (
+        &lt;SafeAreaView style={KIC_Style.outContainer}>
+            &lt;FeedHeader navigation={navigation} />
+            &lt;SafeAreaView style={KIC_Style.innerContainer}>
+            &lt;View style={styles.cameraContainer}>
+                 &lt;Camera
+                    ref={ref => setCamera(ref)}
+                    style={styles.fixedRatio}
+                    type={type}
+                    ratio={'1:1'}
+                    onMountError={({ message }) => console.log("onMountError: " + message)}
+                    onCameraReady={console.log("Camera ready!")}
+                />
+                {!notWeb &amp;&amp; &lt;Text style = {KIC_Style.titlePost}> Take a picture or select an image! &lt;/Text>}
+            &lt;/View>
+            {notWeb &amp;&amp; &lt;TouchableOpacity
+                style={KIC_Style.button_post}
+                onPress={() => {
+                    setType(
+                        type === Camera.Constants.Type.front
+                            ? Camera.Constants.Type.back
+                            : Camera.Constants.Type.front
+                    );
+                }}>
+                &lt;Text style={KIC_Style.button_font}>Flip Image&lt;/Text>
+           &lt;/TouchableOpacity>}
+           &lt;TouchableOpacity
+                style={KIC_Style.button_post}
+                onPress={() => takePicture()}>
+                &lt;Text style={KIC_Style.button_font}>Take Picture&lt;/Text>
+            &lt;/TouchableOpacity>
+            &lt;TouchableOpacity
+                style={KIC_Style.button_post}
+                onPress={() => pickImage()}>
+                &lt;Text style={KIC_Style.button_font}>Select Image from Gallery&lt;/Text>
+            &lt;/TouchableOpacity>
+            &lt;TouchableOpacity
+                style={KIC_Style.button_post}
+                onPress={() => navigation.navigate('PostInfo', { image, base64 })}>
+                &lt;Text style={KIC_Style.button_font}>Save&lt;/Text>
+            &lt;/TouchableOpacity>
+        &lt;/SafeAreaView>
+        &lt;/SafeAreaView>
+    );
+}
+
+
+/**
+ * @constant styles creates stylesheet for Post Page
+ */
+const styles = StyleSheet.create({
+    cameraContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        padding: 10,
+    },
+    fixedRatio: {
+        flex: 6,
+        aspectRatio: 1
+    }
+
+})
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.html#.exports">exports</a></li><li><a href="PostNav.html">PostNav</a></li></ul><h3>Global</h3><ul><li><a href="global.html#base64">base64</a></li><li><a href="global.html#callGetAuthString">callGetAuthString</a></li><li><a href="global.html#camera">camera</a></li><li><a href="global.html#caption">caption</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#hasCameraPermission">hasCameraPermission</a></li><li><a href="global.html#hasGalleryPermission">hasGalleryPermission</a></li><li><a href="global.html#makeUploadFileRequest">makeUploadFileRequest</a></li><li><a href="global.html#navigation">navigation</a></li><li><a href="global.html#notWeb">notWeb</a></li><li><a href="global.html#parseTags">parseTags</a></li><li><a href="global.html#parseTriggers">parseTriggers</a></li><li><a href="global.html#permission">permission</a></li><li><a href="global.html#pickImage">pickImage</a></li><li><a href="global.html#randomizeFileName">randomizeFileName</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#tagString">tagString</a></li><li><a href="global.html#takePicture">takePicture</a></li><li><a href="global.html#triggerString">triggerString</a></li><li><a href="global.html#type">type</a></li><li><a href="global.html#uploadImage">uploadImage</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:23:05 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

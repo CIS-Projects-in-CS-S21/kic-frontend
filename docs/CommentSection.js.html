@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CommentSection.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CommentSection.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* @fileoverview A Comment Section of fixed height and scrollbar populated by Comments.
+*/
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
+
+/*
+* Mock array of comments
+*/
+const COMMENTS = [
+  {
+    id: '1',
+    commenterUsername: 'One',
+    commentText: 'Comments should be a maximum of 150 characters long. ',
+  },
+  {
+    id: '2',
+    commenterUsername: 'Two',
+    commentText: 'Second comment',
+  },
+  {
+    id: '3',
+    commenterUsername: 'Three',
+    commentText: 'Third comment',
+  },
+  {
+    id: '4',
+    commenterUsername: 'Four',
+    commentText: 'Fourth comment',
+  },
+  {
+    id: '5',
+    commenterUsername: 'Five',
+    commentText: 'Fifth comment',
+  },
+  {
+    id: '6',
+    commenterUsername: 'Six',
+    commentText: 'Sixth comment',
+  },
+];
+
+/**
+* Format individual comment
+*/
+const Comment = ({ commenterUsername, commentText }) => (
+  &lt;View style={styles.comments}>
+    &lt;Text style={styles.textCommenterUsername}>{commenterUsername} says...&lt;/Text>
+    &lt;Text style={styles.textComment}>{commentText}&lt;/Text>
+  &lt;/View>
+);
+
+/**
+* @class Contains function for rendering the comment section.
+*/
+class CommentSection extends React.Component {
+
+  /*
+   * Class constructor
+   */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            // active user's userid
+            myuserid: props.userid,
+
+            // poster's username &amp; userid
+            userid: props.userid,
+            username: props.username,
+            fileinfo: props.fileinfo,
+            comments: props.comments,
+        };
+
+    }
+
+    /**
+    * Gets a post's comments to render on the page.
+    */
+    fetchPostComments = () => {
+      // Request post's comments from backend.
+    }
+
+    /**
+    * Renders comments section.
+    * @returns {CommentSection}
+    */
+    render() {
+      {/* Function for rendering comments */}
+      const renderItem = ({ item }) => (
+        &lt;Comment commenterUsername={item.commenterUsername} commentText={item.commentText} />
+      );
+
+      return (
+        &lt;View style={{ flex: 1, alignItems: 'stretch' }}>
+            &lt;Text style={styles.commentCounter}>{this.props.comments.length} comments&lt;/Text>
+
+            {/* The comment box of fixed height */}
+            &lt;View style={styles.commentSection}>
+                &lt;FlatList
+                    data={this.props.comments}
+                    renderItem={renderItem}
+                    keyExtractor={comment => comment.commentID}
+                />
+            &lt;/View>
+        &lt;/View>
+      );
+    }
+}
+
+/**
+* @constant styles creates stylesheet for the Comment Section
+*/
+const styles = StyleSheet.create({
+    commentSection: {
+        flex: 1,
+        alignItems: 'stretch',
+    },
+    comments: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: '#fff',
+        padding: 15,
+        marginTop: 10,
+        borderTopRightRadius: 25,
+        borderTopLeftRadius: 25,
+        borderBottomLeftRadius: 25,
+    },
+    commenterIcon: {
+        width: '10%',
+        height: '10%',
+    },
+    commentCounter: {
+        fontSize: 10,
+        fontStyle: 'italic',
+        color: '#707070',
+        paddingBottom: 5,
+        textAlign: 'right',
+    },
+    textCommenterUsername: {
+        fontSize: 11,
+        fontStyle: 'italic',
+        fontWeight: "bold",
+    },
+    textComment: {
+        fontSize: 11,
+    }
+});
+
+export default CommentSection;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Style.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Style.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview This contains the KIC_style stylesheet, which is used for styling the entire application.
+ */
+import React from 'react';
+import { StyleSheet, Platform } from 'react-native';
+import {StatusBar} from "expo-status-bar";
+
+/**
+ * @constant Contains stylesheet for general application views including containers and buttons
+ */
+const KIC_Style = StyleSheet.create({
+    outContainer: {
+        flex:1,
+        flexDirection: 'column',
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#ffff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#7ab7dd',
+    },
+    innerContainer: {
+        flex: 1,
+        backgroundColor: '#ffff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#7ab7dd',
+        ...Platform.select({
+            ios: {
+              top:30,
+              marginBottom:30,
+            },
+            android: {
+              top:30,
+              marginBottom:30,
+            },
+            default: {
+              top:60,
+              marginBottom: 60,
+            }
+          }),
+    },
+
+    title: {
+        color: '#b3d2db',
+        //fontFamily: 'sans-serif',
+        fontSize: 30,
+        fontWeight: "bold",
+        paddingBottom: 5
+    },
+    titlePost: {
+        color: '#b3d2db',
+        //fontFamily: 'sans-serif',
+        fontSize: 30,
+        alignSelf: 'center',
+        flex: 1,
+        fontWeight: "bold",
+        paddingBottom: 5
+
+    },
+
+    button: {
+        width: "80%",
+        borderRadius: 25,
+        alignItems: "center",
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 7,
+        padding: 10,
+    },
+    button2: {
+        width: "80%",
+        borderRadius: 25,
+        alignItems: "center",
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 7,
+        marginBottom: 7,
+        padding: 10,
+    },
+    button_post: {
+        width: "100%",
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#7ab7dd",
+        marginTop: 1,
+        padding: 10,
+    },
+    button_font: {
+        color: '#ffff'
+    },
+    input: {
+        borderWidth: .2,
+        borderColor: '#CDCDCD',
+        padding: 1
+    },
+    postInput: {
+        alignSelf: 'center',
+        backgroundColor: '#b3d2db',
+        color: '#ffff',
+        borderWidth: .2,
+        borderColor: '#b3d2db',
+        borderRadius: 20,
+        padding: 10,
+        minHeight: 10,
+        width: "90%",
+        margin: 10
+    },
+    journalInput: {
+        borderWidth: .2,
+        borderColor: '#CDCDCD',
+        padding: 1,
+        minHeight: 50,
+        width: "70%",
+    },
+    commentInput: {
+        alignSelf: 'center',
+        backgroundColor: '#ffff',
+        fontColor: '#0000',
+        borderWidth: .2,
+        borderColor: '#b3d2db',
+        borderRadius: 20,
+        padding: 10,
+        minHeight: 10,
+        width: "90%",
+        margin: 10
+    },
+    searchInput: {
+        alignSelf: 'center',
+        backgroundColor: '#ffff',
+        fontColor: '#0000',
+        borderWidth: .2,
+        borderColor: '#b3d2db',
+        borderRadius: 20,
+        padding: 10,
+        minHeight: 10,
+        width: "90%",
+        margin: 10
+    },
+    findHelpInput: {
+        alignSelf: 'center',
+        backgroundColor: '#ffff',
+        fontColor: '#0000',
+        marginTop: 30,
+        borderWidth: .2,
+        borderColor: '#b3d2db',
+        borderRadius: 20,
+        padding: 10,
+        minHeight: 10,
+        width: "90%",
+        margin: 10
+    },
+});
+
+export default KIC_Style;
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

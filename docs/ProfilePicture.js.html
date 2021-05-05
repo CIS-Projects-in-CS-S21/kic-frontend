@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ProfilePicture.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ProfilePicture.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview The profile picture component fetches and renders a user's profile picture
+ */
+import React, { useState } from 'react'
+import {StyleSheet, Platform, View, TextInput, Image, Button, Text, TouchableOpacity} from 'react-native'
+import KIC_Style from "../Components/Style";
+import ClientManager from "../Managers/ClientManager";
+import {Buffer} from "buffer";
+import {bytesToBase64} from "../util/BytesDecoder"
+import {GetFilesByMetadataRequest, DownloadFileRequest} from "../gen/proto/media_pb";
+
+
+/**
+ * @class Contains function for fetching and rendering a user's profile picture
+ */
+class ProfilePicture extends React.Component {
+    /**
+    * Class constructor
+    * @param {String} authString The authstring for making requests
+    * @param {String} userid The id of the user whose profile picture is to be fetched
+     * @param {String} imageSrc defaults to null and will be image uri of profile picture
+     * @param {boolean} iconFetched default is set to false and is set to true when profile picture is fetched correctly
+    */
+    constructor(props) {
+        super();
+
+        // Define the initial state
+        this.state = {
+            // id of the user this icon belongs to
+            userid: props.userid,
+
+            authString: props.authString,
+            imageSrc: "",
+            iconFetched: false,
+        };
+
+        this.fetchImage = this.fetchImage.bind(this)
+    }
+
+    /**
+    * Runs when component first loads
+    * postcondition: fetchImage()
+    */
+    componentDidMount(){
+        this.fetchImage();
+    }
+
+    /**
+    * Runs when the props change and updates the component accordingly.
+    * postcondition: fetchImage()
+    */
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+
+          this.setState({
+              myUserid: this.props.myUserid,
+              userid: this.props.userid,
+              username: this.props.username,
+              navigation: this.props.navigation,
+              authString: this.props.authString,
+          })
+          this.fetchImage();
+      }
+    }
+
+   /**
+   * Finds a user's a profile picture file by searching for files with the metadata containing the user's ID in the metadata map.
+   * @returns {GetFilesByMetadataResponse}
+    * post condition: downloadImage
+   */
+    fetchImage() {
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+
+        // Search for file by metadata, using userid and isProfilePicture metadata
+        let req = new GetFilesByMetadataRequest();
+        let map = req.getDesiredmetadataMap();
+        map.set("pfpUserID", this.props.userid.toString());
+
+        return client.getFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {this.downloadImage(client, res)})
+    }
+
+   /**
+   * Downloads profile image as a stream and saves to state.
+    * @param client of user
+    * @param res downloadImageResponse
+    * pre condition:fetchImage
+    * post condition:setState
+   */
+    downloadImage(client, res) {
+        let imagefile = res.getFileinfosList();
+        // If a file was found
+        if (imagefile.length > 0){
+            // Download the file we found
+            let req = new DownloadFileRequest();
+            req.setFileinfo(imagefile[0]);
+
+            let byte64 = '';
+
+            let stream = client.downloadFileByName(req, {'Authorization': this.props.authString});
+            stream.on('data', function (response) {
+                // This function receives the chunks of data and appends them to the byte64 string
+                // Currently, only the first chunk matches the first part of the uri; the rest of the chunks don't match any part of the uri
+                byte64 += response.getChunk();
+            });
+
+            stream.on('status', function(status) {
+                // This function prints the status of the stream. This handles errors if they happen
+                //console.log("Status code: " + status.code);
+                //console.log("Status details: " + status.details);
+                //console.log("Status metadata: " + status.metadata);
+            })
+
+            stream.on('end', function(end) {
+                // This function runs when the stream ends
+
+                // Just checking that the chunks have been combined at the end of the stream. The logged string should
+                // be a combined string of all the chunks received per file, which are logged by line 64
+                this.setState({
+                    imageSrc: byte64,
+                })
+                //console.log("IMAGESRC AFTER STREAM: " + this.state.imageSrc.toString('ascii'))
+
+                let src1 = this.state.imageSrc;
+                let finalsrc = '';
+
+                // Rebuilds the header with special characters for images taken from web app ("data:image/png;base64" format)
+                if (!src1.toString().includes("mobile")) {
+                    console.log("This image was taken from web");
+                    finalsrc = byte64;
+                } else { //Rebuild the header for images taken from mobile app
+                    console.log("This image was taken from mobile");
+                    finalsrc = byte64;
+                }
+                // Save the fixed uri to state
+                this.setState({
+                    imageSrc: finalsrc,
+                    iconFetched: true,
+                })
+                //console.log("FIXED SRC: " + finalsrc);
+            }.bind(this)); //binds stream.on function so we can access state
+        } else {
+            this.setState({
+                iconFetched: false,
+            })
+        }
+    }
+
+    /**
+    * Renders the ProfilePicture component.
+    * @returns a {ProfilePicture}
+    */
+    render() {
+        return(
+           &lt;View>
+               {(this.state.iconFetched) ?
+               &lt;View>
+                   &lt;Image
+                       style={this.props.style}
+                       source={this.state.imageSrc}
+                   />
+               &lt;/View> :
+               &lt;View>
+                   &lt;Image
+                       style={this.props.style}
+                      source={require('../assets/default/default_icon_2.png')}
+                   />
+               &lt;/View>}
+           &lt;/View>
+        )
+    }
+}
+
+/**
+ * @constant styles creates stylesheet for a ProfilePicture.
+ */
+const styles = StyleSheet.create({
+    icon: {
+        width: 70,
+        height: 70,
+        borderTopRightRadius: 35,
+        borderTopLeftRadius: 35,
+        borderBottomRightRadius: 35,
+        borderBottomLeftRadius: 35,
+        marginRight: 15,
+        marginLeft: 15,
+    },
+});
+
+export default ProfilePicture;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ProfileHeader.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ProfileHeader.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* @fileoverview The profile header is a reusable component used to display the user's icon,
+* display name, handle, and bio.
+*/
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import {useRoute} from '@react-navigation/native';
+import ProfilePicture from "./ProfilePicture";
+
+/**
+* @class Contains function for rendering the profile header.
+*/
+class ProfileHeader extends React.Component {
+
+    /**
+     * Class constructor
+     * @param {String} myUserid The id of the current active user
+     * @param {String} username The username of the current active user
+     * @param {String} bio The bio of the user to be displayed
+     * @param {String} userid The id of the user who owns the page that this blurb is being displayed on
+     */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            myUserid: props.myUserid,
+            userid: props.userid,
+            username: props.username,
+            bio: props.bio,
+        };
+    }
+
+    /**
+    * Runs when the props change and updates the component accordingly.
+    * @params {props} prevProps The previous state's props
+    */
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.userid !== prevProps.userid) {
+          this.setState({
+              userid: this.props.userid,
+              username: this.props.username,
+              bio: this.props.bio,
+              myUserid: this.props.myUserid,
+          })
+      }
+    }
+
+    /**
+    * Handles redirecting the user to the friends page of a certain user
+    */
+    goToFriends = () => {
+        //console.log("I am id " + this.props.myUserid + " and this page has user id " + this.props.userid + " and username is " + this.props.username);
+        this.props.navigation.navigate('FriendsPage', {
+          username: this.props.username,
+          userid: this.props.userid,
+          bio: this.props.bio,
+          myUserid: this.props.myUserid,
+        })
+    }
+
+    /**
+    * Renders personal page components.
+    * @returns {ProfileHeader}
+    */
+    render() {
+      return (
+        &lt;View style={styles.profileHeaderContainer}>
+              {/* User's icon */}
+              &lt;ProfilePicture
+                  style = {styles.icon}
+                  userid = {this.props.userid}
+                  authString = {this.props.authString}
+              />
+
+              {/* Container for user's info */}
+              &lt;View style ={styles.userInfo}>
+
+                  {/* User's display name and handle */}
+                  &lt;View style ={styles.userID}>
+                      {/* Display name */}
+                      &lt;Text style ={styles.textUsername}>@{this.props.username}&lt;/Text>
+                  &lt;/View>
+
+                  &lt;TouchableOpacity
+                      style={styles.friendsButton}
+                      onPress = {this.goToFriends}
+                  >
+                      &lt;Text>View friends&lt;/Text>
+                  &lt;/TouchableOpacity>
+
+                  {/* User's bio */}
+                  &lt;Text style ={styles.textBio}>{this.props.bio}&lt;/Text>
+              &lt;/View>
+        &lt;/View>
+      );
+    }
+}
+
+/**
+* @constant styles creates stylesheet for the profile header
+*/
+const styles = StyleSheet.create({
+    profileHeaderContainer: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor: '#b3d2db',
+        paddingVertical: 20,
+        justifyContent: 'flex-start',
+        paddingTop: 30,
+        paddingBottom: 30,
+        paddingRight: 10,
+        paddingLeft: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        borderBottomRightRadius: 40,
+    },
+    icon: {
+        width: 100,
+        height: 100,
+        borderTopRightRadius: 50,
+        borderTopLeftRadius: 50,
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        marginRight: 20,
+        marginLeft: 20,
+    },
+    userInfo: {
+        flexDirection: 'column',
+        width: '80%',
+        paddingRight: 10,
+        flex: 1,
+    },
+    userID: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+    textUsername: {
+        fontSize: 18,
+        marginRight: 5,
+        fontWeight: "bold",
+    },
+    textBio: {
+        paddingTop: 10,
+        fontSize: 15,
+    },
+    friendsButton: {
+        paddingTop: 1,
+        paddingBottom: 1,
+        paddingLeft: 1,
+        paddingRight: 1,
+    },
+    textFriends: {
+        fontStyle: "italic",
+        fontSize: 13,
+    },
+});
+
+export default ProfileHeader;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MyUser.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: MyUser.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview initializes users with details requested from server
+ */
+import { UsersClient } from "../gen/proto/UsersServiceClientPb";
+import { GetUserByIDRequest, GetUserByUsernameRequest, UpdateUserInfoRequest } from '../gen/proto/users_pb';
+import TokenManager from "../Managers/TokenManager";
+import ClientManager from "../Managers/ClientManager";
+import UserManager from '../Managers/UserManager';
+
+export default class MyUser {
+    /** Class constructor
+     * @param {String} username The username of the current active user
+     *
+     *
+     */
+    constructor(props) {
+        this.username = "default_username";
+        this.initMyUser();
+    }
+
+    /**
+    * Initializes a MyUser with details requested from the server and saves each one
+    *post condition: getUserByUserID obtains user information
+    * @exception error catches error in getting user by user ID
+    * @return getUserByUserIDResponse gets user information when given a userID
+    */
+    initMyUser() {
+        {/* Init UsersClientManager &amp; get client */}
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+
+        {/* Init token manager */}
+        let tm = new TokenManager();
+
+        {/* Init request for GetUserByIDRequest*/ }
+        let req = new GetUserByIDRequest();
+
+        {/* Get JWT from storage and use for authorization */}
+        let authString = "Bearer "
+        tm.getToken().then(value => {
+            authString += value
+
+            let extra = value.split(".")[0]
+            let token = value.split(".")[1]
+
+            //console.log(atob(extra))
+            console.log(atob(token))
+
+            var tokenObj = JSON.parse(atob(token));
+            console.log('User ID: ' + tokenObj.uid);
+            this.userID = tokenObj.uid;
+            req.setUserid(tokenObj.uid);
+
+            {/* Use token to make request */}
+            client.getUserByID(req, {'Authorization': authString}).then(res => {
+                console.log("User: " + res);
+
+                {/* Store user information */}
+                this.username = res.getUser().getUsername();
+                console.log("Username: " + this.username);
+
+                let bday = res.getUser().getBirthday().toString();
+                let year = bday.split(",")[0];
+                let month = bday.split(",")[1];
+                let day = bday.split(",")[2]
+                console.log("Birthday: " + year + " " + month + " " + day);
+
+                this.bio = res.getUser().getBio();
+            }).catch(e => {
+                console.log(e);
+                alert("Could not get username.")
+            });
+        }, reason => {
+            console.log(reason)
+        });
+    }
+
+
+    /**
+    * Returns username
+    *
+    * @return String The user's username, retrieved from the server
+    */
+    getUsername() {
+        console.log("Returning username: " + this.username);
+        return this.username;
+    }
+
+    /**
+    * Returns userID
+    *
+    * @return String The user's unique userID
+    */
+    getUserID() {
+        return this.userID;
+    }
+
+    /**
+    * Returns birthday
+    *
+    * @return Date The user's unique userID
+    */
+    getBirthday() {
+        return this.birthday;
+    }
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

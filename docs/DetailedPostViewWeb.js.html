@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: DetailedPostViewWeb.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: DetailedPostViewWeb.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview The screen for the Detailed View of a post, which is accessed when clicking on a post.
+ */
+
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { Platform, StyleSheet, Text, TextInput, View, Image, Modal, Button, Pressable, TouchableOpacity } from 'react-native';
+import KIC_Style from "../Components/Style";
+import {SafeAreaView} from 'react-native-safe-area-context';
+import PostDetails from "./PostDetails";
+import CommentSection from "./CommentSection";
+import FeedHeader from '../Components/FeedHeader';
+import ClientManager from "../Managers/ClientManager";
+import { DeleteFilesWithMetaDataRequest, UpdateFilesWithMetadataRequest } from "../gen/proto/media_pb";
+import { GetUserByIDRequest } from '../gen/proto/users_pb';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+/**
+ * @class Contains function for rendering the detailed post view.
+ */
+class DetailedPostViewWeb extends React.Component {
+
+  /*
+   * Class constructor
+    * @param {String} authString The authstring for making requests
+    * @param {useNavigation} navigation The navigation prop used to navigate between pages
+    * @param {String} myUserid The id of the current active user
+    * @param {String} userid The id of this file's poster
+    * @param {String} username The username of this file's poster
+    * @param {File} fileinfo The File object to be displayed in this postview
+    * @param {Array} comments The array of comments to be displayed in this postview
+    * @param {String} imageSrc The uri of the image to be displayed in this postview
+   */
+    constructor(props) {
+        super();
+
+        // Define the initial state:
+        this.state = {
+            // active user's userid &amp; authstring
+            myUserid: props.route.params.myUserid,
+            myUsername: 'default',
+            authString: props.route.params.authString,
+            navigation: props.route.params.navigation,
+
+             // poster's userid and username
+            userid: props.route.params.userid,
+            username: props.route.params.username,
+
+            // image info
+            yearPosted: 0,
+            monthPosted: 0,
+            dayPosted: 0,
+            fileinfo: props.route.params.fileinfo,
+            filename: '',
+            comments: props.route.params.fileinfo.getMetadataMap().get("comments"),
+            metadata: [],
+            imageSrc: props.route.params.imageSrc,
+            caption: 'Default caption',
+
+            finishedInit: false,
+            isMyPost: false,
+
+            // For comment adding
+            comment: {},
+            commentText: '',
+            commentID: '',
+            commenterUsername: '',
+        };
+        this.initPostView = this.initPostView.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
+        this.handleAddComment = this.handleAddComment.bind(this)
+    }
+
+    /**
+    * Runs when component first loads
+    *
+    * @function componentDidMount()
+     * precondition: initPostView waits for init post view to start
+    */
+    async componentDidMount() {
+      await this.initPostView();
+    }
+
+    /**
+    * Handles initiating the post view
+    * @function initPostView
+    * @returns {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+     * post condition: getUserByUserID
+    */
+    initPostView() {
+        console.log("Web");
+        console.log("My id: " + this.state.myUserid + " // poster id: " + this.state.userid);
+
+        // Check if this is the active user's own post
+        if (this.state.myUserid == this.state.userid){
+            this.setState({
+                isMyPost: true,
+            })
+        } else {
+            this.setState({
+                isMyPost: false,
+            })
+        }
+
+        // Month name strings
+        let monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+
+        // Extract metadata info
+        this.setState({
+            filename: this.state.fileinfo.getMetadataMap().get("filename"),
+            yearPosted: this.state.fileinfo.getDatestored().getYear().toString(),
+            monthPosted: monthNames[this.state.fileinfo.getDatestored().getMonth()],
+            dayPosted: this.state.fileinfo.getDatestored().getDay().toString(),
+            caption: this.state.fileinfo.getMetadataMap().get("caption"),
+            finishedInit: true,
+        })
+
+        // Only parse if there are comments to avoid error
+        if (this.state.comments.length > 0){
+            this.setState({
+                comments: JSON.parse(this.state.fileinfo.getMetadataMap().get("comments")),
+            })
+        }
+
+        // Get active user's username
+        let cm = new ClientManager();
+        let client = cm.createUsersClient();
+        let req = new GetUserByIDRequest();
+        req.setUserid(this.state.myUserid);
+        return client.getUserByID(req, {'Authorization': this.state.authString}).then(res => {this.setMyUsername(res)})
+    }
+
+    /**
+    * Handles updating the myUsername state variable
+    * @function handleDelete
+    * @params {GetUserByIDResponse} res The response object to a GetUserByIDRequest
+    */
+    setMyUsername(res){
+        let myusername = res.getUser().getUsername();
+        this.setState({
+            myUsername: myusername,
+        })
+    }
+
+    /**
+    * Handles deleting a post via a DeleteFilesWithMetaDataRequest
+    * @function handleDelete
+    * @returns {DeleteFilesWithMetaDataResponse} res The response object to a DeleteFilesWithMetaDataRequest
+     * post condition: deleteFilesWithMetadata deletes files as necessary
+    */
+    handleDelete() {
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+        let req = new DeleteFilesWithMetaDataRequest();
+        let map = req.getMetadataMap();
+        //console.log("My filename is " + this.state.fileinfo.getMetadataMap().get("filename"));
+        map.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
+
+        return client.deleteFilesWithMetaData(req, {'Authorization': this.state.authString}).then(res => {this.redirectUser(res)});
+    }
+
+    /**
+    * Handles redirecting user after a post is deleted
+    * @function redirectUser
+    * @params {DeleteFilesWithMetaDataResponse} res The response object to a DeleteFilesWithMetaDataRequest
+    */
+    redirectUser(res) {
+        console.log("Deleted post");
+        //alert("Post deleted!");
+        this.props.navigation.goBack();
+    }
+
+    /**
+    * Handles updating the comment state variable
+    * @function setCommentText
+    */
+   setCommentText = (text) => {
+      this.setState({ commentText: text })
+      //console.log("Comment: " + this.state.commentText);
+   }
+
+    /**
+    * An async function that handles adding a comment to a file
+    * @function handleAddComment
+    * @returns {UpdateFilesWithMetadataResponse} res The response object to an UpdateFilesWithMetadataRequest
+     * precondition: randomizesCommentID provides a random comment ID
+     * postCondition: updatesFilesWithMetaData of additional comment
+    */
+    async handleAddComment() {
+        await this.randomizeCommentID();
+
+        let commenterusername = this.state.myUsername;
+        this.setState({
+            commenterUsername: commenterusername,
+        })
+
+        // Log new comment
+        console.log("Comment: " + this.state.commentText + " // comment id: " + this.state.commentID + " // commenter: " + this.state.commenterUsername);
+
+        // Create a Comment object with commentID, commenterUsername, and commentTest as keys
+        let comment = {
+            commentID: this.state.commentID,
+            commenterUsername: this.state.commenterUsername,
+            commentText: this.state.commentText,
+        }
+
+        // Create an array containing the single new comment
+        //let comments = [];
+        //comments.push(comment);
+
+        // Set the state with new comment
+        this.setState({
+            comments: [
+              ...this.state.comments,
+              comment
+            ]
+        })
+
+        // Send update file request
+        let cm = new ClientManager();
+        let client = cm.createMediaClient();
+        let req = new UpdateFilesWithMetadataRequest();
+
+        // Search for this file using its unique filename
+        let filtermap = req.getFiltermetadataMap();
+        filtermap.set("filename", this.state.fileinfo.getMetadataMap().get("filename"));
+
+        // Overwrite the previous comments array (since we manually concatenate the new and old comments above)
+        req.setUpdateflag(0);
+
+        let desiredComments = this.state.comments;
+        let desiredCommentsJSON = JSON.stringify(desiredComments);
+
+        // Checks: All IDs logged should match (not undefined)
+        // Check ID from comment object
+        console.log("comment id: " + comment.commentID);
+        // Check ID from state.comments
+        console.log("comment id from state concatenated comment map: " + this.state.comments[0].commentID);
+        // Check ID from desiredComments (metadata used in update request)
+        console.log("Comment id from desiredComments (the metadata in update req): " + desiredComments[0].commentID);
+
+        // Set the map to be updated -- we are updating the comments array with the updatedComments array
+        let desiredmap = req.getDesiredmetadataMap();
+        desiredmap.set("comments", desiredCommentsJSON);
+        // Send the request and print the # of files updated
+        return client.updateFilesWithMetadata(req, {'Authorization': this.state.authString}).then(res => {console.log("Result: " + res)}).catch(error => console.log("Saving comment failed: " + error));
+    }
+
+    /**
+    * An async function that randomizes a string ID for the comment ID
+    * @function randomizeCommentID
+    * @returns {String} vtoString(16) The comment ID
+    */
+    async randomizeCommentID() {
+      let string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r &amp; 0x3 | 0x8);
+        return v.toString(16);
+      });
+      this.setState({
+        commentID: string,
+      })
+    }
+
+  /**
+   * Renders the DetailedPostViewWeb components.
+   * @returns a {DetailedPostViewWeb}
+   */
+  render() {
+    return (
+      &lt;SafeAreaView style={KIC_Style.outContainer}>
+        &lt;FeedHeader navigation={this.props.navigation} />
+        &lt;View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10, }}>
+            {(this.state.finishedInit) ? &lt;View style={styles.container}>
+                &lt;Image
+                    style={styles.postImage}
+                    source = {this.state.imageSrc}
+                    />
+
+                &lt;View style={styles.detailsAndComments}>
+                    {/* Pass parent's (DetailedPostView) state data to the child (PostDetails) */}
+                    &lt;PostDetails
+                        myUserid = {this.state.myUserid}
+                        navigation = {this.state.navigation}
+                        authString = {this.state.authString}
+                        userid = {this.state.userid}
+                        username = {this.state.username}
+                        yearPosted = {this.state.yearPosted}
+                        monthPosted = {this.state.monthPosted}
+                        dayPosted = {this.state.dayPosted}
+                        caption = {this.state.caption}
+                    />
+
+                    {/* Only show display button if this is active user's own post */}
+                    {(this.state.isMyPost) ? &lt;TouchableOpacity
+                        onPress = {this.handleDelete.bind(this)}>
+                            &lt;Text style = {{ textAlign: 'right', fontSize: 10, fontStyle: 'italic', color: '#707070', }} >Delete post&lt;/Text>
+                    &lt;/TouchableOpacity> : &lt;View>&lt;/View>}
+
+                    &lt;View style={{ flex: 1, height: 200 }}>
+                        &lt;CommentSection
+                            comments = {this.state.comments}
+                        />
+                    &lt;/View>
+
+                    &lt;View style={{flexDirection: 'row'}}>
+                        &lt;TextInput
+                            style={KIC_Style.commentInput}
+                            textAlign = {'center'}
+                            onChange={(e) => this.setCommentText(e.nativeEvent.text)}
+                            placeholder="Leave a comment . . ."
+                        />
+                        &lt;TouchableOpacity
+                            style={{ justifyContent: 'center' }}
+                            onPress = {this.handleAddComment}>
+                            &lt;Ionicons name="chatbubble-ellipses-outline" color='#ffff' size={25} />
+                        &lt;/TouchableOpacity>
+                    &lt;/View>
+                    &lt;StatusBar style="auto" />
+                &lt;/View>
+
+            &lt;/View> : &lt;View>&lt;/View>}
+        &lt;/View>
+      &lt;/SafeAreaView>
+    );
+  }
+}
+
+/**
+ * @constant styles creates stylesheet for a DetailedPostViewWeb.
+ */
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    width: '60%',
+    backgroundColor: '#b3d2db',
+    justifyContent: 'flex-start',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    borderBottomLeftRadius: 40,
+    marginTop: 20,
+    paddingRight: 15,
+    ...Platform.select({
+      ios: {
+        top:30,
+        marginBottom:30,
+      },
+      android: {
+        top:30,
+        marginBottom:30,
+      },
+      default: {
+        top:60,
+        marginBottom: 60,
+      }
+    }),
+  },
+  detailsAndComments: {
+    flex: 1,
+    flexDirection: 'column',
+    marginLeft: 10,
+    padding: 10,
+  },
+  postImage: {
+    borderTopLeftRadius: 40,
+    borderBottomLeftRadius: 40,
+    width: 475,
+    height: 475,
+  }
+});
+
+export default DetailedPostViewWeb;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddFriendButton.html">AddFriendButton</a></li><li><a href="CommentSection.html">CommentSection</a></li><li><a href="DetailedPostView.html">DetailedPostView</a></li><li><a href="DetailedPostViewWeb.html">DetailedPostViewWeb</a></li><li><a href="FeedHeader.html">FeedHeader</a></li><li><a href="FeedPost.html">FeedPost</a></li><li><a href="HealthLogBlurb.html">HealthLogBlurb</a></li><li><a href="KIC_Image.html">KIC_Image</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="PostDetails.html">PostDetails</a></li><li><a href="PostsGrid.html">PostsGrid</a></li><li><a href="ProfileHeader.html">ProfileHeader</a></li><li><a href="ProfilePicture.html">ProfilePicture</a></li><li><a href="RequestBlurb.html">RequestBlurb</a></li><li><a href="UserBlurb.html">UserBlurb</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#componentDidMount()precondition:waitsoninitPostView">componentDidMount()pre condition: waits on init Post View</a></li><li><a href="global.html#componentDidMount()precondition:initPostViewwaitsforinitpostviewtostart">componentDidMount()precondition: initPostView waits for init post view to start</a></li><li><a href="global.html#Contains">Contains</a></li><li><a href="global.html#getBirthday">getBirthday</a></li><li><a href="global.html#getUserID">getUserID</a></li><li><a href="global.html#getUsername">getUsername</a></li><li><a href="global.html#handleAddComment">handleAddComment</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#initMyUser">initMyUser</a></li><li><a href="global.html#initPostView">initPostView</a></li><li><a href="global.html#randomizeCommentID">randomizeCommentID</a></li><li><a href="global.html#redirectUser">redirectUser</a></li><li><a href="global.html#setCommentText">setCommentText</a></li><li><a href="global.html#styles">styles</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Apr 22 2021 20:09:25 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
